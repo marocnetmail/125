@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Vidéos MATUHPV – Miniatures Facebook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #f0f2f5;
+      --fg: #1c1e21;
+      --card: #fff;
+      --primary: #1877f2;
+      --secondary: #42b72a;
+      --border: #ccc;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      --arabic-blue: #1a0dab;
+      --arabic-blue-dark: #8ab4f8;
+      --violet-dark: #4a148c; /* Dark violet color */
+      --violet-medium: #7b1fa2;
+      --violet-light: #e7f3ff;
+      --violet-bg: #e7f3ff;
+      --keyword-active: #4a148c;
+      --keyword-bg: #e7f3ff;
+      --facebook-blue: #1877f2;
+      --facebook-blue-dark: #166fe5;
+      --soft-bg: #f0f2f5;
+    }
+    
+    body.dark {
+      --bg: #18191a;
+      --fg: #e4e6eb;
+      --card: #242526;
+      --border: #3a3b3c;
+      --shadow: 0 1px 2px rgba(0,0,0,0.2);
+      --arabic-blue: var(--arabic-blue-dark);
+      --violet-dark: #4a148c;
+      --violet-medium: #7b1fa2;
+      --violet-light: #2a2a2b;
+      --violet-bg: #2a2a2b;
+      --keyword-active: #4a148c;
+      --keyword-bg: #3a3b3c;
+      --facebook-blue: #2374e1;
+      --facebook-blue-dark: #1a7cff;
+      --soft-bg: #3a3b3c;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      transition: background-color 0.3s, color 0.3s;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+    
+    header {
+      padding: 15px 20px;
+      background-color: var(--card);
+      box-shadow: var(--shadow);
+      margin-bottom: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    h1 {
+      color: var(--violet-dark);
+      text-align: center;
+      font-size: clamp(1.3rem, 4vw, 1.8rem);
+      margin-bottom: 1rem;
+      padding: 0 10px;
+    }
+    
+    .video-section {
+      margin: 1rem auto;
+      text-align: center;
+      position: relative;
+      display: none;
+    }
+    
+    .video-section.active {
+      display: block;
+    }
+    
+    .video-container {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      animation: slideIn 0.5s ease;
+      position: relative;
+      margin-bottom: 1rem;
+    }
+    
+    .video-header {
+      padding: 1.2rem 1.5rem;
+      background: var(--violet-dark);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .video-header h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      flex: 1;
+      text-align: left;
+      font-weight: 600;
+    }
+    
+    .close-video {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s;
+      flex-shrink: 0;
+      margin-left: 15px;
+    }
+    
+    .close-video:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%; /* Ratio 16:9 */
+      height: 0;
+      overflow: hidden;
+      background: #000;
+    }
+    
+    .video-iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    .video-info {
+      padding: 1.5rem;
+      text-align: left;
+      border-top: 1px solid var(--border);
+    }
+    
+    .video-title-ar {
+      font-weight: 800;
+      color: var(--violet-dark);
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+      text-align: right;
+      direction: rtl;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      letter-spacing: 0.5px;
+    }
+    
+    .video-title-fr {
+      font-style: italic;
+      color: var(--fg);
+      opacity: 0.9;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      line-height: 1.4;
+    }
+    
+    .video-description-container {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+    }
+    
+    .video-description {
+      color: var(--fg);
+      opacity: 0.8;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+    }
+    
+    .video-description.ar {
+      text-align: right;
+      direction: rtl;
+    }
+    
+    .description-limited {
+      max-height: none; /* Display full description */
+      overflow: visible;
+      position: relative;
+      transition: max-height 0.3s ease;
+    }
+    
+    .description-limited::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1.5em;
+      background: linear-gradient(to bottom, transparent, var(--card));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .description-limited.expanded {
+      max-height: 1000px;
+    }
+    
+    .description-limited.expanded::after {
+      opacity: 0;
+    }
+    
+    .show-more-btn {
+      display: none; /* Hide show more since full description is shown */
+    }
+    
+    .video-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      color: var(--fg);
+      margin-top: 1rem;
+      padding: 1.2rem;
+      background: var(--violet-bg);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.5rem 0;
+    }
+    
+    .meta-icon {
+      font-size: 1.2rem;
+      opacity: 0.8;
+      flex-shrink: 0;
+    }
+    
+    .meta-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    
+    .meta-label {
+      font-size: 0.85rem;
+      opacity: 0.7;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .meta-value {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--violet-dark);
+    }
+    
+    .video-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--violet-bg);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.3rem 0.8rem;
+      background: var(--card);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .stat-icon {
+      font-size: 1rem;
+    }
+    
+    .stat-count {
+      font-weight: 600;
+      color: var(--violet-dark);
+    }
+    
+    .facebook-link {
+      margin-top: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--facebook-blue);
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+    
+    .facebook-link:hover {
+      background: var(--facebook-blue-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(24, 119, 242, 0.3);
+    }
+    
+    .facebook-link i {
+      font-size: 1rem;
+    }
+    
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+      margin: 1rem auto 0.5rem;
+      max-width: 800px;
+      padding: 0 10px;
+    }
+    
+    .search-input,
+    .year-select {
+      flex: 1;
+      min-width: 200px;
+      padding: 12px 16px;
+      font-size: 1rem;
+      border: 2px solid var(--border);
+      background: var(--card);
+      color: var(--fg);
+      border-radius: 10px;
+      transition: all 0.3s;
+    }
+    
+    .search-input:focus,
+    .year-select:focus {
+      outline: none;
+      border-color: var(--violet-dark);
+      box-shadow: 0 0 0 3px rgba(74, 20, 140, 0.1);
+    }
+    
+    .theme-toggle {
+      padding: 12px 16px;
+      background: var(--violet-dark);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s;
+      min-width: 48px;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .theme-toggle:hover,
+    .theme-toggle:active {
+      background: var(--violet-medium);
+      transform: scale(1.05);
+    }
+    
+    /* Section mots-clés fixe */
+    .fixed-keywords-section {
+      background: var(--soft-bg);
+      padding: 0.8rem 0;
+      margin: 0 auto 1rem;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 120px;
+      z-index: 99;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .fixed-keywords-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+    
+    .keywords-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--violet-dark);
+      text-align: center;
+    }
+    
+    .keywords-scroll-container {
+      overflow-x: auto;
+      padding: 0.3rem 0;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .keywords-scroll-container::-webkit-scrollbar {
+      height: 4px;
+    }
+    
+    .keywords-scroll-container::-webkit-scrollbar-track {
+      background: var(--soft-bg);
+    }
+    
+    .keywords-scroll-container::-webkit-scrollbar-thumb {
+      background: var(--violet-medium);
+      border-radius: 2px;
+    }
+    
+    .keywords-container {
+      display: flex;
+      flex-wrap: wrap; /* Allow keywords on multiple lines */
+      gap: 0.5rem;
+      justify-content: flex-start;
+      min-width: min-content;
+    }
+    
+    .keyword {
+      padding: 6px 12px;
+      background: var(--keyword-bg);
+      color: var(--violet-dark);
+      border: 1px solid var(--violet-medium);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      user-select: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    
+    .keyword:hover {
+      background: var(--violet-medium);
+      color: white;
+      transform: translateY(-1px);
+    }
+    
+    .keyword.active {
+      background: var(--violet-dark);
+      color: white;
+      border-color: var(--violet-dark);
+      box-shadow: 0 2px 6px rgba(74, 20, 140, 0.3);
+    }
+    
+    .year-section {
+      margin-bottom: 1rem;
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s;
+    }
+    
+    .year-section:active {
+      transform: scale(0.99);
+    }
+    
+    .year-header {
+      width: 100%;
+      padding: 1rem 1.2rem;
+      background: var(--violet-dark);
+      color: white;
+      border: none;
+      text-align: left;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.3s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .year-header:hover {
+      background: var(--violet-medium);
+    }
+    
+    .year-icon {
+      transition: transform 0.3s ease;
+      font-size: 0.8rem;
+    }
+    
+    .year-header.open .year-icon {
+      transform: rotate(90deg);
+    }
+    
+    .videos-panel {
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .year-header.open + .videos-panel {
+      max-height: 5000px;
+      padding: 1rem;
+    }
+    
+    .video-card {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      animation: fadeIn 0.4s ease;
+      -webkit-tap-highlight-color: transparent;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .video-card:last-child {
+      border-bottom: none;
+    }
+    
+    .video-card.active {
+      background: rgba(74, 20, 140, 0.08);
+      border-left: 4px solid var(--violet-dark);
+    }
+    
+    .video-thumbnail-container {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 1rem;
+    }
+    
+    .video-thumbnail {
+      width: 50%;
+      max-width: 300px;
+      height: auto;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s, opacity 0.3s, box-shadow 0.3s;
+      background: #f5f5f5;
+    }
+    
+    .video-thumbnail:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    
+    .video-list-title-ar {
+      font-weight: 800;
+      color: var(--violet-dark);
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+      text-align: right;
+      direction: rtl;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .video-list-title-fr {
+      font-style: italic;
+      color: var(--fg);
+      opacity: 0.9;
+      margin-bottom: 0.8rem;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+    
+    .video-list-description {
+      color: var(--fg);
+      opacity: 0.8;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      margin-bottom: 0.8rem;
+      max-height: none; /* Full description */
+      overflow: visible;
+      position: relative;
+    }
+    
+    .video-list-description::after {
+      content: ''; /* Remove ellipsis */
+    }
+    
+    .video-list-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.8rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .video-list-date {
+      font-size: 0.8rem;
+      color: var(--violet-dark);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.2rem 0.6rem;
+      background: var(--violet-bg);
+      border-radius: 12px;
+      min-width: 0;
+      flex-shrink: 0;
+    }
+    
+    .video-list-date i {
+      opacity: 0.7;
+      font-size: 0.75rem;
+    }
+    
+    .video-list-year {
+      font-size: 0.8rem;
+      color: var(--violet-dark);
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      background: var(--violet-bg);
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+    
+    .video-actions {
+      margin-top: 0.8rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .watch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--violet-dark);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.95rem;
+      -webkit-tap-highlight-color: transparent;
+      width: 50%;
+      justify-content: center;
+      min-width: 140px;
+    }
+    
+    .watch-btn:hover,
+    .watch-btn:active {
+      background: var(--violet-medium);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .watch-btn.active {
+      background: var(--violet-medium);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .facebook-post-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--facebook-blue);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.95rem;
+      -webkit-tap-highlight-color: transparent;
+      width: 50%;
+      justify-content: center;
+      min-width: 140px;
+    }
+    
+    .facebook-post-link:hover {
+      background: var(--facebook-blue-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3);
+    }
+    
+    .video-list-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 0.8rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .video-list-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.75rem;
+      color: var(--violet-dark);
+      font-weight: 500;
+    }
+    
+    .video-list-stat i {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+    
+    .no-results {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--fg);
+      opacity: 0.7;
+      display: none;
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      margin: 1.5rem auto;
+      max-width: 600px;
+    }
+    
+    .no-results.show {
+      display: block;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      margin-top: 1.5rem;
+      color: var(--fg);
+      opacity: 0.8;
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+    
+    @keyframes fadeIn {
+      from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0); 
+      }
+    }
+    
+    @keyframes slideIn {
+      from { 
+        opacity: 0; 
+        transform: translateY(-20px); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0); 
+      }
+    }
+    
+    /* Optimisations pour mobile */
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 12px;
+      }
+      
+      header {
+        padding: 0.8rem 0;
+        margin-bottom: 0.8rem;
+      }
+      
+      h1 {
+        font-size: 1.3rem;
+        margin-bottom: 0.8rem;
+      }
+      
+      .video-section {
+        margin: 0.8rem auto;
+      }
+      
+      .video-header {
+        padding: 1rem;
+      }
+      
+      .video-header h2 {
+        font-size: 1.1rem;
+      }
+      
+      .video-info {
+        padding: 1rem;
+      }
+      
+      .video-title-ar {
+        font-size: 1.1rem;
+        margin-bottom: 0.8rem;
+      }
+      
+      .video-title-fr {
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
+      }
+      
+      .video-description-container {
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+      }
+      
+      .video-description {
+        font-size: 0.9rem;
+      }
+      
+      .description-limited {
+        max-height: none; /* Full on mobile too */
+      }
+      
+      .video-meta {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1rem;
+      }
+      
+      .video-stats {
+        padding: 0.8rem;
+        gap: 0.8rem;
+      }
+      
+      .stat-item {
+        padding: 0.2rem 0.6rem;
+        font-size: 0.85rem;
+      }
+      
+      .meta-item {
+        padding: 0.3rem 0;
+      }
+      
+      .controls {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        margin: 0.8rem auto 0.3rem;
+      }
+      
+      .search-input,
+      .year-select {
+        width: 100%;
+        min-width: unset;
+        padding: 14px;
+        font-size: 1rem;
+      }
+      
+      .theme-toggle {
+        width: 100%;
+        max-width: 200px;
+        margin-top: 0.3rem;
+      }
+      
+      .fixed-keywords-section {
+        top: 110px;
+        padding: 0.6rem 0;
+      }
+      
+      .fixed-keywords-container {
+        padding: 0 12px;
+      }
+      
+      .keywords-title {
+        font-size: 0.85rem;
+        margin-bottom: 0.4rem;
+      }
+      
+      .keyword {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+      }
+      
+      .year-header {
+        padding: 0.9rem 1rem;
+        font-size: 1.05rem;
+      }
+      
+      .year-header.open + .videos-panel {
+        padding: 0.8rem;
+      }
+      
+      .video-card {
+        padding: 0.9rem;
+      }
+      
+      .video-thumbnail {
+        width: 100%; /* Full width on mobile for better view */
+      }
+      
+      .video-list-title-ar {
+        font-size: 1rem;
+      }
+      
+      .video-list-title-fr {
+        font-size: 0.9rem;
+      }
+      
+      .video-list-description {
+        font-size: 0.8rem;
+        max-height: none;
+      }
+      
+      .video-list-meta {
+        margin-top: 0.6rem;
+        padding-top: 0.6rem;
+      }
+      
+      .video-list-date,
+      .video-list-year {
+        font-size: 0.75rem;
+        padding: 0.15rem 0.5rem;
+      }
+      
+      .video-actions {
+        flex-direction: column;
+      }
+      
+      .watch-btn,
+      .facebook-post-link {
+        width: 100%;
+      }
+      
+      .video-list-stats {
+        gap: 0.6rem;
+      }
+      
+      .video-list-stat {
+        font-size: 0.7rem;
+      }
+      
+      footer {
+        padding: 1.2rem 1rem;
+        font-size: 0.8rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 10px;
+      }
+      
+      h1 {
+        font-size: 1.2rem;
+        padding: 0 5px;
+      }
+      
+      .year-header {
+        padding: 0.8rem;
+        font-size: 1rem;
+      }
+      
+      .video-card {
+        padding: 0.8rem;
+      }
+      
+      .video-thumbnail {
+        width: 100%;
+      }
+      
+      .keyword {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+      }
+      
+      .video-list-title-ar {
+        font-size: 0.95rem;
+      }
+      
+      .video-list-title-fr {
+        font-size: 0.85rem;
+      }
+      
+      .video-list-description {
+        font-size: 0.75rem;
+      }
+      
+      .watch-btn,
+      .facebook-post-link {
+        padding: 10px 14px;
+        font-size: 0.9rem;
+        min-width: 120px;
+      }
+      
+      .meta-value {
+        font-size: 0.95rem;
+      }
+      
+      .video-list-stat {
+        font-size: 0.65rem;
+      }
+      
+      .fixed-keywords-section {
+        top: 105px;
+      }
+    }
+    
+    /* Support pour les appareils avec notch */
+    @supports (padding: max(0px)) {
+      .container {
+        padding-left: max(16px, env(safe-area-inset-left));
+        padding-right: max(16px, env(safe-area-inset-right));
+      }
+      
+      .fixed-keywords-container {
+        padding-left: max(16px, env(safe-area-inset-left));
+        padding-right: max(16px, env(safe-area-inset-right));
+      }
+      
+      @media (max-width: 768px) {
+        .container {
+          padding-left: max(12px, env(safe-area-inset-left));
+          padding-right: max(12px, env(safe-area-inset-right));
+        }
+        
+        .fixed-keywords-container {
+          padding-left: max(12px, env(safe-area-inset-left));
+          padding-right: max(12px, env(safe-area-inset-right));
+        }
+      }
+    }
+    
+    /* Amélioration du touch sur iOS */
+    @media (hover: none) and (pointer: coarse) {
+      .watch-btn,
+      .year-header,
+      .theme-toggle,
+      .facebook-post-link {
+        min-height: 44px;
+      }
+      
+      .search-input,
+      .year-select {
+        font-size: 16px;
+        min-height: 44px;
+      }
+      
+      .watch-btn:active,
+      .year-header:active,
+      .theme-toggle:active,
+      .facebook-post-link:active {
+        opacity: 0.7;
+      }
+      
+      .close-video {
+        min-height: 44px;
+        min-width: 44px;
+      }
+      
+      .keyword {
+        min-height: 32px;
+        display: flex;
+        align-items: center;
+      }
+      
+      .show-more-btn {
+        min-height: 44px;
+      }
+    }
+    
+    /* Mode sombre pour économie d'énergie */
+    @media (prefers-color-scheme: dark) {
+      body:not(.dark):not(.light) {
+        --bg: #121212;
+        --fg: #eee;
+        --card: #1e1e1e;
+        --border: #444;
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        --arabic-blue: var(--arabic-blue-dark);
+        --violet-dark: #4a148c;
+        --violet-medium: #7b1fa2;
+        --violet-light: #d1c4e9;
+        --violet-bg: #2d2d2d;
+        --keyword-active: #4a148c;
+        --keyword-bg: #3a2d4d;
+        --facebook-blue: #2d88ff;
+        --facebook-blue-dark: #1a7cff;
+        --soft-bg: #1e1a24;
+      }
+      
+      .description-limited::after {
+        background: linear-gradient(to bottom, transparent, var(--card));
+      }
+      
+      .video-list-description::after {
+        background: linear-gradient(to right, transparent, var(--card) 50%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>🎥 Vidéos MATUHPV – Miniatures Facebook</h1>
+      
+      <div id="videoSection" class="video-section">
+        <!-- Conteneur vidéo (caché initialement) -->
+        <div id="videoContainer" class="video-container">
+          <div class="video-header">
+            <h2 id="videoTitleHeader">Titre de la vidéo</h2>
+            <button id="closeVideo" class="close-video" aria-label="Fermer la vidéo">×</button>
+          </div>
+          
+          <div class="video-wrapper">
+            <iframe 
+              id="videoIframe"
+              class="video-iframe"
+              scrolling="no"
+              frameborder="0"
+              allowfullscreen="true"
+              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+              title="Vidéo Facebook MATUHPV">
+            </iframe>
+          </div>
+          
+          <div class="video-info">
+            <div id="videoTitleAr" class="video-title-ar"></div>
+            <div id="videoTitleFr" class="video-title-fr"></div>
+            
+            <!-- Conteneur pour les descriptions avec bouton "Afficher plus" -->
+            <div id="videoDescriptionContainer" class="video-description-container">
+              <!-- La description arabe -->
+              <div id="videoDescriptionArWrapper" class="description-wrapper" style="display: none;">
+                <div id="videoDescriptionArLimited" class="video-description ar description-limited"></div>
+                <button class="show-more-btn" data-target="videoDescriptionArLimited">
+                  <span>Afficher plus</span>
+                  <i>▼</i>
+                </button>
+              </div>
+              
+              <!-- La description française -->
+              <div id="videoDescriptionFrWrapper" class="description-wrapper" style="display: none;">
+                <div id="videoDescriptionFrLimited" class="video-description description-limited"></div>
+                <button class="show-more-btn" data-target="videoDescriptionFrLimited">
+                  <span>Afficher plus</span>
+                  <i>▼</i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Statistiques Facebook -->
+            <div id="videoStats" class="video-stats" style="display: none;">
+              <!-- Les statistiques seront ajoutées dynamiquement -->
+            </div>
+            
+            <!-- Lien vers la publication Facebook -->
+            <a id="facebookLink" class="facebook-link" target="_blank" rel="noopener noreferrer">
+              <i>🔗</i>
+              Voir la publication sur Facebook
+            </a>
+            
+            <div class="video-meta">
+              <div class="meta-item">
+                <span class="meta-icon">📅</span>
+                <div class="meta-content">
+                  <span class="meta-label">Date</span>
+                  <span id="videoDate" class="meta-value">Date</span>
+                </div>
+              </div>
+              <div class="meta-item">
+                <span class="meta-icon">🏷️</span>
+                <div class="meta-content">
+                  <span class="meta-label">Année</span>
+                  <span id="videoYear" class="meta-value">Année</span>
+                </div>
+              </div>
+              <div class="meta-item">
+                <span class="meta-icon">🔗</span>
+                <div class="meta-content">
+                  <span class="meta-label">ID Facebook</span>
+                  <span id="videoId" class="meta-value">ID</span>
+                </div>
+              </div>
+              <div class="meta-item">
+                <span class="meta-icon">🎥</span>
+                <div class="meta-content">
+                  <span class="meta-label">Source</span>
+                  <span class="meta-value">Facebook</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="controls">
+        <input 
+          type="search" 
+          id="searchInput" 
+          class="search-input" 
+          placeholder="Rechercher un titre ou un mot-clé…"
+          aria-label="Rechercher des vidéos"
+          autocapitalize="none"
+          autocomplete="off">
+        
+        <select id="yearSelect" class="year-select" aria-label="Filtrer par année">
+          <option value="">Toutes les années</option>
+        </select>
+        
+        <button 
+          id="themeToggle" 
+          class="theme-toggle" 
+          aria-label="Changer le thème"
+          type="button">
+          🌓
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Section des mots-clés fixe -->
+  <div class="fixed-keywords-section">
+    <div class="fixed-keywords-container">
+      <div class="keywords-title">Mots-clés de recherche :</div>
+      <div class="keywords-scroll-container">
+        <div id="keywordsContainer" class="keywords-container">
+          <!-- Les mots-clés seront générés dynamiquement -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="container">
+    <div id="videosTree"></div>
+    <div id="noResults" class="no-results">
+      Aucune vidéo trouvée. Essayez d'autres termes de recherche.
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>Mise à jour : 31 décembre 2025 – Source page Facebook MATUHPV</p>
+    </div>
+  </footer>
+
+  <script>
+    // Données structurées avec toutes les vidéos et descriptions étendues
+    const VIDEO_DATA = [
+      {
+        fbid: "1720356395238723",
+        date: "2025-04-29",
+        titre_ar: "أهم التدابير التي اتخذتها وزارة إعداد التراب الوطني و التعمير و الاسكان و سياسة المدينة لتحفيز الاستثمار ودعم التنمية المجالية",
+        titre_fr: "Mesures clés du MATUHPV pour stimuler l'investissement",
+        description_ar: "تقدم وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة مجموعة من التدابير الهامة لتحفيز الاستثمار ودعم التنمية المجالية في المغرب. تشمل هذه التدابير تحسين البنية التحتية، وتسهيل الإجراءات الإدارية، وتعزيز الشراكات بين القطاعين العام والخاص. تهدف هذه المبادرات إلى جذب المزيد من المستثمرين المحليين والدوليين للمساهمة في التنمية المستدامة للمدن والمجالات الترابية. كما تعمل الوزارة على تحسين جودة الحياة للسكان من خلال توفير سكن لائق وخدمات عمومية ذات جودة. تشمل هذه الجهود أيضًا تعزيز الحكامة الترابية وخلق فرص عمل جديدة في مختلف مناطق المملكة.",
+        description_fr: "Le ministère de l'Aménagement du Territoire National, de l'Urbanisme, de l'Habitat et de la Politique de la Ville (MATUHPV) présente une série de mesures clés visant à stimuler l'investissement et à soutenir le développement territorial au Maroc. Ces mesures comprennent l'amélioration des infrastructures, la simplification des procédures administratives et le renforcement des partenariats public-privé. Ces initiatives visent à attirer davantage d'investisseurs locaux et internationaux pour contribuer au développement durable des villes et des territoires. Le ministère travaille également à améliorer la qualité de vie des citoyens en fournissant un logement décent et des services publics de qualité. Ces efforts incluent également le renforcement de la gouvernance territoriale et la création de nouveaux emplois dans les différentes régions du Royaume.",
+        url_facebook: "https://www.facebook.com/FatimaZahraMansouri.pam/videos/1720356395238723/",
+        thumbnail: "",
+        hashtags: "#investissement #développement #urbanisme #territoire",
+        year: 2025,
+        commentaires: 42,
+        reactions: 156,
+        partages: 23
+      },
+      {
+        fbid: "1020806361885024",
+        date: "2022-05-30",
+        titre_ar: "Film institutionnel relatif à la promotion des villes intermédiaires du Maroc projeté à Africités",
+        titre_fr: "Film institutionnel – Promotion des villes intermédiaires",
+        description_ar: "في إطار جهود الوزارة لتعزيز دور المدن المتوسطة في التنمية الترابية، تم عرض فيلم مؤسساتي حول النهوض بالمدن المتوسطة في المغرب خلال قمة أفريسيتيس. يسلط الفيلم الضوء على الإمكانيات الكبيرة لهذه المدن والفرص المتاحة للاستثمار والتنمية. يبرز الفيلم أيضًا الجهود المبذولة لتحسين البنية التحتية والخدمات في هذه المدن لجعلها أكثر جاذبية للسكان والمستثمرين على حد سواء. تشمل هذه المدن مراكز حضرية تلعب دورًا محوريًا في تحقيق التوازن الترابي والحد من الهجرة نحو المدن الكبرى. تعمل الوزارة على تنفيذ استراتيجيات متكاملة لتعزيز جاذبية هذه المدن وتطوير قدراتها الاقتصادية والاجتماعية.",
+        description_fr: "Dans le cadre des efforts du ministère pour renforcer le rôle des villes intermédiaires dans le développement territorial, un film institutionnel sur la promotion des villes intermédiaires au Maroc a été projeté lors du sommet Africités. Le film met en lumière le grand potentiel de ces villes et les opportunités d'investissement et de développement. Il met également en évidence les efforts déployés pour améliorer les infrastructures et les services dans ces villes afin de les rendre plus attractives pour les résidents et les investisseurs. Ces villes comprennent des centres urbains qui jouent un rôle clé dans l'équilibre territorial et la réduction de la migration vers les grandes villes. Le ministère travaille à la mise en œuvre de stratégies intégrées pour renforcer l'attractivité de ces villes et développer leurs capacités économiques et sociales.",
+        url_facebook: "https://www.facebook.com/MATUHPV/videos/1020806361885024/",
+        thumbnail: "",
+        hashtags: "#villes #intermédiaires #urbanisme #développement",
+        year: 2022,
+        commentaires: 18,
+        reactions: 89,
+        partages: 12
+      },
+      {
+        fbid: "1026126788508799",
+        date: "2023-10-21",
+        titre_ar: "ندوة صحفية للسيدة فاطمة الزهراء المنصوري حول برنامج دعم السكن",
+        titre_fr: "Conférence de presse – Programme d'aide au logement",
+        description_ar: "عقدت السيدة فاطمة الزهراء المنصوري، وزيرة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة، ندوة صحفية لتقديم تفاصيل برنامج الدعم المباشر للسكن. يهدف هذا البرنامج إلى مساعدة الأسر ذات الدخل المحدود في الحصول على سكن لائق من خلال تقديم دعم مالي مباشر. شرح البرنامج يشمل شروط الاستفادة وآليات التقديم والجهات المعنية بتنفيذه. أكدت الوزيرة على التزام الوزارة بتحسين ظروف السكن للفئات الأكثر احتياجًا وتسريع وتيرة توفير السكن الاجتماعي. يأتي هذا البرنامج في إطار الاستراتيجية الوطنية للإسكان التي تهدف إلى معالجة العجز السكني وتحسين جودة الحياة للسكان.",
+        description_fr: "Mme Fatima Zahra Mansouri, ministre de l'Aménagement du Territoire National, de l'Urbanisme, de l'Habitat et de la Politique de la Ville, a tenu une conférence de presse pour présenter les détails du programme d'aide directe au logement. Ce programme vise à aider les familles à revenus limités à accéder à un logement décent en fournissant un soutien financier direct. La présentation du programme comprend les conditions d'éligibilité, les mécanismes de candidature et les acteurs responsables de sa mise en œuvre. La ministre a réaffirmé l'engagement du ministère à améliorer les conditions de logement des catégories les plus nécessiteuses et à accélérer la fourniture de logements sociaux. Ce programme s'inscrit dans le cadre de la stratégie nationale du logement visant à résoudre le déficit en logements et à améliorer la qualité de vie des citoyens.",
+        url_facebook: "https://www.facebook.com/MATUHPV/videos/1026126788508799/",
+        thumbnail: "",
+        hashtags: "#logement #aide #programme #سكن",
+        year: 2023,
+        commentaires: 65,
+        reactions: 210,
+        partages: 45
+      },
+      {
+        fbid: "1033272377718278",
+        date: "2023-10-25",
+        titre_ar: "‎ M برنامج الدعم المباشر للسكن",
+        titre_fr: "‎ M برنامج الدعم المباشر للسكن",
+        description_ar: "تغطية للندوة الصحفية التي عقدتها السيدة الوزيرة فاطمة الزهراء المنصوري، وزيرة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة، للإجابة على التساؤلات حول البرنامج الجديد للدعم المباشر للسكن. #دعم. خلال الندوة، استعرضت الوزيرة المزايا الرئيسية للبرنامج وآليات تنفيذه على المستوى الوطني. تمت مناقشة تفاصيل التمويل وشروط الأهلية وكيفية تقديم الطلبات. كما تمت الإجابة على أسئلة الصحفيين والمهتمين بشأن تفاصيل البرنامج وآثاره المتوقعة على السوق العقاري والوصول إلى السكن للفئات المستهدفة. يؤكد البرنامج على الشفافية والعدالة في توزيع الدعم لضمان وصوله إلى المستفيدين الحقيقيين.",
+        description_fr: "Couverture de la conférence de presse tenue par Mme la ministre Fatima Zahra Mansouri, ministre de l'Aménagement du Territoire National, de l'Urbanisme, de l'Habitat et de la Politique de la Ville, pour répondre aux questions sur le nouveau programme de soutien direct au logement. #développement. Lors de la conférence, la ministre a passé en revue les principaux avantages du programme et ses mécanismes de mise en œuvre au niveau national. Les détails du financement, les conditions d'éligibilité et la manière de soumettre les demandes ont été discutés. Des réponses ont également été apportées aux questions des journalistes et des parties prenantes concernant les détails du programme et ses effets attendus sur le marché immobilier et l'accès au logement pour les catégories cibles. Le programme met l'accent sur la transparence et l'équité dans la distribution de l'aide pour garantir qu'elle atteigne les bénéficiaires légitimes.",
+        url_facebook: "https://www.facebook.com/MATUHPV/videos/1033272377718278/",
+        thumbnail: "https://scontent-iad3-1.xx.fbcdn.net/v/t15.5256-10/395046679_329983909617792_7707866035637446486_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=110&ccb=1-7&_nc_sid=cb5bf7&_nc_ohc=RKduIVVlFFIQ7kNvwHcHnaX&_nc_oc=Adm8NWP9qh9o6l_Y3_NmbHT8VOp2aNqQs4-tklkFACqxfVMLoyJDOB-R8xJFfymscRQ&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=I9Kx4O2zYW9N7u-pfOUrKQ&oh=00_AfkODYiej8fO32WIzg4AuysF_AkXLVf0AdkgK_-cuP3rdw&oe=695A286E",
+        hashtags: "#دعم #السكن #logement #برنامج",
+        year: 2023,
+        commentaires: 123,
+        reactions: 456,
+        partages: 78
+      },
+      {
+        fbid: "1037800670239811",
+        date: "2022-08-10",
+        titre_ar: "_ من الوكالة الحضرية للحسيمة ، مواصلة استقبال مغاربة العالم _ Ministère Aménagement Territoire, Urba",
+        titre_fr: "_ من الوكالة الحضرية للحسيمة ، مواصلة استقبال مغاربة العالم _ Ministère Aménagement Territoire, Urba",
+        description_ar: "من الوكالة الحضرية للحسيمة ، مواصلة استقبال مغاربة العالم في إطار جهود الوزارة لتعزيز التواصل مع مغاربة العالم وتشجيعهم على الاستثمار في وطنهم الأم. تقدم الوكالة خدمات استشارية وإعلامية للمغاربة المقيمين بالخارج الذين يرغبون في الاستثمار في المجال العقاري والبناء في منطقة الحسيمة. تشمل هذه الخدمات التوجيه حول الإجراءات القانونية والفرص الاستثمارية المتاحة في المنطقة. تعكس هذه المبادرة التزام الوزارة بتعزيز الروابط مع الجالية المغربية في الخارج وتسهيل مشاركتهم في التنمية المحلية. كما تساهم في تعزيز التنمية الاقتصادية للمنطقة وجذب الاستثمارات الخارجية.",
+        description_fr: "De l'Agence Urbaine d'Al Hoceima, poursuite de l'accueil des Marocains du Monde dans le cadre des efforts du ministère pour renforcer la communication avec les Marocains résidant à l'étranger et les encourager à investir dans leur pays d'origine. L'agence fournit des services de conseil et d'information aux Marocains résidant à l'étranger qui souhaitent investir dans l'immobilier et la construction dans la région d'Al Hoceima. Ces services comprennent des conseils sur les procédures légales et les opportunités d'investissement disponibles dans la région. Cette initiative reflète l'engagement du ministère à renforcer les liens avec la communauté marocaine à l'étranger et à faciliter leur participation au développement local. Elle contribue également à renforcer le développement économique de la région et à attirer les investissements étrangers.",
+        url_facebook: "https://www.facebook.com/MATUHPV/videos/1037800670239811/",
+        thumbnail: "https://scontent-iad3-1.xx.fbcdn.net/v/t15.5256-10/297979721_725056811925897_8043027588180491439_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=cb5bf7&_nc_ohc=JtijHmCxhsIQ7kNvwH4lhFC&_nc_oc=Adk-65vnX_81SjuRSVGXOPDXlBxEUqVUmJE4mRRoc4MFAG9zPJ2Ktshot2gmZMAH1P4&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=nRK-vayLiixqR6Ypt_sPMQ&oh=00_AfkMuaz3EbKpV8Djx1gs7xhL16FfC0BRGZHTMFJZ_9GneA&oe=695A290D",
+        hashtags: "#الحسيمة #مغاربة_العالم #استثمار #وكالة_حضرية",
+        year: 2022,
+        commentaires: 28,
+        reactions: 134,
+        partages: 19
+      },
+      {
+        fbid: "1046135310054617",
+        date: "2023-12-07",
+        titre_ar: "#دعم_السكن",
+        titre_fr: "#دعم_السكن",
+        description_ar: "مبادرة #دعم_السكن تهدف إلى تسهيل حصول المواطنين على سكن لائق من خلال توفير دعم مالي وإداري. تشمل المبادرة عدة برامج فرعية تستهدف فئات مختلفة من المجتمع، مع إعطاء الأولوية للأسر ذات الدخل المحدود. تعمل الوزارة على تبسيط الإجراءات وتقليل الوقت اللازم للحصول على الدعم. تشمل الخدمات المقدمة الاستشارة القانونية والتوجيه نحو أفضل الفرص السكنية المتاحة. يتم تنفيذ المبادرة بالتعاون مع مختلف الشركاء المحليين والوطنيين لضمان نجاحها et couverture étendue.",
+        description_fr: "L'initiative #دعم_السكن vise à faciliter l'accès des citoyens à un logement décent en fournissant un soutien financier et administratif. L'initiative comprend plusieurs sous-programmes ciblant différentes catégories de la société, avec priorité donnée aux familles à revenus limités. Le ministère travaille à simplifier les procédures et à réduire le temps nécessaire pour obtenir le soutien. Les services fournis comprennent des conseils juridiques et une orientation vers les meilleures opportunités de logement disponibles. L'initiative est mise en œuvre en collaboration avec divers partenaires locaux et nationaux pour garantir son succès et sa large couverture.",
+        url_facebook: "https://www.facebook.com/MATUHPV/videos/1046135310054617/",
+        thumbnail: "https://scontent-iad3-1.xx.fbcdn.net/v/t15.5256-10/409183571_1270767100260658_8844093425097801209_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=102&ccb=1-7&_nc_sid=cb5bf7&_nc_ohc=HjKfssOqLeUQ7kNvwF1Xgmw&_nc_oc=AdnejZr5i21ASUHFJp8Er-Dj--hofk8zj6l0UegFCeRO_ItkFFNB_xw67j0wqPVmaJI&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=DY6EyCYngSzwsTf0kX9f-Q&oh=00_AfmHSLKBYRtZzbKEkJ-VwJ48OTkmvGqPf1j16ZsFbt3phg&oe=695A06A3",
+        hashtags: "#دعم_السكن #logement #سكن #برنامج",
+        year: 2023,
+        commentaires: 87,
+        reactions: 321,
+        partages: 56
+      },
+      {
+        fbid: "1065032967711106",
+        date: "2022-09-29",
+        titre_ar: ". · _ تعمل الوزارة على إيجاد حلول عملية و مبتكرة لبناء سكن الغد، وذلك فيما يتعلق بتمويل السكن، العقا",
+        titre_fr: ". · _ تعمل الوزارة على إيجاد حلول pratiques et innovantes pour construire le logement de demain",
+        description_ar: "تعمل الوزارة على إيجاد حلول عملية و مبتكرة لبناء سكن الغد، وذلك فيما يتعلق بتمويل السكن، العقار، و كذا الرافعات التي يمكن العمل بها لخفض ثمن السكن. تشمل هذه الحلول تطوير آليات تمويل جديدة، وتعزيز الشفافية في سوق العقار، وتبني تقنيات البناء الحديثة لتقليل التكاليف. كما تعمل الوزارة على تحفيز القطاع الخاص للمساهمة في توفير سكن ميسور التكلفة. تشمل الجهود أيضًا تطوير منظومة متكاملة للإسكان تراعي الاحتياجات المتنوعة للمواطنين. تهدف هذه المبادرات إلى تحقيق التوازن بين العرض والطلب في سوق السكن وتحسين جودة الحياة في المناطق الحضرية.",
+        description_fr: "Le ministère travaille à trouver des solutions pratiques et innovantes pour construire le logement de demain, en ce qui concerne le financement du logement, l'immobilier, ainsi que les leviers qui peuvent être utilisés pour réduire le coût du logement. Ces solutions comprennent le développement de nouveaux mécanismes de financement, le renforcement de la transparence sur le marché immobilier et l'adoption de techniques de construction modernes pour réduire les coûts. Le ministère travaille également à inciter le secteur privé à contribuer à la fourniture de logements abordables. Les efforts incluent également le développement d'un système de logement intégré qui tient compte des besoins divers des citoyens. Ces initiatives visent à équilibrer l'offre et la demande sur le marché du logement et à améliorer la qualité de vie dans les zones urbaines.",
+        url_facebook: "https://www.facebook.com/MATUHPV/videos/1065032967711106/",
+        thumbnail: "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/309822836_176793541551276_7386234871241227533_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=111&ccb=1-7&_nc_sid=cb5bf7&_nc_ohc=roANdXXl9KIQ7kNvwFcVGHA&_nc_oc=Admz9nZNusJDjJyYjzugaRkvhiUbD4Dg6XRg_-v_W-uKxIDs0s8sTyQ-D5Xt8muqBDM&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=3kuYTNvVERPkkd63_bPF2A&oh=00_AfnN2DdNPfmrSUaOT_zZPSzOuEi9ZirO8iiIgANW03hv-w&oe=695A0CF6",
+        hashtags: "#تمويل #سكن_الغد #innovation #بناء",
+        year: 2022,
+        commentaires: 34,
+        reactions: 167,
+        partages: 27
+      },
+      {
+        fbid: "1080310930210579",
+        date: "2024-11-09",
+        titre_ar: ". · _ Ministère Aménagement Territoire, Urbanisme, Habitat, Politique de la Ville on Reels",
+        titre_fr: ". · _ Ministère Aménagement Territoire, Urbanisme, Habitat, Politique de la Ville on Reels",
+        description_ar: "يقدم هذا الريلز نظرة سريعة على أنشطة وإنجازات الوزارة في مجال إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة. يسلط الضوء على المشاريع البارزة والجهود المبذولة لتحسين جودة الحياة في المدن المغربية. يتضمن الريلز لقطات من مشاريع التنمية الحضرية وبرامج الإسكان والجهود الرامية إلى تعزيز الاستدامة البيئية في التخطيط العمراني. يهدف هذا المحتوى إلى التواصل مع الجمهور الأصغر سناً وتعزيز الوعي بأهمية التخطيط العمراني المستدام. كما يظهر التزام الوزارة بالشفافية والتواصل الفعال مع المواطنين حول مشاريعها واستراتيجياتها.",
+        description_fr: "Ce Reels offre un aperçu rapide des activités et réalisations du ministère dans les domaines de l'aménagement du territoire national, de l'urbanisme, de l'habitat et de la politique de la ville. Il met en lumière les projets phares et les efforts déployés pour améliorer la qualité de vie dans les villes marocaines. Le Reels comprend des séquences de projets de développement urbain, de programmes de logement et d'efforts visant à renforcer la durabilité environnementale dans la planification urbaine. Ce contenu vise à communiquer avec le public plus jeune et à sensibiliser à l'importance de la planification urbaine durable. Il montre également l'engagement du ministère en faveur de la transparence et d'une communication efficace avec les citoyens sur ses projets et stratégies.",
+        url_facebook: "https://www.facebook.com/MATUHPV/videos/1080310930210579/",
+        thumbnail: "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/466619545_560047889948672_5611261465270923729_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=105&ccb=1-7&_nc_sid=50ce42&_nc_ohc=Gw6hC5aoe7MQ7kNvwE5AquG&_nc_oc=Adntk8Ke-lBlgBUXXP0kFd7bAkfZ3nfVuD5vjZEvQt-gFpe18AfO_Rvw5v5UwdA0y30&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=SBpgx0sVoFK1qlxDdEv3NQ&oh=00_AfkoTr5idXlMs8rrE0TtattNd49l3q2TT8dBd1xYwz9W1g&oe=695A1FE3",
+        hashtags: "#reels #urbanisme #habitat #وزارة",
+        year: 2024,
+        commentaires: 56,
+        reactions: 289,
+        partages: 41
+      },
+      {
+        fbid: "1084681052557797",
+        date: "2023-12-05",
+        titre_ar: "#دعم_السكن",
+        titre_fr: "#دعم_السكن",
+        description_ar: "تستمر حملة #دعم_السكن في تقديم المعلومات والتوجيه للمواطنين الراغبين في الاستفادة من برامج الدعم السكني. تشمل الحملة نشر محتوى توعوي عبر وسائل التواصل الاجتماعي وتنظيم جلسات إعلامية في مختلف المناطق. تهدف هذه الجهود إلى تبسيط عملية الحصول على الدعم وتوضيح الشروط والإجراءات المطلوبة. كما تسلط الحملة الضوء على قصص نجاح المستفيدين من برامج الدعم السكني لتشجيع الآخرين على الاستفادة. تعكس هذه المبادرة التزام الوزارة بتحقيق الشمولية والعدالة في توزيع الدعم السكني.",
+        description_fr: "La campagne #دعم_السكن continue de fournir des informations et des conseils aux citoyens souhaitant bénéficier des programmes de soutien au logement. La campagne comprend la diffusion de contenu de sensibilisation via les médias sociaux et l'organisation de sessions d'information dans différentes régions. Ces efforts visent à simplifier le processus d'obtention du soutien et à clarifier les conditions et procédures requises. La campagne met également en lumière les histoires de réussite des bénéficiaires des programmes de soutien au logement pour encourager les autres à en bénéficier. Cette initiative reflète l'engagement du ministère à réaliser l'inclusion et l'équité dans la distribution du soutien au logement.",
+        url_facebook: "https://www.facebook.com/MATUHPV/videos/1084681052557797/",
+        thumbnail: "https://scontent-iad3-1.xx.fbcdn.net/v/t15.5256-10/405456189_682481477284662_1247736203756816454_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=109&ccb=1-7&_nc_sid=cb5bf7&_nc_ohc=ljWUtqxq4g4Q7kNvwEBt74o&_nc_oc=AdmraIQPy9UsLF0IVZunqCOQt9aUXm1YM325v_LUjb9ZqpMZV-iHIKrngXxZRclIUCg&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=XoBrglT9AWrzF2_S_eY0Xw&oh=00_AfmjZTkR3E_wX54FbMyyD6cyUop8wXpTGxCJkfaNa32VPQ&oe=695A1243",
+        hashtags: "#دعم_السكن #logement #حملة #توعية",
+        year: 2023,
+        commentaires: 72,
+        reactions: 305,
+        partages: 49
+      }
+    ];
+
+    // Mots-clés prédéfinis pour la recherche
+    const PREDEFINED_KEYWORDS = [
+      "دعم السكن", "DNUH", "الحوار الوطني للتخطيط العمراني", "الوكالات الحضرية", 
+      "العالم القروي", "التعمير والاسكان", "الاستثمار العقاري", "التهيئة المجالية", 
+      "سياسة المدينة", "المراكز القروية", "السكن الاجتماعي", "تمويل السكن", 
+      "البناء غير القانوني", "الرقمنة", "اللامركزية", "الشفافية", 
+      "التأهيل الحضري", "المنظومة العمرانية", "الحوار المجتمعي", "المدن الجديدة", 
+      "الخدمات الحضرية", "الأراضي", "التنمية المجالية", "العمران المستدام"
+    ];
+
+    // Éléments DOM
+    const DOM = {
+      videosTree: document.getElementById('videosTree'),
+      searchInput: document.getElementById('searchInput'),
+      yearSelect: document.getElementById('yearSelect'),
+      noResults: document.getElementById('noResults'),
+      themeToggle: document.getElementById('themeToggle'),
+      videoSection: document.getElementById('videoSection'),
+      videoContainer: document.getElementById('videoContainer'),
+      videoIframe: document.getElementById('videoIframe'),
+      videoTitleHeader: document.getElementById('videoTitleHeader'),
+      videoTitleAr: document.getElementById('videoTitleAr'),
+      videoTitleFr: document.getElementById('videoTitleFr'),
+      videoDescriptionContainer: document.getElementById('videoDescriptionContainer'),
+      videoDescriptionArWrapper: document.getElementById('videoDescriptionArWrapper'),
+      videoDescriptionArLimited: document.getElementById('videoDescriptionArLimited'),
+      videoDescriptionFrWrapper: document.getElementById('videoDescriptionFrWrapper'),
+      videoDescriptionFrLimited: document.getElementById('videoDescriptionFrLimited'),
+      videoStats: document.getElementById('videoStats'),
+      facebookLink: document.getElementById('facebookLink'),
+      videoDate: document.getElementById('videoDate'),
+      videoYear: document.getElementById('videoYear'),
+      videoId: document.getElementById('videoId'),
+      closeVideo: document.getElementById('closeVideo'),
+      keywordsContainer: document.getElementById('keywordsContainer')
+    };
+
+    // État de l'application
+    const state = {
+      openYear: null,
+      currentFilter: '',
+      currentYear: '',
+      activeVideo: null,
+      activeKeyword: null
+    };
+
+    // Initialisation
+    function init() {
+      populateYearFilter();
+      displayPredefinedKeywords();
+      renderVideos();
+      setupEventListeners();
+      restorePreferences();
+      optimizeForMobile();
+      setupDescriptionToggle();
+    }
+
+    // Afficher les mots-clés prédéfinis
+    function displayPredefinedKeywords() {
+      DOM.keywordsContainer.innerHTML = '';
+      
+      PREDEFINED_KEYWORDS.forEach(keyword => {
+        const keywordElement = document.createElement('div');
+        keywordElement.className = 'keyword';
+        keywordElement.textContent = keyword;
+        keywordElement.dataset.keyword = keyword;
+        
+        keywordElement.addEventListener('click', () => {
+          toggleKeywordFilter(keyword, keywordElement);
+        });
+        
+        DOM.keywordsContainer.appendChild(keywordElement);
+      });
+      
+      // Ajouter un bouton "Tous" pour effacer le filtre
+      const allKeyword = document.createElement('div');
+      allKeyword.className = 'keyword active';
+      allKeyword.textContent = 'Tous';
+      allKeyword.dataset.keyword = '';
+      
+      allKeyword.addEventListener('click', () => {
+        toggleKeywordFilter('', allKeyword);
+      });
+      
+      DOM.keywordsContainer.prepend(allKeyword);
+    }
+
+    // Basculer le filtre par mot-clé
+    function toggleKeywordFilter(keyword, element) {
+      if (state.activeKeyword === keyword) {
+        state.activeKeyword = null;
+        DOM.searchInput.value = '';
+        element.classList.remove('active');
+        
+        document.querySelector('.keyword[data-keyword=""]').classList.add('active');
+      } else {
+        document.querySelectorAll('.keyword').forEach(k => k.classList.remove('active'));
+        
+        element.classList.add('active');
+        state.activeKeyword = keyword;
+        
+        if (keyword) {
+          DOM.searchInput.value = keyword;
+        } else {
+          DOM.searchInput.value = '';
+        }
+      }
+      
+      renderVideos();
+    }
+
+    // Remplir le filtre des années
+    function populateYearFilter() {
+      const years = [...new Set(VIDEO_DATA.map(v => v.year))]
+        .sort((a, b) => b - a);
+      
+      years.forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        DOM.yearSelect.appendChild(option);
+      });
+    }
+
+    // Formater la date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const options = { day: 'numeric', month: 'long', year: 'numeric' };
+      return date.toLocaleDateString('fr-FR', options);
+    }
+
+    // Formater la date courte (pour la liste)
+    function formatShortDate(dateString) {
+      const date = new Date(dateString);
+      const options = { day: 'numeric', month: 'short', year: 'numeric' };
+      return date.toLocaleDateString('fr-FR', options);
+    }
+
+    // Formater les nombres (ex: 1000 -> 1k)
+    function formatNumber(num) {
+      if (num >= 1000000) {
+        return (num / 1000000).toFixed(1).replace('.0', '') + 'M';
+      }
+      if (num >= 1000) {
+        return (num / 1000).toFixed(1).replace('.0', '') + 'k';
+      }
+      return num.toString();
+    }
+
+    // Tronquer le texte à 150 caractères
+    function truncateText(text, maxLength = 150) {
+      if (!text || text.length <= maxLength) return text;
+      return text.substring(0, maxLength) + '...';
+    }
+
+    // Filtrer les vidéos
+    function filterVideos() {
+      const searchTerm = DOM.searchInput.value.trim().toLowerCase();
+      const selectedYear = DOM.yearSelect.value;
+      
+      state.currentFilter = searchTerm;
+      state.currentYear = selectedYear;
+      
+      return VIDEO_DATA.filter(video => {
+        const matchesYear = !selectedYear || video.year.toString() === selectedYear;
+        
+        if (!searchTerm) return matchesYear;
+        
+        // Recherche dans les titres
+        const matchesTitreAr = video.titre_ar && video.titre_ar.toLowerCase().includes(searchTerm);
+        const matchesTitreFr = video.titre_fr && video.titre_fr.toLowerCase().includes(searchTerm);
+        
+        // Recherche dans les descriptions
+        const matchesDescAr = video.description_ar && video.description_ar.toLowerCase().includes(searchTerm);
+        const matchesDescFr = video.description_fr && video.description_fr.toLowerCase().includes(searchTerm);
+        
+        // Recherche dans les hashtags (en enlevant # et _)
+        const cleanHashtags = video.hashtags ? video.hashtags.replace(/#|_/g, ' ').toLowerCase() : '';
+        const matchesHashtags = cleanHashtags.includes(searchTerm);
+        
+        const matchesSearch = matchesTitreAr || matchesTitreFr || matchesDescAr || matchesDescFr || matchesHashtags;
+        
+        return matchesYear && matchesSearch;
+      });
+    }
+
+    // Afficher une vidéo
+    function showVideo(video) {
+      state.activeVideo = video;
+      
+      // Afficher la section vidéo
+      DOM.videoSection.classList.add('active');
+      
+      // Mettre à jour le titre de l'en-tête
+      DOM.videoTitleHeader.textContent = video.titre_fr.substring(0, 60) + (video.titre_fr.length > 60 ? '...' : '');
+      
+      // Mettre à jour les informations de la vidéo
+      DOM.videoTitleAr.textContent = video.titre_ar;
+      DOM.videoTitleFr.textContent = video.titre_fr;
+      DOM.videoDate.textContent = formatDate(video.date);
+      DOM.videoYear.textContent = video.year;
+      DOM.videoId.textContent = video.fbid;
+      
+      // Mettre à jour le lien Facebook
+      DOM.facebookLink.href = video.url_facebook;
+      
+      // Mettre à jour les descriptions avec bouton "Afficher plus"
+      updateDescription(video.description_ar, DOM.videoDescriptionArLimited, DOM.videoDescriptionArWrapper);
+      updateDescription(video.description_fr, DOM.videoDescriptionFrLimited, DOM.videoDescriptionFrWrapper);
+      
+      // Mettre à jour les statistiques
+      updateStats(video);
+      
+      // Charger l'iframe SEULEMENT maintenant
+      const cleanUrl = video.url_facebook.split('?')[0];
+      const iframeUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(cleanUrl)}&show_text=false&width=560`;
+      DOM.videoIframe.src = iframeUrl;
+      
+      // Faire défiler jusqu'à la vidéo
+      DOM.videoSection.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+      
+      // Mettre à jour la liste des vidéos pour refléter l'état actif
+      renderVideos();
+    }
+
+    // Mettre à jour la description avec le bouton "Afficher plus"
+    function updateDescription(description, element, wrapper) {
+      if (description && description.trim().length > 0) {
+        // Afficher le wrapper
+        wrapper.style.display = 'block';
+        
+        // Déterminer si le texte est long (plus de 150 mots)
+        const words = description.split(/\s+/);
+        const isLong = words.length > 150;
+        
+        // Tronquer à 150 mots si nécessaire
+        const displayText = isLong ? words.slice(0, 150).join(' ') + '...' : description;
+        
+        // Mettre à jour le contenu
+        element.textContent = displayText;
+        
+        // Stocker le texte complet dans un attribut data
+        element.dataset.fullText = description;
+        
+        // Initialiser l'état (collapsed par défaut si long)
+        if (isLong) {
+          element.classList.remove('expanded');
+          const button = wrapper.querySelector('.show-more-btn');
+          button.classList.remove('expanded');
+          button.querySelector('span').textContent = 'Afficher plus';
+          button.style.display = 'inline-flex';
+        } else {
+          element.classList.add('expanded');
+          const button = wrapper.querySelector('.show-more-btn');
+          button.style.display = 'none'; // Cacher le bouton si le texte n'est pas long
+        }
+      } else {
+        // Cacher le wrapper si pas de description
+        wrapper.style.display = 'none';
+      }
+    }
+
+    // Mettre à jour les statistiques
+    function updateStats(video) {
+      DOM.videoStats.innerHTML = '';
+      
+      if (video.reactions || video.commentaires || video.partages) {
+        DOM.videoStats.style.display = 'flex';
+        
+        if (video.reactions) {
+          const reactionItem = document.createElement('div');
+          reactionItem.className = 'stat-item';
+          reactionItem.innerHTML = `
+            <span class="stat-icon">👍</span>
+            <span class="stat-count">${formatNumber(video.reactions)}</span>
+            <span>Réactions</span>
+          `;
+          DOM.videoStats.appendChild(reactionItem);
+        }
+        
+        if (video.commentaires) {
+          const commentItem = document.createElement('div');
+          commentItem.className = 'stat-item';
+          commentItem.innerHTML = `
+            <span class="stat-icon">💬</span>
+            <span class="stat-count">${formatNumber(video.commentaires)}</span>
+            <span>Commentaires</span>
+          `;
+          DOM.videoStats.appendChild(commentItem);
+        }
+        
+        if (video.partages) {
+          const shareItem = document.createElement('div');
+          shareItem.className = 'stat-item';
+          shareItem.innerHTML = `
+            <span class="stat-icon">↪️</span>
+            <span class="stat-count">${formatNumber(video.partages)}</span>
+            <span>Partages</span>
+          `;
+          DOM.videoStats.appendChild(shareItem);
+        }
+      } else {
+        DOM.videoStats.style.display = 'none';
+      }
+    }
+
+    // Configurer le toggle pour les boutons "Afficher plus"
+    function setupDescriptionToggle() {
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.show-more-btn')) {
+          const button = e.target.closest('.show-more-btn');
+          const targetId = button.dataset.target;
+          const descriptionElement = document.getElementById(targetId);
+          
+          if (descriptionElement) {
+            const isExpanded = descriptionElement.classList.contains('expanded');
+            
+            if (isExpanded) {
+              // Replier le texte
+              const words = descriptionElement.dataset.fullText.split(/\s+/);
+              const truncatedText = words.length > 150 ? 
+                words.slice(0, 150).join(' ') + '...' : 
+                descriptionElement.dataset.fullText;
+              
+              descriptionElement.textContent = truncatedText;
+              descriptionElement.classList.remove('expanded');
+              button.classList.remove('expanded');
+              button.querySelector('span').textContent = 'Afficher plus';
+            } else {
+              // Déplier le texte complet
+              descriptionElement.textContent = descriptionElement.dataset.fullText;
+              descriptionElement.classList.add('expanded');
+              button.classList.add('expanded');
+              button.querySelector('span').textContent = 'Afficher moins';
+            }
+          }
+        }
+      });
+    }
+
+    // Cacher la vidéo
+    function hideVideo() {
+      DOM.videoSection.classList.remove('active');
+      
+      // Arrêter la vidéo en retirant la source de l'iframe
+      DOM.videoIframe.src = '';
+      state.activeVideo = null;
+      
+      // Mettre à jour la liste des vidéos
+      renderVideos();
+    }
+
+    // Rendu des vidéos
+    function renderVideos() {
+      const filteredVideos = filterVideos();
+      const groupedByYear = groupByYear(filteredVideos);
+      
+      DOM.videosTree.innerHTML = '';
+      
+      if (filteredVideos.length === 0) {
+        DOM.noResults.classList.add('show');
+        if (state.activeVideo && !filteredVideos.some(v => v.fbid === state.activeVideo.fbid)) {
+          hideVideo();
+        }
+        return;
+      }
+      
+      DOM.noResults.classList.remove('show');
+      
+      if (state.activeVideo && !filteredVideos.some(v => v.fbid === state.activeVideo.fbid)) {
+        hideVideo();
+      }
+      
+      Object.keys(groupedByYear)
+        .sort((a, b) => b - a)
+        .forEach(year => {
+          const yearSection = createYearSection(year, groupedByYear[year]);
+          DOM.videosTree.appendChild(yearSection);
+        });
+      
+      if (state.openYear && document.querySelector(`[data-year="${state.openYear}"]`)) {
+        const yearBtn = document.querySelector(`[data-year="${state.openYear}"]`);
+        yearBtn.click();
+      }
+    }
+
+    // Grouper les vidéos par année
+    function groupByYear(videos) {
+      return videos.reduce((groups, video) => {
+        if (!groups[video.year]) groups[video.year] = [];
+        groups[video.year].push(video);
+        return groups;
+      }, {});
+    }
+
+    // Créer une section année
+    function createYearSection(year, videos) {
+      const section = document.createElement('div');
+      section.className = 'year-section';
+      
+      const header = document.createElement('button');
+      header.className = 'year-header';
+      header.dataset.year = year;
+      header.type = 'button';
+      header.innerHTML = `
+        <span>${year} (${videos.length})</span>
+        <span class="year-icon">▶</span>
+      `;
+      
+      const panel = document.createElement('div');
+      panel.className = 'videos-panel';
+      
+      videos.forEach(video => {
+        const videoCard = createVideoCard(video);
+        panel.appendChild(videoCard);
+      });
+      
+      section.appendChild(header);
+      section.appendChild(panel);
+      
+      return section;
+    }
+
+    // Créer une carte vidéo avec miniature
+    function createVideoCard(video) {
+      const isActive = state.activeVideo && state.activeVideo.fbid === video.fbid;
+      const card = document.createElement('article');
+      card.className = `video-card ${isActive ? 'active' : ''}`;
+      card.dataset.fbid = video.fbid;
+      
+      // Créer la miniature seulement si elle est disponible
+      let thumbnailHtml = '';
+      if (video.thumbnail && video.thumbnail.trim() !== '') {
+        thumbnailHtml = `
+          <div class="video-thumbnail-container">
+            <img 
+              src="${video.thumbnail}" 
+              alt="${escapeHtml(video.titre_fr)}" 
+              class="video-thumbnail"
+              data-fbid="${video.fbid}"
+              loading="lazy"
+            >
+          </div>
+        `;
+      }
+      
+      // Créer les statistiques
+      let statsHtml = '';
+      if (video.reactions || video.commentaires || video.partages) {
+        statsHtml = `
+          <div class="video-list-stats">
+            ${video.reactions ? `<div class="video-list-stat"><i>👍</i> ${formatNumber(video.reactions)}</div>` : ''}
+            ${video.commentaires ? `<div class="video-list-stat"><i>💬</i> ${formatNumber(video.commentaires)}</div>` : ''}
+            ${video.partages ? `<div class="video-list-stat"><i>↪️</i> ${formatNumber(video.partages)}</div>` : ''}
+          </div>
+        `;
+      }
+      
+      // Description tronquée à 150 caractères
+      const description = video.description_fr || video.description_ar || '';
+      const truncatedDescription = truncateText(description, 150);
+      const descriptionHtml = description ? `
+        <div class="video-list-description">${escapeHtml(truncatedDescription)}</div>
+      ` : '';
+      
+      card.innerHTML = `
+        ${thumbnailHtml}
+        <h3 class="video-list-title-ar">${escapeHtml(video.titre_ar)}</h3>
+        <p class="video-list-title-fr">${escapeHtml(video.titre_fr)}</p>
+        ${descriptionHtml}
+        <div class="video-list-meta">
+          <div class="video-list-date">
+            <i>📅</i>
+            <span>${formatShortDate(video.date)}</span>
+          </div>
+          <div class="video-list-year">
+            Année: ${video.year}
+          </div>
+        </div>
+        ${statsHtml}
+        <div class="video-actions">
+          <button 
+            class="watch-btn ${isActive ? 'active' : ''}" 
+            data-fbid="${video.fbid}"
+            aria-label="${isActive ? 'Fermer la vidéo' : 'Voir la vidéo'}: ${escapeHtml(video.titre_fr)}"
+            type="button">
+            <span>▶</span> ${isActive ? 'Vidéo en cours' : 'Voir la vidéo'}
+          </button>
+          <a 
+            href="${video.url_facebook}" 
+            class="facebook-post-link" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            aria-label="Voir la publication sur Facebook">
+            <i>🔗</i> Publication
+          </a>
+        </div>
+      `;
+      
+      return card;
+    }
+
+    // Gestion des événements
+    function setupEventListeners() {
+      let searchTimeout;
+      DOM.searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          if (state.activeKeyword && DOM.searchInput.value !== state.activeKeyword) {
+            state.activeKeyword = null;
+            document.querySelectorAll('.keyword').forEach(k => k.classList.remove('active'));
+            document.querySelector('.keyword[data-keyword=""]').classList.add('active');
+          }
+          renderVideos();
+        }, 300);
+      });
+      
+      DOM.yearSelect.addEventListener('change', renderVideos);
+      
+      DOM.themeToggle.addEventListener('click', toggleTheme);
+      
+      DOM.closeVideo.addEventListener('click', hideVideo);
+      
+      DOM.videosTree.addEventListener('click', handleTreeClick);
+      
+      DOM.searchInput.addEventListener('touchstart', function(e) {
+        this.style.fontSize = '16px';
+      });
+      
+      DOM.searchInput.addEventListener('blur', function() {
+        this.style.fontSize = '';
+      });
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && state.activeVideo) {
+          hideVideo();
+        }
+      });
+    }
+
+    // Gérer les clics sur l'arborescence (miniatures et boutons)
+    function handleTreeClick(event) {
+      if (event.target.closest('.year-header')) {
+        const header = event.target.closest('.year-header');
+        const year = header.dataset.year;
+        const panel = header.nextElementSibling;
+        
+        const isOpen = header.classList.contains('open');
+        
+        if (window.innerWidth <= 768) {
+          document.querySelectorAll('.year-header').forEach(h => {
+            if (h !== header) {
+              h.classList.remove('open');
+              h.nextElementSibling.style.maxHeight = null;
+            }
+          });
+        }
+        
+        if (!isOpen) {
+          header.classList.add('open');
+          panel.style.maxHeight = panel.scrollHeight + 'px';
+          state.openYear = year;
+          localStorage.setItem('openYear', year);
+        } else {
+          header.classList.remove('open');
+          panel.style.maxHeight = null;
+          state.openYear = null;
+          localStorage.removeItem('openYear');
+        }
+      }
+      
+      // Clic sur une miniature
+      if (event.target.closest('.video-thumbnail')) {
+        const thumbnail = event.target.closest('.video-thumbnail');
+        const fbid = thumbnail.dataset.fbid;
+        const video = VIDEO_DATA.find(v => v.fbid === fbid);
+        
+        if (video) {
+          showVideo(video);
+        }
+        
+        if (window.innerWidth <= 768) {
+          thumbnail.style.transform = 'scale(0.98)';
+          setTimeout(() => {
+            thumbnail.style.transform = '';
+          }, 200);
+        }
+      }
+      
+      // Boutons "Voir la vidéo"
+      if (event.target.closest('.watch-btn')) {
+        const button = event.target.closest('.watch-btn');
+        const fbid = button.dataset.fbid;
+        const video = VIDEO_DATA.find(v => v.fbid === fbid);
+        
+        if (video) {
+          if (state.activeVideo && state.activeVideo.fbid === fbid) {
+            hideVideo();
+          } else {
+            showVideo(video);
+          }
+        }
+        
+        if (window.innerWidth <= 768) {
+          button.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            button.style.transform = '';
+          }, 200);
+        }
+      }
+      
+      // Empêcher la navigation pour les liens dans les cartes vidéo (sauf le lien Facebook)
+      if (event.target.closest('.facebook-post-link')) {
+        // Laisser le lien s'ouvrir normalement (target="_blank")
+        return;
+      }
+      
+      // Empêcher la propagation pour les autres éléments cliquables dans la carte
+      if (event.target.closest('.video-card')) {
+        event.stopPropagation();
+      }
+    }
+
+    // Basculer le thème
+    function toggleTheme() {
+      const isDark = document.body.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      DOM.themeToggle.textContent = isDark ? '☀️' : '🌓';
+      
+      if (window.innerWidth <= 768) {
+        DOM.themeToggle.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          DOM.themeToggle.style.transform = '';
+        }, 200);
+      }
+    }
+
+    // Restaurer les préférences
+    function restorePreferences() {
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.body.classList.add('dark');
+        DOM.themeToggle.textContent = '☀️';
+      }
+      
+      const savedYear = localStorage.getItem('openYear');
+      if (savedYear) {
+        state.openYear = savedYear;
+      }
+    }
+
+    // Optimisations spécifiques pour mobile
+    function optimizeForMobile() {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        document.body.classList.add('is-mobile');
+        
+        setTimeout(() => {
+          document.body.style.opacity = '0.99';
+          setTimeout(() => {
+            document.body.style.opacity = '';
+          }, 10);
+        }, 100);
+      }
+    }
+
+    // Échapper le HTML (sécurité)
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Gestionnaire pour le redimensionnement
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        document.querySelectorAll('.year-header.open').forEach(header => {
+          const panel = header.nextElementSibling;
+          if (panel) {
+            panel.style.maxHeight = panel.scrollHeight + 'px';
+          }
+        });
+      }, 250);
+    });
+
+    // Initialiser l'application
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>
