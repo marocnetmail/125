@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حصيلة أنشطة الوزارة من 2021 إلى 2025</title>
+<meta name="description" content="حصيلة أنشطة وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة من 2021 إلى 2025">
+<style>
+:root {
+  --primary-color: #9370DB;
+  --secondary-color: #BA55D3;
+  --accent-color: #6A5ACD;
+  --text-color: #333;
+  --light-bg: #f8f4ff;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --hover-shadow: 0 8px 20px rgba(147, 112, 219, 0.15);
+  --facebook-blue: #0866ff;
+  --facebook-blue-dark: #1877f2;
+  --soft-bg: #f0f2f5;
+  --transition: 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: #f0f2f5;
+  color: var(--text-color);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 clamp(12px, 3vw, 20px);
+}
+
+/* Header Styles */
+.header {
+  text-align: center;
+  padding: clamp(12px, 2vw, 16px);
+  margin: clamp(8px, 1.5vw, 12px) 0;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.12);
+  border: 1px solid rgba(147, 112, 219, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+.logo-arabic {
+  font-size: clamp(1rem, 1.5vw, 1.1rem);
+  font-weight: 700;
+  color: var(--accent-color);
+  line-height: 1.4;
+}
+
+.main-title {
+  text-align: center;
+  margin: clamp(15px, 3vw, 30px) 0;
+  padding: clamp(20px, 4vw, 30px);
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(147, 112, 219, 0.3);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 700;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Video Section */
+.video-section {
+  display: none;
+  margin: clamp(15px, 3vw, 25px) 0;
+  animation: fadeIn 0.5s ease;
+}
+
+.video-section.active {
+  display: block;
+}
+
+.video-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.video-header {
+  padding: clamp(15px, 3vw, 25px);
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.video-header h2 {
+  margin: 0;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.close-video {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition);
+  flex-shrink: 0;
+}
+
+.close-video:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+.video-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.video-info {
+  padding: clamp(20px, 3vw, 30px);
+}
+
+.video-title-ar {
+  font-weight: 800;
+  color: var(--primary-color);
+  font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+  margin-bottom: 15px;
+  text-align: right;
+  direction: rtl;
+}
+
+.video-title-fr {
+  font-style: italic;
+  color: var(--text-color);
+  opacity: 0.9;
+  margin-bottom: 20px;
+  font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+}
+
+.video-description {
+  color: var(--text-color);
+  opacity: 0.8;
+  font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+  line-height: 1.7;
+  margin: 20px 0;
+}
+
+.video-description.ar {
+  text-align: right;
+  direction: rtl;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(10px, 2vw, 15px);
+  justify-content: center;
+  margin: clamp(15px, 3vw, 25px) 0;
+}
+
+.search-input, .year-select {
+  flex: 1;
+  min-width: 200px;
+  padding: clamp(12px, 2vw, 14px) clamp(15px, 2.5vw, 20px);
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  background: white;
+  border-radius: 10px;
+  transition: all var(--transition);
+  outline: none;
+}
+
+.search-input:focus, .year-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(147, 112, 219, 0.1);
+}
+
+.theme-toggle {
+  padding: clamp(12px, 2vw, 14px) clamp(15px, 2.5vw, 20px);
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all var(--transition);
+  min-width: 60px;
+}
+
+.theme-toggle:hover {
+  background: var(--secondary-color);
+  transform: translateY(-2px);
+}
+
+/* Year Sections */
+.year-section {
+  margin-bottom: clamp(20px, 3vw, 30px);
+  background: white;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,.12);
+}
+
+.year-header {
+  width: 100%;
+  padding: clamp(16px, 2.5vw, 22px);
+  background: linear-gradient(to right, #f8f4ff, #ede7f6);
+  color: var(--accent-color);
+  border: none;
+  text-align: right;
+  font-size: clamp(1.2rem, 2vw, 1.4rem);
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color var(--transition);
+  gap: 15px;
+}
+
+.year-header:hover {
+  background: linear-gradient(to right, #ede7f6, #e1d9f0);
+}
+
+.year-count {
+  background: var(--primary-color);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  min-width: 40px;
+  text-align: center;
+}
+
+.videos-panel {
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.year-header.open + .videos-panel {
+  max-height: 5000px;
+  padding: clamp(15px, 2.5vw, 25px);
+}
+
+/* Video Cards - Style du modèle */
+.publication-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.12);
+  overflow: hidden;
+  margin-bottom: 20px;
+  animation: fadeIn 0.4s ease;
+  direction: rtl;
+}
+
+.publication-card:last-child {
+  margin-bottom: 0;
+}
+
+/* Style thumb du modèle */
+.thumb {
+  position: relative;
+  width: 100%;
+}
+
+.thumb img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+}
+
+.play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  color: white;
+  background: rgba(0,0,0,.35);
+  opacity: 0.9;
+  transition: opacity var(--transition);
+}
+
+.thumb:hover .play {
+  opacity: 1;
+  background: rgba(0,0,0,.4);
+}
+
+.video-duration {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+}
+
+.content {
+  padding: 16px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0866ff;
+  margin-bottom: 5px;
+}
+
+.date {
+  font-size: 14px;
+  color: #777;
+  margin: 5px 0 10px 0;
+}
+
+.desc {
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 10px 0;
+  color: #333;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #555;
+  margin: 15px 0;
+  padding: 10px 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.btn {
+  display: block;
+  text-align: center;
+  margin-top: 12px;
+  padding: 12px;
+  background: #0866ff;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all var(--transition);
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn:hover {
+  background: var(--facebook-blue-dark);
+  transform: translateY(-2px);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: clamp(20px, 3vw, 35px);
+  margin-top: clamp(30px, 5vw, 45px);
+  color: #666;
+  font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+  border-top: 1px solid #e4e6eb;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+}
+
+/* No Results */
+.no-results {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 1.1rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.12);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Dark Mode */
+.dark-mode {
+  --text-color: #e4e6eb;
+  --light-bg: #2a2a3a;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --soft-bg: #1a1a2e;
+}
+
+.dark-mode body {
+  background: #121212;
+  color: var(--text-color);
+}
+
+.dark-mode .header,
+.dark-mode .year-section,
+.dark-mode .publication-card,
+.dark-mode .video-container {
+  background: rgba(30, 30, 46, 0.95);
+  color: var(--text-color);
+}
+
+.dark-mode .video-description {
+  color: #d0d3d9;
+}
+
+.dark-mode .stats {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .thumb {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .search-input,
+.dark-mode .year-select {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-color);
+}
+
+.dark-mode .no-results {
+  background: rgba(30, 30, 46, 0.95);
+  color: #d0d3d9;
+}
+
+.dark-mode .title {
+  color: #4dabf7;
+}
+
+.dark-mode .desc {
+  color: #d0d3d9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .controls {
+    flex-direction: column;
+  }
+  
+  .search-input,
+  .year-select,
+  .theme-toggle {
+    width: 100%;
+    min-width: unset;
+  }
+  
+  .thumb img {
+    height: 200px;
+  }
+  
+  .play {
+    font-size: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .thumb img {
+    height: 180px;
+  }
+  
+  .title {
+    font-size: 18px;
+  }
+  
+  .desc {
+    font-size: 14px;
+  }
+  
+  .stats {
+    font-size: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .stats div {
+    flex: 1;
+    min-width: 45%;
+    text-align: center;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="logo-arabic">
+      وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة
+    </div>
+  </header>
+
+  <div class="main-title">
+    حصيلة أنشطة الوزارة من 2021 إلى 2025
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <input type="search" id="searchInput" class="search-input" placeholder="Rechercher des vidéos..." aria-label="Rechercher des vidéos">
+    <select id="yearSelect" class="year-select" aria-label="Filtrer par année">
+      <option value="">Toutes les années</option>
+      <option value="2025">2025</option>
+      <option value="2024">2024</option>
+      <option value="2023">2023</option>
+      <option value="2022">2022</option>
+      <option value="2021">2021</option>
+      <option value="2019">2019</option>
+    </select>
+    <button id="themeToggle" class="theme-toggle" aria-label="Basculer le thème">🌓</button>
+  </div>
+
+  <!-- Video Section -->
+  <section id="videoSection" class="video-section" aria-label="Vue détaillée de la vidéo">
+    <div id="videoContainer" class="video-container">
+      <div class="video-header">
+        <h2 id="videoTitleHeader">Titre de la vidéo</h2>
+        <button id="closeVideo" class="close-video" aria-label="Fermer la vidéo">×</button>
+      </div>
+      
+      <div class="video-wrapper">
+        <iframe id="videoIframe" class="video-iframe" title="Lecteur vidéo Facebook" allowfullscreen></iframe>
+      </div>
+      
+      <div class="video-info">
+        <div id="videoTitleAr" class="video-title-ar"></div>
+        <div id="videoTitleFr" class="video-title-fr"></div>
+        
+        <div id="videoDescriptionContainer">
+          <div id="videoDescriptionAr" class="video-description ar"></div>
+          <div id="videoDescriptionFr" class="video-description"></div>
+        </div>
+        
+        <a id="facebookLink" class="btn" target="_blank" rel="noopener noreferrer" aria-label="Voir la publication sur Facebook" style="margin-top: 20px;">
+          📘 مشاهدة الفيديو على فيسبوك
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Videos Tree -->
+  <main id="videosTree" aria-label="Liste des vidéos"></main>
+
+  <footer class="footer">
+    <p>جميع الحقوق محفوظة &copy; وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة</p>
+    <p style="margin-top: 10px; font-size: 0.85rem; color: #888;">
+      آخر تحديث: يناير 2024
+    </p>
+  </footer>
+</div>
+
+<script>
+// Données des vidéos avec tags et hashtags
+const VIDEO_DATA = [
+  {
+    "fbid": "664426331407897",
+    "date": "2022-01-18",
+    "year": "2022",
+    "titre_ar": "تخليد اليوم الوطني للمهندس المعماري",
+    "titre_fr": "Célébration de la Journée Nationale de l'Architecte",
+    "description_ar": "تخليد اليوم الوطني للمهندس المعماري تحت شعار: \"دور المهندس المعماري في النموذج التنموي الجديد\"، حيث نظمت الوزارة فعاليات وأنشطة للاحتفاء بدور المهندسين المعماريين في تشكيل المشهد الحضري والمساهمة في التنمية المستدامة.",
+    "description_fr": "Célébration de la Journée Nationale de l'Architecte sous le thème : \"Le rôle de l'architecte dans le nouveau modèle de développement\". Le ministère a organisé des événements et activités pour célébrer le rôle des architectes dans la formation du paysage urbain et leur contribution au développement durable.",
+    "url_facebook": "https://www.facebook.com/MATUHPV/videos/664426331407897/",
+    "thumbnail": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/271810389_664431154740748_9199244546718538407_n.jpg",
+    "type": "video",
+    "views": 856,
+    "reactions": 45,
+    "commentaires": 23,
+    "partages": 15,
+    "duration_seconds": 120,
+    "tags": "Vidéo, تخليد, اليوم, الوطني, للمهندس, المعماري, شعار, المهندس, المعماري, النموذج",
+    "hashtags": "#اليوم_الوطني_للمهندس_المعماري #النموذج_التنموي_الجديد #مهندس_معماري #تنمية_مستدامة"
+  },
+  {
+    "fbid": "3055743178046962",
+    "date": "2022-01-24",
+    "year": "2022",
+    "titre_ar": "الجزء الاول من الجلسة العمومية للأسئلة الأسبوعية الشفوية",
+    "titre_fr": "الجزء الاول من الجلسة العمومية للأسئلة الأسبوعية الشفوية",
+    "description_ar": "الجزء الاول من الجلسة العمومية للأسئلة الأسبوعية الشفوية",
+    "description_fr": "الجزء الاول من الجلسة العمومية للأسئلة الأسبوعية الشفوية",
+    "url_facebook": "https://www.facebook.com/MATUHPV/videos/3055743178046962/",
+    "thumbnail": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/272058391_3055758311378782_7854534478366822538_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=103&ccb=1-7&_nc_sid=50ce42&_nc_eui2=AeGQvdO5tnloEtOUUr17xt7jfjxJQ2FS5LB-PElDYVLksEXJT2vOjeh18Zit0cFmLzJDM3RobebZN6aIK7kGfaj9&_nc_ohc=wBRxWPO9PyoQ7kNvwG6zrqu&_nc_oc=AdlwI02Sb_kchiIAnUiEHXh5b9-0eHyEvzeDCpiwpSAwWfsb5fbd-AuYBiasa8sbTZI&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=w0nzlL18YbDPSiW721CasA&oh=00_AfpwKxPHXx3v1JNRBh7bI-KOURAMltbQ1trba_glU9LZqA&oe=695F46B8",
+    "type": "video",
+    "views": 1031,
+    "reactions": 0,
+    "commentaires": 0,
+    "partages": 0,
+    "tags": "الجزء, الاول, الجلسة, العمومية, للأسئلة, الأسبوعية, الشفوية, الجزء, الاول, الجلسة",
+    "hashtags": ""
+  },
+  {
+    "fbid": "989618614971390",
+    "date": "2022-01-24",
+    "year": "2022",
+    "titre_ar": "الجزء الثاني من الجلسة العمومية للأسئلة الأسبوعية الشفوية",
+    "titre_fr": "الجزء الثاني من الجلسة العمومية للأسئلة الأسبوعية الشفوية",
+    "description_ar": "الجزء الثاني من الجلسة العمومية للأسئلة الأسبوعية الشفوية",
+    "description_fr": "الجزء الثاني من الجلسة العمومية للأسئلة الأسبوعية الشفوية",
+    "url_facebook": "https://www.facebook.com/MATUHPV/videos/989618614971390/",
+    "thumbnail": "https://scontent-iad3-1.xx.fbcdn.net/v/t15.5256-10/272009728_989624708304114_2331884773414441892_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=107&ccb=1-7&_nc_sid=50ce42&_nc_eui2=AeFRF6z7te8zUZHnqZ-a6TgNYGGGwicNZh9gYYbCJw1mHxZwxwANEyIYJRNaNaroCP3yEtbW9FsTf5cjXObeapPL&_nc_ohc=ECwU8qHBlIcQ7kNvwEFdRVX&_nc_oc=AdkepV4rNIuzbSLVOhILinRjmO6-76N0AB-teLmKs62w7vtGyKiRK_ZXxP-lbP78RBg&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=960Z-qEMxtepbnBYDMZcfw&oh=00_AfqU9-AP7F_N1G4yACiUro2bW7aF1CKo-E92w8JqoHYZ2w&oe=695F464F",
+    "type": "video",
+    "views": 1808,
+    "reactions": 0,
+    "commentaires": 0,
+    "partages": 0,
+    "tags": "الجزء, الثاني, الجلسة, العمومية, للأسئلة, الأسبوعية, الشفوية, الجزء, الثاني, الجلسة",
+    "hashtags": ""
+  },
+  {
+    "fbid": "334080068575778",
+    "date": "2022-01-22",
+    "year": "2022",
+    "titre_ar": "Vidéo",
+    "titre_fr": "Vidéo",
+    "description_ar": "الجمعة 21 يناير 2022، إقليم الصويرة. أبرز لحظات الزيارة الميدانية التي قامت بها السيدة فاطمة الزهراء المنصوري، وزيرة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة، لإقليم الصويرة قصد الوقوف على تقدم أشغال الأوراش المتعلقة بمشاريع البرنامج التكميلي لإعادة تأهيل مدينة الصويرة.",
+    "description_fr": "الجمعة 21 يناير 2022، إقليم الصويرة. أبرز لحظات الزيارة الميدانية التي قامت بها السيدة فاطمة الزهراء المنصوري، وزيرة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة، لإقليم الصويرة قصد الوقوف على تقدم أشغال الأوراش المتعلقة بمشاريع البرنامج التكميلي لإعادة تأهيل مدينة الصويرة.",
+    "url_facebook": "https://www.facebook.com/MATUHPV/videos/334080068575778/",
+    "thumbnail": "https://scontent-iad3-1.xx.fbcdn.net/v/t15.5256-10/271947305_334080891909029_5638228967049700018_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=50ce42&_nc_eui2=AeEpM31z8bB_FsQTeGL_QLx2aMUjkQggXOZoxSORCCBc5uBGoq0k6BLeC59bnUQQr2rJ8ag2rVMul6JEF9tJAJHu&_nc_ohc=JD9XsiZQCLMQ7kNvwHSYUOI&_nc_oc=Adl2SwW53R2ej84yy7jnDQRyVGTqV3IH_64jJOcctMlkleaV6bOC_f1pgcgswzp3oSw&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=xyPmYgVjKHX6C5xwALu3NQ&oh=00_AfpeWkdbvKThZ9SEZE6eNgR9ptQ0DFGu1-zw04pDDAEDww&oe=695F3159",
+    "type": "video",
+    "views": 2862,
+    "reactions": 0,
+    "commentaires": 0,
+    "partages": 0,
+    "tags": "Vidéo, الجمعة, يناير, 2022،, إقليم, الصويرة, أبرز, لحظات, الزيارة, الميدانية",
+    "hashtags": ""
+  },
+  {
+    "fbid": "664426331407897",
+    "date": "2022-01-18",
+    "year": "2022",
+    "titre_ar": "Vidéo",
+    "titre_fr": "Vidéo",
+    "description_ar": "تخليد اليوم الوطني للمهندس المعماري تحت شعار: \"دور المهندس المعماري في النموذج التنموي الجديد\"",
+    "description_fr": "تخليد اليوم الوطني للمهندس المعماري تحت شعار: \"دور المهندس المعماري في النموذج التنموي الجديد\"",
+    "url_facebook": "https://www.facebook.com/MATUHPV/videos/664426331407897/",
+    "thumbnail": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/271810389_664431154740748_9199244546718538407_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=50ce42&_nc_eui2=AeHU4E6vb69Ovl8_YFQMnvzmYUH4g6Bepa1hQfiDoF6lrcTDXl3nHWtktN4MYNgnfFImRrEMySZyWXwvrLohjHh6&_nc_ohc=vcGDoYWY9FEQ7kNvwEo106j&_nc_oc=AdmVdvdD0_MO9-B_dE5ofUrQqPK4u8XSdMDl9rlmZuELpZhSV1-4d7_3cMwhxS7eERM&_nc_zt=23&_nc_ht=scontent-iad3-2.xx&_nc_gid=1Nx4hr4nMNrM9XVqvMt0Gg&oh=00_Afq3l9Ai_85q8PIbESvoMSjUibHk5tE1RKlrNCYULQcWrA&oe=695F35E3",
+    "type": "video",
+    "views": 856,
+    "reactions": 0,
+    "commentaires": 0,
+    "partages": 0,
+    "tags": "Vidéo, تخليد, اليوم, الوطني, للمهندس, المعماري, شعار, المهندس, المعماري, النموذج",
+    "hashtags": ""
+  },
+  {
+    "fbid": "2427160320750911",
+    "date": "2022-01-14",
+    "year": "2022",
+    "titre_ar": "Vidéo",
+    "titre_fr": "Vidéo",
+    "description_ar": "أقوى لحظات ورشة العمل الخاصة بانطلاقة إنجاز التقرير الوطني الأول لتنفيذ الخطة الحضرية الجديدة.",
+    "description_fr": "أقوى لحظات ورشة العمل الخاصة بانطلاقة إنجاز التقرير الوطني الأول لتنفيذ الخطة الحضرية الجديدة.",
+    "url_facebook": "https://www.facebook.com/MATUHPV/videos/2427160320750911/",
+    "thumbnail": "https://scontent-iad3-1.xx.fbcdn.net/v/t15.5256-10/271752785_2427160660750877_4375624258705510721_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=109&ccb=1-7&_nc_sid=50ce42&_nc_eui2=AeE5VVVn7ssyTtRfHWX2LCgAh8kMLVyacmCHyQwtXJpyYKQ7QYks8nnjVCrXigAr9jnyqSPaghs7L7Z2SD3JX8p2&_nc_ohc=_6xNiIV6wc0Q7kNvwGbQRo7&_nc_oc=AdnZkO9ZOQCMBaCZpIE8tJloaoknzUhdID5UakCnVcEvtK5YG9uKO39ZFg_wrUvWeJA&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=PzA7zbKKAYabcLW8o64DLg&oh=00_AfqvH_cKBXS4JZLkoeHY1wC6Q2vMC3VJzU7A4ZeYXVC2Bg&oe=695F53A2",
+    "type": "video",
+    "views": 1829,
+    "reactions": 0,
+    "commentaires": 0,
+    "partages": 0,
+    "tags": "Vidéo, أقوى, لحظات, ورشة, العمل, الخاصة, بانطلاقة, إنجاز, التقرير, الوطني",
+    "hashtags": ""
+  },
+  {
+    "fbid": "616740436268344",
+    "date": "2022-01-07",
+    "year": "2022",
+    "titre_ar": "Vidéo",
+    "titre_fr": "Vidéo",
+    "description_ar": "أهم محطات اللقاء التشاوري الذي قامت به السيدة فلطمة الزهراء المنصوري، وزيرة إعداد التراب الوطني و التعمير و الاسكان و سياسة المدينة بالدار البيضاء، حول البرنامج الجديد للقضاء على ما تبقى من دور الصفيح، و كذا الزيارة التفقدية لمشروع إعادة الإيواء بدوار ولاد عزوز بمقاطعة الحي الحسني. Retour sur les moments forts de la réunion de communication et d'échange, effectuée par Madame Fatima Ezzahra El Mansouri, Ministre de l'Aménagement du Territoire National, de l'Urbanisme, de l'Habitat et de la Politique de la Ville, autour du programme de la résorption des bidonvilles restants, ainsi que la visite de terrain du projet de recasement du Douar Oulad Azouz à la Préfecture Hay Hassani.",
+    "description_fr": "أهم محطات اللقاء التشاوري الذي قامت به السيدة فلطمة الزهراء المنصوري، وزيرة إعداد التراب الوطني و التعمير و الاسكان و سياسة المدينة بالدار البيضاء، حول البرنامج الجديد للقضاء على ما تبقى من دور الصفيح، و كذا الزيارة التفقدية لمشروع إعادة الإيواء بدوار ولاد عزوز بمقاطعة الحي الحسني. Retour sur les moments forts de la réunion de communication et d'échange, effectuée par Madame Fatima Ezzahra El Mansouri, Ministre de l'Aménagement du Territoire National, de l'Urbanisme, de l'Habitat et de la Politique de la Ville, autour du programme de la résorption des bidonvilles restants, ainsi que la visite de terrain du projet de recasement du Douar Oulad Azouz à la Préfecture Hay Hassani.",
+    "url_facebook": "https://www.facebook.com/MATUHPV/videos/616740436268344/",
+    "thumbnail": "https://scontent-iad3-1.xx.fbcdn.net/v/t15.5256-10/271245166_616741992934855_1786000577394023383_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=108&ccb=1-7&_nc_sid=50ce42&_nc_eui2=AeGJ7ylqAK6pmns8e-3Z6Wi0rOhgz4VZSsKs6GDPhVlKwpkbqxh7VY67bTFC2ukMw7i2Ea0r4XL5iYDGngoQRonx&_nc_ohc=JYufH0xlb5AQ7kNvwGenwIw&_nc_oc=AdkUvR6-vH7ZfigSF7LI6c36CvvKGvTeRKFmHvM78gW9utVIIXnPGthy9AM3PqX5cUY&_nc_zt=23&_nc_ht=scontent-iad3-1.xx&_nc_gid=BtCV5ZA5_ymxeL-f20nlcA&oh=00_AfpeO0ix0b8PLqi_nCYd0QDdFCIHITtkLySgvmTLikaBNQ&oe=695F5468",
+    "type": "video",
+    "views": 1451,
+    "reactions": 0,
+    "commentaires": 0,
+    "partages": 0,
+    "tags": "Vidéo, محطات, اللقاء, التشاوري, الذي, قامت, السيدة, فلطمة, الزهراء, المنصوري،",
+    "hashtags": ""
+  }
+];
+
+// État de l'application
+const state = {
+  openYear: null,
+  activeVideo: null,
+  searchTerm: '',
+  selectedYear: ''
+};
+
+// Initialisation
+function init() {
+  renderVideos();
+  setupEventListeners();
+  restoreTheme();
+  updateLastUpdated();
+}
+
+// Rendre les vidéos
+function renderVideos() {
+  const videosTree = document.getElementById('videosTree');
+  videosTree.innerHTML = '';
+  
+  const filteredVideos = filterVideos();
+  
+  if (filteredVideos.length === 0) {
+    videosTree.innerHTML = `
+      <div class="no-results">
+        <p style="text-align: center; color: #666;">
+          لم يتم العثور على أي فيديو يطابق البحث
+        </p>
+      </div>
+    `;
+    return;
+  }
+  
+  const grouped = groupVideosByYear(filteredVideos);
+  
+  Object.keys(grouped).sort((a, b) => b - a).forEach(year => {
+    const yearSection = createYearSection(year, grouped[year]);
+    videosTree.appendChild(yearSection);
+  });
+  
+  if (state.openYear) {
+    const yearHeader = document.querySelector(`[data-year="${state.openYear}"]`);
+    if (yearHeader) toggleYearPanel(yearHeader);
+  }
+}
+
+// Filtrer les vidéos
+function filterVideos() {
+  return VIDEO_DATA.filter(video => {
+    const matchesSearch = !state.searchTerm || 
+      [video.titre_ar, video.titre_fr, video.description_ar, video.description_fr, video.tags || '', video.hashtags || '']
+        .some(text => text?.toLowerCase().includes(state.searchTerm.toLowerCase()));
+    
+    const matchesYear = !state.selectedYear || video.year === state.selectedYear;
+    
+    return matchesSearch && matchesYear;
+  });
+}
+
+// Grouper par année
+function groupVideosByYear(videos) {
+  return videos.reduce((groups, video) => {
+    if (!groups[video.year]) groups[video.year] = [];
+    groups[video.year].push(video);
+    return groups;
+  }, {});
+}
+
+// Créer une section d'année
+function createYearSection(year, videos) {
+  const section = document.createElement('section');
+  section.className = 'year-section';
+  section.setAttribute('aria-label', `Vidéos de l'année ${year}`);
+  
+  const header = document.createElement('button');
+  header.className = 'year-header';
+  header.dataset.year = year;
+  header.setAttribute('aria-expanded', 'false');
+  header.innerHTML = `
+    سنة ${year} <span class="year-count">${videos.length}</span>
+  `;
+  
+  const panel = document.createElement('div');
+  panel.className = 'videos-panel';
+  panel.setAttribute('role', 'region');
+  
+  videos.forEach(video => {
+    const videoCard = createVideoCard(video);
+    panel.appendChild(videoCard);
+  });
+  
+  section.appendChild(header);
+  section.appendChild(panel);
+  
+  return section;
+}
+
+// Créer une carte vidéo (style du modèle)
+function createVideoCard(video) {
+  const card = document.createElement('article');
+  card.className = 'publication-card';
+  card.setAttribute('aria-label', video.titre_ar);
+  
+  const durationHtml = video.duration_seconds ? 
+    `<div class="video-duration">${formatDuration(video.duration_seconds)}</div>` : '';
+  
+  card.innerHTML = `
+    <div class="thumb">
+      <img src="${video.thumbnail}" alt="${video.titre_fr}" loading="lazy">
+      <div class="play">▶</div>
+      ${durationHtml}
+    </div>
+    
+    <div class="content">
+      <div class="title">${escapeHtml(video.titre_ar)}</div>
+      <div class="date">${formatDate(video.date)} — ⏱ ${formatDuration(video.duration_seconds || 0)} دقيقة</div>
+      <div class="desc">${escapeHtml(video.description_ar.substring(0, 150))}...</div>
+      
+      <div class="stats">
+        <div>👁 ${formatNumber(video.views || 0)} مشاهدة</div>
+        <div>👍 ${formatNumber(video.reactions || 0)} إعجاب</div>
+        <div>💬 ${formatNumber(video.commentaires || 0)} تعليق</div>
+        <div>↗ ${formatNumber(video.partages || 0)} مشاركة</div>
+      </div>
+      
+      <button class="btn" data-fbid="${video.fbid}" aria-label="مشاهدة ${video.titre_ar} على فيسبوك">
+        مشاهدة الفيديو على فيسبوك
+      </button>
+    </div>
+  `;
+  
+  // Ajouter les événements
+  const thumb = card.querySelector('.thumb');
+  thumb?.addEventListener('click', () => showVideo(video));
+  
+  const btn = card.querySelector('.btn');
+  btn?.addEventListener('click', () => window.open(video.url_facebook, '_blank'));
+  
+  return card;
+}
+
+// Afficher une vidéo
+function showVideo(video) {
+  state.activeVideo = video;
+  
+  // Mettre à jour l'interface
+  document.getElementById('videoTitleHeader').textContent = truncateText(video.titre_fr, 60);
+  document.getElementById('videoTitleAr').textContent = video.titre_ar;
+  document.getElementById('videoTitleFr').textContent = video.titre_fr;
+  document.getElementById('videoDescriptionAr').textContent = video.description_ar;
+  document.getElementById('videoDescriptionFr').textContent = video.description_fr;
+  document.getElementById('facebookLink').href = video.url_facebook;
+  
+  // Charger l'iframe
+  loadVideoIframe(video);
+  
+  // Afficher la section
+  document.getElementById('videoSection').classList.add('active');
+  document.getElementById('videoSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Charger l'iframe vidéo
+function loadVideoIframe(video) {
+  const cleanUrl = video.url_facebook.split('?')[0];
+  const embedUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(cleanUrl)}&show_text=false&width=560`;
+  document.getElementById('videoIframe').src = embedUrl;
+}
+
+// Cacher la vidéo
+function hideVideo() {
+  state.activeVideo = null;
+  document.getElementById('videoSection').classList.remove('active');
+  document.getElementById('videoIframe').src = '';
+}
+
+// Basculer le panneau d'année
+function toggleYearPanel(header) {
+  const panel = header.nextElementSibling;
+  const isOpen = header.classList.contains('open');
+  
+  if (isOpen) {
+    header.classList.remove('open');
+    header.setAttribute('aria-expanded', 'false');
+    panel.style.maxHeight = null;
+    state.openYear = null;
+  } else {
+    header.classList.add('open');
+    header.setAttribute('aria-expanded', 'true');
+    panel.style.maxHeight = panel.scrollHeight + 'px';
+    state.openYear = header.dataset.year;
+  }
+}
+
+// Formater la date
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const options = { day: 'numeric', month: 'long', year: 'numeric' };
+  return date.toLocaleDateString('ar-MA', options);
+}
+
+// Formater la durée
+function formatDuration(seconds) {
+  if (!seconds) return '0:00';
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+// Formater les nombres
+function formatNumber(num) {
+  if (!num) return '0';
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+// Tronquer le texte
+function truncateText(text, maxLength) {
+  if (!text) return '';
+  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+}
+
+// Échapper le HTML
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// Configuration des événements
+function setupEventListeners() {
+  // Recherche
+  document.getElementById('searchInput').addEventListener('input', (e) => {
+    state.searchTerm = e.target.value;
+    renderVideos();
+  });
+  
+  // Filtre par année
+  document.getElementById('yearSelect').addEventListener('change', (e) => {
+    state.selectedYear = e.target.value;
+    renderVideos();
+  });
+  
+  // Thème
+  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+  
+  // Fermer la vidéo
+  document.getElementById('closeVideo').addEventListener('click', hideVideo);
+  
+  // Gérer les clics sur les années
+  document.getElementById('videosTree').addEventListener('click', (e) => {
+    if (e.target.closest('.year-header')) {
+      const header = e.target.closest('.year-header');
+      toggleYearPanel(header);
+    }
+  });
+  
+  // Touche Échap pour fermer la vidéo
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && state.activeVideo) {
+      hideVideo();
+    }
+  });
+}
+
+// Basculer le thème
+function toggleTheme() {
+  const isDark = document.body.classList.toggle('dark-mode');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  document.getElementById('themeToggle').textContent = isDark ? '☀️' : '🌓';
+}
+
+// Restaurer le thème
+function restoreTheme() {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    document.getElementById('themeToggle').textContent = '☀️';
+  }
+}
+
+// Mettre à jour la date de dernière mise à jour
+function updateLastUpdated() {
+  const now = new Date();
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const dateString = now.toLocaleDateString('ar-MA', options);
+  document.querySelector('.footer p:last-child').textContent = `آخر تحديث: ${dateString}`;
+}
+
+// Démarrer l'application
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
