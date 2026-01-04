@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حصيلة أنشطة الوزارة من 2021 إلى 2025</title>
+<meta name="description" content="حصيلة أنشطة وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة من 2021 إلى 2025">
+<style>
+:root {
+  --primary-color: #9370DB;
+  --secondary-color: #BA55D3;
+  --accent-color: #6A5ACD;
+  --text-color: #333;
+  --light-bg: #f8f4ff;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --hover-shadow: 0 8px 20px rgba(147, 112, 219, 0.15);
+  --facebook-blue: #0866ff;
+  --facebook-blue-dark: #1877f2;
+  --soft-bg: #f0f2f5;
+  --transition: 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Arial', sans-serif;
+  background: linear-gradient(135deg, #f5f0ff 0%, #f9f7ff 100%);
+  color: var(--text-color);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 clamp(12px, 3vw, 20px);
+}
+
+/* Header Styles */
+.header {
+  text-align: center;
+  padding: clamp(12px, 2vw, 16px);
+  margin: clamp(8px, 1.5vw, 12px) 0;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(147, 112, 219, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+.logo-arabic {
+  font-size: clamp(1rem, 1.5vw, 1.1rem);
+  font-weight: 700;
+  color: var(--accent-color);
+  line-height: 1.4;
+}
+
+.main-title {
+  text-align: center;
+  margin: clamp(15px, 3vw, 30px) 0;
+  padding: clamp(20px, 4vw, 30px);
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(147, 112, 219, 0.3);
+  font-size: clamp(1.8rem, 4vw, 2.5rem); /* Augmenté */
+  font-weight: 800; /* Plus gras */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.5px;
+}
+
+/* Video Section - Niveau image */
+.video-section {
+  display: none;
+  margin: clamp(15px, 3vw, 25px) 0;
+  animation: fadeIn 0.5s ease;
+  position: relative;
+  top: 0;
+}
+
+.video-section.active {
+  display: block;
+}
+
+.video-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* Ombre plus prononcée */
+  overflow: hidden;
+  border: 1px solid rgba(147, 112, 219, 0.15);
+}
+
+.video-header {
+  padding: clamp(15px, 3vw, 25px);
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.video-header h2 {
+  margin: 0;
+  font-size: clamp(1.3rem, 2.5vw, 1.6rem); /* Augmenté */
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.close-video {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+
+.close-video:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+.video-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.video-info {
+  padding: clamp(20px, 3vw, 30px);
+}
+
+.video-title-ar {
+  font-weight: 800;
+  color: var(--primary-color);
+  font-size: clamp(1.5rem, 3vw, 1.9rem); /* Augmenté */
+  margin-bottom: 15px;
+  text-align: right;
+  direction: rtl;
+  line-height: 1.4;
+}
+
+.video-title-fr {
+  font-style: italic;
+  color: var(--text-color);
+  opacity: 0.9;
+  margin-bottom: 25px;
+  font-size: clamp(1.2rem, 2vw, 1.5rem); /* Augmenté */
+  line-height: 1.4;
+}
+
+.video-description {
+  color: var(--text-color);
+  opacity: 0.8;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: 1.7;
+  margin: 20px 0;
+}
+
+.video-description.ar {
+  text-align: right;
+  direction: rtl;
+}
+
+/* Tags Styles */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 15px;
+  background: var(--light-bg);
+  color: var(--primary-color);
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--transition);
+  border: 1px solid rgba(147, 112, 219, 0.2);
+}
+
+.tag:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(147, 112, 219, 0.3);
+}
+
+.tag-icon {
+  font-size: 0.9rem;
+}
+
+.hashtag {
+  background: rgba(147, 112, 219, 0.1);
+  color: var(--accent-color);
+  border: 1px solid rgba(106, 90, 205, 0.2);
+}
+
+.hashtag:hover {
+  background: var(--accent-color);
+  color: white;
+}
+
+.video-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: clamp(15px, 2vw, 20px);
+  margin: 25px 0;
+  padding: clamp(15px, 2vw, 20px);
+  background: var(--light-bg);
+  border-radius: 16px;
+  border: 1px solid rgba(147, 112, 219, 0.1);
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.meta-icon {
+  font-size: 1.5rem;
+  opacity: 0.9;
+  color: var(--primary-color);
+}
+
+.meta-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.meta-label {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.meta-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.video-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(10px, 1.5vw, 15px);
+  margin: 25px 0;
+  padding: clamp(15px, 2vw, 20px);
+  background: var(--light-bg);
+  border-radius: 16px;
+  border: 1px solid rgba(147, 112, 219, 0.1);
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: white;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  flex: 1;
+  min-width: 140px;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.stat-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+}
+
+.facebook-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: clamp(14px, 2.5vw, 18px) clamp(22px, 3.5vw, 30px);
+  background: var(--facebook-blue);
+  color: white;
+  text-decoration: none;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  transition: all var(--transition);
+  margin-top: 25px;
+  width: fit-content;
+  border: none;
+}
+
+.facebook-link:hover {
+  background: var(--facebook-blue-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(8, 102, 255, 0.4);
+}
+
+.facebook-icon {
+  font-size: 1.4rem;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(10px, 2vw, 15px);
+  justify-content: center;
+  margin: clamp(15px, 3vw, 25px) 0;
+}
+
+.search-input, .year-select {
+  flex: 1;
+  min-width: 220px;
+  padding: clamp(14px, 2.5vw, 16px) clamp(18px, 3vw, 24px);
+  font-size: 1.1rem;
+  border: 2px solid #ddd;
+  background: white;
+  border-radius: 12px;
+  transition: all var(--transition);
+  outline: none;
+  font-weight: 500;
+}
+
+.search-input:focus, .year-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(147, 112, 219, 0.15);
+  transform: translateY(-2px);
+}
+
+.theme-toggle {
+  padding: clamp(14px, 2.5vw, 16px) clamp(18px, 3vw, 24px);
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1.3rem;
+  transition: all var(--transition);
+  min-width: 70px;
+  font-weight: 600;
+}
+
+.theme-toggle:hover {
+  background: var(--secondary-color);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(147, 112, 219, 0.3);
+}
+
+/* Year Sections */
+.year-section {
+  margin-bottom: clamp(25px, 4vw, 35px);
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(147, 112, 219, 0.1);
+  transition: transform var(--transition);
+}
+
+.year-section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Year-header avec arrière-plan foncé */
+.year-header {
+  width: 100%;
+  padding: clamp(18px, 3vw, 25px);
+  background: linear-gradient(135deg, #2d2b55 0%, #4a3f8c 100%); /* Fond plus foncé */
+  color: white;
+  border: none;
+  text-align: right;
+  font-size: clamp(1.4rem, 2.5vw, 1.7rem);
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all var(--transition);
+  gap: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.year-header:hover {
+  background: linear-gradient(135deg, #3a3780 0%, #5a4da3 100%);
+}
+
+.year-count {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  min-width: 50px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.videos-panel {
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.year-header.open + .videos-panel {
+  max-height: 5000px;
+  padding: clamp(20px, 3vw, 30px);
+}
+
+/* Publication Cards - Encadrement professionnel */
+.publication-card {
+  padding: clamp(25px, 4vw, 35px);
+  margin: clamp(20px, 3vw, 30px) 0;
+  border-radius: 20px;
+  animation: fadeIn 0.4s ease;
+  direction: rtl;
+  background: white;
+  border: 2px solid rgba(147, 112, 219, 0.1);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.publication-card:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 5px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+  border-radius: 0 20px 20px 0;
+}
+
+.publication-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(147, 112, 219, 0.2);
+  border-color: rgba(147, 112, 219, 0.3);
+}
+
+.publication-card:last-child {
+  margin-bottom: 0;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: clamp(18px, 3vw, 25px);
+  padding-bottom: clamp(15px, 2.5vw, 20px);
+  border-bottom: 2px solid #f0f0f0;
+  gap: clamp(12px, 2.5vw, 18px);
+}
+
+.avatar {
+  width: clamp(60px, 8vw, 75px);
+  height: clamp(60px, 8vw, 75px);
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 800;
+  font-size: clamp(1.5rem, 2.5vw, 1.8rem);
+  box-shadow: 0 6px 15px rgba(147, 112, 219, 0.3);
+  flex-shrink: 0;
+  border: 3px solid white;
+}
+
+.page-name {
+  font-weight: 800;
+  color: var(--text-color);
+  font-size: clamp(1.3rem, 2.2vw, 1.5rem);
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+
+.post-date {
+  font-size: 1rem;
+  color: #ffffff;
+  background: linear-gradient(135deg, #6A5ACD, #9370DB);
+  padding: 8px 18px;
+  border-radius: 25px;
+  display: inline-block;
+  margin-top: 5px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(106, 90, 205, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.thumb {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  margin: clamp(18px, 3vw, 28px) 0;
+  cursor: pointer;
+  background: #f5f5f5;
+  transition: all var(--transition);
+  border: 2px solid white;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.thumb:hover {
+  transform: scale(1.03);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+}
+
+.thumb img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--transition);
+}
+
+.video-thumb {
+  aspect-ratio: 16/9;
+}
+
+.reel-thumb {
+  aspect-ratio: 9/16;
+  max-width: 350px;
+  margin: clamp(18px, 3vw, 28px) auto;
+  border-radius: 20px;
+  border: 4px solid white;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.play {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(50px, 8vw, 70px);
+  color: white;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  transition: all var(--transition);
+  opacity: 0.9;
+}
+
+.play:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.video-duration {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.post-content {
+  font-size: clamp(1.1rem, 1.8vw, 1.25rem);
+  line-height: 1.8;
+  margin: clamp(18px, 3vw, 28px) 0;
+  color: #444;
+  text-align: right;
+}
+
+.post-content strong {
+  color: var(--accent-color);
+  font-weight: 800;
+  display: block;
+  margin-bottom: 12px;
+  font-size: clamp(1.3rem, 2.2vw, 1.5rem);
+}
+
+.description-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.description-text {
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+.description-text.truncated {
+  max-height: 150px;
+  overflow: hidden;
+  position: relative;
+}
+
+.description-text.truncated::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, white);
+}
+
+.see-more-btn {
+  background: rgba(147, 112, 219, 0.1);
+  border: 1px solid rgba(147, 112, 219, 0.3);
+  color: var(--primary-color);
+  cursor: pointer;
+  font-weight: 700;
+  padding: 10px 20px;
+  margin-top: 15px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all var(--transition);
+  font-size: 0.95rem;
+}
+
+.see-more-btn:hover {
+  background: rgba(147, 112, 219, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(147, 112, 219, 0.2);
+}
+
+.see-more-btn .icon {
+  font-size: 0.9rem;
+  transition: transform var(--transition);
+}
+
+.see-more-btn.expanded .icon {
+  transform: rotate(180deg);
+}
+
+.post-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: clamp(12px, 2vw, 18px);
+  font-size: 1rem;
+  color: #666;
+  padding: clamp(18px, 2.5vw, 25px) 0;
+  margin: clamp(18px, 3vw, 28px) 0;
+  border-top: 2px solid #f0f0f0;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.post-stats div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: clamp(12px, 2vw, 16px);
+  background: #f9f9f9;
+  border-radius: 12px;
+  justify-content: center;
+  text-align: center;
+  font-weight: 600;
+  border: 1px solid rgba(0,0,0,0.05);
+  transition: all var(--transition);
+}
+
+.post-stats div:hover {
+  background: #f0f0f0;
+  transform: translateY(-3px);
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: clamp(18px, 3vw, 24px);
+  text-align: center;
+  background: var(--facebook-blue);
+  color: white;
+  text-decoration: none;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+  margin-top: clamp(25px, 4vw, 35px);
+  transition: all var(--transition);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(8, 102, 255, 0.2);
+}
+
+.btn:hover {
+  background: var(--facebook-blue-dark);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(8, 102, 255, 0.4);
+}
+
+/* Tags in Cards */
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.card-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(147, 112, 219, 0.1);
+  color: var(--primary-color);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid rgba(147, 112, 219, 0.2);
+  transition: all var(--transition);
+}
+
+.card-tag:hover {
+  background: rgba(147, 112, 219, 0.2);
+  transform: translateY(-2px);
+}
+
+.card-hashtag {
+  background: rgba(106, 90, 205, 0.1);
+  color: var(--accent-color);
+  border: 1px solid rgba(106, 90, 205, 0.2);
+}
+
+.card-hashtag:hover {
+  background: rgba(106, 90, 205, 0.2);
+}
+
+/* Reels Badge */
+.reels-badge {
+  display: inline-flex;
+  align-items: center;
+  background: linear-gradient(45deg, #FF0069, #FF7F00);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  gap: 10px;
+  width: fit-content;
+  box-shadow: 0 4px 15px rgba(255, 0, 105, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.reels-badge::before {
+  content: '🎬';
+  font-size: 1.4rem;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: clamp(25px, 4vw, 40px);
+  margin-top: clamp(35px, 6vw, 50px);
+  color: #666;
+  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+  border-top: 2px solid #e4e6eb;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* No Results */
+.no-results {
+  text-align: center;
+  padding: 50px;
+  color: #666;
+  font-size: 1.2rem;
+  background: white;
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
+  border: 2px solid rgba(147, 112, 219, 0.1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Dark Mode */
+.dark-mode {
+  --text-color: #e4e6eb;
+  --light-bg: #2a2a3a;
+  --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  --soft-bg: #1a1a2e;
+}
+
+.dark-mode body {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: var(--text-color);
+}
+
+.dark-mode .header,
+.dark-mode .year-section,
+.dark-mode .publication-card,
+.dark-mode .video-container,
+.dark-mode .no-results {
+  background: rgba(30, 30, 46, 0.95);
+  color: var(--text-color);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .video-description,
+.dark-mode .post-content {
+  color: #d0d3d9;
+}
+
+.dark-mode .post-stats div {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dark-mode .thumb {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .search-input,
+.dark-mode .year-select {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-color);
+}
+
+.dark-mode .stat-item {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .no-results {
+  background: rgba(30, 30, 46, 0.95);
+  color: #d0d3d9;
+}
+
+.dark-mode .tag {
+  background: rgba(147, 112, 219, 0.2);
+  color: #d0d3d9;
+  border-color: rgba(147, 112, 219, 0.3);
+}
+
+.dark-mode .hashtag {
+  background: rgba(106, 90, 205, 0.2);
+  border-color: rgba(106, 90, 205, 0.3);
+}
+
+.dark-mode .card-tag {
+  background: rgba(147, 112, 219, 0.2);
+  border-color: rgba(147, 112, 219, 0.3);
+}
+
+.dark-mode .card-hashtag {
+  background: rgba(106, 90, 205, 0.2);
+  border-color: rgba(106, 90, 205, 0.3);
+}
+
+.dark-mode .post-date {
+  background: linear-gradient(135deg, #7B68EE, #9370DB);
+  color: white;
+  box-shadow: 0 4px 15px rgba(123, 104, 238, 0.4);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .year-header {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .year-header:hover {
+  background: linear-gradient(135deg, #2d2b55 0%, #4338ca 100%);
+}
+
+.dark-mode .description-text.truncated::after {
+  background: linear-gradient(to bottom, transparent, rgba(30, 30, 46, 0.95));
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .controls {
+    flex-direction: column;
+  }
+  
+  .search-input,
+  .year-select,
+  .theme-toggle {
+    width: 100%;
+    min-width: unset;
+  }
+  
+  .video-meta {
+    grid-template-columns: 1fr;
+  }
+  
+  .stat-item {
+    min-width: 120px;
+  }
+  
+  .description-text.truncated {
+    max-height: 120px;
+  }
+  
+  .post-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .reel-thumb {
+    max-width: 280px;
+  }
+  
+  .post-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .card-tags {
+    gap: 8px;
+  }
+  
+  .card-tag {
+    font-size: 0.8rem;
+    padding: 5px 12px;
+  }
+  
+  .main-title {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="logo-arabic">
+      وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة
+    </div>
+  </header>
+
+  <div class="main-title">
+    حصيلة أنشطة الوزارة من 2021 إلى 2025
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <input type="search" id="searchInput" class="search-input" placeholder="Rechercher des vidéos..." aria-label="Rechercher des vidéos">
+    <select id="yearSelect" class="year-select" aria-label="Filtrer par année">
+      <option value="">Toutes les années</option>
+      <option value="2025">2025</option>
+      <option value="2024">2024</option>
+      <option value="2023">2023</option>
+      <option value="2022">2022</option>
+      <option value="2021">2021</option>
+      <option value="2019">2019</option>
+    </select>
+    <button id="themeToggle" class="theme-toggle" aria-label="Basculer le thème">🌓</button>
+  </div>
+
+  <!-- Video Section -->
+  <section id="videoSection" class="video-section" aria-label="Vue détaillée de la vidéo">
+    <div id="videoContainer" class="video-container">
+      <div class="video-header">
+        <h2 id="videoTitleHeader">Titre de la vidéo</h2>
+        <button id="closeVideo" class="close-video" aria-label="Fermer la vidéo">×</button>
+      </div>
+      
+      <div class="video-wrapper">
+        <iframe id="videoIframe" class="video-iframe" title="Lecteur vidéo Facebook" allowfullscreen></iframe>
+      </div>
+      
+      <div class="video-info">
+        <div id="videoTitleAr" class="video-title-ar"></div>
+        <div id="videoTitleFr" class="video-title-fr"></div>
+        
+        <div id="videoDescriptionContainer">
+          <div id="videoDescriptionAr" class="video-description ar"></div>
+          <div id="videoDescriptionFr" class="video-description"></div>
+        </div>
+        
+        <!-- Tags Container -->
+        <div id="videoTagsContainer" class="tags-container"></div>
+        
+        <!-- Hashtags Container -->
+        <div id="videoHashtagsContainer" class="tags-container"></div>
+        
+        <div id="videoStats" class="video-stats"></div>
+        
+        <a id="facebookLink" class="facebook-link" target="_blank" rel="noopener noreferrer" aria-label="Voir la publication sur Facebook">
+          <span class="facebook-icon">📘</span>
+          <span>Voir la publication sur Facebook</span>
+        </a>
+        
+        <div class="video-meta">
+          <div class="meta-item">
+            <span class="meta-icon">📅</span>
+            <div class="meta-content">
+              <span class="meta-label">Date</span>
+              <span id="videoDate" class="meta-value">Date</span>
+            </div>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon">🏷️</span>
+            <div class="meta-content">
+              <span class="meta-label">Année</span>
+              <span id="videoYear" class="meta-value">Année</span>
+            </div>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon">🔗</span>
+            <div class="meta-content">
+              <span class="meta-label">ID Facebook</span>
+              <span id="videoId" class="meta-value">ID</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Videos Tree -->
+  <main id="videosTree" aria-label="Liste des vidéos"></main>
+
+  <footer class="footer">
+    <p>جميع الحقوق محفوظة &copy; وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة</p>
+    <p style="margin-top: 10px; font-size: 0.85rem; color: #888;">
+      آخر تحديث: يناير 2024
+    </p>
+  </footer>
+</div>
+
+<script>
+// Données des vidéos avec tags et hashtags
+const VIDEO_DATA = [
+  {
+    "fbid": "664426331407897",
+    "date": "2022-01-18",
+    "year": "2022",
+    "titre_ar": "تخليد اليوم الوطني للمهندس المعماري",
+    "titre_fr": "Célébration de la Journée Nationale de l'Architecte",
+    "description_ar": "تخليد اليوم الوطني للمهندس المعماري تحت شعار: \"دور المهندس المعماري في النموذج التنموي الجديد\"، حيث نظمت الوزارة فعاليات وأنشطة للاحتفاء بدور المهندسين المعماريين في تشكيل المشهد الحضري والمساهمة في التنمية المستدامة. تم تنظيم هذا الحدث الهام في مقر الوزارة بحضور عدد كبير من المهندسين المعماريين والخبراء في مجال التعمير والتنمية الحضرية.",
+    "description_fr": "Célébration de la Journée Nationale de l'Architecte sous le thème : \"Le rôle de l'architecte dans le nouveau modèle de développement\". Le ministère a organisé des événements et activités pour célébrer le rôle des architectes dans la formation du paysage urbain et leur contribution au développement durable. Cet événement majeur a rassemblé des architectes, des urbanistes et des experts du développement territorial.",
+    "url_facebook": "https://www.facebook.com/MATUHPV/videos/664426331407897/",
+    "thumbnail": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/271810389_664431154740748_9199244546718538407_n.jpg",
+    "type": "video",
+    "views": 1856,
+    "reactions": 145,
+    "commentaires": 43,
+    "partages": 25,
+    "duration_seconds": 120,
+    "tags": "Vidéo, تخليد, اليوم, الوطني, للمهندس, المعماري, شعار, المهندس, المعماري, النموذج",
+    "hashtags": "#اليوم_الوطني_للمهندس_المعماري #النموذج_التنموي_الجديد #مهندس_معماري #تنمية_مستدامة #وزارة_إعداد_التراب"
+  },
+  {
+    "fbid": "3055743178046962",
+    "date": "2022-01-24",
+    "year": "2022",
+    "titre_ar": "الجزء الاول من الجلسة العمومية للأسئلة الأسبوعية الشفوية",
+    "titre_fr": "Première partie de la séance plénière des questions orales hebdomadaires",
+    "description_ar": "الجلسة العمومية للأسئلة الأسبوعية الشفوية التي عقدت في البرلمان، حيث تمت مناقشة عدد من القضايا المتعلقة بسياسات الإسكان والتعمير. تناولت الجلسة مواضيع هامة تتعلق بتطوير المدن وتحسين جودة الحياة للمواطنين.",
+    "description_fr": "Séance plénière des questions orales hebdomadaires au Parlement, durant laquelle plusieurs questions relatives aux politiques de logement et d'urbanisme ont été débattues. La séance a abordé des sujets importants concernant le développement des villes et l'amélioration de la qualité de vie des citoyens.",
+    "url_facebook": "https://www.facebook.com/MATUHPV/videos/3055743178046962/",
+    "thumbnail": "https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/272058391_3055758311378782_7854534478366822538_n.jpg",
+    "type": "video",
+    "views": 2103,
+    "reactions": 78,
+    "commentaires": 32,
+    "partages": 18,
+    "duration_seconds": 180,
+    "tags": "الجلسة, العمومية, الأسئلة, الأسبوعية, الشفوية, البرلمان, المناقشة",
+    "hashtags": "#الجلسة_العمومية #الأسئلة_الشفوية #البرلمان #سياسة_المدينة"
+  }
+];
+
+// État de l'application
+const state = {
+  openYear: null,
+  activeVideo: null,
+  searchTerm: '',
+  selectedYear: ''
+};
+
+// Initialisation
+function init() {
+  renderVideos();
+  setupEventListeners();
+  restoreTheme();
+  updateLastUpdated();
+}
+
+// Rendre les vidéos
+function renderVideos() {
+  const videosTree = document.getElementById('videosTree');
+  videosTree.innerHTML = '';
+  
+  const filteredVideos = filterVideos();
+  
+  if (filteredVideos.length === 0) {
+    videosTree.innerHTML = `
+      <div class="year-section">
+        <div class="year-header">
+          <span>لا توجد نتائج</span>
+          <span class="year-count">0</span>
+        </div>
+        <div class="videos-panel" style="max-height: none; padding: 20px;">
+          <div class="no-results">
+            <p style="text-align: center; color: #666; font-size: 1.2rem;">
+              لم يتم العثور على أي فيديو يطابق البحث
+            </p>
+          </div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  
+  const grouped = groupVideosByYear(filteredVideos);
+  
+  Object.keys(grouped).sort((a, b) => b - a).forEach(year => {
+    const yearSection = createYearSection(year, grouped[year]);
+    videosTree.appendChild(yearSection);
+  });
+  
+  if (state.openYear) {
+    const yearHeader = document.querySelector(`[data-year="${state.openYear}"]`);
+    if (yearHeader) toggleYearPanel(yearHeader);
+  }
+}
+
+// Filtrer les vidéos
+function filterVideos() {
+  return VIDEO_DATA.filter(video => {
+    // S'assurer que toutes les propriétés requises existent
+    if (!video.titre_ar || !video.titre_fr || !video.description_ar || !video.description_fr) {
+      console.warn('Vidéo avec données manquantes:', video.fbid);
+      return false;
+    }
+    
+    const matchesSearch = !state.searchTerm || 
+      [video.titre_ar, video.titre_fr, video.description_ar, video.description_fr, video.tags || '', video.hashtags || '']
+        .some(text => text && text.toLowerCase().includes(state.searchTerm.toLowerCase()));
+    
+    const matchesYear = !state.selectedYear || video.year === state.selectedYear;
+    
+    return matchesSearch && matchesYear;
+  });
+}
+
+// Grouper par année
+function groupVideosByYear(videos) {
+  return videos.reduce((groups, video) => {
+    if (!groups[video.year]) groups[video.year] = [];
+    groups[video.year].push(video);
+    return groups;
+  }, {});
+}
+
+// Créer une section d'année
+function createYearSection(year, videos) {
+  const section = document.createElement('section');
+  section.className = 'year-section';
+  section.setAttribute('aria-label', `Vidéos de l'année ${year}`);
+  
+  const header = document.createElement('button');
+  header.className = 'year-header';
+  header.dataset.year = year;
+  header.setAttribute('aria-expanded', 'false');
+  header.innerHTML = `
+    سنة ${year} <span class="year-count">${videos.length}</span>
+  `;
+  
+  const panel = document.createElement('div');
+  panel.className = 'videos-panel';
+  panel.setAttribute('role', 'region');
+  
+  videos.forEach((video, index) => {
+    setTimeout(() => {
+      const videoCard = createVideoCard(video);
+      panel.appendChild(videoCard);
+    }, index * 100);
+  });
+  
+  section.appendChild(header);
+  section.appendChild(panel);
+  
+  return section;
+}
+
+// Créer une carte vidéo
+function createVideoCard(video) {
+  const isActive = state.activeVideo?.fbid === video.fbid;
+  const card = document.createElement('article');
+  card.className = `publication-card ${isActive ? 'active' : ''}`;
+  card.setAttribute('aria-label', video.titre_ar);
+  card.style.animationDelay = `${Math.random() * 0.3}s`;
+  
+  const thumbnailContent = video.thumbnail ? createThumbnailContent(video) : '';
+  const reelsBadge = video.type === 'reel' ? createReelsBadge() : '';
+  const tagsContent = createTagsContent(video);
+  const hashtagsContent = createHashtagsContent(video);
+  
+  // Vérifier si la description est longue (>150 caractères)
+  const descriptionAr = video.description_ar || '';
+  const isLongDescriptionAr = descriptionAr.length > 150;
+  const descriptionFr = video.description_fr || '';
+  const isLongDescriptionFr = descriptionFr.length > 150;
+  
+  // Créer le contenu de la description avec "Voir plus" si nécessaire
+  const descriptionContentAr = createDescriptionContent(descriptionAr, 'ar', isLongDescriptionAr);
+  const descriptionContentFr = createDescriptionContent(descriptionFr, 'fr', isLongDescriptionFr);
+  
+  card.innerHTML = `
+    <div class="card-header">
+      <div class="avatar" aria-hidden="true">M</div>
+      <div>
+        <div class="page-name">Ministère Aménagement Territoire, Urbanisme, Habitat, Politique de la Ville</div>
+        <div class="post-date">${formatDate(video.date)}</div>
+      </div>
+    </div>
+    
+    ${reelsBadge}
+    
+    <div class="post-content">
+      <strong>${escapeHtml(video.titre_ar)}</strong>
+      ${descriptionContentAr}
+      ${descriptionContentFr}
+    </div>
+    
+    ${thumbnailContent}
+    
+    ${tagsContent}
+    ${hashtagsContent}
+    
+    <div class="post-stats">
+      <div>👁 ${formatNumber(video.views || 0)} مشاهدة</div>
+      <div>👍 ${formatNumber(video.reactions || 0)} تفاعل</div>
+      <div>💬 ${formatNumber(video.commentaires || 0)} تعليق</div>
+      <div>↗ ${formatNumber(video.partages || 0)} مشاركة</div>
+    </div>
+    
+    <button class="btn" data-fbid="${video.fbid}" aria-label="مشاهدة ${video.titre_ar} على فيسبوك">
+      <span style="margin-left: 8px;">📘</span>
+      مشاهدة على فيسبوك
+    </button>
+  `;
+  
+  // Ajouter les événements
+  if (video.thumbnail) {
+    const thumb = card.querySelector('.thumb');
+    thumb?.addEventListener('click', () => showVideo(video));
+  }
+  
+  const btn = card.querySelector('.btn');
+  btn?.addEventListener('click', () => window.open(video.url_facebook, '_blank'));
+  
+  // Ajouter les événements pour les boutons "Voir plus"
+  card.querySelectorAll('.see-more-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const container = this.closest('.description-container');
+      const textElement = container.querySelector('.description-text');
+      const isExpanded = this.classList.contains('expanded');
+      
+      if (isExpanded) {
+        textElement.classList.add('truncated');
+        this.classList.remove('expanded');
+        this.innerHTML = lang === 'ar' ? '<span class="icon">▼</span> عرض المزيد' : '<span class="icon">▼</span> Voir plus';
+      } else {
+        textElement.classList.remove('truncated');
+        this.classList.add('expanded');
+        this.innerHTML = lang === 'ar' ? '<span class="icon">▲</span> عرض أقل' : '<span class="icon">▲</span> Voir moins';
+      }
+    });
+  });
+  
+  return card;
+}
+
+// Créer le contenu de la description avec "Voir plus"
+function createDescriptionContent(text, lang, isLong) {
+  if (!text) return '';
+  
+  const langClass = lang === 'ar' ? 'ar' : '';
+  const seeMoreText = lang === 'ar' ? 'عرض المزيد' : 'Voir plus';
+  const seeLessText = lang === 'ar' ? 'عرض أقل' : 'Voir moins';
+  
+  if (isLong) {
+    return `
+      <div class="description-container">
+        <div class="description-text truncated ${langClass}">
+          ${escapeHtml(text)}
+        </div>
+        <button class="see-more-btn" data-lang="${lang}">
+          <span class="icon">▼</span> ${seeMoreText}
+        </button>
+      </div>
+    `;
+  } else {
+    return `<div class="description-text ${langClass}">${escapeHtml(text)}</div>`;
+  }
+}
+
+// Créer le contenu des tags
+function createTagsContent(video) {
+  if (!video.tags) return '';
+  
+  const tags = video.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+  if (tags.length === 0) return '';
+  
+  const tagsHtml = tags.map(tag => `
+    <span class="card-tag">
+      <span class="tag-icon">🏷️</span>
+      ${escapeHtml(tag)}
+    </span>
+  `).join('');
+  
+  return `<div class="card-tags">${tagsHtml}</div>`;
+}
+
+// Créer le contenu des hashtags
+function createHashtagsContent(video) {
+  const hashtagsStr = video.hashtags || video.Hatags || '';
+  if (!hashtagsStr) return '';
+  
+  const hashtags = hashtagsStr.split(' ').map(tag => tag.trim()).filter(tag => tag);
+  if (hashtags.length === 0) return '';
+  
+  const hashtagsHtml = hashtags.map(hashtag => `
+    <span class="card-tag card-hashtag">
+      <span class="tag-icon">#</span>
+      ${escapeHtml(hashtag.replace('#', ''))}
+    </span>
+  `).join('');
+  
+  return `<div class="card-tags">${hashtagsHtml}</div>`;
+}
+
+// Créer le contenu de la miniature
+function createThumbnailContent(video) {
+  const thumbClass = video.type === 'reel' ? 'reel-thumb' : 'video-thumb';
+  const durationHtml = video.duration_seconds ? 
+    `<div class="video-duration">${formatDuration(video.duration_seconds)}</div>` : '';
+  
+  return `
+    <div class="thumb ${thumbClass}" data-fbid="${video.fbid}" role="button" tabindex="0" aria-label="تشغيل ${video.titre_ar}">
+      <img src="${video.thumbnail}" alt="${video.titre_fr}" loading="lazy" width="800" height="450">
+      <div class="play" aria-hidden="true">▶</div>
+      ${durationHtml}
+    </div>
+  `;
+}
+
+// Créer le badge Reels
+function createReelsBadge() {
+  return '<div class="reels-badge">Facebook Reels</div>';
+}
+
+// Afficher une vidéo
+function showVideo(video) {
+  state.activeVideo = video;
+  
+  // Mettre à jour l'interface
+  document.getElementById('videoTitleHeader').textContent = truncateText(video.titre_fr, 60);
+  document.getElementById('videoTitleAr').textContent = video.titre_ar;
+  document.getElementById('videoTitleFr').textContent = video.titre_fr;
+  
+  // Gérer les descriptions avec "Voir plus"
+  const descAr = video.description_ar || '';
+  const descFr = video.description_fr || '';
+  
+  document.getElementById('videoDescriptionAr').innerHTML = createDescriptionContent(descAr, 'ar', descAr.length > 150);
+  document.getElementById('videoDescriptionFr').innerHTML = createDescriptionContent(descFr, 'fr', descFr.length > 150);
+  
+  document.getElementById('videoDate').textContent = formatDate(video.date);
+  document.getElementById('videoYear').textContent = video.year;
+  document.getElementById('videoId').textContent = video.fbid;
+  document.getElementById('facebookLink').href = video.url_facebook;
+  
+  // Mettre à jour les tags
+  updateTagsDisplay(video);
+  
+  // Mettre à jour les statistiques
+  updateVideoStats(video);
+  
+  // Charger l'iframe
+  loadVideoIframe(video);
+  
+  // Afficher la section
+  document.getElementById('videoSection').classList.add('active');
+  document.getElementById('videoSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  
+  // Ajouter les événements pour les boutons "Voir plus" dans la section vidéo
+  setTimeout(() => {
+    document.querySelectorAll('#videoDescriptionContainer .see-more-btn').forEach(btn => {
+      const lang = btn.getAttribute('data-lang');
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const container = this.closest('.description-container');
+        const textElement = container.querySelector('.description-text');
+        const isExpanded = this.classList.contains('expanded');
+        
+        if (isExpanded) {
+          textElement.classList.add('truncated');
+          this.classList.remove('expanded');
+          this.innerHTML = lang === 'ar' ? '<span class="icon">▼</span> عرض المزيد' : '<span class="icon">▼</span> Voir plus';
+        } else {
+          textElement.classList.remove('truncated');
+          this.classList.add('expanded');
+          this.innerHTML = lang === 'ar' ? '<span class="icon">▲</span> عرض أقل' : '<span class="icon">▲</span> Voir moins';
+        }
+      });
+    });
+  }, 100);
+  
+  renderVideos();
+}
+
+// Mettre à jour l'affichage des tags et hashtags
+function updateTagsDisplay(video) {
+  const tagsContainer = document.getElementById('videoTagsContainer');
+  const hashtagsContainer = document.getElementById('videoHashtagsContainer');
+  
+  // Tags
+  if (video.tags) {
+    const tags = video.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+    tagsContainer.innerHTML = tags.map(tag => `
+      <a href="#" class="tag" onclick="searchTag('${tag}')">
+        <span class="tag-icon">🏷️</span>
+        ${escapeHtml(tag)}
+      </a>
+    `).join('');
+    tagsContainer.style.display = tags.length > 0 ? 'flex' : 'none';
+  } else {
+    tagsContainer.innerHTML = '';
+    tagsContainer.style.display = 'none';
+  }
+  
+  // Hashtags
+  const hashtagsStr = video.hashtags || video.Hatags || '';
+  if (hashtagsStr) {
+    const hashtags = hashtagsStr.split(' ').map(tag => tag.trim()).filter(tag => tag);
+    hashtagsContainer.innerHTML = hashtags.map(hashtag => `
+      <a href="#" class="tag hashtag" onclick="searchHashtag('${hashtag}')">
+        <span class="tag-icon">#</span>
+        ${escapeHtml(hashtag.replace('#', ''))}
+      </a>
+    `).join('');
+    hashtagsContainer.style.display = hashtags.length > 0 ? 'flex' : 'none';
+  } else {
+    hashtagsContainer.innerHTML = '';
+    hashtagsContainer.style.display = 'none';
+  }
+}
+
+// Rechercher par tag
+function searchTag(tag) {
+  event.preventDefault();
+  const searchInput = document.getElementById('searchInput');
+  searchInput.value = tag;
+  state.searchTerm = tag;
+  renderVideos();
+}
+
+// Rechercher par hashtag
+function searchHashtag(hashtag) {
+  event.preventDefault();
+  const searchInput = document.getElementById('searchInput');
+  searchInput.value = hashtag;
+  state.searchTerm = hashtag;
+  renderVideos();
+}
+
+// Mettre à jour les statistiques vidéo
+function updateVideoStats(video) {
+  const stats = document.getElementById('videoStats');
+  stats.innerHTML = '';
+  
+  const statsData = [
+    { icon: '👁', value: video.views, label: 'vues' },
+    { icon: '👍', value: video.reactions, label: 'réactions' },
+    { icon: '💬', value: video.commentaires, label: 'commentaires' },
+    { icon: '↪️', value: video.partages, label: 'partages' }
+  ];
+  
+  statsData.forEach(({ icon, value, label }) => {
+    if (value || value === 0) {
+      const statItem = document.createElement('div');
+      statItem.className = 'stat-item';
+      statItem.innerHTML = `<span>${icon}</span> ${formatNumber(value)} ${label}`;
+      stats.appendChild(statItem);
+    }
+  });
+}
+
+// Charger l'iframe vidéo
+function loadVideoIframe(video) {
+  const cleanUrl = video.url_facebook.split('?')[0];
+  const embedUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(cleanUrl)}&show_text=false&width=560`;
+  document.getElementById('videoIframe').src = embedUrl;
+}
+
+// Cacher la vidéo
+function hideVideo() {
+  state.activeVideo = null;
+  document.getElementById('videoSection').classList.remove('active');
+  document.getElementById('videoIframe').src = '';
+  document.getElementById('videoTagsContainer').innerHTML = '';
+  document.getElementById('videoHashtagsContainer').innerHTML = '';
+  renderVideos();
+}
+
+// Basculer le panneau d'année
+function toggleYearPanel(header) {
+  const panel = header.nextElementSibling;
+  const isOpen = header.classList.contains('open');
+  
+  if (isOpen) {
+    header.classList.remove('open');
+    header.setAttribute('aria-expanded', 'false');
+    panel.style.maxHeight = null;
+    state.openYear = null;
+  } else {
+    header.classList.add('open');
+    header.setAttribute('aria-expanded', 'true');
+    panel.style.maxHeight = panel.scrollHeight + 'px';
+    state.openYear = header.dataset.year;
+  }
+}
+
+// Formater la date
+function formatDate(dateString) {
+  try {
+    const date = new Date(dateString);
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    return date.toLocaleDateString('ar-MA', options);
+  } catch (e) {
+    return dateString;
+  }
+}
+
+// Formater la durée
+function formatDuration(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+// Formater les nombres
+function formatNumber(num) {
+  if (!num && num !== 0) return '0';
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+// Tronquer le texte
+function truncateText(text, maxLength) {
+  if (!text) return '';
+  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+}
+
+// Échapper le HTML
+function escapeHtml(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// Configuration des événements
+function setupEventListeners() {
+  // Recherche
+  document.getElementById('searchInput').addEventListener('input', (e) => {
+    state.searchTerm = e.target.value;
+    renderVideos();
+  });
+  
+  // Filtre par année
+  document.getElementById('yearSelect').addEventListener('change', (e) => {
+    state.selectedYear = e.target.value;
+    renderVideos();
+  });
+  
+  // Thème
+  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+  
+  // Fermer la vidéo
+  document.getElementById('closeVideo').addEventListener('click', hideVideo);
+  
+  // Gérer les clics sur les années
+  document.getElementById('videosTree').addEventListener('click', (e) => {
+    if (e.target.closest('.year-header')) {
+      const header = e.target.closest('.year-header');
+      toggleYearPanel(header);
+    }
+  });
+  
+  // Touche Échap pour fermer la vidéo
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && state.activeVideo) {
+      hideVideo();
+    }
+  });
+}
+
+// Basculer le thème
+function toggleTheme() {
+  const isDark = document.body.classList.toggle('dark-mode');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  document.getElementById('themeToggle').textContent = isDark ? '☀️' : '🌓';
+}
+
+// Restaurer le thème
+function restoreTheme() {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    document.getElementById('themeToggle').textContent = '☀️';
+  }
+}
+
+// Mettre à jour la date de dernière mise à jour
+function updateLastUpdated() {
+  const now = new Date();
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const dateString = now.toLocaleDateString('ar-MA', options);
+  document.querySelector('.footer p:last-child').textContent = `آخر تحديث: ${dateString}`;
+}
+
+// Démarrer l'application
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
