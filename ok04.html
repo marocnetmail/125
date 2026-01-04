@@ -68,19 +68,18 @@ body {
   text-align: center;
   margin: clamp(15px, 3vw, 30px) 0;
   
-  /* On garde un padding généreux pour la hauteur du bloc */
+  /* Padding pour donner de l'espace au texte sur l'image */
   padding: clamp(60px, 10vw, 120px) 20px; 
   
+  /* Configuration de l'image de fond */
   background-image: url('background.jpg');
   background-repeat: no-repeat;
-  background-position: center; /* L'image reste au milieu */
+  background-position: center; 
   
-  /* 1. Taille réduite à 80% (soit -20%) */
-  /* "80%" signifie que l'image prendra 80% de la largeur du div */
-  /* "auto" permet de garder les proportions (ne pas écraser l'image) */
+  /* L'image prend 80% de la largeur du div, hauteur auto pour garder le ratio */
   background-size: 80% auto; 
 
-  /* 2. Style du texte */
+  /* Style du texte */
   color: white;
   border-radius: 20px;
   box-shadow: 0 8px 25px rgba(147, 112, 219, 0.3);
@@ -88,6 +87,7 @@ body {
   font-weight: 800;
   text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
 
+  /* Centrage du contenu */
   display: flex;
   align-items: center;
   justify-content: center;
