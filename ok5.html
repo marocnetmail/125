@@ -178,7 +178,7 @@
 </head>
 <body>
 <div class="container">
-<div class="main-title">حصيلة أنشطة الوزارة من 2022 إلى 2025</div>
+<div class="main-title">حصيلة أنشطة الوزارة<br> من 2022 إلى 2025</div>
 <div class="controls">
 <input type="search" id="searchInput" class="search-input" placeholder="Rechercher des vidéos..." aria-label="Rechercher des vidéos">
 <select id="yearSelect" class="year-select" aria-label="Filtrer par année">
@@ -187,8 +187,6 @@
 <option value="2024">2024</option>
 <option value="2023">2023</option>
 <option value="2022">2022</option>
-<option value="2021">2021</option>
-<option value="2019">2019</option>
 </select>
 <button id="themeToggle" class="theme-toggle" aria-label="Basculer le thème">🌓</button>
 </div>
@@ -242,8 +240,11 @@
 <footer class="footer"></footer>
 </div>
 <script>
+
+
 const VIDEO_DATA=[{fbid:"664426331407897",date:"2022-01-18",year:"2022",titre_ar:"تخليد اليوم الوطني للمهندس المعماري",titre_fr:"Célébration de la Journée Nationale de l'Architecte",description_ar:"تخليد اليوم الوطني للمهندس المعماري تحت شعار: \"دور المهندس المعماري في النموذج التنموي الجديد\"، حيث نظمت الوزارة فعاليات وأنشطة للاحتفاء بدور المهندسين المعماريين في تشكيل المشهد الحضري والمساهمة في التنمية المستدامة. تم تنظيم هذا الحدث الهام في مقر الوزارة بحضور عدد كبير من المهندسين المعماريين والخبراء في مجال التعمير والتنمية الحضرية.",description_fr:"Célébration de la Journée Nationale de l'Architecte sous le thème : \"Le rôle de l'architecte dans le nouveau modèle de développement\". Le ministère a organisé des événements et activités pour célébrer le rôle des architectes dans la formation du paysage urbain et leur contribution au développement durable. Cet événement majeur a rassemblé des architectes, des urbanistes et des experts du développement territorial.",url_facebook:"https://www.facebook.com/MATUHPV/videos/664426331407897/",thumbnail:"https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/271810389_664431154740748_9199244546718538407_n.jpg",type:"video",views:1856,reactions:145,commentaires:43,partages:25,duration_seconds:120},{fbid:"3055743178046962",date:"2022-01-24",year:"2022",titre_ar:"الجزء الاول من الجلسة العمومية للأسئلة الأسبوعية الشفوية",titre_fr:"Première partie de la séance plénière des questions orales hebdomadaires",description_ar:"الجلسة العمومية للأسئلة الأسبوعية الشفوية التي عقدت في البرلمان، حيث تمت مناقشة عدد من القضايا المتعلقة بسياسات الإسكان والتعمير. تناولت الجلسة مواضيع هامة تتعلق بتطوير المدن وتحسين جودة الحياة للمواطنين.",description_fr:"Séance plénière des questions orales hebdomadaires au Parlement, durant laquelle plusieurs questions relatives aux politiques de logement et d'urbanisme ont été débattues. La séance a abordé des sujets importants concernant le développement des villes et l'amélioration de la qualité de vie des citoyens.",url_facebook:"https://www.facebook.com/MATUHPV/videos/3055743178046962/",thumbnail:"https://scontent-iad3-2.xx.fbcdn.net/v/t15.5256-10/272058391_3055758311378782_7854534478366822538_n.jpg",type:"video",views:2103,reactions:78,commentaires:32,partages:18,duration_seconds:180},{fbid:"123456789012345",date:"2021-12-15",year:"2021",titre_ar:"",titre_fr:"Visite de terrain pour le projet de développement urbain",description_ar:"",description_fr:"Visite de terrain effectuée par la ministre pour suivre l'avancement des travaux du projet de développement urbain dans la région nord. La visite a permis de constater les progrès réalisés et d'échanger avec les responsables du projet.",url_facebook:"https://www.facebook.com/MATUHPV/videos/123456789012345/",thumbnail:"https://via.placeholder.com/800x450/9370DB/FFFFFF?text=Visite+Terrain",type:"video",views:1500,reactions:65,commentaires:28,partages:12,duration_seconds:240}];
 const state={openYear:null,activeVideo:null,searchTerm:'',selectedYear:'',playingVideos:{}};
+
 function init(){renderVideos();setupEventListeners();restoreTheme()}
 function renderVideos(){const e=document.getElementById("videosTree");e.innerHTML="";const t=filterVideos();if(0===t.length){e.innerHTML=`<div class="year-section"><div class="year-header"><span>لا توجد نتائج</span><span class="year-count">0</span></div><div class="videos-panel" style="max-height: none; padding: 20px;"><div class="no-results"><p style="text-align: center; color: #666; font-size: 1.2rem;">لم يتم العثور على أي فيديو يطابق البحث</p></div></div></div>`;return}const n=groupVideosByYear(t);Object.keys(n).sort((e,t)=>t-e).forEach(t=>{e.appendChild(createYearSection(t,n[t]))});if(state.openYear){const e=document.querySelector(`[data-year="${state.openYear}"]`);e&&toggleYearPanel(e)}}
 function filterVideos(){return VIDEO_DATA.filter(e=>{if(!e.titre_ar&&!e.titre_fr)return!1;const t=!state.searchTerm||[e.titre_ar||'',e.titre_fr||'',e.description_ar||'',e.description_fr||''].some(t=>t&&t.toLowerCase().includes(state.searchTerm.toLowerCase())),n=!state.selectedYear||e.year===state.selectedYear;return t&&n})}
