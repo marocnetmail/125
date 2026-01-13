@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>حصيلة أنشطة الوزارة من 2022 إلى 2025</title>
+<meta name="description" content="حصيلة أنشطة وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة من 2022 إلى 2025">
+
+<style>
+:root {
+  --bg: #f5f6fa;
+  --primary: #6A5ACD;
+  --secondary: #BA55D3;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 6px;
+  flex: 1; /* pour que le footer reste en bas si contenu faible */
+}
+
+.header {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.15);
+  position: sticky;
+  top: 6px;
+  z-index: 1000;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 6px 10px;
+}
+
+.main-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: url("images1/Graf dialogue.png") no-repeat left;
+  background-size: 65% auto;
+  border-radius: 10px;
+  padding: 10px;
+  justify-content: flex-start; /* Logo à gauche */
+}
+
+.logo-arabic {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0,0,0,.5);
+  text-align: right;
+  flex: 1;
+}
+
+.logo-img {
+  width: 120px;
+  height: 120px;
+}
+
+@media (max-width: 768px) {
+  .logo-arabic {
+    font-size: 1.1rem;
+  }
+
+  .logo-img {
+    width: 90px;
+    height: 90px;
+  }
+
+  .main-title {
+    padding: 8px;
+  }
+}
+
+/* Footer similaire au header */
+.footer {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  margin-top: 20px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.footer-text {
+  font-size: 0.95rem;
+  text-align: right;
+  line-height: 1.4;
+}
+
+.footer img {
+  width: 80px;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .footer img {
+    width: 60px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+<div class="container">
+<header class="header">
+  <div class="header-content">
+    <div class="main-title">
+      <!-- Logo à gauche -->
+      <img src="images1/ar-amazigh.png"
+           alt="شعار المملكة المغربية"
+           class="logo-img"
+           loading="eager">
+      <!-- Texte à droite -->
+      <div class="logo-arabic">
+         حصيلة أنشطة الوزارة من <br>2022 إلى 2025
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Contenu principal ici -->
+<main>
+  <!-- Votre contenu principal -->
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-text">
+    <br> <center><b> Divison de la communication</b><center>
+
+    جميع الحقوق محفوظة © وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة 2026
+  </div>
+  <img src="images1/CACHET DIVISION.png" alt="Cachet division">
+</footer>
+
+</div>
+</body>
+</html>
