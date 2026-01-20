@@ -201,7 +201,7 @@
 <main id="articles-container"></main>
 
 <!-- OVERLAY GLOBAL (caché au début) -->
-<div id="article-overlay" class="overlay">
+<div id="article-overlay" class="overlay" style="display: none;">
   <div class="overlay-content">
     <button class="close-btn" id="close-overlay">×</button>
     <div id="overlay-article-info" class="article-info">
@@ -217,7 +217,7 @@
 
 <script>
   // Données JSON
-  const articles =[
+  const articles = [
   {
     "index": 20260120222812,
     "date_heure": "2026-01-19T18:16:00.000Z",
@@ -2269,24 +2269,48 @@
   const articleFrame = document.getElementById('article-frame');
   const articleInfo = document.getElementById('overlay-article-info');
 
+  // Fonction pour supprimer les doublons basés sur le lien
+  function removeDuplicateArticles(articlesArray) {
+    const uniqueLinks = new Set();
+    const uniqueArticles = [];
+    
+    for (const article of articlesArray) {
+      if (!uniqueLinks.has(article.lien)) {
+        uniqueLinks.add(article.lien);
+        uniqueArticles.push(article);
+      }
+    }
+    
+    return uniqueArticles;
+  }
+
+  // Filtrer les articles pour enlever les doublons
+  const uniqueArticles = removeDuplicateArticles(articles);
+  console.log(`Articles initiaux: ${articles.length}, Articles uniques: ${uniqueArticles.length}`);
+
   // Fermer l'overlay
   closeBtn.addEventListener('click', () => {
     overlay.style.display = 'none';
-    articleFrame.src = ''; // Vide l'iframe
+    articleFrame.src = 'about:blank'; // Vide l'iframe
   });
 
   // Fermer l'overlay en cliquant en dehors
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) {
       overlay.style.display = 'none';
-      articleFrame.src = '';
+      articleFrame.src = 'about:blank';
     }
   });
 
-  articles.forEach(titre => {
-    // --- Sélection de l'image ---
-    const imgPath = titre.url1 || titre.url2 || titre.url3 || '';
+  // Fermer avec la touche Echap
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.style.display === 'flex') {
+      overlay.style.display = 'none';
+      articleFrame.src = 'about:blank';
+    }
+  });
 
+  uniqueArticles.forEach(titre => {
     // --- Utilisation du titre directement ---
     let titreTexte = titre.titre_article || `مقال إخباري رقم ${titre.index}`;
     
@@ -2303,26 +2327,21 @@
     card.dataset.articleIndex = titre.index;
 
     card.innerHTML = `
-      <div class="image-wrapper">
-          ${imgPath 
-              ? `<img src="${imgPath}" alt="${titre.titre_article || 'titre'}">`
-              : `<img src="images1/${titre.index}-image.jpg" alt="Image par défaut">`
-          }
-          
-          <!-- TITRE DANS LE BAS 2/3 DE L'IMAGE -->
-          <div class="image-title-overlay">
-            <div class="image-title">
-              ${titreTexte}
-            </div>
-          </div>
-      </div>
+ <div class="image-wrapper">
+  <img src="images1/${titre.index}-image.jpg" alt="Image par défaut">
+
+  <!-- TITRE DANS LE BAS 2/3 DE L'IMAGE -->
+  <div class="image-title-overlay">
+    <div class="image-title">
+      ${titreTexte}
+    </div>
+  </div>
+</div>
 
       <div class="time-badge">منذ دقائق</div>
       <div class="category-badge">أخبار</div>
 
       ${titre.alerte === 'Oui' ? '<div class="alert-badge">تنبيه عاجل</div>' : ''}
-
-      <!-- Pas de .overlay dans la carte - il est maintenant global -->
     `;
 
     // Ajouter l'événement de clic
