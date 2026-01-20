@@ -1,0 +1,2357 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>مرصد الأخبار - آخر المستجدات</title>
+  <style>
+    /* Augmenter la taille de la carte */
+    .titre-card {
+      margin-bottom: 18px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #001a44;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.65);
+      position: relative;
+      height: auto;
+      min-height: 360px;
+      cursor: pointer;
+    }
+
+    /* Ajuster ratio de l'image pour qu'elle soit plus grande */
+    .image-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 66.66%; /* ratio 3:2 */
+      background: #000;
+    }
+
+    .image-wrapper img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* TITRE DANS LE BAS 2/3 DE L'IMAGE */
+    .image-title-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 66.66%; /* 2/3 de la hauteur */
+      display: flex;
+      align-items: flex-end; /* Alignement en bas */
+      justify-content: center;
+      text-align: center;
+      z-index: 1;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0) 100%);
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .image-title {
+      font-size: 1.8rem;
+      font-weight: 700; /* Très gras */
+      line-height: 1.3;
+      color: #ffffff;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+      margin: 0 0 20px 0; /* Marge en bas pour espacement */
+      width: 100%;
+      max-width: 90%;
+    }
+
+    /* OVERLAY CACHÉ AU DÉBUT */
+    .overlay {
+      display: none; /* Caché par défaut */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .overlay-content {
+      background: #001a44;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 20px;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: #ff4444;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1001;
+    }
+
+    .article-frame {
+      width: 100%;
+      height: 60vh;
+      border: none;
+      border-radius: 10px;
+      margin-top: 20px;
+      background: white;
+    }
+
+    .article-info {
+      color: #cccccc;
+      margin-top: 15px;
+      padding: 15px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+    }
+
+    /* Badges */
+    .time-badge, .category-badge, .alert-badge {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      z-index: 2;
+    }
+
+    .time-badge { top: 10px; right: 10px; }
+    .category-badge { top: 10px; left: 10px; }
+    .alert-badge { 
+      top: 10px; 
+      right: 10px; 
+      background: #ff4444;
+      z-index: 3; /* Au-dessus du titre */
+    }
+
+    /* Métadonnées */
+    .meta {
+      font-size: 0.9rem;
+      color: #cccccc;
+      line-height: 1.5;
+    }
+
+    /* Pour écran large */
+    @media (min-width: 768px) {
+      .titre-card {
+        max-width: 720px;
+        margin: 20px auto;
+        min-height: 400px;
+      }
+      .image-title {
+        font-size: 2rem;
+        max-width: 85%;
+        margin-bottom: 30px;
+      }
+      .image-title-overlay {
+        padding: 30px;
+      }
+      .overlay-content {
+        padding: 30px;
+      }
+    }
+    
+    @media (max-width: 767px) {
+      .image-title {
+        font-size: 1.5rem;
+        max-width: 95%;
+        margin-bottom: 15px;
+      }
+      .image-title-overlay {
+        padding: 15px;
+        height: 70%; /* Un peu plus sur mobile pour mieux voir */
+      }
+      .article-frame {
+        height: 50vh;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="menu-btn">☰</div>
+  <div class="logo">هسبريس</div>
+  <div class="search-btn">🔍</div>
+  <div class="refresh-btn">↻</div>
+</header>
+
+<main id="articles-container"></main>
+
+<!-- OVERLAY GLOBAL (caché au début) -->
+<div id="article-overlay" class="overlay">
+  <div class="overlay-content">
+    <button class="close-btn" id="close-overlay">×</button>
+    <div id="overlay-article-info" class="article-info">
+      <!-- Les informations de l'article seront insérées ici -->
+    </div>
+    <iframe id="article-frame" class="article-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  ○
+</div>
+
+<script>
+  // Données JSON
+  const articles =[
+  {
+    "index": 20260120222812,
+    "date_heure": "2026-01-19T18:16:00.000Z",
+    "media_source": "https://www.ad-hoc-news.de/boerse/news/ueberblick/alliances-developpement-immobilier-un-titre-sous-pression-entre/68500831",
+    "titre_article": "Ad-hoc-news - Alliances Développement Immobilier : un titre sous pression, entre incertitudes boursières et pari Le titre Alliances Développement Immobilier reste faiblement échangé à Casablanca, sur fond de faiblesse du secteur i",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "alliances",
+      "veloppement",
+      "immobilier",
+      "titre",
+      "news"
+    ],
+    "rang": 93,
+    "sentiment": "Neutre",
+    "lien": "https://www.ad-hoc-news.de/boerse/news/ueberblick/alliances-developpement-immobilier-un-titre-sous-pression-entre/68500831",
+    "url1": "images1/20260120222812-titre.jpg",
+    "url2": "images1/20260120222812-article.jpg",
+    "url3": "images1/20260120222812-image.jpg"
+  },
+  {
+    "index": 20260120222813,
+    "date_heure": "2026-01-19T18:16:00.000Z",
+    "media_source": "https://premiumtravelnews.com/2026/01/19/la-faillite-du-tourisme-social-marocain-implique-lechec-politique-des-cheques-vacances",
+    "titre_article": "Ad-hoc-news - Alliances Développement Immobilier : un titre sous pression, entre incertitudes boursières et pari Le titre Alliances Développement Immobilier reste faiblement échangé à Casablanca, sur fond de faiblesse du secteur i",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "alliances",
+      "veloppement",
+      "immobilier",
+      "titre",
+      "news"
+    ],
+    "rang": 93,
+    "sentiment": "Neutre",
+    "lien": "https://premiumtravelnews.com/2026/01/19/la-faillite-du-tourisme-social-marocain-implique-lechec-politique-des-cheques-vacances",
+    "url1": "images1/20260120222813-titre.jpg",
+    "url2": "images1/20260120222813-article.jpg",
+    "url3": "images1/20260120222813-image.jpg"
+  },
+  {
+    "index": 20260120222814,
+    "date_heure": "2026-01-19T19:16:00.000Z",
+    "media_source": "https://alaan.ma?p=79957",
+    "titre_article": "Alaan - يستقطب معرض الصناعة المتقدمة والتنقل المستقبلي (WAM Morocco) نخبة غير مسبوقة من رواد الصناعة العالميين، بما في ذلك شركات SAP وSumitomo Corporation وENGIE التي تشارك لأول مرة في أول معرض للصناعة 4.0 ينظم في المغرب – المغرب",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "معرض",
+      "الصناعة",
+      "المغرب",
+      "alaan",
+      "يستقطب"
+    ],
+    "rang": 35,
+    "sentiment": "Neutre",
+    "lien": "https://alaan.ma?p=79957",
+    "url1": "images1/20260120222814-titre.jpg",
+    "url2": "images1/20260120222814-article.jpg",
+    "url3": "images1/20260120222814-image.jpg"
+  },
+  {
+    "index": 20260120222815,
+    "date_heure": "2026-01-19T21:16:00.000Z",
+    "media_source": "https://rue20.com/971785.html",
+    "titre_article": "Rue20 - بنبراهيم يكشف مضامين مشروع قانون تسوية أزمات البنوك وحماية الودائع زنقة20ا الرباط قدم اليوم الإثنين أديب ابن ابراهيم كاتب الدولة لدى وزيرة إعداد التراب الوطني والتمير والإسكان وسياسة المدينة، المكلف بالإسكان لجنة المالية و",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "rue20",
+      "بنبراهيم",
+      "يكشف",
+      "مضامين",
+      "مشروع"
+    ],
+    "rang": 66,
+    "sentiment": "Neutre",
+    "lien": "https://rue20.com/971785.html",
+    "url1": "images1/20260120222815-titre.jpg",
+    "url2": "images1/20260120222815-article.jpg",
+    "url3": "images1/20260120222815-image.jpg"
+  },
+  {
+    "index": 20260120222816,
+    "date_heure": "2026-01-19T22:16:00.000Z",
+    "media_source": "https://www.hespress.com/رصيف-الصحافة-مطالب-بإعادة-فتح-المساجد-1689202.html",
+    "titre_article": "Hespress - رصيف الصحافة: مطالب بإعادة فتح المساجد المغلقة في إقليم الجديدة قراءة مواد بعض الجرائد الخاصة بيوم الثلاثاء نستهلها من “بيان اليوم”، التي نشرت أن ساكنة إقليم الجديدة تواجه، منذ مدة، إغلاقا مستمرا لعدد من المساجد الواقعة",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "المساجد",
+      "إقليم",
+      "الجديدة",
+      "hespress",
+      "رصيف"
+    ],
+    "rang": 71,
+    "sentiment": "Neutre",
+    "lien": "https://www.hespress.com/رصيف-الصحافة-مطالب-بإعادة-فتح-المساجد-1689202.html",
+    "url1": "images1/20260120222816-titre.jpg",
+    "url2": "images1/20260120222816-article.jpg",
+    "url3": "images1/20260120222816-image.jpg"
+  },
+  {
+    "index": 20260120222817,
+    "date_heure": "2026-01-20T01:16:00.000Z",
+    "media_source": "https://www.lereporter.ma/casablanca-wam-morocco-reunit-plus-de-100-entreprises-de-18-pays",
+    "titre_article": "Lereporter - Casablanca | WAM Morocco réunit plus de 100 entreprises de 18 pays Le Salon mondial de la fabrication avancée et de la mobilité du futur (WAM Morocco) accueille, du 20 au 22 janvier à Casablanca, des géants industriel",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "casablanca",
+      "morocco",
+      "lereporter",
+      "unit",
+      "plus"
+    ],
+    "rang": 72,
+    "sentiment": "Neutre",
+    "lien": "https://www.lereporter.ma/casablanca-wam-morocco-reunit-plus-de-100-entreprises-de-18-pays",
+    "url1": "images1/20260120222817-titre.jpg",
+    "url2": "images1/20260120222817-article.jpg",
+    "url3": "images1/20260120222817-image.jpg"
+  },
+  {
+    "index": 20260120222818,
+    "date_heure": "2026-01-20T04:16:00.000Z",
+    "media_source": "https://arabic.pressbee.net/show10380029.html?title=بنبراهيم-يكشف-مضامين-مشروع-قانون-تسوية-أزمات-البنوك-وحماية-الودائ",
+    "titre_article": "Arabic Pressbee - بنبراهيم يكشف مضامين مشروع قانون تسوية أزمات البنوك وحماية الودائع ...المغرب زنقة20ا الرباط قدم اليوم الإثنين السيد أديب ابن ابراهيم كاتب الدولة لدى وزيرة إعداد التراب الوطني والتمير والإسكان وسياسة المدينة، المك",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "arabic",
+      "pressbee",
+      "بنبراهيم",
+      "يكشف",
+      "مضامين"
+    ],
+    "rang": 62,
+    "sentiment": "Neutre",
+    "lien": "https://arabic.pressbee.net/show10380029.html?title=بنبراهيم-يكشف-مضامين-مشروع-قانون-تسوية-أزمات-البنوك-وحماية-الودائ",
+    "url1": "images1/20260120222818-titre.jpg",
+    "url2": "images1/20260120222818-article.jpg",
+    "url3": "images1/20260120222818-image.jpg"
+  },
+  {
+    "index": 20260120222819,
+    "date_heure": "2026-01-20T05:16:00.000Z",
+    "media_source": "https://leseco.ma/maroc/casablanca-wam-morocco-reunit-plus-de-100-exposants-de-18-pays.html",
+    "titre_article": "Leseco - Casablanca : WAM Morocco réunit plus de 100 exposants de 18 pays Le Salon mondial de la fabrication avancée et de la mobilité du futur (WAM Morocco) accueille, du 20 au 22 janvier à Casablanca, des géants industriels mond",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "casablanca",
+      "morocco",
+      "leseco",
+      "unit",
+      "plus"
+    ],
+    "rang": 54,
+    "sentiment": "Neutre",
+    "lien": "https://leseco.ma/maroc/casablanca-wam-morocco-reunit-plus-de-100-exposants-de-18-pays.html",
+    "url1": "images1/20260120222819-titre.jpg",
+    "url2": "images1/20260120222819-article.jpg",
+    "url3": "images1/20260120222819-image.jpg"
+  },
+  {
+    "index": 20260120222820,
+    "date_heure": "2026-01-20T13:16:00.000Z",
+    "media_source": "https://leseco.ma/business/logement-locatif-intermediaire-le-casse-tete-du-loyer-de-reference.html",
+    "titre_article": "Leseco - Logement locatif intermédiaire : le casse-tête du loyer de référence Face à la flambée des valeurs locatives et à la difficulté d’accès au logement pour la classe moyenne, le gouvernement explore de nouvelles pistes de ré",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "logement",
+      "leseco",
+      "locatif",
+      "interm",
+      "diaire"
+    ],
+    "rang": 24,
+    "sentiment": "Neutre",
+    "lien": "https://leseco.ma/business/logement-locatif-intermediaire-le-casse-tete-du-loyer-de-reference.html",
+    "url1": "images1/20260120222820-titre.jpg",
+    "url2": "images1/20260120222820-article.jpg",
+    "url3": "images1/20260120222820-image.jpg"
+  },
+  {
+    "index": 20260120222821,
+    "date_heure": "2026-01-20T15:16:00.000Z",
+    "media_source": "https://www.hespress.com/منح-رخص-لـتبييض-البناء-العشوائي-يورط-1689061.html",
+    "titre_article": "Hespress - منح رخص لـ\"تبييض\" البناء العشوائي يورط رجال سلطة ومنتخبين بالمغرب كشفت تسريبات من إحصاء أنجزته مصالح الإدارة الترابية بعمالات وأقاليم جهات الدار البيضاء-سطات ومراكش-آسفي والرباط-سلا-القنيطرة عن تورط رؤساء جماعات في منح",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "hespress",
+      "تبييض",
+      "البناء",
+      "العشوائي",
+      "يورط"
+    ],
+    "rang": 6,
+    "sentiment": "Neutre",
+    "lien": "https://www.hespress.com/منح-رخص-لـتبييض-البناء-العشوائي-يورط-1689061.html",
+    "url1": "images1/20260120222821-titre.jpg",
+    "url2": "images1/20260120222821-article.jpg",
+    "url3": "images1/20260120222821-image.jpg"
+  },
+  {
+    "index": 20260120222822,
+    "date_heure": "2026-01-20T15:16:00.000Z",
+    "media_source": "https://www.lavieeco.com/au-royaume/urbanisme-et-habitat-feu-vert-a-la-creation-des-12-agences-regionales",
+    "titre_article": "Hespress - منح رخص لـ\"تبييض\" البناء العشوائي يورط رجال سلطة ومنتخبين بالمغرب كشفت تسريبات من إحصاء أنجزته مصالح الإدارة الترابية بعمالات وأقاليم جهات الدار البيضاء-سطات ومراكش-آسفي والرباط-سلا-القنيطرة عن تورط رؤساء جماعات في منح",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "hespress",
+      "تبييض",
+      "البناء",
+      "العشوائي",
+      "يورط"
+    ],
+    "rang": 6,
+    "sentiment": "Neutre",
+    "lien": "https://www.lavieeco.com/au-royaume/urbanisme-et-habitat-feu-vert-a-la-creation-des-12-agences-regionales",
+    "url1": "images1/20260120222822-titre.jpg",
+    "url2": "images1/20260120222822-article.jpg",
+    "url3": "images1/20260120222822-image.jpg"
+  },
+  {
+    "index": 20260120222823,
+    "date_heure": "2026-01-20T15:16:00.000Z",
+    "media_source": "https://alaoual.com/رئيسية/465005.html",
+    "titre_article": "Hespress - منح رخص لـ\"تبييض\" البناء العشوائي يورط رجال سلطة ومنتخبين بالمغرب كشفت تسريبات من إحصاء أنجزته مصالح الإدارة الترابية بعمالات وأقاليم جهات الدار البيضاء-سطات ومراكش-آسفي والرباط-سلا-القنيطرة عن تورط رؤساء جماعات في منح",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "hespress",
+      "تبييض",
+      "البناء",
+      "العشوائي",
+      "يورط"
+    ],
+    "rang": 6,
+    "sentiment": "Neutre",
+    "lien": "https://alaoual.com/رئيسية/465005.html",
+    "url1": "images1/20260120222823-titre.jpg",
+    "url2": "images1/20260120222823-article.jpg",
+    "url3": "images1/20260120222823-image.jpg"
+  },
+  {
+    "index": 20260120222824,
+    "date_heure": "2026-01-20T15:16:00.000Z",
+    "media_source": "https://www.leconomistemaghrebin.com/2026/01/20/inondations-1969-tunisie-catastrophe-naturelle",
+    "titre_article": "Hespress - منح رخص لـ\"تبييض\" البناء العشوائي يورط رجال سلطة ومنتخبين بالمغرب كشفت تسريبات من إحصاء أنجزته مصالح الإدارة الترابية بعمالات وأقاليم جهات الدار البيضاء-سطات ومراكش-آسفي والرباط-سلا-القنيطرة عن تورط رؤساء جماعات في منح",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "hespress",
+      "تبييض",
+      "البناء",
+      "العشوائي",
+      "يورط"
+    ],
+    "rang": 6,
+    "sentiment": "Neutre",
+    "lien": "https://www.leconomistemaghrebin.com/2026/01/20/inondations-1969-tunisie-catastrophe-naturelle",
+    "url1": "images1/20260120222824-titre.jpg",
+    "url2": "images1/20260120222824-article.jpg",
+    "url3": "images1/20260120222824-image.jpg"
+  },
+  {
+    "index": 20260120222825,
+    "date_heure": "2026-01-20T15:16:00.000Z",
+    "media_source": "https://arabic.pressbee.net/show10381743.html?title=بن-إبراهيم-التسوية-ت-قر-ب-خدمات-التعمير",
+    "titre_article": "Hespress - منح رخص لـ\"تبييض\" البناء العشوائي يورط رجال سلطة ومنتخبين بالمغرب كشفت تسريبات من إحصاء أنجزته مصالح الإدارة الترابية بعمالات وأقاليم جهات الدار البيضاء-سطات ومراكش-آسفي والرباط-سلا-القنيطرة عن تورط رؤساء جماعات في منح",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "hespress",
+      "تبييض",
+      "البناء",
+      "العشوائي",
+      "يورط"
+    ],
+    "rang": 6,
+    "sentiment": "Neutre",
+    "lien": "https://arabic.pressbee.net/show10381743.html?title=بن-إبراهيم-التسوية-ت-قر-ب-خدمات-التعمير",
+    "url1": "images1/20260120222825-titre.jpg",
+    "url2": "images1/20260120222825-article.jpg",
+    "url3": "images1/20260120222825-image.jpg"
+  },
+  {
+    "index": 20260120222826,
+    "date_heure": "2026-01-20T16:16:00.000Z",
+    "media_source": "https://fr.hespress.com/459146-urbanisme-et-habitat-le-parlement-adopte-le-pl-portant-creation-des-agences-regionales.html",
+    "titre_article": "Fr Hespress - Urbanisme et habitat : Le parlement adopte le PL portant création des Agences régionales La Chambre des représentants a adopté, ce mardi 20 janvier 2026, le projet de loi n° 64.23 relatif à la création des Agences ré",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "ation",
+      "agences",
+      "2026",
+      "hespress",
+      "urbanisme"
+    ],
+    "rang": 58,
+    "sentiment": "Neutre",
+    "lien": "https://fr.hespress.com/459146-urbanisme-et-habitat-le-parlement-adopte-le-pl-portant-creation-des-agences-regionales.html"
+  },
+  {
+    "index": 20260120222827,
+    "date_heure": "2026-01-20T16:16:00.000Z",
+    "media_source": "https://laquotidienne.ma/article/info-politique/creation-agences-regionales-urbanisme-habitat-chambre-representants",
+    "titre_article": "Fr Hespress - Urbanisme et habitat : Le parlement adopte le PL portant création des Agences régionales La Chambre des représentants a adopté, ce mardi 20 janvier 2026, le projet de loi n° 64.23 relatif à la création des Agences ré",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "ation",
+      "agences",
+      "2026",
+      "hespress",
+      "urbanisme"
+    ],
+    "rang": 58,
+    "sentiment": "Neutre",
+    "lien": "https://laquotidienne.ma/article/info-politique/creation-agences-regionales-urbanisme-habitat-chambre-representants",
+    "url1": "images1/20260120222827-titre.jpg",
+    "url2": "images1/20260120222827-article.jpg",
+    "url3": "images1/20260120222827-image.jpg"
+  },
+  {
+    "index": 20260120222828,
+    "date_heure": "2026-01-20T19:16:00.000Z",
+    "media_source": "https://al3omk.com/1132036.html",
+    "titre_article": "Al3omk - بسبب “فوضى عقود الكراء”.. تعليمات صارمة لموظفي تصحيح الإمضاءات بجماعات جهة البيضاء علمت جريدة \"العمق المغربي\" من مصادر جيدة الاطلاع أن المصالح الإقليمية بجهة الدار البيضاء سطات أعطت توجيهات صارمة لرؤساء الجماعات الترابية،",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "صارمة",
+      "البيضاء",
+      "al3omk",
+      "بسبب",
+      "فوضى"
+    ],
+    "rang": 60,
+    "sentiment": "Neutre",
+    "lien": "https://al3omk.com/1132036.html",
+    "url1": "images1/20260120222828-titre.jpg",
+    "url2": "images1/20260120222828-article.jpg",
+    "url3": "images1/20260120222828-image.jpg"
+  },
+  {
+    "index": 20260120222829,
+    "date_heure": "2026-01-20T19:16:00.000Z",
+    "media_source": "https://www.lebrief.ma/la-chambre-des-representants-adopte-un-projet-de-loi-relatif-a-la-creation-des-agences-regionales-durbanisme-et-dhabitat-100138462",
+    "titre_article": "Al3omk - بسبب “فوضى عقود الكراء”.. تعليمات صارمة لموظفي تصحيح الإمضاءات بجماعات جهة البيضاء علمت جريدة \"العمق المغربي\" من مصادر جيدة الاطلاع أن المصالح الإقليمية بجهة الدار البيضاء سطات أعطت توجيهات صارمة لرؤساء الجماعات الترابية،",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "صارمة",
+      "البيضاء",
+      "al3omk",
+      "بسبب",
+      "فوضى"
+    ],
+    "rang": 60,
+    "sentiment": "Neutre",
+    "lien": "https://www.lebrief.ma/la-chambre-des-representants-adopte-un-projet-de-loi-relatif-a-la-creation-des-agences-regionales-durbanisme-et-dhabitat-100138462",
+    "url1": "images1/20260120222829-titre.jpg",
+    "url2": "images1/20260120222829-article.jpg",
+    "url3": "images1/20260120222829-image.jpg"
+  },
+  {
+    "index": 20260120222830,
+    "date_heure": "2026-01-20T19:16:00.000Z",
+    "media_source": "https://www.lebrief.ma/la-chambre-des-representants-adopte-en-deuxieme-lecture-la-loi-sur-lenseignement-superieur-100138491",
+    "titre_article": "Al3omk - بسبب “فوضى عقود الكراء”.. تعليمات صارمة لموظفي تصحيح الإمضاءات بجماعات جهة البيضاء علمت جريدة \"العمق المغربي\" من مصادر جيدة الاطلاع أن المصالح الإقليمية بجهة الدار البيضاء سطات أعطت توجيهات صارمة لرؤساء الجماعات الترابية،",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "صارمة",
+      "البيضاء",
+      "al3omk",
+      "بسبب",
+      "فوضى"
+    ],
+    "rang": 60,
+    "sentiment": "Neutre",
+    "lien": "https://www.lebrief.ma/la-chambre-des-representants-adopte-en-deuxieme-lecture-la-loi-sur-lenseignement-superieur-100138491",
+    "url1": "images1/20260120222830-titre.jpg",
+    "url2": "images1/20260120222830-article.jpg",
+    "url3": "images1/20260120222830-image.jpg"
+  },
+  {
+    "index": 20260120222831,
+    "date_heure": "2026-01-16T05:16:00.000Z",
+    "media_source": "https://almaghribi.ma/323401",
+    "titre_article": "Almaghribi - :white_check_mark: أنوار يكتب: التخطيط الحضري الذكي بين ذاكرة التراب ومخاطر المناخ... دور الذكاء الاصطناعي وانترنت الاشياء في حماية المدينة والإنسان - أخبار المغرب يشهد التخطيط الحضري اليوم تحولا نوعيا من منطق الإسقاط",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "التخطيط",
+      "الحضري",
+      "almaghribi",
+      "white_check_mark",
+      "أنوار"
+    ],
+    "rang": 95,
+    "sentiment": "Neutre",
+    "lien": "https://almaghribi.ma/323401",
+    "url1": "images1/20260120222831-titre.jpg",
+    "url2": "images1/20260120222831-article.jpg",
+    "url3": "images1/20260120222831-image.jpg"
+  },
+  {
+    "index": 20260120222832,
+    "date_heure": "2026-01-16T05:16:00.000Z",
+    "media_source": "https://www.infoimmo.ma/le-groupe-alliances-developpement-immobilier-decroche-le-label-elu-service-client-de-lannee-2026",
+    "titre_article": "Almaghribi - :white_check_mark: أنوار يكتب: التخطيط الحضري الذكي بين ذاكرة التراب ومخاطر المناخ... دور الذكاء الاصطناعي وانترنت الاشياء في حماية المدينة والإنسان - أخبار المغرب يشهد التخطيط الحضري اليوم تحولا نوعيا من منطق الإسقاط",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "التخطيط",
+      "الحضري",
+      "almaghribi",
+      "white_check_mark",
+      "أنوار"
+    ],
+    "rang": 95,
+    "sentiment": "Neutre",
+    "lien": "https://www.infoimmo.ma/le-groupe-alliances-developpement-immobilier-decroche-le-label-elu-service-client-de-lannee-2026",
+    "url1": "images1/20260120222832-titre.jpg",
+    "url2": "images1/20260120222832-article.jpg",
+    "url3": "images1/20260120222832-image.jpg"
+  },
+  {
+    "index": 20260120222833,
+    "date_heure": "2026-01-16T16:16:00.000Z",
+    "media_source": "https://industries.ma/40ᵉ-journee-nationale-de-larchitecte-vers-une-synergie-public-prive-durable",
+    "titre_article": "Industries - 40ᵉ Journée Nationale de l’Architecte : vers une synergie public-privé durable Placée sous le Haut Patronage de Sa Majesté le Roi Mohammed VI, que Dieu L’assiste, la 40ᵉ Journée Nationale de l’Architecte marque une ét",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "journ",
+      "nationale",
+      "architecte",
+      "industries",
+      "vers"
+    ],
+    "rang": 30,
+    "sentiment": "Neutre",
+    "lien": "https://industries.ma/40ᵉ-journee-nationale-de-larchitecte-vers-une-synergie-public-prive-durable",
+    "url1": "images1/20260120222833-titre.jpg",
+    "url2": "images1/20260120222833-article.jpg",
+    "url3": "images1/20260120222833-image.jpg"
+  },
+  {
+    "index": 20260120222834,
+    "date_heure": "2026-01-17T02:16:00.000Z",
+    "media_source": "https://tanja24.com/محمد-الحمامي-رئيس-أكبر-مقاطعة-بالمغرب",
+    "titre_article": "Tanja24 - :white_check_mark: محمد الحمامي .. رئيس مقاطعة بني مكادة الذي يتقن فن \"الرقص على الرخص\" | طنجة24 جارا معه أثقال سنوات من الجدل غير المحسوم، ومثقلا بملف “التعمير” الذي لم يغادره يوما، يواصل محمد الحمّامي مساره السياسي وسط",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "محمد",
+      "الذي",
+      "tanja24",
+      "white_check_mark",
+      "الحمامي"
+    ],
+    "rang": 87,
+    "sentiment": "Neutre",
+    "lien": "https://tanja24.com/محمد-الحمامي-رئيس-أكبر-مقاطعة-بالمغرب"
+  },
+  {
+    "index": 20260120222835,
+    "date_heure": "2026-01-17T02:16:00.000Z",
+    "media_source": "https://casa24.ma/economie/63849.html",
+    "titre_article": "Tanja24 - :white_check_mark: محمد الحمامي .. رئيس مقاطعة بني مكادة الذي يتقن فن \"الرقص على الرخص\" | طنجة24 جارا معه أثقال سنوات من الجدل غير المحسوم، ومثقلا بملف “التعمير” الذي لم يغادره يوما، يواصل محمد الحمّامي مساره السياسي وسط",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "محمد",
+      "الذي",
+      "tanja24",
+      "white_check_mark",
+      "الحمامي"
+    ],
+    "rang": 87,
+    "sentiment": "Neutre",
+    "lien": "https://casa24.ma/economie/63849.html",
+    "url1": "images1/20260120222835-titre.jpg",
+    "url2": "images1/20260120222835-article.jpg",
+    "url3": "images1/20260120222835-image.jpg"
+  },
+  {
+    "index": 20260120222836,
+    "date_heure": "2026-01-17T02:16:00.000Z",
+    "media_source": "https://www.alalam.ma/بعد-انهيار-عمارة-قيد-البناء-بمراكش-تضامن-مهني-يقابله-مطلب-حقوقي_a31275.html",
+    "titre_article": "Tanja24 - :white_check_mark: محمد الحمامي .. رئيس مقاطعة بني مكادة الذي يتقن فن \"الرقص على الرخص\" | طنجة24 جارا معه أثقال سنوات من الجدل غير المحسوم، ومثقلا بملف “التعمير” الذي لم يغادره يوما، يواصل محمد الحمّامي مساره السياسي وسط",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "محمد",
+      "الذي",
+      "tanja24",
+      "white_check_mark",
+      "الحمامي"
+    ],
+    "rang": 87,
+    "sentiment": "Neutre",
+    "lien": "https://www.alalam.ma/بعد-انهيار-عمارة-قيد-البناء-بمراكش-تضامن-مهني-يقابله-مطلب-حقوقي_a31275.html",
+    "url1": "images1/20260120222836-titre.jpg",
+    "url2": "images1/20260120222836-article.jpg",
+    "url3": "images1/20260120222836-image.jpg"
+  },
+  {
+    "index": 20260120222837,
+    "date_heure": "2026-01-17T02:16:00.000Z",
+    "media_source": "https://hnews.ma/97994",
+    "titre_article": "Tanja24 - :white_check_mark: محمد الحمامي .. رئيس مقاطعة بني مكادة الذي يتقن فن \"الرقص على الرخص\" | طنجة24 جارا معه أثقال سنوات من الجدل غير المحسوم، ومثقلا بملف “التعمير” الذي لم يغادره يوما، يواصل محمد الحمّامي مساره السياسي وسط",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "محمد",
+      "الذي",
+      "tanja24",
+      "white_check_mark",
+      "الحمامي"
+    ],
+    "rang": 87,
+    "sentiment": "Neutre",
+    "lien": "https://hnews.ma/97994",
+    "url1": "images1/20260120222837-titre.jpg",
+    "url2": "images1/20260120222837-article.jpg",
+    "url3": "images1/20260120222837-image.jpg"
+  },
+  {
+    "index": 20260120222838,
+    "date_heure": "2026-01-17T02:16:00.000Z",
+    "media_source": "https://arabic.pressbee.net/show10369656.html?title=محمد-الحمامي-رئيس-مقاطعة-بني-مكادة-الذي-يتقن-فن-الرقص-على-الرخص",
+    "titre_article": "Tanja24 - :white_check_mark: محمد الحمامي .. رئيس مقاطعة بني مكادة الذي يتقن فن \"الرقص على الرخص\" | طنجة24 جارا معه أثقال سنوات من الجدل غير المحسوم، ومثقلا بملف “التعمير” الذي لم يغادره يوما، يواصل محمد الحمّامي مساره السياسي وسط",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "محمد",
+      "الذي",
+      "tanja24",
+      "white_check_mark",
+      "الحمامي"
+    ],
+    "rang": 87,
+    "sentiment": "Neutre",
+    "lien": "https://arabic.pressbee.net/show10369656.html?title=محمد-الحمامي-رئيس-مقاطعة-بني-مكادة-الذي-يتقن-فن-الرقص-على-الرخص",
+    "url1": "images1/20260120222838-titre.jpg",
+    "url2": "images1/20260120222838-article.jpg",
+    "url3": "images1/20260120222838-image.jpg"
+  },
+  {
+    "index": 20260120222839,
+    "date_heure": "2026-01-17T11:16:00.000Z",
+    "media_source": "https://www.moroccomail.fr/2026/01/17/maroc-ue-accord-commercial-sahara-occidental-cooperation-statut-avance",
+    "titre_article": "Moroccomail - Fiche sur le partenariat Maroc - Union européenne (note diplomatique) - Maghreb Online #Maroc #Union_Européenne #accord_agricole #accord_de_pêche #Zone_de_libre_échange #Sahara_Occidental #coopération_Statut_Avancé R",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "maroc",
+      "enne",
+      "moroccomail",
+      "fiche",
+      "partenariat"
+    ],
+    "rang": 2,
+    "sentiment": "Neutre",
+    "lien": "https://www.moroccomail.fr/2026/01/17/maroc-ue-accord-commercial-sahara-occidental-cooperation-statut-avance",
+    "url1": "images1/20260120222839-titre.jpg",
+    "url2": "images1/20260120222839-article.jpg",
+    "url3": "images1/20260120222839-image.jpg"
+  },
+  {
+    "index": 20260120222840,
+    "date_heure": "2026-01-17T13:16:00.000Z",
+    "media_source": "https://www.alalam.ma/بعد-انهيار-عمارة-قيد-البناء-بمراكش-تضامن-مهني-يقابله-مطلب-حقوقي_a31275.amp.html",
+    "titre_article": "Alalam - بعد انهيار عمارة قيد البناء بمراكش… تضامن مهني يقابله مطلب حقوقي بربط المسؤولية بالمحاسبة أعاد انهيار عمارة مكونة من خمسة طوابق، كانت في طور البناء بحيّ الشتاء بمدينة مراكش، في الساعات الأولى من يوم الخميس 31 دجنبر 2025،",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "انهيار",
+      "عمارة",
+      "البناء",
+      "alalam",
+      "بمراكش"
+    ],
+    "rang": 50,
+    "sentiment": "Neutre",
+    "lien": "https://www.alalam.ma/بعد-انهيار-عمارة-قيد-البناء-بمراكش-تضامن-مهني-يقابله-مطلب-حقوقي_a31275.amp.html",
+    "url1": "images1/20260120222840-titre.jpg",
+    "url2": "images1/20260120222840-article.jpg",
+    "url3": "images1/20260120222840-image.jpg"
+  },
+  {
+    "index": 20260120222841,
+    "date_heure": "2026-01-17T13:16:00.000Z",
+    "media_source": "https://www.safitoday.com/2026/01/16/حوار-شامل-مع-الدكتور-المصطفى-الرزرازي",
+    "titre_article": "Alalam - بعد انهيار عمارة قيد البناء بمراكش… تضامن مهني يقابله مطلب حقوقي بربط المسؤولية بالمحاسبة أعاد انهيار عمارة مكونة من خمسة طوابق، كانت في طور البناء بحيّ الشتاء بمدينة مراكش، في الساعات الأولى من يوم الخميس 31 دجنبر 2025،",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "انهيار",
+      "عمارة",
+      "البناء",
+      "alalam",
+      "بمراكش"
+    ],
+    "rang": 50,
+    "sentiment": "Neutre",
+    "lien": "https://www.safitoday.com/2026/01/16/حوار-شامل-مع-الدكتور-المصطفى-الرزرازي",
+    "url1": "images1/20260120222841-titre.jpg",
+    "url2": "images1/20260120222841-article.jpg",
+    "url3": "images1/20260120222841-image.jpg"
+  },
+  {
+    "index": 20260120222842,
+    "date_heure": "2026-01-17T13:16:00.000Z",
+    "media_source": "https://www.maroc-hebdo.com/article/nouveau-parc-industriel-de-mediouna-un-projet-du-groupe-cdg-a-12-milliard-de-dirhams",
+    "titre_article": "Alalam - بعد انهيار عمارة قيد البناء بمراكش… تضامن مهني يقابله مطلب حقوقي بربط المسؤولية بالمحاسبة أعاد انهيار عمارة مكونة من خمسة طوابق، كانت في طور البناء بحيّ الشتاء بمدينة مراكش، في الساعات الأولى من يوم الخميس 31 دجنبر 2025،",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "انهيار",
+      "عمارة",
+      "البناء",
+      "alalam",
+      "بمراكش"
+    ],
+    "rang": 50,
+    "sentiment": "Neutre",
+    "lien": "https://www.maroc-hebdo.com/article/nouveau-parc-industriel-de-mediouna-un-projet-du-groupe-cdg-a-12-milliard-de-dirhams"
+  },
+  {
+    "index": 20260120222843,
+    "date_heure": "2026-01-17T15:16:00.000Z",
+    "media_source": "https://h24info.ma/economie/maroc-besoin-liquidite-bancaire-135-mmdh-2025",
+    "titre_article": "H24info - Au Maroc, le besoin de liquidité bancaire dépasse les 135 MMDH fin 2025 Le besoin de liquidité des banques s’est accentué, en décembre 2025, à 135,7 milliards de dirhams (MMDH) en moyenne hebdomadaire, après 129,1 MMDH u",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "mmdh",
+      "2025",
+      "besoin",
+      "liquidit",
+      "h24info"
+    ],
+    "rang": 83,
+    "sentiment": "Neutre",
+    "lien": "https://h24info.ma/economie/maroc-besoin-liquidite-bancaire-135-mmdh-2025",
+    "url1": "images1/20260120222843-titre.jpg",
+    "url2": "images1/20260120222843-article.jpg",
+    "url3": "images1/20260120222843-image.jpg"
+  },
+  {
+    "index": 20260120222844,
+    "date_heure": "2026-01-17T20:16:00.000Z",
+    "media_source": "https://hnews.ma/97994?amp=1",
+    "titre_article": "Hnews - نادية فتاح تتنافس مع المنصوري على حكومة المونديال أشارت العديد من المصادر، إلى أن نادية فتاح، وزيرة الاقتصاد والمالية، هي المرشحة الأقوى لقيادة حزب التجمع الوطني للأحرار خلفا لعزيز أخنوش الذي لن يترشح مرة أخرى لرئاسة حزب ا",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "نادية",
+      "hnews",
+      "فتاح",
+      "تتنافس",
+      "المنصوري"
+    ],
+    "rang": 17,
+    "sentiment": "Neutre",
+    "lien": "https://hnews.ma/97994?amp=1",
+    "url1": "images1/20260120222844-titre.jpg",
+    "url2": "images1/20260120222844-article.jpg",
+    "url3": "images1/20260120222844-image.jpg"
+  },
+  {
+    "index": 20260120222845,
+    "date_heure": "2026-01-18T01:16:00.000Z",
+    "media_source": "https://www.moroccomail.fr/2026/01/17/maroc-ue-accord-commercial-sahara-occidental-cooperation-statut-avance?amp=1",
+    "titre_article": "Moroccomail - Fiche sur le partenariat Maroc - Union européenne (note diplomatique) - Maghreb Online La mise en œuvre du Statut avancé permettra de raffermir les relations Maroc-UE et facilitera leur évolution vers la conclusion d",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "maroc",
+      "moroccomail",
+      "fiche",
+      "partenariat",
+      "union"
+    ],
+    "rang": 32,
+    "sentiment": "Neutre",
+    "lien": "https://www.moroccomail.fr/2026/01/17/maroc-ue-accord-commercial-sahara-occidental-cooperation-statut-avance?amp=1",
+    "url1": "images1/20260120222845-titre.jpg",
+    "url2": "images1/20260120222845-article.jpg",
+    "url3": "images1/20260120222845-image.jpg"
+  },
+  {
+    "index": 20260120222846,
+    "date_heure": "2026-01-18T12:16:00.000Z",
+    "media_source": "https://afrique.le360.ma/economie/industrie-du-sport-le-nouveau-front-de-la-transformation-economique-africaine_Q3GRYQYAXZG6RN7YT2FWEYTPCY?amp;utm_medium=twitter",
+    "titre_article": "Afrique Le360 - Industrie du sport: le nouveau front de la transformation économique africaine En marge de la Coupe d’Afrique des Nations, le AfricaMed Business Forum a placé l’économie du sport au centre d’une réflexion stratégiq",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "afrique",
+      "sport",
+      "le360",
+      "industrie",
+      "nouveau"
+    ],
+    "rang": 22,
+    "sentiment": "Neutre",
+    "lien": "https://afrique.le360.ma/economie/industrie-du-sport-le-nouveau-front-de-la-transformation-economique-africaine_Q3GRYQYAXZG6RN7YT2FWEYTPCY?amp;utm_medium=twitter"
+  },
+  {
+    "index": 20260120222847,
+    "date_heure": "2026-01-18T21:16:00.000Z",
+    "media_source": "https://www.hibazoom.com/article-199270",
+    "titre_article": "Hibazoom - انهيارات مراكش تفضح فشل تدبير المنصوري وتستدعي تدخّل الوالي لهبيل قبل الكارثة المقبلة هبة زووم – الرباط لم يعد ما يقع في مراكش من انهيارات متكررة داخل أوراش البناء مجرد حوادث عرضية يمكن تبريرها بالقضاء والقدر أو أخطاء ت",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "انهيارات",
+      "مراكش",
+      "hibazoom",
+      "تفضح",
+      "تدبير"
+    ],
+    "rang": 54,
+    "sentiment": "Neutre",
+    "lien": "https://www.hibazoom.com/article-199270"
+  },
+  {
+    "index": 20260120222848,
+    "date_heure": "2026-01-15T07:16:00.000Z",
+    "media_source": "https://www.hespress.com/الكراء-المؤقت-يهدد-استقرار-السكن-في-ال-1686668.html?print=",
+    "titre_article": "Hespress - الكراء المؤقت يهدد استقرار السكن في المغرب وسط تحذيرات من أزمة خانقة قال فاعلون في حماية المستهلك إن “الكراء المؤقت، الذي ينتشر في المغرب داخل المناطق السكنية، بات يمس بشكل مباشر بالحق في السكن، بعدما ساهم في تقليص العر",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "الكراء",
+      "المغرب",
+      "hespress",
+      "المؤقت",
+      "يهدد"
+    ],
+    "rang": 77,
+    "sentiment": "Neutre",
+    "lien": "https://www.hespress.com/الكراء-المؤقت-يهدد-استقرار-السكن-في-ال-1686668.html?print=",
+    "url1": "images1/20260120222848-titre.jpg",
+    "url2": "images1/20260120222848-article.jpg",
+    "url3": "images1/20260120222848-image.jpg"
+  },
+  {
+    "index": 20260120222849,
+    "date_heure": "2026-01-15T07:16:00.000Z",
+    "media_source": "https://www.travelandtourworld.ae/أخبار/البند/تتوسع-شركة-ماهلاتيني-للسفر-الفاخر-لتشمل-المغرب،-حيث-تقدم-رحلات-مصممة-خصيصاً-تمزج-بين-التاريخ-والعمارة-والثقافة-للمسافرين-الباحثين-عن-",
+    "titre_article": "Hespress - الكراء المؤقت يهدد استقرار السكن في المغرب وسط تحذيرات من أزمة خانقة قال فاعلون في حماية المستهلك إن “الكراء المؤقت، الذي ينتشر في المغرب داخل المناطق السكنية، بات يمس بشكل مباشر بالحق في السكن، بعدما ساهم في تقليص العر",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "الكراء",
+      "المغرب",
+      "hespress",
+      "المؤقت",
+      "يهدد"
+    ],
+    "rang": 77,
+    "sentiment": "Neutre",
+    "lien": "https://www.travelandtourworld.ae/أخبار/البند/تتوسع-شركة-ماهلاتيني-للسفر-الفاخر-لتشمل-المغرب،-حيث-تقدم-رحلات-مصممة-خصيصاً-تمزج-بين-التاريخ-والعمارة-والثقافة-للمسافرين-الباحثين-عن-"
+  },
+  {
+    "index": 20260120222850,
+    "date_heure": "2026-01-15T11:16:00.000Z",
+    "media_source": "https://www.bladi.net/immobilier-maroc-baisse-prix-loyers,118948.html",
+    "titre_article": "Bladi - Immobilier au Maroc : vers une baisse de 20 % du prix des loyers ? Le programme « Villes sans bidonvilles » a bénéficié à plus de 382 000 familles au 31 décembre 2025, marquant une étape majeure dans la résorption de l’hab",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "2025",
+      "bladi",
+      "immobilier",
+      "maroc",
+      "vers"
+    ],
+    "rang": 91,
+    "sentiment": "Neutre",
+    "lien": "https://www.bladi.net/immobilier-maroc-baisse-prix-loyers,118948.html",
+    "url1": "images1/20260120222850-titre.jpg",
+    "url2": "images1/20260120222850-article.jpg",
+    "url3": "images1/20260120222850-image.jpg"
+  },
+  {
+    "index": 20260120222851,
+    "date_heure": "2026-01-15T14:16:00.000Z",
+    "media_source": "https://barlamane.com/ديرها-غا-زوينة-المهام-الجديدة-لأخن",
+    "titre_article": "Barlamane - ديرها غا زوينة.. المهام الجديدة لأخنوش/ مصير حزب التجمع وحزب الأصالة/ رئيس الحكومة المقبل (فيديو) يثير البرنامج التعليقي “ديرها غا زوينة.”، الذي يبث على القناة الرسمية بمنصة التواصل الاجتماعي “يوتيوب” الخاصة بموقع “برل",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "ديرها",
+      "زوينة",
+      "barlamane",
+      "المهام",
+      "الجديدة"
+    ],
+    "rang": 24,
+    "sentiment": "Neutre",
+    "lien": "https://barlamane.com/ديرها-غا-زوينة-المهام-الجديدة-لأخن"
+  },
+  {
+    "index": 20260120222852,
+    "date_heure": "2026-01-13T22:16:00.000Z",
+    "media_source": "https://ecopress.ma/المغرب-يتخذ-إجراءات-جديدة-في-الإيجار-ا",
+    "titre_article": "Ecopress - المغرب يتخذ إجراءات جديدة في الإيجار المؤقت وتقليص كلفته يتجه المغرب إلى إجراءات جديدة في الإيجار المؤقت وتقليص كلفته، وفق ما صرح به أديب بن إبراهيم، كاتب الدولة لدى وزيرة إعداد التراب الوطني والتعمير والإسكان وسياسة ال",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "المغرب",
+      "إجراءات",
+      "جديدة",
+      "الإيجار",
+      "المؤقت"
+    ],
+    "rang": 4,
+    "sentiment": "Neutre",
+    "lien": "https://ecopress.ma/المغرب-يتخذ-إجراءات-جديدة-في-الإيجار-ا",
+    "url1": "images1/20260120222852-titre.jpg",
+    "url2": "images1/20260120222852-article.jpg",
+    "url3": "images1/20260120222852-image.jpg"
+  },
+  {
+    "index": 20260120222853,
+    "date_heure": "2026-01-14T00:16:00.000Z",
+    "media_source": "https://www.belpresse.com/politique/608503.html",
+    "titre_article": "Belpresse - د.بلقاضي: قرار أخنوش بعدم الترشح لولاية ثالثة يربك أحزاب اليسار شكّل إعلان رئيس الحكومة عزيز أخنوش بعدم الترشح لترؤس حزب التجمع الوطني للأحرار لولاية جديدة، وعدم خوض الانتخابات البرلمانية المقبلة، لحظة سياسية لافتة أثا",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "أخنوش",
+      "بعدم",
+      "الترشح",
+      "لولاية",
+      "belpresse"
+    ],
+    "rang": 79,
+    "sentiment": "Neutre",
+    "lien": "https://www.belpresse.com/politique/608503.html",
+    "url1": "images1/20260120222853-titre.jpg",
+    "url2": "images1/20260120222853-article.jpg",
+    "url3": "images1/20260120222853-image.jpg"
+  },
+  {
+    "index": 20260120222854,
+    "date_heure": "2026-01-14T09:16:00.000Z",
+    "media_source": "https://www.mediaterranee.com/1432026-maroc-les-credits-bancaires-en-hausse-de-62-fin-novembre-2025.html",
+    "titre_article": "Mediaterranee - Maroc : les crédits bancaires en hausse de 6,2% à fin novembre 2025 Le secteur bancaire marocain affiche une dynamique solide. Selon les dernières données publiées par Bank Al-Maghrib, l'encours du crédit bancaire",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "bancaire",
+      "2025",
+      "mediaterranee",
+      "maroc",
+      "dits"
+    ],
+    "rang": 13,
+    "sentiment": "Neutre",
+    "lien": "https://www.mediaterranee.com/1432026-maroc-les-credits-bancaires-en-hausse-de-62-fin-novembre-2025.html",
+    "url1": "images1/20260120222854-titre.jpg",
+    "url2": "images1/20260120222854-article.jpg",
+    "url3": "images1/20260120222854-image.jpg"
+  },
+  {
+    "index": 20260120222855,
+    "date_heure": "2026-01-14T10:16:00.000Z",
+    "media_source": "https://h24info.ma/maroc/kiosque/la-revue-de-presse-de-ce-mercredi-14-janvier",
+    "titre_article": "H24info - La revue de presse de ce mercredi 14 janvier , H24info H24info Le Maroc parmi les 10 premiers pays africains pour l’attractivité des affaires en 2026; Projet gouvernemental pour réduire les loyers jusqu’à 20 %; La minist",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "h24info",
+      "2026",
+      "revue",
+      "presse",
+      "mercredi"
+    ],
+    "rang": 28,
+    "sentiment": "Neutre",
+    "lien": "https://h24info.ma/maroc/kiosque/la-revue-de-presse-de-ce-mercredi-14-janvier",
+    "url1": "images1/20260120222855-titre.jpg",
+    "url2": "images1/20260120222855-article.jpg",
+    "url3": "images1/20260120222855-image.jpg"
+  },
+  {
+    "index": 20260120222856,
+    "date_heure": "2026-01-14T19:16:00.000Z",
+    "media_source": "https://article19.ma/accueil/archives/188017",
+    "titre_article": "Article19 - Chronique – L’heure est venue d’effacer l’héritage de Lyautey du port de Casablanca Par Abderrahim Ariri * Lorsque le général Lyautey décida de transférer la capitale du Maroc de Fès à Rabat, cette décision n’était nul",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "lyautey",
+      "article19",
+      "chronique",
+      "heure",
+      "venue"
+    ],
+    "rang": 53,
+    "sentiment": "Neutre",
+    "lien": "https://article19.ma/accueil/archives/188017",
+    "url1": "images1/20260120222856-titre.jpg",
+    "url2": "images1/20260120222856-article.jpg",
+    "url3": "images1/20260120222856-image.jpg"
+  },
+  {
+    "index": 20260120222857,
+    "date_heure": "2026-01-14T19:16:00.000Z",
+    "media_source": "https://www.marrakech24.info/11-5498",
+    "titre_article": "Article19 - Chronique – L’heure est venue d’effacer l’héritage de Lyautey du port de Casablanca Par Abderrahim Ariri * Lorsque le général Lyautey décida de transférer la capitale du Maroc de Fès à Rabat, cette décision n’était nul",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "lyautey",
+      "article19",
+      "chronique",
+      "heure",
+      "venue"
+    ],
+    "rang": 53,
+    "sentiment": "Neutre",
+    "lien": "https://www.marrakech24.info/11-5498",
+    "url1": "images1/20260120222857-titre.jpg",
+    "url2": "images1/20260120222857-article.jpg",
+    "url3": "images1/20260120222857-image.jpg"
+  },
+  {
+    "index": 20260120222858,
+    "date_heure": "2026-01-14T20:16:00.000Z",
+    "media_source": "https://www.hespress.com/الكراء-المؤقت-يهدد-استقرار-السكن-في-ال-1686668.html",
+    "titre_article": "Hespress - الكراء المؤقت يهدد استقرار السكن في المغرب وسط تحذيرات من أزمة خانقة قال فاعلون في حماية المستهلك إن “الكراء المؤقت، الذي ينتشر في المغرب داخل المناطق السكنية، بات يمس بشكل مباشر بالحق في السكن، بعدما ساهم في تقليص العر",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "الكراء",
+      "المغرب",
+      "hespress",
+      "المؤقت",
+      "يهدد"
+    ],
+    "rang": 79,
+    "sentiment": "Neutre",
+    "lien": "https://www.hespress.com/الكراء-المؤقت-يهدد-استقرار-السكن-في-ال-1686668.html",
+    "url1": "images1/20260120222858-titre.jpg",
+    "url2": "images1/20260120222858-article.jpg",
+    "url3": "images1/20260120222858-image.jpg"
+  },
+  {
+    "index": 20260120222859,
+    "date_heure": "2026-01-14T20:16:00.000Z",
+    "media_source": "https://rue20.com/970229.html",
+    "titre_article": "Hespress - الكراء المؤقت يهدد استقرار السكن في المغرب وسط تحذيرات من أزمة خانقة قال فاعلون في حماية المستهلك إن “الكراء المؤقت، الذي ينتشر في المغرب داخل المناطق السكنية، بات يمس بشكل مباشر بالحق في السكن، بعدما ساهم في تقليص العر",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "الكراء",
+      "المغرب",
+      "hespress",
+      "المؤقت",
+      "يهدد"
+    ],
+    "rang": 79,
+    "sentiment": "Neutre",
+    "lien": "https://rue20.com/970229.html",
+    "url1": "images1/20260120222859-titre.jpg",
+    "url2": "images1/20260120222859-article.jpg",
+    "url3": "images1/20260120222859-image.jpg"
+  },
+  {
+    "index": 20260120222860,
+    "date_heure": "2026-01-14T20:16:00.000Z",
+    "media_source": "https://www.chtoukapress.com/300390.html",
+    "titre_article": "Hespress - الكراء المؤقت يهدد استقرار السكن في المغرب وسط تحذيرات من أزمة خانقة قال فاعلون في حماية المستهلك إن “الكراء المؤقت، الذي ينتشر في المغرب داخل المناطق السكنية، بات يمس بشكل مباشر بالحق في السكن، بعدما ساهم في تقليص العر",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "الكراء",
+      "المغرب",
+      "hespress",
+      "المؤقت",
+      "يهدد"
+    ],
+    "rang": 79,
+    "sentiment": "Neutre",
+    "lien": "https://www.chtoukapress.com/300390.html",
+    "url1": "images1/20260120222860-titre.jpg",
+    "url2": "images1/20260120222860-article.jpg",
+    "url3": "images1/20260120222860-image.jpg"
+  },
+  {
+    "index": 20260120222861,
+    "date_heure": "2026-01-14T20:16:00.000Z",
+    "media_source": "https://www.marocmedias.com/156696/الإعلام-الإيطالي-المغرب-ينجح-في-كان-2025-و",
+    "titre_article": "Hespress - الكراء المؤقت يهدد استقرار السكن في المغرب وسط تحذيرات من أزمة خانقة قال فاعلون في حماية المستهلك إن “الكراء المؤقت، الذي ينتشر في المغرب داخل المناطق السكنية، بات يمس بشكل مباشر بالحق في السكن، بعدما ساهم في تقليص العر",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "الكراء",
+      "المغرب",
+      "hespress",
+      "المؤقت",
+      "يهدد"
+    ],
+    "rang": 79,
+    "sentiment": "Neutre",
+    "lien": "https://www.marocmedias.com/156696/الإعلام-الإيطالي-المغرب-ينجح-في-كان-2025-و",
+    "url1": "images1/20260120222861-titre.jpg",
+    "url2": "images1/20260120222861-article.jpg",
+    "url3": "images1/20260120222861-image.jpg"
+  },
+  {
+    "index": 20260120222862,
+    "date_heure": "2026-01-14T20:16:00.000Z",
+    "media_source": "https://www.almaghribtoday.net/amp/318/075612-الحكومة-المغربية-تدرس-تقنين-الإيجار-المؤقت-airbnb-وتقليص-كلفة-الكراء-بـ20",
+    "titre_article": "Hespress - الكراء المؤقت يهدد استقرار السكن في المغرب وسط تحذيرات من أزمة خانقة قال فاعلون في حماية المستهلك إن “الكراء المؤقت، الذي ينتشر في المغرب داخل المناطق السكنية، بات يمس بشكل مباشر بالحق في السكن، بعدما ساهم في تقليص العر",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "الكراء",
+      "المغرب",
+      "hespress",
+      "المؤقت",
+      "يهدد"
+    ],
+    "rang": 79,
+    "sentiment": "Neutre",
+    "lien": "https://www.almaghribtoday.net/amp/318/075612-الحكومة-المغربية-تدرس-تقنين-الإيجار-المؤقت-airbnb-وتقليص-كلفة-الكراء-بـ20",
+    "url1": "images1/20260120222862-titre.jpg",
+    "url2": "images1/20260120222862-article.jpg",
+    "url3": "images1/20260120222862-image.jpg"
+  },
+  {
+    "index": "20260120222863",
+    "date_heure": "2026-01-19 19:16",
+    "alerte": "Oui",
+    "media_source": "https://www.ad-hoc-news.de/boerse/news/ueberblick/alliances-developpement-immobilier-un-titre-sous-pression-entre/68500831",
+    "titre_article": "Ad-hoc-news - Alliances Développement Immobilier : un titre sous pression, entre incertitudes boursières et pari Le titre Alliances Développement Immobilier reste faiblement échangé à Casablanca, sur fond de faiblesse du secteur i",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "alliances",
+      "veloppement",
+      "immobilier",
+      "titre",
+      "news"
+    ],
+    "rang": 43,
+    "sentiment": "Neutre",
+    "lien": "https://www.ad-hoc-news.de/boerse/news/ueberblick/alliances-developpement-immobilier-un-titre-sous-pression-entre/68500831",
+    "url1": "images1/20260120222863-titre.jpg",
+    "url2": "images1/20260120222863-article.jpg",
+    "url3": "images1/20260120222863-image.jpg"
+  },
+  {
+    "index": "20260120222864",
+    "date_heure": "2026-01-19 19:16",
+    "alerte": "Oui",
+    "media_source": "https://premiumtravelnews.com/2026/01/19/la-faillite-du-tourisme-social-marocain-implique-lechec-politique-des-cheques-vacances",
+    "titre_article": "Ad-hoc-news - Alliances Développement Immobilier : un titre sous pression, entre incertitudes boursières et pari Le titre Alliances Développement Immobilier reste faiblement échangé à Casablanca, sur fond de faiblesse du secteur i",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "alliances",
+      "veloppement",
+      "immobilier",
+      "titre",
+      "news"
+    ],
+    "rang": 43,
+    "sentiment": "Neutre",
+    "lien": "https://premiumtravelnews.com/2026/01/19/la-faillite-du-tourisme-social-marocain-implique-lechec-politique-des-cheques-vacances",
+    "url1": "images1/20260120222864-titre.jpg",
+    "url2": "images1/20260120222864-article.jpg",
+    "url3": "images1/20260120222864-image.jpg"
+  },
+  {
+    "index": "20260120222865",
+    "date_heure": "2026-01-19 20:16",
+    "alerte": "Oui",
+    "media_source": "https://alaan.ma?p=79957",
+    "titre_article": "Alaan - يستقطب معرض الصناعة المتقدمة والتنقل المستقبلي (WAM Morocco) نخبة غير مسبوقة من رواد الصناعة العالميين، بما في ذلك شركات SAP وSumitomo Corporation وENGIE التي تشارك لأول مرة في أول معرض للصناعة 4.0 ينظم في المغرب – المغرب",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "معرض",
+      "الصناعة",
+      "المغرب",
+      "alaan",
+      "يستقطب"
+    ],
+    "rang": 46,
+    "sentiment": "Neutre",
+    "lien": "https://alaan.ma?p=79957",
+    "url1": "images1/20260120222865-titre.jpg",
+    "url2": "images1/20260120222865-article.jpg",
+    "url3": "images1/20260120222865-image.jpg"
+  },
+  {
+    "index": "20260120222866",
+    "date_heure": "2026-01-19 22:16",
+    "alerte": "Oui",
+    "media_source": "https://rue20.com/971785.html",
+    "titre_article": "Rue20 - بنبراهيم يكشف مضامين مشروع قانون تسوية أزمات البنوك وحماية الودائع زنقة20ا الرباط قدم اليوم الإثنين أديب ابن ابراهيم كاتب الدولة لدى وزيرة إعداد التراب الوطني والتمير والإسكان وسياسة المدينة، المكلف بالإسكان لجنة المالية و",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "rue20",
+      "بنبراهيم",
+      "يكشف",
+      "مضامين",
+      "مشروع"
+    ],
+    "rang": 19,
+    "sentiment": "Neutre",
+    "lien": "https://rue20.com/971785.html",
+    "url1": "images1/20260120222866-titre.jpg",
+    "url2": "images1/20260120222866-article.jpg",
+    "url3": "images1/20260120222866-image.jpg"
+  },
+  {
+    "index": "20260120222867",
+    "date_heure": "2026-01-19 23:16",
+    "alerte": "Oui",
+    "media_source": "https://www.hespress.com/رصيف-الصحافة-مطالب-بإعادة-فتح-المساجد-1689202.html",
+    "titre_article": "Hespress - رصيف الصحافة: مطالب بإعادة فتح المساجد المغلقة في إقليم الجديدة قراءة مواد بعض الجرائد الخاصة بيوم الثلاثاء نستهلها من “بيان اليوم”، التي نشرت أن ساكنة إقليم الجديدة تواجه، منذ مدة، إغلاقا مستمرا لعدد من المساجد الواقعة",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "المساجد",
+      "إقليم",
+      "الجديدة",
+      "hespress",
+      "رصيف"
+    ],
+    "rang": 11,
+    "sentiment": "Neutre",
+    "lien": "https://www.hespress.com/رصيف-الصحافة-مطالب-بإعادة-فتح-المساجد-1689202.html"
+  },
+  {
+    "index": "20260120222868",
+    "date_heure": "2026-01-20 02:16",
+    "alerte": "Oui",
+    "media_source": "https://www.lereporter.ma/casablanca-wam-morocco-reunit-plus-de-100-entreprises-de-18-pays",
+    "titre_article": "Lereporter - Casablanca | WAM Morocco réunit plus de 100 entreprises de 18 pays Le Salon mondial de la fabrication avancée et de la mobilité du futur (WAM Morocco) accueille, du 20 au 22 janvier à Casablanca, des géants industriel",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "casablanca",
+      "morocco",
+      "lereporter",
+      "unit",
+      "plus"
+    ],
+    "rang": 97,
+    "sentiment": "Neutre",
+    "lien": "https://www.lereporter.ma/casablanca-wam-morocco-reunit-plus-de-100-entreprises-de-18-pays"
+  },
+  {
+    "index": "20260120222869",
+    "date_heure": "2026-01-20 05:16",
+    "alerte": "Oui",
+    "media_source": "https://arabic.pressbee.net/show10380029.html?title=بنبراهيم-يكشف-مضامين-مشروع-قانون-تسوية-أزمات-البنوك-وحماية-الودائ",
+    "titre_article": "Arabic Pressbee - بنبراهيم يكشف مضامين مشروع قانون تسوية أزمات البنوك وحماية الودائع ...المغرب زنقة20ا الرباط قدم اليوم الإثنين السيد أديب ابن ابراهيم كاتب الدولة لدى وزيرة إعداد التراب الوطني والتمير والإسكان وسياسة المدينة، المك",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "arabic",
+      "pressbee",
+      "بنبراهيم",
+      "يكشف",
+      "مضامين"
+    ],
+    "rang": 31,
+    "sentiment": "Neutre",
+    "lien": "https://arabic.pressbee.net/show10380029.html?title=بنبراهيم-يكشف-مضامين-مشروع-قانون-تسوية-أزمات-البنوك-وحماية-الودائ",
+    "url1": "images1/20260120222869-titre.jpg",
+    "url2": "images1/20260120222869-article.jpg",
+    "url3": "images1/20260120222869-image.jpg"
+  },
+  {
+    "index": "20260120222870",
+    "date_heure": "2026-01-20 06:16",
+    "alerte": "Oui",
+    "media_source": "https://leseco.ma/maroc/casablanca-wam-morocco-reunit-plus-de-100-exposants-de-18-pays.html",
+    "titre_article": "Leseco - Casablanca : WAM Morocco réunit plus de 100 exposants de 18 pays Le Salon mondial de la fabrication avancée et de la mobilité du futur (WAM Morocco) accueille, du 20 au 22 janvier à Casablanca, des géants industriels mond",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "casablanca",
+      "morocco",
+      "leseco",
+      "unit",
+      "plus"
+    ],
+    "rang": 81,
+    "sentiment": "Neutre",
+    "lien": "https://leseco.ma/maroc/casablanca-wam-morocco-reunit-plus-de-100-exposants-de-18-pays.html",
+    "url1": "images1/20260120222870-titre.jpg",
+    "url2": "images1/20260120222870-article.jpg",
+    "url3": "images1/20260120222870-image.jpg"
+  },
+  {
+    "index": "20260120222871",
+    "date_heure": "2026-01-20 14:16",
+    "alerte": "Oui",
+    "media_source": "https://leseco.ma/business/logement-locatif-intermediaire-le-casse-tete-du-loyer-de-reference.html",
+    "titre_article": "Leseco - Logement locatif intermédiaire : le casse-tête du loyer de référence Face à la flambée des valeurs locatives et à la difficulté d’accès au logement pour la classe moyenne, le gouvernement explore de nouvelles pistes de ré",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "logement",
+      "leseco",
+      "locatif",
+      "interm",
+      "diaire"
+    ],
+    "rang": 16,
+    "sentiment": "Neutre",
+    "lien": "https://leseco.ma/business/logement-locatif-intermediaire-le-casse-tete-du-loyer-de-reference.html",
+    "url1": "images1/20260120222871-titre.jpg",
+    "url2": "images1/20260120222871-article.jpg",
+    "url3": "images1/20260120222871-image.jpg"
+  },
+  {
+    "index": "20260120222872",
+    "date_heure": "2026-01-20 16:16",
+    "alerte": "Oui",
+    "media_source": "https://www.hespress.com/منح-رخص-لـتبييض-البناء-العشوائي-يورط-1689061.html",
+    "titre_article": "Hespress - منح رخص لـ\"تبييض\" البناء العشوائي يورط رجال سلطة ومنتخبين بالمغرب كشفت تسريبات من إحصاء أنجزته مصالح الإدارة الترابية بعمالات وأقاليم جهات الدار البيضاء-سطات ومراكش-آسفي والرباط-سلا-القنيطرة عن تورط رؤساء جماعات في منح",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "hespress",
+      "تبييض",
+      "البناء",
+      "العشوائي",
+      "يورط"
+    ],
+    "rang": 8,
+    "sentiment": "Neutre",
+    "lien": "https://www.hespress.com/منح-رخص-لـتبييض-البناء-العشوائي-يورط-1689061.html",
+    "url1": "images1/20260120222872-titre.jpg",
+    "url2": "images1/20260120222872-article.jpg",
+    "url3": "images1/20260120222872-image.jpg"
+  },
+  {
+    "index": "20260120222873",
+    "date_heure": "2026-01-20 16:16",
+    "alerte": "Oui",
+    "media_source": "https://www.lavieeco.com/au-royaume/urbanisme-et-habitat-feu-vert-a-la-creation-des-12-agences-regionales",
+    "titre_article": "Hespress - منح رخص لـ\"تبييض\" البناء العشوائي يورط رجال سلطة ومنتخبين بالمغرب كشفت تسريبات من إحصاء أنجزته مصالح الإدارة الترابية بعمالات وأقاليم جهات الدار البيضاء-سطات ومراكش-آسفي والرباط-سلا-القنيطرة عن تورط رؤساء جماعات في منح",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "hespress",
+      "تبييض",
+      "البناء",
+      "العشوائي",
+      "يورط"
+    ],
+    "rang": 8,
+    "sentiment": "Neutre",
+    "lien": "https://www.lavieeco.com/au-royaume/urbanisme-et-habitat-feu-vert-a-la-creation-des-12-agences-regionales",
+    "url1": "images1/20260120222873-titre.jpg",
+    "url2": "images1/20260120222873-article.jpg",
+    "url3": "images1/20260120222873-image.jpg"
+  },
+  {
+    "index": "20260120222874",
+    "date_heure": "2026-01-20 16:16",
+    "alerte": "Oui",
+    "media_source": "https://alaoual.com/رئيسية/465005.html",
+    "titre_article": "Hespress - منح رخص لـ\"تبييض\" البناء العشوائي يورط رجال سلطة ومنتخبين بالمغرب كشفت تسريبات من إحصاء أنجزته مصالح الإدارة الترابية بعمالات وأقاليم جهات الدار البيضاء-سطات ومراكش-آسفي والرباط-سلا-القنيطرة عن تورط رؤساء جماعات في منح",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "hespress",
+      "تبييض",
+      "البناء",
+      "العشوائي",
+      "يورط"
+    ],
+    "rang": 8,
+    "sentiment": "Neutre",
+    "lien": "https://alaoual.com/رئيسية/465005.html",
+    "url1": "images1/20260120222874-titre.jpg",
+    "url2": "images1/20260120222874-article.jpg",
+    "url3": "images1/20260120222874-image.jpg"
+  },
+  {
+    "index": "20260120222875",
+    "date_heure": "2026-01-20 16:16",
+    "alerte": "Oui",
+    "media_source": "https://www.leconomistemaghrebin.com/2026/01/20/inondations-1969-tunisie-catastrophe-naturelle",
+    "titre_article": "Hespress - منح رخص لـ\"تبييض\" البناء العشوائي يورط رجال سلطة ومنتخبين بالمغرب كشفت تسريبات من إحصاء أنجزته مصالح الإدارة الترابية بعمالات وأقاليم جهات الدار البيضاء-سطات ومراكش-آسفي والرباط-سلا-القنيطرة عن تورط رؤساء جماعات في منح",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "hespress",
+      "تبييض",
+      "البناء",
+      "العشوائي",
+      "يورط"
+    ],
+    "rang": 8,
+    "sentiment": "Neutre",
+    "lien": "https://www.leconomistemaghrebin.com/2026/01/20/inondations-1969-tunisie-catastrophe-naturelle",
+    "url1": "images1/20260120222875-titre.jpg",
+    "url2": "images1/20260120222875-article.jpg",
+    "url3": "images1/20260120222875-image.jpg"
+  },
+  {
+    "index": "20260120222876",
+    "date_heure": "2026-01-20 16:16",
+    "alerte": "Oui",
+    "media_source": "https://arabic.pressbee.net/show10381743.html?title=بن-إبراهيم-التسوية-ت-قر-ب-خدمات-التعمير",
+    "titre_article": "Hespress - منح رخص لـ\"تبييض\" البناء العشوائي يورط رجال سلطة ومنتخبين بالمغرب كشفت تسريبات من إحصاء أنجزته مصالح الإدارة الترابية بعمالات وأقاليم جهات الدار البيضاء-سطات ومراكش-آسفي والرباط-سلا-القنيطرة عن تورط رؤساء جماعات في منح",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "hespress",
+      "تبييض",
+      "البناء",
+      "العشوائي",
+      "يورط"
+    ],
+    "rang": 8,
+    "sentiment": "Neutre",
+    "lien": "https://arabic.pressbee.net/show10381743.html?title=بن-إبراهيم-التسوية-ت-قر-ب-خدمات-التعمير",
+    "url1": "images1/20260120222876-titre.jpg",
+    "url2": "images1/20260120222876-article.jpg",
+    "url3": "images1/20260120222876-image.jpg"
+  },
+  {
+    "index": "20260120222877",
+    "date_heure": "2026-01-20 17:16",
+    "alerte": "Oui",
+    "media_source": "https://fr.hespress.com/459146-urbanisme-et-habitat-le-parlement-adopte-le-pl-portant-creation-des-agences-regionales.html",
+    "titre_article": "Fr Hespress - Urbanisme et habitat : Le parlement adopte le PL portant création des Agences régionales La Chambre des représentants a adopté, ce mardi 20 janvier 2026, le projet de loi n° 64.23 relatif à la création des Agences ré",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "ation",
+      "agences",
+      "2026",
+      "hespress",
+      "urbanisme"
+    ],
+    "rang": 23,
+    "sentiment": "Neutre",
+    "lien": "https://fr.hespress.com/459146-urbanisme-et-habitat-le-parlement-adopte-le-pl-portant-creation-des-agences-regionales.html",
+    "url1": "images1/20260120222877-titre.jpg",
+    "url2": "images1/20260120222877-article.jpg",
+    "url3": "images1/20260120222877-image.jpg"
+  },
+  {
+    "index": "20260120222878",
+    "date_heure": "2026-01-20 17:16",
+    "alerte": "Oui",
+    "media_source": "https://laquotidienne.ma/article/info-politique/creation-agences-regionales-urbanisme-habitat-chambre-representants",
+    "titre_article": "Fr Hespress - Urbanisme et habitat : Le parlement adopte le PL portant création des Agences régionales La Chambre des représentants a adopté, ce mardi 20 janvier 2026, le projet de loi n° 64.23 relatif à la création des Agences ré",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "ation",
+      "agences",
+      "2026",
+      "hespress",
+      "urbanisme"
+    ],
+    "rang": 23,
+    "sentiment": "Neutre",
+    "lien": "https://laquotidienne.ma/article/info-politique/creation-agences-regionales-urbanisme-habitat-chambre-representants",
+    "url1": "images1/20260120222878-titre.jpg",
+    "url2": "images1/20260120222878-article.jpg",
+    "url3": "images1/20260120222878-image.jpg"
+  },
+  {
+    "index": "20260120222879",
+    "date_heure": "2026-01-20 20:16",
+    "alerte": "Oui",
+    "media_source": "https://al3omk.com/1132036.html",
+    "titre_article": "Al3omk - بسبب “فوضى عقود الكراء”.. تعليمات صارمة لموظفي تصحيح الإمضاءات بجماعات جهة البيضاء علمت جريدة \"العمق المغربي\" من مصادر جيدة الاطلاع أن المصالح الإقليمية بجهة الدار البيضاء سطات أعطت توجيهات صارمة لرؤساء الجماعات الترابية،",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "صارمة",
+      "البيضاء",
+      "al3omk",
+      "بسبب",
+      "فوضى"
+    ],
+    "rang": 3,
+    "sentiment": "Neutre",
+    "lien": "https://al3omk.com/1132036.html",
+    "url1": "images1/20260120222879-titre.jpg",
+    "url2": "images1/20260120222879-article.jpg",
+    "url3": "images1/20260120222879-image.jpg"
+  },
+  {
+    "index": "20260120222880",
+    "date_heure": "2026-01-20 20:16",
+    "alerte": "Oui",
+    "media_source": "https://www.lebrief.ma/la-chambre-des-representants-adopte-un-projet-de-loi-relatif-a-la-creation-des-agences-regionales-durbanisme-et-dhabitat-100138462",
+    "titre_article": "Al3omk - بسبب “فوضى عقود الكراء”.. تعليمات صارمة لموظفي تصحيح الإمضاءات بجماعات جهة البيضاء علمت جريدة \"العمق المغربي\" من مصادر جيدة الاطلاع أن المصالح الإقليمية بجهة الدار البيضاء سطات أعطت توجيهات صارمة لرؤساء الجماعات الترابية،",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "صارمة",
+      "البيضاء",
+      "al3omk",
+      "بسبب",
+      "فوضى"
+    ],
+    "rang": 3,
+    "sentiment": "Neutre",
+    "lien": "https://www.lebrief.ma/la-chambre-des-representants-adopte-un-projet-de-loi-relatif-a-la-creation-des-agences-regionales-durbanisme-et-dhabitat-100138462",
+    "url1": "images1/20260120222880-titre.jpg",
+    "url2": "images1/20260120222880-article.jpg",
+    "url3": "images1/20260120222880-image.jpg"
+  },
+  {
+    "index": "20260120222881",
+    "date_heure": "2026-01-20 20:16",
+    "alerte": "Oui",
+    "media_source": "https://www.lebrief.ma/la-chambre-des-representants-adopte-en-deuxieme-lecture-la-loi-sur-lenseignement-superieur-100138491",
+    "titre_article": "Al3omk - بسبب “فوضى عقود الكراء”.. تعليمات صارمة لموظفي تصحيح الإمضاءات بجماعات جهة البيضاء علمت جريدة \"العمق المغربي\" من مصادر جيدة الاطلاع أن المصالح الإقليمية بجهة الدار البيضاء سطات أعطت توجيهات صارمة لرؤساء الجماعات الترابية،",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "صارمة",
+      "البيضاء",
+      "al3omk",
+      "بسبب",
+      "فوضى"
+    ],
+    "rang": 3,
+    "sentiment": "Neutre",
+    "lien": "https://www.lebrief.ma/la-chambre-des-representants-adopte-en-deuxieme-lecture-la-loi-sur-lenseignement-superieur-100138491",
+    "url1": "images1/20260120222881-titre.jpg",
+    "url2": "images1/20260120222881-article.jpg",
+    "url3": "images1/20260120222881-image.jpg"
+  },
+  {
+    "index": "20260120222882",
+    "date_heure": "2026-01-16 06:16",
+    "alerte": "Oui",
+    "media_source": "https://almaghribi.ma/323401",
+    "titre_article": "Almaghribi - :white_check_mark: أنوار يكتب: التخطيط الحضري الذكي بين ذاكرة التراب ومخاطر المناخ... دور الذكاء الاصطناعي وانترنت الاشياء في حماية المدينة والإنسان - أخبار المغرب يشهد التخطيط الحضري اليوم تحولا نوعيا من منطق الإسقاط",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "التخطيط",
+      "الحضري",
+      "almaghribi",
+      "white_check_mark",
+      "أنوار"
+    ],
+    "rang": 97,
+    "sentiment": "Neutre",
+    "lien": "https://almaghribi.ma/323401",
+    "url1": "images1/20260120222882-titre.jpg",
+    "url2": "images1/20260120222882-article.jpg",
+    "url3": "images1/20260120222882-image.jpg"
+  },
+  {
+    "index": "20260120222883",
+    "date_heure": "2026-01-16 06:16",
+    "alerte": "Oui",
+    "media_source": "https://www.infoimmo.ma/le-groupe-alliances-developpement-immobilier-decroche-le-label-elu-service-client-de-lannee-2026",
+    "titre_article": "Almaghribi - :white_check_mark: أنوار يكتب: التخطيط الحضري الذكي بين ذاكرة التراب ومخاطر المناخ... دور الذكاء الاصطناعي وانترنت الاشياء في حماية المدينة والإنسان - أخبار المغرب يشهد التخطيط الحضري اليوم تحولا نوعيا من منطق الإسقاط",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "التخطيط",
+      "الحضري",
+      "almaghribi",
+      "white_check_mark",
+      "أنوار"
+    ],
+    "rang": 97,
+    "sentiment": "Neutre",
+    "lien": "https://www.infoimmo.ma/le-groupe-alliances-developpement-immobilier-decroche-le-label-elu-service-client-de-lannee-2026",
+    "url1": "images1/20260120222883-titre.jpg",
+    "url2": "images1/20260120222883-article.jpg",
+    "url3": "images1/20260120222883-image.jpg"
+  },
+  {
+    "index": "20260120222884",
+    "date_heure": "2026-01-16 17:16",
+    "alerte": "Oui",
+    "media_source": "https://industries.ma/40ᵉ-journee-nationale-de-larchitecte-vers-une-synergie-public-prive-durable",
+    "titre_article": "Industries - 40ᵉ Journée Nationale de l’Architecte : vers une synergie public-privé durable Placée sous le Haut Patronage de Sa Majesté le Roi Mohammed VI, que Dieu L’assiste, la 40ᵉ Journée Nationale de l’Architecte marque une ét",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "journ",
+      "nationale",
+      "architecte",
+      "industries",
+      "vers"
+    ],
+    "rang": 68,
+    "sentiment": "Neutre",
+    "lien": "https://industries.ma/40ᵉ-journee-nationale-de-larchitecte-vers-une-synergie-public-prive-durable",
+    "url1": "images1/20260120222884-titre.jpg",
+    "url2": "images1/20260120222884-article.jpg",
+    "url3": "images1/20260120222884-image.jpg"
+  },
+  {
+    "index": "20260120222885",
+    "date_heure": "2026-01-17 03:16",
+    "alerte": "Oui",
+    "media_source": "https://tanja24.com/محمد-الحمامي-رئيس-أكبر-مقاطعة-بالمغرب",
+    "titre_article": "Tanja24 - :white_check_mark: محمد الحمامي .. رئيس مقاطعة بني مكادة الذي يتقن فن \"الرقص على الرخص\" | طنجة24 جارا معه أثقال سنوات من الجدل غير المحسوم، ومثقلا بملف “التعمير” الذي لم يغادره يوما، يواصل محمد الحمّامي مساره السياسي وسط",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "محمد",
+      "الذي",
+      "tanja24",
+      "white_check_mark",
+      "الحمامي"
+    ],
+    "rang": 5,
+    "sentiment": "Neutre",
+    "lien": "https://tanja24.com/محمد-الحمامي-رئيس-أكبر-مقاطعة-بالمغرب",
+    "url1": "images1/20260120222885-titre.jpg",
+    "url2": "images1/20260120222885-article.jpg",
+    "url3": "images1/20260120222885-image.jpg"
+  },
+  {
+    "index": "20260120222886",
+    "date_heure": "2026-01-17 03:16",
+    "alerte": "Oui",
+    "media_source": "https://casa24.ma/economie/63849.html",
+    "titre_article": "Tanja24 - :white_check_mark: محمد الحمامي .. رئيس مقاطعة بني مكادة الذي يتقن فن \"الرقص على الرخص\" | طنجة24 جارا معه أثقال سنوات من الجدل غير المحسوم، ومثقلا بملف “التعمير” الذي لم يغادره يوما، يواصل محمد الحمّامي مساره السياسي وسط",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "محمد",
+      "الذي",
+      "tanja24",
+      "white_check_mark",
+      "الحمامي"
+    ],
+    "rang": 5,
+    "sentiment": "Neutre",
+    "lien": "https://casa24.ma/economie/63849.html",
+    "url1": "images1/20260120222886-titre.jpg",
+    "url2": "images1/20260120222886-article.jpg",
+    "url3": "images1/20260120222886-image.jpg"
+  },
+  {
+    "index": "20260120222887",
+    "date_heure": "2026-01-17 03:16",
+    "alerte": "Oui",
+    "media_source": "https://www.alalam.ma/بعد-انهيار-عمارة-قيد-البناء-بمراكش-تضامن-مهني-يقابله-مطلب-حقوقي_a31275.html",
+    "titre_article": "Tanja24 - :white_check_mark: محمد الحمامي .. رئيس مقاطعة بني مكادة الذي يتقن فن \"الرقص على الرخص\" | طنجة24 جارا معه أثقال سنوات من الجدل غير المحسوم، ومثقلا بملف “التعمير” الذي لم يغادره يوما، يواصل محمد الحمّامي مساره السياسي وسط",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "محمد",
+      "الذي",
+      "tanja24",
+      "white_check_mark",
+      "الحمامي"
+    ],
+    "rang": 5,
+    "sentiment": "Neutre",
+    "lien": "https://www.alalam.ma/بعد-انهيار-عمارة-قيد-البناء-بمراكش-تضامن-مهني-يقابله-مطلب-حقوقي_a31275.html",
+    "url1": "images1/20260120222887-titre.jpg",
+    "url2": "images1/20260120222887-article.jpg",
+    "url3": "images1/20260120222887-image.jpg"
+  },
+  {
+    "index": "20260120222888",
+    "date_heure": "2026-01-17 03:16",
+    "alerte": "Oui",
+    "media_source": "https://hnews.ma/97994",
+    "titre_article": "Tanja24 - :white_check_mark: محمد الحمامي .. رئيس مقاطعة بني مكادة الذي يتقن فن \"الرقص على الرخص\" | طنجة24 جارا معه أثقال سنوات من الجدل غير المحسوم، ومثقلا بملف “التعمير” الذي لم يغادره يوما، يواصل محمد الحمّامي مساره السياسي وسط",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "محمد",
+      "الذي",
+      "tanja24",
+      "white_check_mark",
+      "الحمامي"
+    ],
+    "rang": 5,
+    "sentiment": "Neutre",
+    "lien": "https://hnews.ma/97994",
+    "url1": "images1/20260120222888-titre.jpg",
+    "url2": "images1/20260120222888-article.jpg",
+    "url3": "images1/20260120222888-image.jpg"
+  },
+  {
+    "index": "20260120222889",
+    "date_heure": "2026-01-17 03:16",
+    "alerte": "Oui",
+    "media_source": "https://arabic.pressbee.net/show10369656.html?title=محمد-الحمامي-رئيس-مقاطعة-بني-مكادة-الذي-يتقن-فن-الرقص-على-الرخص",
+    "titre_article": "Tanja24 - :white_check_mark: محمد الحمامي .. رئيس مقاطعة بني مكادة الذي يتقن فن \"الرقص على الرخص\" | طنجة24 جارا معه أثقال سنوات من الجدل غير المحسوم، ومثقلا بملف “التعمير” الذي لم يغادره يوما، يواصل محمد الحمّامي مساره السياسي وسط",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "محمد",
+      "الذي",
+      "tanja24",
+      "white_check_mark",
+      "الحمامي"
+    ],
+    "rang": 5,
+    "sentiment": "Neutre",
+    "lien": "https://arabic.pressbee.net/show10369656.html?title=محمد-الحمامي-رئيس-مقاطعة-بني-مكادة-الذي-يتقن-فن-الرقص-على-الرخص",
+    "url1": "images1/20260120222889-titre.jpg",
+    "url2": "images1/20260120222889-article.jpg",
+    "url3": "images1/20260120222889-image.jpg"
+  },
+  {
+    "index": "20260120222890",
+    "date_heure": "2026-01-17 12:16",
+    "alerte": "Oui",
+    "media_source": "https://www.moroccomail.fr/2026/01/17/maroc-ue-accord-commercial-sahara-occidental-cooperation-statut-avance",
+    "titre_article": "Moroccomail - Fiche sur le partenariat Maroc - Union européenne (note diplomatique) - Maghreb Online #Maroc #Union_Européenne #accord_agricole #accord_de_pêche #Zone_de_libre_échange #Sahara_Occidental #coopération_Statut_Avancé R",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "maroc",
+      "enne",
+      "moroccomail",
+      "fiche",
+      "partenariat"
+    ],
+    "rang": 91,
+    "sentiment": "Neutre",
+    "lien": "https://www.moroccomail.fr/2026/01/17/maroc-ue-accord-commercial-sahara-occidental-cooperation-statut-avance",
+    "url1": "images1/20260120222890-titre.jpg",
+    "url2": "images1/20260120222890-article.jpg",
+    "url3": "images1/20260120222890-image.jpg"
+  },
+  {
+    "index": "20260120222891",
+    "date_heure": "2026-01-17 14:16",
+    "alerte": "Oui",
+    "media_source": "https://www.alalam.ma/بعد-انهيار-عمارة-قيد-البناء-بمراكش-تضامن-مهني-يقابله-مطلب-حقوقي_a31275.amp.html",
+    "titre_article": "Alalam - بعد انهيار عمارة قيد البناء بمراكش… تضامن مهني يقابله مطلب حقوقي بربط المسؤولية بالمحاسبة أعاد انهيار عمارة مكونة من خمسة طوابق، كانت في طور البناء بحيّ الشتاء بمدينة مراكش، في الساعات الأولى من يوم الخميس 31 دجنبر 2025،",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "انهيار",
+      "عمارة",
+      "البناء",
+      "alalam",
+      "بمراكش"
+    ],
+    "rang": 10,
+    "sentiment": "Neutre",
+    "lien": "https://www.alalam.ma/بعد-انهيار-عمارة-قيد-البناء-بمراكش-تضامن-مهني-يقابله-مطلب-حقوقي_a31275.amp.html",
+    "url1": "images1/20260120222891-titre.jpg",
+    "url2": "images1/20260120222891-article.jpg",
+    "url3": "images1/20260120222891-image.jpg"
+  },
+  {
+    "index": "20260120222892",
+    "date_heure": "2026-01-17 14:16",
+    "alerte": "Oui",
+    "media_source": "https://www.safitoday.com/2026/01/16/حوار-شامل-مع-الدكتور-المصطفى-الرزرازي",
+    "titre_article": "Alalam - بعد انهيار عمارة قيد البناء بمراكش… تضامن مهني يقابله مطلب حقوقي بربط المسؤولية بالمحاسبة أعاد انهيار عمارة مكونة من خمسة طوابق، كانت في طور البناء بحيّ الشتاء بمدينة مراكش، في الساعات الأولى من يوم الخميس 31 دجنبر 2025،",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "انهيار",
+      "عمارة",
+      "البناء",
+      "alalam",
+      "بمراكش"
+    ],
+    "rang": 10,
+    "sentiment": "Neutre",
+    "lien": "https://www.safitoday.com/2026/01/16/حوار-شامل-مع-الدكتور-المصطفى-الرزرازي",
+    "url1": "images1/20260120222892-titre.jpg",
+    "url2": "images1/20260120222892-article.jpg",
+    "url3": "images1/20260120222892-image.jpg"
+  },
+  {
+    "index": "20260120222893",
+    "date_heure": "2026-01-17 14:16",
+    "alerte": "Oui",
+    "media_source": "https://www.maroc-hebdo.com/article/nouveau-parc-industriel-de-mediouna-un-projet-du-groupe-cdg-a-12-milliard-de-dirhams",
+    "titre_article": "Alalam - بعد انهيار عمارة قيد البناء بمراكش… تضامن مهني يقابله مطلب حقوقي بربط المسؤولية بالمحاسبة أعاد انهيار عمارة مكونة من خمسة طوابق، كانت في طور البناء بحيّ الشتاء بمدينة مراكش، في الساعات الأولى من يوم الخميس 31 دجنبر 2025،",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "انهيار",
+      "عمارة",
+      "البناء",
+      "alalam",
+      "بمراكش"
+    ],
+    "rang": 10,
+    "sentiment": "Neutre",
+    "lien": "https://www.maroc-hebdo.com/article/nouveau-parc-industriel-de-mediouna-un-projet-du-groupe-cdg-a-12-milliard-de-dirhams",
+    "url1": "images1/20260120222893-titre.jpg",
+    "url2": "images1/20260120222893-article.jpg",
+    "url3": "images1/20260120222893-image.jpg"
+  },
+  {
+    "index": "20260120222894",
+    "date_heure": "2026-01-17 16:16",
+    "alerte": "Oui",
+    "media_source": "https://h24info.ma/economie/maroc-besoin-liquidite-bancaire-135-mmdh-2025",
+    "titre_article": "H24info - Au Maroc, le besoin de liquidité bancaire dépasse les 135 MMDH fin 2025 Le besoin de liquidité des banques s’est accentué, en décembre 2025, à 135,7 milliards de dirhams (MMDH) en moyenne hebdomadaire, après 129,1 MMDH u",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "mmdh",
+      "2025",
+      "besoin",
+      "liquidit",
+      "h24info"
+    ],
+    "rang": 42,
+    "sentiment": "Neutre",
+    "lien": "https://h24info.ma/economie/maroc-besoin-liquidite-bancaire-135-mmdh-2025",
+    "url1": "images1/20260120222894-titre.jpg",
+    "url2": "images1/20260120222894-article.jpg",
+    "url3": "images1/20260120222894-image.jpg"
+  },
+  {
+    "index": "20260120222895",
+    "date_heure": "2026-01-17 21:16",
+    "alerte": "Oui",
+    "media_source": "https://hnews.ma/97994?amp=1",
+    "titre_article": "Hnews - نادية فتاح تتنافس مع المنصوري على حكومة المونديال أشارت العديد من المصادر، إلى أن نادية فتاح، وزيرة الاقتصاد والمالية، هي المرشحة الأقوى لقيادة حزب التجمع الوطني للأحرار خلفا لعزيز أخنوش الذي لن يترشح مرة أخرى لرئاسة حزب ا",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "نادية",
+      "hnews",
+      "فتاح",
+      "تتنافس",
+      "المنصوري"
+    ],
+    "rang": 48,
+    "sentiment": "Neutre",
+    "lien": "https://hnews.ma/97994?amp=1",
+    "url1": "images1/20260120222895-titre.jpg",
+    "url2": "images1/20260120222895-article.jpg",
+    "url3": "images1/20260120222895-image.jpg"
+  },
+  {
+    "index": "20260120222896",
+    "date_heure": "2026-01-18 02:16",
+    "alerte": "Oui",
+    "media_source": "https://www.moroccomail.fr/2026/01/17/maroc-ue-accord-commercial-sahara-occidental-cooperation-statut-avance?amp=1",
+    "titre_article": "Moroccomail - Fiche sur le partenariat Maroc - Union européenne (note diplomatique) - Maghreb Online La mise en œuvre du Statut avancé permettra de raffermir les relations Maroc-UE et facilitera leur évolution vers la conclusion d",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "maroc",
+      "moroccomail",
+      "fiche",
+      "partenariat",
+      "union"
+    ],
+    "rang": 45,
+    "sentiment": "Neutre",
+    "lien": "https://www.moroccomail.fr/2026/01/17/maroc-ue-accord-commercial-sahara-occidental-cooperation-statut-avance?amp=1",
+    "url1": "images1/20260120222896-titre.jpg",
+    "url2": "images1/20260120222896-article.jpg",
+    "url3": "images1/20260120222896-image.jpg"
+  },
+  {
+    "index": "20260120222897",
+    "date_heure": "2026-01-18 13:16",
+    "alerte": "Oui",
+    "media_source": "https://afrique.le360.ma/economie/industrie-du-sport-le-nouveau-front-de-la-transformation-economique-africaine_Q3GRYQYAXZG6RN7YT2FWEYTPCY?amp;utm_medium=twitter",
+    "titre_article": "Afrique Le360 - Industrie du sport: le nouveau front de la transformation économique africaine En marge de la Coupe d’Afrique des Nations, le AfricaMed Business Forum a placé l’économie du sport au centre d’une réflexion stratégiq",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "afrique",
+      "sport",
+      "le360",
+      "industrie",
+      "nouveau"
+    ],
+    "rang": 3,
+    "sentiment": "Neutre",
+    "lien": "https://afrique.le360.ma/economie/industrie-du-sport-le-nouveau-front-de-la-transformation-economique-africaine_Q3GRYQYAXZG6RN7YT2FWEYTPCY?amp;utm_medium=twitter",
+    "url1": "images1/20260120222897-titre.jpg",
+    "url2": "images1/20260120222897-article.jpg",
+    "url3": "images1/20260120222897-image.jpg"
+  },
+  {
+    "index": "20260120222898",
+    "date_heure": "2026-01-18 22:16",
+    "alerte": "Oui",
+    "media_source": "https://www.hibazoom.com/article-199270",
+    "titre_article": "Hibazoom - انهيارات مراكش تفضح فشل تدبير المنصوري وتستدعي تدخّل الوالي لهبيل قبل الكارثة المقبلة هبة زووم – الرباط لم يعد ما يقع في مراكش من انهيارات متكررة داخل أوراش البناء مجرد حوادث عرضية يمكن تبريرها بالقضاء والقدر أو أخطاء ت",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "انهيارات",
+      "مراكش",
+      "hibazoom",
+      "تفضح",
+      "تدبير"
+    ],
+    "rang": 31,
+    "sentiment": "Neutre",
+    "lien": "https://www.hibazoom.com/article-199270",
+    "url1": "images1/20260120222898-titre.jpg",
+    "url2": "images1/20260120222898-article.jpg",
+    "url3": "images1/20260120222898-image.jpg"
+  },
+  {
+    "index": "20260120222899",
+    "date_heure": "2026-01-15 08:16",
+    "alerte": "Oui",
+    "media_source": "https://www.hespress.com/الكراء-المؤقت-يهدد-استقرار-السكن-في-ال-1686668.html?print=",
+    "titre_article": "Hespress - الكراء المؤقت يهدد استقرار السكن في المغرب وسط تحذيرات من أزمة خانقة قال فاعلون في حماية المستهلك إن “الكراء المؤقت، الذي ينتشر في المغرب داخل المناطق السكنية، بات يمس بشكل مباشر بالحق في السكن، بعدما ساهم في تقليص العر",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "الكراء",
+      "المغرب",
+      "hespress",
+      "المؤقت",
+      "يهدد"
+    ],
+    "rang": 46,
+    "sentiment": "Neutre",
+    "lien": "https://www.hespress.com/الكراء-المؤقت-يهدد-استقرار-السكن-في-ال-1686668.html?print="
+  },
+  {
+    "index": "20260120222900",
+    "date_heure": "2026-01-15 08:16",
+    "alerte": "Oui",
+    "media_source": "https://www.travelandtourworld.ae/أخبار/البند/تتوسع-شركة-ماهلاتيني-للسفر-الفاخر-لتشمل-المغرب،-حيث-تقدم-رحلات-مصممة-خصيصاً-تمزج-بين-التاريخ-والعمارة-والثقافة-للمسافرين-الباحثين-عن-",
+    "titre_article": "Hespress - الكراء المؤقت يهدد استقرار السكن في المغرب وسط تحذيرات من أزمة خانقة قال فاعلون في حماية المستهلك إن “الكراء المؤقت، الذي ينتشر في المغرب داخل المناطق السكنية، بات يمس بشكل مباشر بالحق في السكن، بعدما ساهم في تقليص العر",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "الكراء",
+      "المغرب",
+      "hespress",
+      "المؤقت",
+      "يهدد"
+    ],
+    "rang": 46,
+    "sentiment": "Neutre",
+    "lien": "https://www.travelandtourworld.ae/أخبار/البند/تتوسع-شركة-ماهلاتيني-للسفر-الفاخر-لتشمل-المغرب،-حيث-تقدم-رحلات-مصممة-خصيصاً-تمزج-بين-التاريخ-والعمارة-والثقافة-للمسافرين-الباحثين-عن-"
+  },
+  {
+    "index": "20260120222901",
+    "date_heure": "2026-01-15 12:16",
+    "alerte": "Oui",
+    "media_source": "https://www.bladi.net/immobilier-maroc-baisse-prix-loyers,118948.html",
+    "titre_article": "Bladi - Immobilier au Maroc : vers une baisse de 20 % du prix des loyers ? Le programme « Villes sans bidonvilles » a bénéficié à plus de 382 000 familles au 31 décembre 2025, marquant une étape majeure dans la résorption de l’hab",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "2025",
+      "bladi",
+      "immobilier",
+      "maroc",
+      "vers"
+    ],
+    "rang": 9,
+    "sentiment": "Neutre",
+    "lien": "https://www.bladi.net/immobilier-maroc-baisse-prix-loyers,118948.html"
+  },
+  {
+    "index": "20260120222902",
+    "date_heure": "2026-01-15 15:16",
+    "alerte": "Oui",
+    "media_source": "https://barlamane.com/ديرها-غا-زوينة-المهام-الجديدة-لأخن",
+    "titre_article": "Barlamane - ديرها غا زوينة.. المهام الجديدة لأخنوش/ مصير حزب التجمع وحزب الأصالة/ رئيس الحكومة المقبل (فيديو) يثير البرنامج التعليقي “ديرها غا زوينة.”، الذي يبث على القناة الرسمية بمنصة التواصل الاجتماعي “يوتيوب” الخاصة بموقع “برل",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "ديرها",
+      "زوينة",
+      "barlamane",
+      "المهام",
+      "الجديدة"
+    ],
+    "rang": 73,
+    "sentiment": "Neutre",
+    "lien": "https://barlamane.com/ديرها-غا-زوينة-المهام-الجديدة-لأخن"
+  },
+  {
+    "index": "20260120222903",
+    "date_heure": "2026-01-13 23:16",
+    "alerte": "Oui",
+    "media_source": "https://ecopress.ma/المغرب-يتخذ-إجراءات-جديدة-في-الإيجار-ا",
+    "titre_article": "Ecopress - المغرب يتخذ إجراءات جديدة في الإيجار المؤقت وتقليص كلفته يتجه المغرب إلى إجراءات جديدة في الإيجار المؤقت وتقليص كلفته، وفق ما صرح به أديب بن إبراهيم، كاتب الدولة لدى وزيرة إعداد التراب الوطني والتعمير والإسكان وسياسة ال",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "المغرب",
+      "إجراءات",
+      "جديدة",
+      "الإيجار",
+      "المؤقت"
+    ],
+    "rang": 3,
+    "sentiment": "Neutre",
+    "lien": "https://ecopress.ma/المغرب-يتخذ-إجراءات-جديدة-في-الإيجار-ا"
+  },
+  {
+    "index": "20260120222904",
+    "date_heure": "2026-01-14 01:16",
+    "alerte": "Oui",
+    "media_source": "https://www.belpresse.com/politique/608503.html",
+    "titre_article": "Belpresse - د.بلقاضي: قرار أخنوش بعدم الترشح لولاية ثالثة يربك أحزاب اليسار شكّل إعلان رئيس الحكومة عزيز أخنوش بعدم الترشح لترؤس حزب التجمع الوطني للأحرار لولاية جديدة، وعدم خوض الانتخابات البرلمانية المقبلة، لحظة سياسية لافتة أثا",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "أخنوش",
+      "بعدم",
+      "الترشح",
+      "لولاية",
+      "belpresse"
+    ],
+    "rang": 97,
+    "sentiment": "Neutre",
+    "lien": "https://www.belpresse.com/politique/608503.html",
+    "url1": "images1/20260120222904-titre.jpg",
+    "url2": "images1/20260120222904-article.jpg",
+    "url3": "images1/20260120222904-image.jpg"
+  },
+  {
+    "index": "20260120222905",
+    "date_heure": "2026-01-14 10:16",
+    "alerte": "Oui",
+    "media_source": "https://www.mediaterranee.com/1432026-maroc-les-credits-bancaires-en-hausse-de-62-fin-novembre-2025.html",
+    "titre_article": "Mediaterranee - Maroc : les crédits bancaires en hausse de 6,2% à fin novembre 2025 Le secteur bancaire marocain affiche une dynamique solide. Selon les dernières données publiées par Bank Al-Maghrib, l'encours du crédit bancaire",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "bancaire",
+      "2025",
+      "mediaterranee",
+      "maroc",
+      "dits"
+    ],
+    "rang": 43,
+    "sentiment": "Neutre",
+    "lien": "https://www.mediaterranee.com/1432026-maroc-les-credits-bancaires-en-hausse-de-62-fin-novembre-2025.html"
+  },
+  {
+    "index": "20260120222906",
+    "date_heure": "2026-01-14 11:16",
+    "alerte": "Oui",
+    "media_source": "https://h24info.ma/maroc/kiosque/la-revue-de-presse-de-ce-mercredi-14-janvier",
+    "titre_article": "H24info - La revue de presse de ce mercredi 14 janvier , H24info H24info Le Maroc parmi les 10 premiers pays africains pour l’attractivité des affaires en 2026; Projet gouvernemental pour réduire les loyers jusqu’à 20 %; La minist",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "h24info",
+      "2026",
+      "revue",
+      "presse",
+      "mercredi"
+    ],
+    "rang": 79,
+    "sentiment": "Neutre",
+    "lien": "https://h24info.ma/maroc/kiosque/la-revue-de-presse-de-ce-mercredi-14-janvier",
+    "url1": "images1/20260120222906-titre.jpg",
+    "url2": "images1/20260120222906-article.jpg",
+    "url3": "images1/20260120222906-image.jpg"
+  },
+  {
+    "index": "20260120222907",
+    "date_heure": "2026-01-14 20:16",
+    "alerte": "Oui",
+    "media_source": "https://article19.ma/accueil/archives/188017",
+    "titre_article": "Article19 - Chronique – L’heure est venue d’effacer l’héritage de Lyautey du port de Casablanca Par Abderrahim Ariri * Lorsque le général Lyautey décida de transférer la capitale du Maroc de Fès à Rabat, cette décision n’était nul",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "lyautey",
+      "article19",
+      "chronique",
+      "heure",
+      "venue"
+    ],
+    "rang": 82,
+    "sentiment": "Neutre",
+    "lien": "https://article19.ma/accueil/archives/188017",
+    "url1": "images1/20260120222907-titre.jpg",
+    "url2": "images1/20260120222907-article.jpg",
+    "url3": "images1/20260120222907-image.jpg"
+  },
+  {
+    "index": "20260120222908",
+    "date_heure": "2026-01-14 20:16",
+    "alerte": "Oui",
+    "media_source": "https://www.marrakech24.info/11-5498",
+    "titre_article": "Article19 - Chronique – L’heure est venue d’effacer l’héritage de Lyautey du port de Casablanca Par Abderrahim Ariri * Lorsque le général Lyautey décida de transférer la capitale du Maroc de Fès à Rabat, cette décision n’était nul",
+    "langue": "FR",
+    "mots_cles_principaux": [
+      "lyautey",
+      "article19",
+      "chronique",
+      "heure",
+      "venue"
+    ],
+    "rang": 82,
+    "sentiment": "Neutre",
+    "lien": "https://www.marrakech24.info/11-5498",
+    "url1": "images1/20260120222908-titre.jpg",
+    "url2": "images1/20260120222908-article.jpg",
+    "url3": "images1/20260120222908-image.jpg"
+  },
+  {
+    "index": "20260120222909",
+    "date_heure": "2026-01-14 21:16",
+    "alerte": "Oui",
+    "media_source": "https://www.hespress.com/الكراء-المؤقت-يهدد-استقرار-السكن-في-ال-1686668.html",
+    "titre_article": "Hespress - الكراء المؤقت يهدد استقرار السكن في المغرب وسط تحذيرات من أزمة خانقة قال فاعلون في حماية المستهلك إن “الكراء المؤقت، الذي ينتشر في المغرب داخل المناطق السكنية، بات يمس بشكل مباشر بالحق في السكن، بعدما ساهم في تقليص العر",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "الكراء",
+      "المغرب",
+      "hespress",
+      "المؤقت",
+      "يهدد"
+    ],
+    "rang": 80,
+    "sentiment": "Neutre",
+    "lien": "https://www.hespress.com/الكراء-المؤقت-يهدد-استقرار-السكن-في-ال-1686668.html",
+    "url1": "images1/20260120222909-titre.jpg",
+    "url2": "images1/20260120222909-article.jpg",
+    "url3": "images1/20260120222909-image.jpg"
+  },
+  {
+    "index": "20260120222910",
+    "date_heure": "2026-01-14 21:16",
+    "alerte": "Oui",
+    "media_source": "https://rue20.com/970229.html",
+    "titre_article": "Hespress - الكراء المؤقت يهدد استقرار السكن في المغرب وسط تحذيرات من أزمة خانقة قال فاعلون في حماية المستهلك إن “الكراء المؤقت، الذي ينتشر في المغرب داخل المناطق السكنية، بات يمس بشكل مباشر بالحق في السكن، بعدما ساهم في تقليص العر",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "الكراء",
+      "المغرب",
+      "hespress",
+      "المؤقت",
+      "يهدد"
+    ],
+    "rang": 80,
+    "sentiment": "Neutre",
+    "lien": "https://rue20.com/970229.html",
+    "url1": "images1/20260120222910-titre.jpg",
+    "url2": "images1/20260120222910-article.jpg",
+    "url3": "images1/20260120222910-image.jpg"
+  },
+  {
+    "index": "20260120222911",
+    "date_heure": "2026-01-14 21:16",
+    "alerte": "Oui",
+    "media_source": "https://www.chtoukapress.com/300390.html",
+    "titre_article": "Hespress - الكراء المؤقت يهدد استقرار السكن في المغرب وسط تحذيرات من أزمة خانقة قال فاعلون في حماية المستهلك إن “الكراء المؤقت، الذي ينتشر في المغرب داخل المناطق السكنية، بات يمس بشكل مباشر بالحق في السكن، بعدما ساهم في تقليص العر",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "الكراء",
+      "المغرب",
+      "hespress",
+      "المؤقت",
+      "يهدد"
+    ],
+    "rang": 80,
+    "sentiment": "Neutre",
+    "lien": "https://www.chtoukapress.com/300390.html",
+    "url1": "images1/20260120222911-titre.jpg",
+    "url2": "images1/20260120222911-article.jpg",
+    "url3": "images1/20260120222911-image.jpg"
+  },
+  {
+    "index": "20260120222912",
+    "date_heure": "2026-01-14 21:16",
+    "alerte": "Oui",
+    "media_source": "https://www.marocmedias.com/156696/الإعلام-الإيطالي-المغرب-ينجح-في-كان-2025-و",
+    "titre_article": "Hespress - الكراء المؤقت يهدد استقرار السكن في المغرب وسط تحذيرات من أزمة خانقة قال فاعلون في حماية المستهلك إن “الكراء المؤقت، الذي ينتشر في المغرب داخل المناطق السكنية، بات يمس بشكل مباشر بالحق في السكن، بعدما ساهم في تقليص العر",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "الكراء",
+      "المغرب",
+      "hespress",
+      "المؤقت",
+      "يهدد"
+    ],
+    "rang": 80,
+    "sentiment": "Neutre",
+    "lien": "https://www.marocmedias.com/156696/الإعلام-الإيطالي-المغرب-ينجح-في-كان-2025-و",
+    "url1": "images1/20260120222912-titre.jpg",
+    "url2": "images1/20260120222912-article.jpg",
+    "url3": "images1/20260120222912-image.jpg"
+  },
+  {
+    "index": "20260120222913",
+    "date_heure": "2026-01-14 21:16",
+    "alerte": "Oui",
+    "media_source": "https://www.almaghribtoday.net/amp/318/075612-الحكومة-المغربية-تدرس-تقنين-الإيجار-المؤقت-airbnb-وتقليص-كلفة-الكراء-بـ20",
+    "titre_article": "Hespress - الكراء المؤقت يهدد استقرار السكن في المغرب وسط تحذيرات من أزمة خانقة قال فاعلون في حماية المستهلك إن “الكراء المؤقت، الذي ينتشر في المغرب داخل المناطق السكنية، بات يمس بشكل مباشر بالحق في السكن، بعدما ساهم في تقليص العر",
+    "langue": "AR",
+    "mots_cles_principaux": [
+      "الكراء",
+      "المغرب",
+      "hespress",
+      "المؤقت",
+      "يهدد"
+    ],
+    "rang": 80,
+    "sentiment": "Neutre",
+    "lien": "https://www.almaghribtoday.net/amp/318/075612-الحكومة-المغربية-تدرس-تقنين-الإيجار-المؤقت-airbnb-وتقليص-كلفة-الكراء-بـ20"
+  }
+];
+  
+  const container = document.getElementById('articles-container');
+  const overlay = document.getElementById('article-overlay');
+  const closeBtn = document.getElementById('close-overlay');
+  const articleFrame = document.getElementById('article-frame');
+  const articleInfo = document.getElementById('overlay-article-info');
+
+  // Fermer l'overlay
+  closeBtn.addEventListener('click', () => {
+    overlay.style.display = 'none';
+    articleFrame.src = ''; // Vide l'iframe
+  });
+
+  // Fermer l'overlay en cliquant en dehors
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      overlay.style.display = 'none';
+      articleFrame.src = '';
+    }
+  });
+
+  articles.forEach(titre => {
+    // --- Sélection de l'image ---
+    const imgPath = titre.url1 || titre.url2 || titre.url3 || '';
+
+    // --- Utilisation du titre directement ---
+    let titreTexte = titre.titre_article || `مقال إخباري رقم ${titre.index}`;
+    
+    // Limite la longueur du titre
+    if (titreTexte.length > 120) {
+      titreTexte = titreTexte.substring(0, 120) + "...";
+    }
+
+    // --- Création de la carte ---
+    const card = document.createElement('div');
+    card.className = 'titre-card';
+    
+    // Ajouter un ID pour référence
+    card.dataset.articleIndex = titre.index;
+
+    card.innerHTML = `
+      <div class="image-wrapper">
+          ${imgPath 
+              ? `<img src="${imgPath}" alt="${titre.titre_article || 'titre'}">`
+              : `<img src="images1/${titre.index}-image.jpg" alt="Image par défaut">`
+          }
+          
+          <!-- TITRE DANS LE BAS 2/3 DE L'IMAGE -->
+          <div class="image-title-overlay">
+            <div class="image-title">
+              ${titreTexte}
+            </div>
+          </div>
+      </div>
+
+      <div class="time-badge">منذ دقائق</div>
+      <div class="category-badge">أخبار</div>
+
+      ${titre.alerte === 'Oui' ? '<div class="alert-badge">تنبيه عاجل</div>' : ''}
+
+      <!-- Pas de .overlay dans la carte - il est maintenant global -->
+    `;
+
+    // Ajouter l'événement de clic
+    card.addEventListener('click', () => {
+      // Afficher les informations de l'article dans l'overlay
+      articleInfo.innerHTML = `
+        <div class="meta">
+          <h3 style="color: white; margin-top: 0;">${titreTexte}</h3>
+          <strong>المصدر :</strong> ${titre.media_source}<br>
+          <strong>وقت الرصد :</strong> ${titre.date_heure}<br>
+          <strong>اللغة :</strong> ${titre.langue}<br>
+          <strong>الرتبة :</strong> ${titre.rang}<br>
+          <strong>المشاعر :</strong> ${titre.sentiment}<br>
+          <strong>الكلمات المفتاحية :</strong> ${titre.mots_cles_principaux.join(', ')}
+        </div>
+      `;
+      
+      // Charger l'article dans l'iframe
+      if (titre.lien) {
+        articleFrame.src = titre.lien;
+      }
+      
+      // Afficher l'overlay
+      overlay.style.display = 'flex';
+    });
+
+    container.appendChild(card);
+  });
+</script>
+
+</body>
+</html>
