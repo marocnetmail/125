@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#001122">
-<meta name="description" content="مرصد الأخبار - Revue de Presse Hebdomadaire">
-<title>مرصد الأخبار | Revue de Presse</title>
+<meta name="description" content="Revue de Presse Hebdomadaire">
+<title>Revue de Presse Hebdomadaire</title>
 <link rel="icon" type="image/png" href="images1/00011.png">
 
 <style>
@@ -26,8 +26,6 @@
   --text-secondary: #cccccc;
   --accent-1: #FF6B6B;
   --accent-2: #4ECDC4;
-  --accent-3: #45B7D1;
-  --accent-4: #FFEAA7;
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   --radius: 12px;
   --transition: all 0.3s ease;
@@ -42,85 +40,37 @@ body {
   overflow-x: hidden;
 }
 
-/* ===== LOADING SCREEN ===== */
-#loading-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--background);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  transition: opacity 0.5s ease;
-}
-
-.loading-logo {
-  width: 120px;
-  height: 120px;
-  margin-bottom: 30px;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { opacity: 0.7; transform: scale(0.95); }
-  50% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0.7; transform: scale(0.95); }
-}
-
-.loading-text {
-  font-size: 1.2rem;
-  color: var(--text-secondary);
-}
-
-/* ===== HEADER (NON-FIXED) ===== */
+/* ===== COMPACT HEADER ===== */
 .app-header {
   background: linear-gradient(135deg, #001122 0%, #002244 100%);
-  padding: 25px 20px 20px;
+  padding: 15px 20px 15px;
   box-shadow: var(--shadow);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.logo-container {
+/* ===== MAIN TITLE AND SEARCH COMPACT ===== */
+.title-search-container {
   display: flex;
-  justify-content: center;
-  margin-bottom: 30px;
-}
-
-.app-logo {
-  height: 60px;
-  width: auto;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-}
-
-/* ===== MAIN TITLE ===== */
-.main-title-container {
-  text-align: center;
-  margin-bottom: 30px;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 15px;
 }
 
 .main-title {
-  font-size: 2.8rem;
+  font-size: 2.5rem;
   font-weight: 900;
   color: white;
-  line-height: 1.2;
+  line-height: 1.1;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-  margin-bottom: 10px;
-}
-
-.title-subtitle {
-  font-size: 1.1rem;
-  color: var(--text-secondary);
-  font-weight: 300;
+  text-align: center;
+  letter-spacing: -0.5px;
 }
 
 /* ===== SEARCH BAR ===== */
 .search-container {
   max-width: 600px;
-  margin: 0 auto 25px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .search-wrapper {
@@ -144,14 +94,14 @@ body {
 .search-icon {
   padding: 0 15px;
   color: var(--text-secondary);
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   display: flex;
   align-items: center;
 }
 
 #search-input {
   flex: 1;
-  padding: 15px 15px 15px 0;
+  padding: 14px 15px 14px 0;
   background: transparent;
   border: none;
   color: var(--text);
@@ -166,7 +116,7 @@ body {
 .clear-search {
   padding: 0 15px;
   color: var(--text-secondary);
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   cursor: pointer;
   display: none;
   transition: var(--transition);
@@ -178,7 +128,7 @@ body {
 
 /* ===== ARTICLES LIST ===== */
 #articles-container {
-  padding: 20px;
+  padding: 15px;
   max-width: 800px;
   margin: 0 auto;
   display: flex;
@@ -186,7 +136,7 @@ body {
   gap: 20px;
 }
 
-/* ===== ARTICLE CARD ===== */
+/* ===== ARTICLE CARD - INCREASED HEIGHT ===== */
 .article-card {
   background: var(--card-bg);
   border-radius: var(--radius);
@@ -195,6 +145,9 @@ body {
   transition: var(--transition);
   cursor: pointer;
   border: 1px solid rgba(255, 255, 255, 0.05);
+  min-height: 400px; /* Increased minimum height */
+  display: flex;
+  flex-direction: column;
 }
 
 .article-card:hover {
@@ -203,12 +156,14 @@ body {
   border-color: rgba(26, 115, 232, 0.3);
 }
 
+/* Article Image Section - Increased Height */
 .article-image-container {
   position: relative;
   width: 100%;
-  height: 200px;
+  height: 280px; /* Increased from 200px to 280px */
   background: linear-gradient(45deg, #000428, #004e92);
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .article-image {
@@ -227,8 +182,8 @@ body {
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 20px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  padding: 25px 20px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent 60%);
 }
 
 .article-image-title {
@@ -251,8 +206,8 @@ body {
 }
 
 .image-badge {
-  padding: 6px 12px;
-  font-size: 0.8rem;
+  padding: 7px 14px;
+  font-size: 0.85rem;
   font-weight: 700;
   border-radius: 20px;
   backdrop-filter: blur(10px);
@@ -265,7 +220,7 @@ body {
 .date-badge { 
   background: rgba(255, 107, 107, 0.9);
   color: white;
-  font-weight: bold !important; /* Added for bold date */
+  font-weight: bold;
 }
 
 .category-badge { 
@@ -277,12 +232,13 @@ body {
   transform: translateY(-2px);
 }
 
-/* ===== ARTICLE INFO ===== */
+/* ===== ARTICLE INFO - Increased Space ===== */
 .article-info {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 15px;
+  flex: 1;
 }
 
 .article-meta {
@@ -291,6 +247,7 @@ body {
   align-items: center;
   color: var(--text-secondary);
   font-size: 0.9rem;
+  margin-top: 5px;
 }
 
 .article-source {
@@ -310,7 +267,7 @@ body {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-weight: bold; /* Added for bold time */
+  font-weight: bold;
 }
 
 .article-time::before {
@@ -323,23 +280,25 @@ body {
   line-height: 1.6;
   color: var(--text-secondary);
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 4; /* Increased from 3 to 4 lines */
   -webkit-box-orient: vertical;
   overflow: hidden;
+  margin: 5px 0;
+  flex: 1;
 }
 
 .article-keywords {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
   margin-top: 10px;
 }
 
 .keyword-tag {
   background: rgba(26, 115, 232, 0.15);
   color: var(--primary);
-  font-size: 0.75rem;
-  padding: 4px 10px;
+  font-size: 0.8rem;
+  padding: 5px 12px;
   border-radius: 12px;
   border: 1px solid rgba(26, 115, 232, 0.3);
   font-weight: 600;
@@ -378,7 +337,7 @@ body {
 }
 
 .overlay-title {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--text);
   flex: 1;
@@ -516,16 +475,16 @@ body {
 
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 480px) {
-  .main-title {
-    font-size: 2.2rem;
+  .app-header {
+    padding: 12px 15px 12px;
   }
   
-  .title-subtitle {
-    font-size: 1rem;
+  .main-title {
+    font-size: 2rem;
   }
   
   .article-image-container {
-    height: 180px;
+    height: 240px; /* Still increased but responsive */
   }
   
   .article-image-title {
@@ -533,8 +492,8 @@ body {
   }
   
   .image-badge {
-    padding: 5px 10px;
-    font-size: 0.75rem;
+    padding: 6px 12px;
+    font-size: 0.8rem;
   }
   
   .overlay-header {
@@ -542,7 +501,7 @@ body {
   }
   
   .overlay-title {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
   
   .close-overlay {
@@ -554,48 +513,43 @@ body {
 
 @media (min-width: 768px) {
   .main-title {
-    font-size: 3.2rem;
+    font-size: 2.8rem;
   }
   
   .article-image-container {
-    height: 250px;
+    height: 320px; /* Even larger on tablets */
   }
   
   .article-image-title {
     font-size: 1.6rem;
   }
 }
+
+@media (min-width: 1024px) {
+  .article-image-container {
+    height: 350px; /* Largest on desktop */
+  }
+}
 </style>
 </head>
 
 <body>
-<!-- Loading Screen -->
-<div id="loading-screen">
-  <img src="images1/00011.png" alt="مرصد الأخبار" class="loading-logo" onerror="this.style.display='none'">
-  <div class="loading-text">جاري تحميل الأخبار...</div>
-</div>
-
-<!-- Header -->
+<!-- Header with Title and Search -->
 <header class="app-header">
-  <div class="logo-container">
-    <img src="images1/00011.png" alt="مرصد الأخبار" class="app-logo">
-  </div>
-  
-  <div class="main-title-container">
+  <div class="title-search-container">
     <h1 class="main-title">Revue de Presse<br>Hebdomadaire</h1>
-    <div class="title-subtitle">مرصد الأخبار العالمية</div>
-  </div>
-  
-  <!-- Search Bar -->
-  <div class="search-container">
-    <div class="search-wrapper">
-      <div class="search-icon">🔍</div>
-      <input type="text" 
-             id="search-input" 
-             placeholder="ابحث في جميع المقالات..." 
-             autocomplete="off"
-             spellcheck="false">
-      <div class="clear-search" id="clear-search">✕</div>
+    
+    <!-- Search Bar -->
+    <div class="search-container">
+      <div class="search-wrapper">
+        <div class="search-icon">🔍</div>
+        <input type="text" 
+               id="search-input" 
+               placeholder="Search all articles..." 
+               autocomplete="off"
+               spellcheck="false">
+        <div class="clear-search" id="clear-search">✕</div>
+      </div>
     </div>
   </div>
 </header>
@@ -617,7 +571,7 @@ body {
       <div class="article-frame-container">
         <iframe id="article-frame" 
                 sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-                title="عرض المقال">
+                title="Article Content">
         </iframe>
       </div>
     </div>
@@ -642,7 +596,6 @@ let appState = {
 
 // ===== DOM ELEMENTS =====
 const elements = {
-  loadingScreen: document.getElementById('loading-screen'),
   searchInput: document.getElementById('search-input'),
   clearSearch: document.getElementById('clear-search'),
   articlesContainer: document.getElementById('articles-container'),
@@ -693,8 +646,6 @@ function setupEventListeners() {
 // ===== LOAD ARTICLES =====
 async function loadArticles() {
   try {
-    showLoading(true);
-    
     const response = await fetch(CONFIG.jsonUrl);
     
     if (!response.ok) {
@@ -711,9 +662,7 @@ async function loadArticles() {
     
   } catch (error) {
     console.error('Error loading articles:', error);
-    showError('تعذر تحميل المقالات. تحقق من اتصال الإنترنت.');
-  } finally {
-    showLoading(false);
+    showError('Unable to load articles. Check your internet connection.');
   }
 }
 
@@ -892,10 +841,10 @@ function createArticleCard(article, index) {
       
       ${keywords.length > 0 ? `
       <div class="article-keywords">
-        ${keywords.slice(0, 3).map(keyword => 
+        ${keywords.slice(0, 4).map(keyword => 
           `<span class="keyword-tag">${keyword}</span>`
         ).join('')}
-        ${keywords.length > 3 ? `<span class="keyword-tag">+${keywords.length - 3}</span>` : ''}
+        ${keywords.length > 4 ? `<span class="keyword-tag">+${keywords.length - 4}</span>` : ''}
       </div>
       ` : ''}
     </div>
@@ -928,8 +877,9 @@ function openArticleOverlay(article) {
               margin: 0 auto; 
               line-height: 1.6;
             }
-            h1 { color: #333; }
-            .meta { color: #666; font-size: 14px; margin-bottom: 20px; }
+            h1 { color: #333; margin-bottom: 20px; }
+            .meta { color: #666; font-size: 14px; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+            .content { margin-top: 20px; }
           </style>
         </head>
         <body>
@@ -939,7 +889,9 @@ function openArticleOverlay(article) {
             <strong>Date:</strong> ${validateAndFormatDate(article.date_heure).fullDate}<br>
             <strong>Category:</strong> ${article.theme || 'News'}
           </div>
-          <p>${article.resume || 'No content available'}</p>
+          <div class="content">
+            <p>${article.resume || 'No content available'}</p>
+          </div>
         </body>
       </html>
     `;
@@ -992,18 +944,6 @@ function getArticleImage(article) {
   return article.url3 || article.url2 || article.url1 || 
          `images3/${article.index}-image.jpg` ||
          'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMDAxYjQ0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEluYWdlPC90ZXh0Pjwvc3ZnPg==';
-}
-
-function showLoading(show) {
-  if (show) {
-    elements.loadingScreen.style.display = 'flex';
-    elements.loadingScreen.style.opacity = '1';
-  } else {
-    elements.loadingScreen.style.opacity = '0';
-    setTimeout(() => {
-      elements.loadingScreen.style.display = 'none';
-    }, 500);
-  }
 }
 
 function clearAllSearch() {
