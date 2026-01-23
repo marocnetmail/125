@@ -2,125 +2,180 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Fix - Revue 125</title>
+    <title>Admin 125 - Éditeur Automatique</title>
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; padding: 20px; }
-        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .config-bar { background: #eee; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
-        .error-log { background: #ffdce0; color: #af1923; padding: 10px; border-radius: 5px; margin: 10px 0; display: none; border: 1px solid #ebccd1; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8f9fa; padding: 20px; }
+        .admin-panel { max-width: 1200px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .config-zone { background: #343a40; color: white; padding: 15px; border-radius: 8px; margin-bottom: 25px; display: flex; gap: 10px; align-items: center; }
+        
         table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        .rtl { direction: rtl; text-align: right; width: 100%; box-sizing: border-box; }
-        .img-preview { width: 60px; height: 40px; object-fit: cover; background: #ccc; }
+        th { background: #f1f3f5; color: #495057; padding: 12px; border-bottom: 2px solid #dee2e6; text-align: left; }
+        td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: top; }
+        
+        .img-stack img { width: 120px; height: 70px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd; display: block; margin-bottom: 5px; }
+        .input-title { font-size: 1.1em; font-weight: bold; color: #2c3e50; margin-bottom: 10px; }
+        .rtl { direction: rtl; text-align: right; }
+        
+        .btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        .btn-save { background: #2ecc71; color: white; }
+        .btn-load { background: #3498db; color: white; }
+        .btn-del { background: #e74c3c; color: white; font-size: 0.8em; }
+        
+        .visible-toggle { transform: scale(1.5); cursor: pointer; }
+        #debug { color: #ffeb3b; font-family: monospace; font-size: 0.85em; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>🛠 Reparation Connexion GitHub</h2>
-    
-    <div id="debugBox" class="error-log"></div>
-
-    <div class="config-bar">
-        <label>GitHub Token:</label>
-        <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" style="width: 300px;">
-        <button onclick="forceLoad()">🚀 Forcer le Chargement</button>
-        <button onclick="clearToken()" style="background:#ccc; border:none; cursor:pointer">Effacer le Token</button>
+<div class="admin-panel">
+    <div class="config-zone">
+        <span>🔑 GitHub Token :</span>
+        <input type="password" id="ghToken" placeholder="ghp_..." style="flex:1; padding: 8px; border-radius: 4px; border:none;">
+        <button class="btn btn-load" onclick="initConnexion()">Charger datajzon.json</button>
+        <div id="debug"></div>
     </div>
 
-    <table id="dataTable">
+    <table id="mainTable">
         <thead>
             <tr>
-                <th>Image</th>
-                <th>Titre (Arabe)</th>
-                <th>Visible</th>
-                <th>Actions</th>
+                <th style="width: 150px;">Aperçu Images</th>
+                <th>Contenu de l'article (Titre & Résumé)</th>
+                <th style="width: 80px; text-align:center;">Visible</th>
+                <th style="width: 120px;">Actions</th>
             </tr>
         </thead>
-        <tbody id="dataBody">
-            <tr><td colspan="4" style="text-align:center">En attente du token...</td></tr>
-        </tbody>
+        <tbody id="dataRows">
+            </tbody>
     </table>
 </div>
 
 <script>
-    // CONFIGURATION STRICTE
-    const OWNER = "marocnetmail";
-    const REPO = "125";
-    const FILE_PATH = "data/datajzon.json"; // <--- VERIFIE BIEN L'ORTHOGRAPHE ICI
+    const GITHUB_CONFIG = {
+        owner: "marocnetmail",
+        repo: "125",
+        path: "data/datajzon.json", // Bien vérifié : datajzon.json
+        imgBase: "https://marocnetmail.github.io/125/"
+    };
 
-    function logError(msg) {
-        const box = document.getElementById('debugBox');
-        box.style.display = "block";
-        box.innerHTML += `<div>❌ ${msg}</div>`;
-        console.error(msg);
-    }
+    let localData = [];
+    let currentSha = "";
 
-    function clearToken() {
-        localStorage.removeItem('github_token_125');
-        location.reload();
-    }
+    async function initConnexion() {
+        const token = document.getElementById('ghToken').value;
+        const debug = document.getElementById('debug');
+        
+        if (!token) return alert("Le token est vide !");
+        localStorage.setItem('my_gh_token', token);
+        debug.innerHTML = "⏳ Connexion à GitHub...";
 
-    async function forceLoad() {
-        const tokenInput = document.getElementById('ghToken').value;
-        if(!tokenInput) return alert("Collez votre token d'abord");
-        
-        localStorage.setItem('github_token_125', tokenInput);
-        document.getElementById('debugBox').innerHTML = ""; // Reset debug
-        
-        const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
-        
         try {
-            console.log("Tentative de connexion à:", url);
+            const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
             const response = await fetch(url, {
-                headers: { 
-                    "Authorization": `token ${tokenInput}`,
-                    "Accept": "application/vnd.github.v3+json",
-                    "Cache-Control": "no-cache"
-                }
+                headers: { "Authorization": `token ${token}`, "Cache-Control": "no-cache" }
             });
 
-            if (!response.ok) {
-                const errData = await response.json();
-                throw new Error(`GitHub dit: ${response.status} - ${errData.message}`);
-            }
+            if (!response.ok) throw new Error(`Erreur ${response.status}: ${response.statusText}`);
 
-            const data = await response.json();
-            const sha = data.sha;
-            window.currentFileSha = sha; // Stockage global pour la sauvegarde
-
-            // Décodage
-            const content = decodeURIComponent(escape(atob(data.content)));
-            const json = JSON.parse(content);
+            const fileInfo = await response.json();
+            currentSha = fileInfo.sha;
             
-            render(json);
+            // Décodage du contenu
+            const rawContent = decodeURIComponent(escape(atob(fileInfo.content)));
+            localData = JSON.parse(rawContent);
+            
+            renderTable();
+            debug.innerHTML = "✅ Fichier chargé avec succès.";
         } catch (err) {
-            logError(err.message);
+            debug.innerHTML = `❌ Erreur : ${err.message}. <br> Vérifiez si vous lancez la page via un serveur (http://) et non en local (file://).`;
         }
     }
 
-    function render(items) {
-        const tbody = document.getElementById('dataBody');
-        tbody.innerHTML = "";
-        
-        items.forEach((item, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td><img src="https://marocnetmail.github.io/125/${item.url1}" class="img-preview"></td>
-                <td><input type="text" class="rtl" value="${item.titre || ''}"></td>
-                <td><input type="checkbox" ${item.visible ? 'checked' : ''}></td>
-                <td><button onclick="alert('SHA actuel: ' + window.currentFileSha)">Info</button></td>
+    function renderTable() {
+        const container = document.getElementById('dataRows');
+        container.innerHTML = "";
+
+        localData.forEach((item, index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>
+                    <div class="img-stack">
+                        <img src="${GITHUB_CONFIG.imgBase}${item.url1}" title="URL1">
+                        <img src="${GITHUB_CONFIG.imgBase}${item.url2}" style="height:30px; width:50px; opacity:0.7">
+                        <input type="text" value="${item.url1}" onchange="updateData(${index}, 'url1', this.value)" style="font-size:9px; width:100%">
+                    </div>
+                </td>
+                <td>
+                    <input type="text" class="input-title rtl" value="${item.titre}" onchange="updateData(${index}, 'titre', this.value)">
+                    <textarea class="rtl" style="width:100%; height:80px;" onchange="updateData(${index}, 'resume', this.value)">${item.resume}</textarea>
+                    <div style="margin-top:10px; font-size:0.8em; color:#666">
+                        Media: <input type="text" value="${item.media}" onchange="updateData(${index}, 'media', this.value)" style="width:100px">
+                        Thème: <input type="text" value="${item.theme}" onchange="updateData(${index}, 'theme', this.value)" style="width:100px">
+                    </div>
+                </td>
+                <td style="text-align:center;">
+                    <input type="checkbox" class="visible-toggle" ${item.visible ? 'checked' : ''} onchange="updateData(${index}, 'visible', this.checked)">
+                    <p><small>${item.visible ? 'OUI' : 'NON'}</small></p>
+                </td>
+                <td>
+                    <button class="btn btn-save" onclick="saveToGitHub()">💾 Sauver</button>
+                    <button class="btn btn-del" onclick="deleteRow(${index})" style="margin-top:10px">Supprimer</button>
+                </td>
             `;
-            tbody.appendChild(row);
+            container.appendChild(tr);
         });
     }
 
-    // Auto-chargement au démarrage si token présent
+    function updateData(index, key, value) {
+        localData[index][key] = value;
+    }
+
+    async function deleteRow(index) {
+        if(confirm("Voulez-vous vraiment supprimer cette ligne ?")) {
+            localData.splice(index, 1);
+            renderTable();
+            await saveToGitHub();
+        }
+    }
+
+    async function saveToGitHub() {
+        const token = localStorage.getItem('my_gh_token');
+        const debug = document.getElementById('debug');
+        debug.innerHTML = "💾 Enregistrement en cours...";
+
+        const jsonString = JSON.stringify(localData, null, 2);
+        const encodedContent = btoa(unescape(encodeURIComponent(jsonString)));
+
+        try {
+            const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
+            const response = await fetch(url, {
+                method: "PUT",
+                headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    message: "Modif Titre/Visibilité via Admin",
+                    content: encodedContent,
+                    sha: currentSha
+                })
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                currentSha = result.content.sha;
+                debug.innerHTML = "✅ Enregistré sur GitHub !";
+                renderTable();
+            } else {
+                throw new Error(result.message);
+            }
+        } catch (err) {
+            debug.innerHTML = `❌ Erreur sauvegarde : ${err.message}`;
+        }
+    }
+
+    // Auto-load au démarrage
     window.onload = () => {
-        const t = localStorage.getItem('github_token_125');
-        if(t) {
-            document.getElementById('ghToken').value = t;
-            forceLoad();
+        const savedToken = localStorage.getItem('my_gh_token');
+        if (savedToken) {
+            document.getElementById('ghToken').value = savedToken;
+            initConnexion();
         }
     };
 </script>
