@@ -145,7 +145,7 @@ body {
   transition: var(--transition);
   cursor: pointer;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  min-height: 400px; /* Increased minimum height */
+  min-height: 400px;
   display: flex;
   flex-direction: column;
 }
@@ -160,7 +160,7 @@ body {
 .article-image-container {
   position: relative;
   width: 100%;
-  height: 280px; /* Increased from 200px to 280px */
+  height: 280px;
   background: linear-gradient(45deg, #000428, #004e92);
   overflow: hidden;
   flex-shrink: 0;
@@ -186,12 +186,14 @@ body {
   background: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent 60%);
 }
 
+/* Article Title - Bold and Truncated */
 .article-image-title {
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: 800; /* Increased from 700 to 800 for bolder text */
   line-height: 1.3;
   color: white;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+  margin-bottom: 5px;
 }
 
 /* ===== BADGES ===== */
@@ -228,11 +230,24 @@ body {
   color: white;
 }
 
+/* Category badge alignment based on language */
+.category-badge.ltr {
+  text-align: left;
+  justify-content: flex-start;
+  padding-right: 12px;
+}
+
+.category-badge.rtl {
+  text-align: right;
+  justify-content: flex-end;
+  padding-left: 12px;
+}
+
 .article-card:hover .image-badge {
   transform: translateY(-2px);
 }
 
-/* ===== ARTICLE INFO - Increased Space ===== */
+/* ===== ARTICLE INFO ===== */
 .article-info {
   padding: 20px;
   display: flex;
@@ -245,22 +260,26 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: var(--text-secondary);
   font-size: 0.9rem;
   margin-top: 5px;
 }
 
-.article-source {
+/* Media source with logo */
+.media-source {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  color: white; /* Changed to white */
   font-weight: 600;
-  color: var(--primary);
 }
 
-.article-source::before {
-  content: "📰";
-  font-size: 1rem;
+.media-logo {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  object-fit: contain;
+  background: white;
+  padding: 2px;
 }
 
 .article-time {
@@ -268,6 +287,7 @@ body {
   align-items: center;
   gap: 5px;
   font-weight: bold;
+  color: white; /* Changed to white */
 }
 
 .article-time::before {
@@ -280,13 +300,14 @@ body {
   line-height: 1.6;
   color: var(--text-secondary);
   display: -webkit-box;
-  -webkit-line-clamp: 4; /* Increased from 3 to 4 lines */
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
   margin: 5px 0;
   flex: 1;
 }
 
+/* Keywords in white */
 .article-keywords {
   display: flex;
   flex-wrap: wrap;
@@ -295,13 +316,13 @@ body {
 }
 
 .keyword-tag {
-  background: rgba(26, 115, 232, 0.15);
-  color: var(--primary);
+  background: rgba(255, 255, 255, 0.1);
+  color: white; /* Changed to white */
   font-size: 0.8rem;
   padding: 5px 12px;
   border-radius: 12px;
-  border: 1px solid rgba(26, 115, 232, 0.3);
-  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-weight: 500;
 }
 
 /* ===== ARTICLE OVERLAY ===== */
@@ -484,7 +505,7 @@ body {
   }
   
   .article-image-container {
-    height: 240px; /* Still increased but responsive */
+    height: 240px;
   }
   
   .article-image-title {
@@ -517,7 +538,7 @@ body {
   }
   
   .article-image-container {
-    height: 320px; /* Even larger on tablets */
+    height: 320px;
   }
   
   .article-image-title {
@@ -527,7 +548,7 @@ body {
 
 @media (min-width: 1024px) {
   .article-image-container {
-    height: 350px; /* Largest on desktop */
+    height: 350px;
   }
 }
 </style>
@@ -586,6 +607,36 @@ const CONFIG = {
   maxArticles: 100
 };
 
+// ===== MEDIA LOGOS MAPPING =====
+const MEDIA_LOGOS = {
+  // French media
+  'le monde': 'https://upload.wikimedia.org/wikipedia/commons/4/43/Le_Monde.svg',
+  'le figaro': 'https://upload.wikimedia.org/wikipedia/commons/5/5b/Le_Figaro_Logo.svg',
+  'liberation': 'https://upload.wikimedia.org/wikipedia/commons/8/8d/Lib%C3%A9ration_%28logo%29.svg',
+  'france 24': 'https://upload.wikimedia.org/wikipedia/commons/2/2d/France_24_logo.svg',
+  'bbc': 'https://upload.wikimedia.org/wikipedia/commons/6/6a/BBC_World_News_2022.svg',
+  'cnn': 'https://upload.wikimedia.org/wikipedia/commons/b/b1/CNN.svg',
+  'al jazeera': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Al_Jazeera_Logo_2016.svg',
+  'rt': 'https://upload.wikimedia.org/wikipedia/commons/a/a0/RT_logo.svg',
+  'ap': 'https://upload.wikimedia.org/wikipedia/commons/5/5a/Associated_Press_logo_2012.svg',
+  'reuters': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Reuters_logo.svg',
+  'afp': 'https://upload.wikimedia.org/wikipedia/commons/6/69/Agence_France-Presse_logo.svg',
+  
+  // Arabic media
+  'الجزيرة': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Al_Jazeera_Logo_2016.svg',
+  'العربية': 'https://upload.wikimedia.org/wikipedia/commons/7/76/Al_Arabiya_Network_logo.svg',
+  'الشرق الأوسط': 'https://upload.wikimedia.org/wikipedia/commons/8/8f/Asharq_Al-Awsat_logo.svg',
+  'الرأي': 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Alrai_logo.svg',
+  'النهار': 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Annahar_%28newspaper%29_logo.svg',
+  'الديار': 'https://upload.wikimedia.org/wikipedia/commons/2/2d/Al-Diyar_logo.svg',
+  'الحدث': 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Alhadath_logo.svg',
+  
+  // Generic fallbacks
+  'newspaper': 'https://cdn-icons-png.flaticon.com/512/60/60543.png',
+  'news': 'https://cdn-icons-png.flaticon.com/512/60/60543.png',
+  'media': 'https://cdn-icons-png.flaticon.com/512/60/60543.png'
+};
+
 // ===== APP STATE =====
 let appState = {
   articles: [],
@@ -641,6 +692,52 @@ function setupEventListeners() {
       closeArticleOverlay();
     }
   });
+}
+
+// ===== UTILITY FUNCTIONS =====
+function truncateTitle(title, maxLength = 150) {
+  if (!title || title.length <= maxLength) return title;
+  
+  // Truncate to max length
+  let truncated = title.substring(0, maxLength);
+  
+  // Find the last space to ensure we don't cut a word
+  const lastSpace = truncated.lastIndexOf(' ');
+  
+  if (lastSpace > maxLength - 20) { // If we're not cutting off too much
+    truncated = truncated.substring(0, lastSpace);
+  }
+  
+  // Add ellipsis
+  return truncated + '...';
+}
+
+function isArabic(text) {
+  if (!text) return false;
+  // Arabic Unicode range
+  const arabicRegex = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
+  return arabicRegex.test(text);
+}
+
+function getMediaLogo(mediaName) {
+  if (!mediaName) return null;
+  
+  const lowerName = mediaName.toLowerCase().trim();
+  
+  // Try exact match
+  if (MEDIA_LOGOS[lowerName]) {
+    return MEDIA_LOGOS[lowerName];
+  }
+  
+  // Try partial match
+  for (const [key, logo] of Object.entries(MEDIA_LOGOS)) {
+    if (lowerName.includes(key) || key.includes(lowerName)) {
+      return logo;
+    }
+  }
+  
+  // Return generic news icon
+  return MEDIA_LOGOS['newspaper'];
 }
 
 // ===== LOAD ARTICLES =====
@@ -804,6 +901,7 @@ function createArticleCard(article, index) {
   // Get article data
   const imageUrl = getArticleImage(article);
   const title = article.titre || `Article ${index + 1}`;
+  const truncatedTitle = truncateTitle(title);
   const source = article.media || 'Unknown';
   const category = article.theme || 'News';
   const summary = article.resume || 'No summary available';
@@ -812,19 +910,23 @@ function createArticleCard(article, index) {
   // Format date
   const dateInfo = validateAndFormatDate(article.date_heure);
   
+  // Get media logo
+  const mediaLogo = getMediaLogo(source);
+  const isCategoryArabic = isArabic(category);
+  
   // Create card content
   card.innerHTML = `
     <div class="article-image-container">
       <img src="${imageUrl}" alt="${title}" class="article-image" loading="lazy">
       <div class="image-overlay">
-        <h3 class="article-image-title">${title}</h3>
+        <h3 class="article-image-title">${truncatedTitle}</h3>
       </div>
       <div class="image-badges">
         <div class="image-badge date-badge">
           <span>📅</span>
           <span>${dateInfo.date}</span>
         </div>
-        <div class="image-badge category-badge">
+        <div class="image-badge category-badge ${isCategoryArabic ? 'rtl' : 'ltr'}">
           <span>🏷️</span>
           <span>${category}</span>
         </div>
@@ -833,7 +935,10 @@ function createArticleCard(article, index) {
     
     <div class="article-info">
       <div class="article-meta">
-        <div class="article-source">${source}</div>
+        <div class="media-source">
+          ${mediaLogo ? `<img src="${mediaLogo}" alt="${source}" class="media-logo">` : ''}
+          <span>${source}</span>
+        </div>
         <div class="article-time">${dateInfo.time}</div>
       </div>
       
@@ -877,7 +982,7 @@ function openArticleOverlay(article) {
               margin: 0 auto; 
               line-height: 1.6;
             }
-            h1 { color: #333; margin-bottom: 20px; }
+            h1 { color: #333; margin-bottom: 20px; font-weight: bold; }
             .meta { color: #666; font-size: 14px; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
             .content { margin-top: 20px; }
           </style>
@@ -942,7 +1047,7 @@ function showError(message) {
 // ===== UTILITY FUNCTIONS =====
 function getArticleImage(article) {
   return article.url3 || article.url2 || article.url1 || 
-         `images1/${article.index}-image.jpg` ||
+         `images3/${article.index}-image.jpg` ||
          'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMDAxYjQ0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEluYWdlPC90ZXh0Pjwvc3ZnPg==';
 }
 
