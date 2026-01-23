@@ -1,1 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Fix - Revue 125</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .config-bar { background: #eee; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .error-log { background: #ffdce0; color: #af1923; padding: 10px; border-radius: 5px; margin: 10px 0; display: none; border: 1px solid #ebccd1; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        .rtl { direction: rtl; text-align: right; width: 100%; box-sizing: border-box; }
+        .img-preview { width: 60px; height: 40px; object-fit: cover; background: #ccc; }
+    </style>
+</head>
+<body>
 
+<div class="container">
+    <h2>🛠 Reparation Connexion GitHub</h2>
+    
+    <div id="debugBox" class="error-log"></div>
+
+    <div class="config-bar">
+        <label>GitHub Token:</label>
+        <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" style="width: 300px;">
+        <button onclick="forceLoad()">🚀 Forcer le Chargement</button>
+        <button onclick="clearToken()" style="background:#ccc; border:none; cursor:pointer">Effacer le Token</button>
+    </div>
+
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Titre (Arabe)</th>
+                <th>Visible</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="dataBody">
+            <tr><td colspan="4" style="text-align:center">En attente du token...</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // CONFIGURATION STRICTE
+    const OWNER = "marocnetmail";
+    const REPO = "125";
+    const FILE_PATH = "data/datajzon.json"; // <--- VERIFIE BIEN L'ORTHOGRAPHE ICI
+
+    function logError(msg) {
+        const box = document.getElementById('debugBox');
+        box.style.display = "block";
+        box.innerHTML += `<div>❌ ${msg}</div>`;
+        console.error(msg);
+    }
+
+    function clearToken() {
+        localStorage.removeItem('github_token_125');
+        location.reload();
+    }
+
+    async function forceLoad() {
+        const tokenInput = document.getElementById('ghToken').value;
+        if(!tokenInput) return alert("Collez votre token d'abord");
+        
+        localStorage.setItem('github_token_125', tokenInput);
+        document.getElementById('debugBox').innerHTML = ""; // Reset debug
+        
+        const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
+        
+        try {
+            console.log("Tentative de connexion à:", url);
+            const response = await fetch(url, {
+                headers: { 
+                    "Authorization": `token ${tokenInput}`,
+                    "Accept": "application/vnd.github.v3+json",
+                    "Cache-Control": "no-cache"
+                }
+            });
+
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(`GitHub dit: ${response.status} - ${errData.message}`);
+            }
+
+            const data = await response.json();
+            const sha = data.sha;
+            window.currentFileSha = sha; // Stockage global pour la sauvegarde
+
+            // Décodage
+            const content = decodeURIComponent(escape(atob(data.content)));
+            const json = JSON.parse(content);
+            
+            render(json);
+        } catch (err) {
+            logError(err.message);
+        }
+    }
+
+    function render(items) {
+        const tbody = document.getElementById('dataBody');
+        tbody.innerHTML = "";
+        
+        items.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><img src="https://marocnetmail.github.io/125/${item.url1}" class="img-preview"></td>
+                <td><input type="text" class="rtl" value="${item.titre || ''}"></td>
+                <td><input type="checkbox" ${item.visible ? 'checked' : ''}></td>
+                <td><button onclick="alert('SHA actuel: ' + window.currentFileSha)">Info</button></td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    // Auto-chargement au démarrage si token présent
+    window.onload = () => {
+        const t = localStorage.getItem('github_token_125');
+        if(t) {
+            document.getElementById('ghToken').value = t;
+            forceLoad();
+        }
+    };
+</script>
+</body>
+</html>
