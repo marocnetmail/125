@@ -38,6 +38,7 @@ body {
   color: var(--text);
   line-height: 1.6;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
 /* ===== COMPACT HEADER ===== */
@@ -46,6 +47,9 @@ body {
   padding: 15px 20px 15px;
   box-shadow: var(--shadow);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 /* ===== MAIN TITLE AND SEARCH COMPACT ===== */
@@ -107,6 +111,7 @@ body {
   color: var(--text);
   font-size: 1rem;
   outline: none;
+  font-family: inherit;
 }
 
 #search-input::placeholder {
@@ -120,23 +125,47 @@ body {
   cursor: pointer;
   display: none;
   transition: var(--transition);
+  background: none;
+  border: none;
 }
 
 .clear-search:hover {
   color: var(--text);
 }
 
+/* ===== LOADING STATE ===== */
+#loading-indicator {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* ===== ARTICLES LIST ===== */
 #articles-container {
   padding: 15px;
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-height: 200px;
 }
 
-/* ===== ARTICLE CARD - INCREASED HEIGHT ===== */
+/* ===== ARTICLE CARD ===== */
 .article-card {
   background: var(--card-bg);
   border-radius: var(--radius);
@@ -145,9 +174,19 @@ body {
   transition: var(--transition);
   cursor: pointer;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  min-height: 400px;
+  min-height: 420px;
   display: flex;
   flex-direction: column;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .article-card:hover {
@@ -156,11 +195,11 @@ body {
   border-color: rgba(26, 115, 232, 0.3);
 }
 
-/* Article Image Section - Increased Height */
+/* Article Image Section - AUGMENTÉE */
 .article-image-container {
   position: relative;
   width: 100%;
-  height: 280px;
+  height: 350px;
   background: linear-gradient(45deg, #000428, #004e92);
   overflow: hidden;
   flex-shrink: 0;
@@ -171,6 +210,7 @@ body {
   height: 100%;
   object-fit: cover;
   transition: transform 0.8s ease;
+  background: linear-gradient(45deg, #000428, #004e92);
 }
 
 .article-card:hover .article-image {
@@ -186,14 +226,31 @@ body {
   background: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent 60%);
 }
 
-/* Article Title - Bold and Truncated */
+/* Article Title - TRÈS GRAND ET GRAS */
 .article-image-title {
-  font-size: 1.4rem;
-  font-weight: 800; /* Increased from 700 to 800 for bolder text */
-  line-height: 1.3;
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1.2;
   color: white;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 1);
   margin-bottom: 5px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Source à la fin du titre - PETITE TAILLE */
+.title-source {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent-2);
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0.9;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 /* ===== BADGES ===== */
@@ -205,188 +262,175 @@ body {
   display: flex;
   justify-content: space-between;
   padding: 0 20px;
+  z-index: 2;
 }
 
 .image-badge {
-  padding: 7px 14px;
-  font-size: 0.85rem;
+  padding: 8px 16px;
+  font-size: 0.9rem;
   font-weight: 700;
   border-radius: 20px;
   backdrop-filter: blur(10px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  transition: var(--transition);
 }
 
 .date-badge { 
-  background: rgba(255, 107, 107, 0.9);
+  background: rgba(255, 107, 107, 0.95);
   color: white;
   font-weight: bold;
 }
 
 .category-badge { 
-  background: rgba(78, 205, 196, 0.9);
+  background: rgba(78, 205, 196, 0.95);
   color: white;
 }
 
-/* Category badge alignment based on language */
-.category-badge.ltr {
-  text-align: left;
-  justify-content: flex-start;
-  padding-right: 12px;
-}
+/* Category badge alignment */
+.category-badge.ltr { text-align: left; justify-content: flex-start; padding-right: 12px; }
+.category-badge.rtl { text-align: right; justify-content: flex-end; padding-left: 12px; }
 
-.category-badge.rtl {
-  text-align: right;
-  justify-content: flex-end;
-  padding-left: 12px;
-}
+.article-card:hover .image-badge { transform: translateY(-3px); }
 
-.article-card:hover .image-badge {
-  transform: translateY(-2px);
-}
-
-/* ===== ARTICLE INFO ===== */
+/* ===== ARTICLE INFO - SIMPLIFIÉ ===== */
 .article-info {
-  padding: 20px;
+  padding: 15px 20px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
   flex: 1;
-}
-
-.article-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
-  margin-top: 5px;
-}
-
-/* Media source with logo */
-.media-source {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: white; /* Changed to white */
-  font-weight: 600;
-}
-
-.media-logo {
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  object-fit: contain;
-  background: white;
-  padding: 2px;
-}
-
-.article-time {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-weight: bold;
-  color: white; /* Changed to white */
-}
-
-.article-time::before {
-  content: "🕒";
-  font-size: 0.9rem;
-}
-
-.article-summary {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--text-secondary);
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin: 5px 0;
-  flex: 1;
-}
-
-/* Keywords in white */
-.article-keywords {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.keyword-tag {
-  background: rgba(255, 255, 255, 0.1);
-  color: white; /* Changed to white */
-  font-size: 0.8rem;
-  padding: 5px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  font-weight: 500;
+  justify-content: flex-end;
 }
 
 /* ===== ARTICLE OVERLAY ===== */
 #article-overlay {
   display: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(0, 0, 0, 0.98);
   z-index: 1000;
   animation: fadeIn 0.3s ease;
 }
 
-.overlay-container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  position: relative;
+.overlay-container { 
+  width: 100%; 
+  height: 100%; 
+  display: flex; 
+  flex-direction: column; 
+  position: relative; 
 }
 
-.overlay-header {
-  padding: 20px;
+/* ===== OVERLAY HEADER ÉTENDU ===== */
+.overlay-header-extended {
+  padding: 15px 20px;
   background: rgba(0, 26, 68, 0.95);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 10px;
   position: relative;
   z-index: 2;
-}
-
-.overlay-title {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--text);
-  flex: 1;
-  margin-right: 15px;
-  line-height: 1.3;
-}
-
-.close-overlay {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--accent-1);
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: var(--transition);
   flex-shrink: 0;
 }
 
-.close-overlay:hover {
-  background: #ff4444;
-  transform: rotate(90deg);
+.overlay-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
+.overlay-title { 
+  font-size: 1.4rem; 
+  font-weight: 800; 
+  color: var(--text); 
+  flex: 1; 
+  margin-right: 15px; 
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.close-overlay {
+  width: 45px; 
+  height: 45px; 
+  border-radius: 50%;
+  background: var(--accent-1); 
+  border: none; 
+  color: white;
+  font-size: 1.8rem; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  cursor: pointer; 
+  transition: var(--transition); 
+  flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.close-overlay:hover { 
+  background: #ff4444; 
+  transform: rotate(90deg) scale(1.1); 
+}
+
+/* ===== SENTIMENT ET MOTS-CLÉS ===== */
+.overlay-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.sentiment-display-overlay {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sentiment-positive {
+  color: #4CAF50;
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+.sentiment-negative {
+  color: #FF6B6B;
+  border-color: rgba(255, 107, 107, 0.4);
+}
+
+.sentiment-neutral {
+  color: #FFD166;
+  border-color: rgba(255, 209, 102, 0.4);
+}
+
+.keywords-container-overlay {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.keyword-overlay {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ===== CONTENU ARTICLE ===== */
 .overlay-content {
   flex: 1;
   display: flex;
@@ -406,235 +450,185 @@ body {
   border: none;
 }
 
-/* ===== NO RESULTS ===== */
-.no-results {
-  text-align: center;
-  padding: 60px 20px;
+/* ===== NO RESULTS & ERROR ===== */
+.no-results, .error-state { 
+  text-align: center; 
+  padding: 60px 20px; 
   color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
 }
 
-.no-results-icon {
-  font-size: 3rem;
-  margin-bottom: 20px;
-  opacity: 0.5;
+.no-results-icon, .error-icon { 
+  font-size: 3rem; 
+  margin-bottom: 20px; 
+  opacity: 0.5; 
 }
 
-.no-results h3 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-  color: var(--text);
-}
-
-.no-results p {
-  font-size: 1rem;
-  margin-bottom: 20px;
-}
-
-.clear-search-btn {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 25px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  display: inline-block;
-}
-
-.clear-search-btn:hover {
-  background: var(--primary-dark);
-  transform: translateY(-2px);
-}
-
-/* ===== ERROR STATE ===== */
-.error-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--accent-1);
-}
-
-.error-icon {
-  font-size: 3rem;
-  margin-bottom: 20px;
-}
-
-.error-state h3 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-}
-
-.error-state p {
-  font-size: 1rem;
-  margin-bottom: 20px;
-  color: var(--text-secondary);
-}
-
-.retry-button {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 25px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
+.clear-search-btn, .retry-button { 
+  background: var(--primary); 
+  color: white; 
+  border: none; 
+  padding: 12px 25px; 
+  border-radius: 25px; 
+  cursor: pointer; 
+  margin-top: 20px;
+  font-family: inherit;
   transition: var(--transition);
 }
 
-.retry-button:hover {
+.clear-search-btn:hover, .retry-button:hover {
   background: var(--primary-dark);
-  transform: translateY(-2px);
 }
 
 /* ===== ANIMATIONS ===== */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ===== SCROLL TO TOP ===== */
+.scroll-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: none;
+  z-index: 99;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+}
+
+.scroll-top:hover {
+  background: var(--primary-dark);
+  transform: translateY(-3px);
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .main-title { font-size: 2rem; }
+  .article-image-container { height: 300px; }
+  .article-image-title { font-size: 1.8rem; }
+  .overlay-title { font-size: 1.2rem; }
+  .overlay-header-extended {
+    padding: 12px 15px;
+  }
+}
+
 @media (max-width: 480px) {
-  .app-header {
-    padding: 12px 15px 12px;
+  .app-header { padding: 15px 10px; }
+  .main-title { font-size: 1.8rem; }
+  .article-image-container { height: 250px; }
+  .article-image-title { font-size: 1.6rem; }
+  .article-info { padding: 12px 15px; }
+  .image-badges { padding: 0 10px; }
+  .image-badge { padding: 6px 12px; font-size: 0.85rem; }
+  .scroll-top {
+    bottom: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
   }
-  
-  .main-title {
-    font-size: 2rem;
-  }
-  
-  .article-image-container {
-    height: 240px;
-  }
-  
-  .article-image-title {
-    font-size: 1.2rem;
-  }
-  
-  .image-badge {
-    padding: 6px 12px;
-    font-size: 0.8rem;
-  }
-  
-  .overlay-header {
-    padding: 15px;
-  }
-  
-  .overlay-title {
-    font-size: 1.1rem;
-  }
-  
+  .overlay-title { font-size: 1.1rem; }
   .close-overlay {
-    width: 35px;
-    height: 35px;
-    font-size: 1.3rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+  }
+  .keywords-container-overlay {
+    gap: 6px;
+  }
+  .keyword-overlay {
+    font-size: 0.8rem;
+    padding: 5px 10px;
   }
 }
 
-@media (min-width: 768px) {
-  .main-title {
-    font-size: 2.8rem;
-  }
-  
-  .article-image-container {
-    height: 320px;
-  }
-  
-  .article-image-title {
-    font-size: 1.6rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .article-image-container {
-    height: 350px;
-  }
+/* ===== IMAGE ERROR STATE ===== */
+.image-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  height: 100%;
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(45deg, #000428, #004e92);
 }
 </style>
 </head>
 
 <body>
-<!-- Header with Title and Search -->
 <header class="app-header">
   <div class="title-search-container">
     <h1 class="main-title">Revue de Presse<br>Hebdomadaire</h1>
-    
-    <!-- Search Bar -->
     <div class="search-container">
       <div class="search-wrapper">
         <div class="search-icon">🔍</div>
-        <input type="text" 
-               id="search-input" 
-               placeholder="Search all articles..." 
-               autocomplete="off"
-               spellcheck="false">
-        <div class="clear-search" id="clear-search">✕</div>
+        <input type="text" id="search-input" placeholder="Rechercher des articles..." autocomplete="off" spellcheck="false">
+        <button class="clear-search" id="clear-search" aria-label="Effacer la recherche">✕</button>
       </div>
     </div>
   </div>
 </header>
 
-<!-- Articles Container -->
 <main id="articles-container">
-  <!-- Articles will be loaded here -->
+  <div id="loading-indicator">
+    <div class="loading-spinner"></div>
+    <p>Chargement des articles...</p>
+  </div>
 </main>
 
-<!-- Article Overlay -->
+<button class="scroll-top" id="scroll-top" aria-label="Retour en haut">↑</button>
+
 <div id="article-overlay">
   <div class="overlay-container">
-    <div class="overlay-header">
-      <div class="overlay-title" id="overlay-article-title"></div>
-      <button class="close-overlay" id="close-overlay">×</button>
+    <div class="overlay-header-extended">
+      <div class="overlay-header-top">
+        <div class="overlay-title" id="overlay-article-title"></div>
+        <button class="close-overlay" id="close-overlay" aria-label="Fermer">×</button>
+      </div>
+      <div class="overlay-details">
+        <div id="sentiment-display-overlay" class="sentiment-display-overlay sentiment-neutral">
+          <span>Sentiment:</span>
+          <span id="sentiment-value">Chargement...</span>
+        </div>
+        <div class="keywords-container-overlay" id="keywords-container-overlay">
+          <!-- Les mots-clés seront insérés ici -->
+        </div>
+      </div>
     </div>
-    
     <div class="overlay-content">
       <div class="article-frame-container">
-        <iframe id="article-frame" 
-                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-                title="Article Content">
-        </iframe>
+        <iframe id="article-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" title="Contenu de l'article"></iframe>
       </div>
     </div>
   </div>
 </div>
 
-<!-- JavaScript -->
 <script>
 // ===== APP CONFIGURATION =====
 const CONFIG = {
-  jsonUrl: 'data/datajson.json',
-  maxArticles: 100
+  jsonUrl: 'data/datajson.json?t=' + Date.now(),
+  maxArticles: 100,
+  imagesBasePath: 'images3/'
 };
 
 // ===== MEDIA LOGOS MAPPING =====
 const MEDIA_LOGOS = {
-  // French media
-  'le monde': 'https://upload.wikimedia.org/wikipedia/commons/4/43/Le_Monde.svg',
-  'le figaro': 'https://upload.wikimedia.org/wikipedia/commons/5/5b/Le_Figaro_Logo.svg',
-  'liberation': 'https://upload.wikimedia.org/wikipedia/commons/8/8d/Lib%C3%A9ration_%28logo%29.svg',
-  'france 24': 'https://upload.wikimedia.org/wikipedia/commons/2/2d/France_24_logo.svg',
-  'bbc': 'https://upload.wikimedia.org/wikipedia/commons/6/6a/BBC_World_News_2022.svg',
-  'cnn': 'https://upload.wikimedia.org/wikipedia/commons/b/b1/CNN.svg',
   'al jazeera': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Al_Jazeera_Logo_2016.svg',
-  'rt': 'https://upload.wikimedia.org/wikipedia/commons/a/a0/RT_logo.svg',
-  'ap': 'https://upload.wikimedia.org/wikipedia/commons/5/5a/Associated_Press_logo_2012.svg',
-  'reuters': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Reuters_logo.svg',
-  'afp': 'https://upload.wikimedia.org/wikipedia/commons/6/69/Agence_France-Presse_logo.svg',
-  
-  // Arabic media
   'الجزيرة': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Al_Jazeera_Logo_2016.svg',
-  'العربية': 'https://upload.wikimedia.org/wikipedia/commons/7/76/Al_Arabiya_Network_logo.svg',
-  'الشرق الأوسط': 'https://upload.wikimedia.org/wikipedia/commons/8/8f/Asharq_Al-Awsat_logo.svg',
-  'الرأي': 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Alrai_logo.svg',
-  'النهار': 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Annahar_%28newspaper%29_logo.svg',
-  'الديار': 'https://upload.wikimedia.org/wikipedia/commons/2/2d/Al-Diyar_logo.svg',
-  'الحدث': 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Alhadath_logo.svg',
-  
-  // Generic fallbacks
-  'newspaper': 'https://cdn-icons-png.flaticon.com/512/60/60543.png',
-  'news': 'https://cdn-icons-png.flaticon.com/512/60/60543.png',
-  'media': 'https://cdn-icons-png.flaticon.com/512/60/60543.png'
+  'france 24': 'https://upload.wikimedia.org/wikipedia/commons/2/2d/France_24_logo.svg',
+  'arabic.pressbee.net': 'https://cdn-icons-png.flaticon.com/512/60/60543.png',
+  'default': 'https://cdn-icons-png.flaticon.com/512/60/60543.png'
 };
 
 // ===== APP STATE =====
@@ -645,7 +639,6 @@ let appState = {
   isLoading: true
 };
 
-// ===== DOM ELEMENTS =====
 const elements = {
   searchInput: document.getElementById('search-input'),
   clearSearch: document.getElementById('clear-search'),
@@ -653,25 +646,28 @@ const elements = {
   articleOverlay: document.getElementById('article-overlay'),
   closeOverlay: document.getElementById('close-overlay'),
   articleFrame: document.getElementById('article-frame'),
-  overlayArticleTitle: document.getElementById('overlay-article-title')
+  overlayArticleTitle: document.getElementById('overlay-article-title'),
+  sentimentDisplayOverlay: document.getElementById('sentiment-display-overlay'),
+  sentimentValue: document.getElementById('sentiment-value'),
+  keywordsContainerOverlay: document.getElementById('keywords-container-overlay'),
+  loadingIndicator: document.getElementById('loading-indicator'),
+  scrollTop: document.getElementById('scroll-top')
 };
 
-// ===== INITIALIZE APP =====
 function initApp() {
   setupEventListeners();
   loadArticles();
 }
 
-// ===== EVENT LISTENERS =====
 function setupEventListeners() {
-  // Search input
+  // Recherche
   elements.searchInput.addEventListener('input', function(e) {
     appState.searchQuery = e.target.value;
     elements.clearSearch.style.display = appState.searchQuery ? 'block' : 'none';
     debounce(filterArticles, 300)();
   });
   
-  // Clear search button
+  // Effacer recherche
   elements.clearSearch.addEventListener('click', () => {
     elements.searchInput.value = '';
     appState.searchQuery = '';
@@ -680,181 +676,137 @@ function setupEventListeners() {
     elements.searchInput.focus();
   });
   
-  // Overlay close
+  // Fermer overlay
   elements.closeOverlay.addEventListener('click', closeArticleOverlay);
-  elements.articleOverlay.addEventListener('click', (e) => {
-    if (e.target === elements.articleOverlay) closeArticleOverlay();
+  
+  // Fermer overlay avec ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeArticleOverlay();
   });
   
-  // Escape key to close overlay
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && elements.articleOverlay.style.display === 'block') {
-      closeArticleOverlay();
-    }
+  // Scroll to top
+  elements.scrollTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  
+  // Afficher/masquer bouton scroll
+  window.addEventListener('scroll', () => {
+    elements.scrollTop.style.display = window.scrollY > 300 ? 'block' : 'none';
   });
 }
 
-// ===== UTILITY FUNCTIONS =====
-function truncateTitle(title, maxLength = 150) {
+function truncateTitle(title, maxLength = 120) {
   if (!title || title.length <= maxLength) return title;
-  
-  // Truncate to max length
-  let truncated = title.substring(0, maxLength);
-  
-  // Find the last space to ensure we don't cut a word
-  const lastSpace = truncated.lastIndexOf(' ');
-  
-  if (lastSpace > maxLength - 20) { // If we're not cutting off too much
-    truncated = truncated.substring(0, lastSpace);
-  }
-  
-  // Add ellipsis
-  return truncated + '...';
+  return title.substring(0, maxLength) + '...';
 }
 
 function isArabic(text) {
-  if (!text) return false;
-  // Arabic Unicode range
-  const arabicRegex = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
-  return arabicRegex.test(text);
+  return /[\u0600-\u06FF]/.test(text);
 }
 
 function getMediaLogo(mediaName) {
-  if (!mediaName) return null;
+  if (!mediaName) return MEDIA_LOGOS.default;
+  const lower = mediaName.toLowerCase();
   
-  const lowerName = mediaName.toLowerCase().trim();
+  if (MEDIA_LOGOS[lower]) return MEDIA_LOGOS[lower];
   
-  // Try exact match
-  if (MEDIA_LOGOS[lowerName]) {
-    return MEDIA_LOGOS[lowerName];
-  }
-  
-  // Try partial match
-  for (const [key, logo] of Object.entries(MEDIA_LOGOS)) {
-    if (lowerName.includes(key) || key.includes(lowerName)) {
-      return logo;
+  for (const key in MEDIA_LOGOS) {
+    if (lower.includes(key) || key.includes(lower)) {
+      return MEDIA_LOGOS[key];
     }
   }
   
-  // Return generic news icon
-  return MEDIA_LOGOS['newspaper'];
+  return MEDIA_LOGOS.default;
 }
 
-// ===== LOAD ARTICLES =====
+// ===== IMAGE MANAGEMENT =====
+function getArticleImageUrl(article) {
+  if (article.image_brute) {
+    if (!article.image_brute.startsWith('http') && 
+        !article.image_brute.startsWith('/') &&
+        !article.image_brute.startsWith('images')) {
+      return CONFIG.imagesBasePath + article.image_brute;
+    }
+    return article.image_brute;
+  }
+  
+  if (article.image_brute) {
+    if (!article.image_brute.startsWith('http') && 
+        !article.image_brute.startsWith('/') &&
+        !article.image_brute.startsWith('images')) {
+      return CONFIG.imagesBasePath + article.image_brute;
+    }
+    return article.image_brute;
+  }
+  
+  return null;
+}
+
+function createImageElement(imageUrl, title) {
+  if (!imageUrl) {
+    return '<div class="image-error">Image non disponible</div>';
+  }
+  
+  return `<img src="${imageUrl}" 
+                alt="${title || 'Image de l\'article'}" 
+                class="article-image" 
+                loading="lazy"
+                onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\\'image-error\\'>Image non disponible</div>';"
+                onload="this.style.opacity='1'"
+                style="opacity:0; transition: opacity 0.3s ease;">`;
+}
+
+// ===== LOAD & PROCESS =====
 async function loadArticles() {
   try {
+    showLoading(true);
     const response = await fetch(CONFIG.jsonUrl);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const data = await response.json();
-    
-    // Process articles
     appState.articles = processArticleData(data);
-    
-    // Update UI
     filterArticles();
-    
   } catch (error) {
     console.error('Error loading articles:', error);
-    showError('Unable to load articles. Check your internet connection.');
+    showError('Impossible de charger les articles. Veuillez réessayer.');
+  } finally {
+    showLoading(false);
   }
 }
 
-// ===== VALIDATE AND FORMAT DATE =====
 function validateAndFormatDate(dateString) {
-  if (!dateString) {
-    return {
-      date: 'N/A',
-      time: '',
-      fullDate: 'N/A'
-    };
-  }
+  if (!dateString) return { date: 'N/A', time: '', fullDate: 'N/A' };
   
   try {
-    let date = new Date(dateString);
-    
-    // If invalid, try to parse different formats
-    if (isNaN(date.getTime())) {
-      // Try to fix common date format issues
-      const cleanDate = dateString.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1');
-      date = new Date(cleanDate);
-      
-      if (isNaN(date.getTime())) {
-        // If still invalid, try as is
-        date = new Date(dateString);
-      }
-    }
-    
-    // Format date in Western format (DD/MM/YYYY)
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    const formattedDate = `${day}/${month}/${year}`;
-    
-    // Format time
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const formattedTime = `${hours}:${minutes}`;
-    
-    // Full date and time
-    const fullDate = `${formattedDate} ${formattedTime}`;
-    
+    const [datePart, timePart] = dateString.split(' ');
     return {
-      date: formattedDate,
-      time: formattedTime,
-      fullDate: fullDate
-    };
-    
-  } catch (error) {
-    console.warn('Date parsing error:', error);
-    return {
-      date: dateString,
-      time: '',
+      date: datePart || dateString,
+      time: timePart || '',
       fullDate: dateString
     };
+  } catch (e) {
+    return { date: dateString, time: '', fullDate: dateString };
   }
 }
 
-// ===== PROCESS ARTICLE DATA =====
 function processArticleData(articles) {
-  // Filter visible articles
-  const visibleArticles = articles.filter(article => article.visible === true);
-  
-  // Remove duplicates based on link, keep longest title
-  const uniqueArticles = [];
-  const linksMap = new Map();
-  
-  visibleArticles.forEach(article => {
-    if (!article.lien) return;
-    
-    const existing = linksMap.get(article.lien);
-    
-    if (!existing) {
-      linksMap.set(article.lien, article);
-      uniqueArticles.push(article);
-    } else if (article.titre && article.titre.length > existing.titre.length) {
-      // Replace with longer title
-      const index = uniqueArticles.indexOf(existing);
-      uniqueArticles[index] = article;
-      linksMap.set(article.lien, article);
-    }
-  });
-  
-  // Sort by date (newest first)
-  uniqueArticles.sort((a, b) => {
-    const dateA = new Date(a.date_heure) || new Date(0);
-    const dateB = new Date(b.date_heure) || new Date(0);
-    return dateB - dateA;
-  });
-  
-  // Limit number of articles
-  return uniqueArticles.slice(0, CONFIG.maxArticles);
+  return articles
+    .filter(a => a.visible === true || a.visible === "true")
+    .sort((a, b) => {
+      try {
+        const parseDate = (str) => {
+          const [date, time] = str.split(' ');
+          const [d, m, y] = date.split('/');
+          const [h, min] = time ? time.split(':') : [0, 0];
+          return new Date(y, m - 1, d, h, min);
+        };
+        return parseDate(b.date_heure) - parseDate(a.date_heure);
+      } catch (e) {
+        return 0;
+      }
+    })
+    .slice(0, CONFIG.maxArticles);
 }
 
-// ===== FILTER ARTICLES =====
 function filterArticles() {
   const query = appState.searchQuery.toLowerCase().trim();
   
@@ -862,23 +814,22 @@ function filterArticles() {
     appState.filteredArticles = [...appState.articles];
   } else {
     appState.filteredArticles = appState.articles.filter(article => {
-      // Full-text search
-      const searchFields = [
-        article.titre,
-        article.resume,
-        article.media,
-        article.theme,
-        ...(article.mots_cles_principaux || [])
-      ].filter(Boolean).join(' ').toLowerCase();
+      const searchableText = `
+        ${article.titre || ''}
+        ${article.source || ''}
+        ${article.theme || ''}
+        ${article.mots_cles || ''}
+        ${article.langue || ''}
+        ${article.sentiment || ''}
+      `.toLowerCase();
       
-      return searchFields.includes(query);
+      return searchableText.includes(query);
     });
   }
   
   displayArticles();
 }
 
-// ===== DISPLAY ARTICLES =====
 function displayArticles() {
   elements.articlesContainer.innerHTML = '';
   
@@ -887,39 +838,36 @@ function displayArticles() {
     return;
   }
   
-  // Create article cards
+  const fragment = document.createDocumentFragment();
+  
   appState.filteredArticles.forEach((article, index) => {
-    createArticleCard(article, index);
+    const card = createArticleCard(article, index);
+    fragment.appendChild(card);
   });
+  
+  elements.articlesContainer.appendChild(fragment);
 }
 
-// ===== CREATE ARTICLE CARD =====
 function createArticleCard(article, index) {
   const card = document.createElement('div');
   card.className = 'article-card';
+  card.style.animationDelay = `${index * 0.05}s`;
   
-  // Get article data
-  const imageUrl = getArticleImage(article);
-  const title = article.titre || `Article ${index + 1}`;
-  const truncatedTitle = truncateTitle(title);
-  const source = article.media || 'Unknown';
-  const category = article.theme || 'News';
-  const summary = article.resume || 'No summary available';
-  const keywords = article.mots_cles_principaux || [];
-  
-  // Format date
+  const imageUrl = getArticleImageUrl(article);
   const dateInfo = validateAndFormatDate(article.date_heure);
+  const isCategoryArabic = isArabic(article.theme);
   
-  // Get media logo
-  const mediaLogo = getMediaLogo(source);
-  const isCategoryArabic = isArabic(category);
-  
-  // Create card content
+  const imageElement = createImageElement(imageUrl, article.titre);
+
   card.innerHTML = `
     <div class="article-image-container">
-      <img src="${imageUrl}" alt="${title}" class="article-image" loading="lazy">
+      ${imageElement}
       <div class="image-overlay">
-        <h3 class="article-image-title">${truncatedTitle}</h3>
+        <h3 class="article-image-title">${truncateTitle(article.titre || 'Sans titre')}</h3>
+        <div class="title-source">
+          <span>📰</span>
+          <span>${article.source || 'Source inconnue'}</span>
+        </div>
       </div>
       <div class="image-badges">
         <div class="image-badge date-badge">
@@ -928,150 +876,110 @@ function createArticleCard(article, index) {
         </div>
         <div class="image-badge category-badge ${isCategoryArabic ? 'rtl' : 'ltr'}">
           <span>🏷️</span>
-          <span>${category}</span>
+          <span>${article.theme || 'Non catégorisé'}</span>
         </div>
       </div>
-    </div>
-    
-    <div class="article-info">
-      <div class="article-meta">
-        <div class="media-source">
-          ${mediaLogo ? `<img src="${mediaLogo}" alt="${source}" class="media-logo">` : ''}
-          <span>${source}</span>
-        </div>
-        <div class="article-time">${dateInfo.time}</div>
-      </div>
-      
-      <p class="article-summary">${summary}</p>
-      
-      ${keywords.length > 0 ? `
-      <div class="article-keywords">
-        ${keywords.slice(0, 4).map(keyword => 
-          `<span class="keyword-tag">${keyword}</span>`
-        ).join('')}
-        ${keywords.length > 4 ? `<span class="keyword-tag">+${keywords.length - 4}</span>` : ''}
-      </div>
-      ` : ''}
-    </div>
+  </div>
+  
   `;
   
-  // Add click event
   card.addEventListener('click', () => openArticleOverlay(article));
-  
-  elements.articlesContainer.appendChild(card);
+  return card;
 }
 
-// ===== OPEN ARTICLE OVERLAY =====
 function openArticleOverlay(article) {
-  // Set overlay title
-  elements.overlayArticleTitle.textContent = article.titre || 'No Title';
+  // Mettre à jour le titre
+  elements.overlayArticleTitle.textContent = article.titre || 'Article';
   
-  // Load article in iframe
-  if (article.lien) {
-    elements.articleFrame.src = article.lien;
+  // Charger l'article dans l'iframe
+  elements.articleFrame.src = article.url || '#';
+  
+  // Mettre à jour le sentiment
+  const sentiment = article.sentiment || 'Non spécifié';
+  elements.sentimentValue.textContent = sentiment;
+  
+  // Appliquer la classe CSS appropriée
+  elements.sentimentDisplayOverlay.className = 'sentiment-display-overlay';
+  if (sentiment.toLowerCase().includes('positif') || sentiment.toLowerCase().includes('positive')) {
+    elements.sentimentDisplayOverlay.classList.add('sentiment-positive');
+  } else if (sentiment.toLowerCase().includes('négatif') || sentiment.toLowerCase().includes('negative')) {
+    elements.sentimentDisplayOverlay.classList.add('sentiment-negative');
   } else {
-    elements.articleFrame.srcdoc = `
-      <html>
-        <head>
-          <title>${article.titre || 'Article'}</title>
-          <style>
-            body { 
-              font-family: Arial, sans-serif; 
-              padding: 20px; 
-              max-width: 800px; 
-              margin: 0 auto; 
-              line-height: 1.6;
-            }
-            h1 { color: #333; margin-bottom: 20px; font-weight: bold; }
-            .meta { color: #666; font-size: 14px; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
-            .content { margin-top: 20px; }
-          </style>
-        </head>
-        <body>
-          <h1>${article.titre || 'Article'}</h1>
-          <div class="meta">
-            <strong>Source:</strong> ${article.media || 'Unknown'}<br>
-            <strong>Date:</strong> ${validateAndFormatDate(article.date_heure).fullDate}<br>
-            <strong>Category:</strong> ${article.theme || 'News'}
-          </div>
-          <div class="content">
-            <p>${article.resume || 'No content available'}</p>
-          </div>
-        </body>
-      </html>
-    `;
+    elements.sentimentDisplayOverlay.classList.add('sentiment-neutral');
   }
   
-  // Show overlay
+  // Mettre à jour les mots-clés
+  const keywords = article.mots_cles ? 
+    article.mots_cles.split(',').map(k => k.trim()).filter(k => k) : 
+    [];
+  
+  elements.keywordsContainerOverlay.innerHTML = '';
+  keywords.forEach(keyword => {
+    const keywordElement = document.createElement('div');
+    keywordElement.className = 'keyword-overlay';
+    keywordElement.textContent = keyword;
+    elements.keywordsContainerOverlay.appendChild(keywordElement);
+  });
+  
+  // Afficher l'overlay
   elements.articleOverlay.style.display = 'block';
   document.body.style.overflow = 'hidden';
+  
+  // Focus sur le bouton de fermeture
+  setTimeout(() => elements.closeOverlay.focus(), 100);
 }
 
-// ===== CLOSE ARTICLE OVERLAY =====
 function closeArticleOverlay() {
   elements.articleOverlay.style.display = 'none';
   elements.articleFrame.src = '';
   document.body.style.overflow = '';
+  
+  // Focus sur la recherche
+  elements.searchInput.focus();
 }
 
-// ===== NO RESULTS VIEW =====
+function showLoading(show) {
+  appState.isLoading = show;
+  if (elements.loadingIndicator) {
+    elements.loadingIndicator.style.display = show ? 'block' : 'none';
+  }
+}
+
 function showNoResults() {
   elements.articlesContainer.innerHTML = `
     <div class="no-results">
       <div class="no-results-icon">🔍</div>
-      <h3>No Results Found</h3>
-      <p>No articles match "<strong>${appState.searchQuery}</strong>"</p>
-      <button class="clear-search-btn" onclick="clearAllSearch()">
-        <span>Clear Search</span>
-        <span>✕</span>
+      <h3>Aucun résultat trouvé</h3>
+      <p>Aucun article ne correspond à "${appState.searchQuery}"</p>
+      <button class="clear-search-btn" onclick="elements.searchInput.value=''; filterArticles();">
+        Effacer la recherche
       </button>
     </div>
   `;
 }
 
-// ===== ERROR VIEW =====
 function showError(message) {
   elements.articlesContainer.innerHTML = `
     <div class="error-state">
       <div class="error-icon">⚠️</div>
-      <h3>Error</h3>
+      <h3>Erreur</h3>
       <p>${message}</p>
       <button class="retry-button" onclick="loadArticles()">
-        <span>Try Again</span>
-        <span>🔄</span>
+        Réessayer
       </button>
     </div>
   `;
 }
 
-// ===== UTILITY FUNCTIONS =====
-function getArticleImage(article) {
-  return article.url3 || article.url2 || article.url1 || 
-         `images3/${article.index}-image.jpg` ||
-         'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMDAxYjQ0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEluYWdlPC90ZXh0Pjwvc3ZnPg==';
-}
-
-function clearAllSearch() {
-  elements.searchInput.value = '';
-  appState.searchQuery = '';
-  elements.clearSearch.style.display = 'none';
-  filterArticles();
-}
-
-// ===== DEBOUNCE =====
 function debounce(func, wait) {
   let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
+  return (...args) => {
     clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
+    timeout = setTimeout(() => func(...args), wait);
   };
 }
 
-// ===== INITIALIZE =====
+// Initialiser l'application
 document.addEventListener('DOMContentLoaded', initApp);
 </script>
 </body>
