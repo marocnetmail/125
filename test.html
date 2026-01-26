@@ -2,11 +2,14 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
 <meta name="theme-color" content="#001122">
+<meta name="description" content="Revue de Presse Hebdomadaire">
 <title>Revue de Presse Hebdomadaire</title>
+<link rel="icon" type="image/png" href="images1/00011.png">
+
 <style>
-/* ===== RESET & VARIABLES ===== */
+/* ===== CSS RESET & VARIABLES ===== */
 * {
   margin: 0;
   padding: 0;
@@ -15,189 +18,276 @@
 }
 
 :root {
-  --primary: #6a11cb;
-  --primary-dark: #2575fc;
-  --background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
-  --card-bg: #ffffff;
-  --text: #333333;
-  --text-secondary: #666666;
+  --primary: #1a73e8;
+  --primary-dark: #0d5cb6;
+  --background: #001122;
+  --card-bg: #001a44;
+  --text: #ffffff;
+  --text-secondary: #cccccc;
   --accent-1: #FF6B6B;
   --accent-2: #4ECDC4;
-  --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  --radius: 10px;
+  --accent-3: #FFD166;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  --radius: 8px;
+  --radius-sm: 6px;
+  --radius-lg: 12px;
   --transition: all 0.3s ease;
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
 }
 
 /* ===== BASE STYLES ===== */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   background: var(--background);
-  color: #ffffff;
+  color: var(--text);
   line-height: 1.5;
+  overflow-x: hidden;
   min-height: 100vh;
-  background-attachment: fixed;
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ===== HEADER ===== */
+/* ===== COMPACT HEADER ===== */
 .app-header {
-  background: rgba(26, 35, 126, 0.8);
-  padding: 15px;
+  background: linear-gradient(135deg, #001122 0%, #002244 100%);
+  padding: 12px 15px;
+  padding-top: calc(12px + var(--safe-top));
+  box-shadow: var(--shadow);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
   backdrop-filter: blur(10px);
+}
+
+.title-search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 10px;
 }
 
 .main-title {
   font-size: 1.8rem;
   font-weight: 900;
   color: white;
+  line-height: 1.1;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
   text-align: center;
-  margin-bottom: 20px;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-  letter-spacing: 0.5px;
+  letter-spacing: -0.5px;
 }
 
-/* ===== SEARCH BAR - CENTRÉE ===== */
+/* ===== FILTERS CONTAINER ===== */
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+/* ===== SEARCH BAR ===== */
 .search-container {
-  max-width: 600px;
-  margin: 0 auto 20px auto;
   width: 100%;
 }
 
 .search-wrapper {
+  position: relative;
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 30px;
-  padding: 8px 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  padding: 4px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: var(--transition);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
+  transition: var(--transition);
 }
 
 .search-wrapper:focus-within {
   border-color: var(--primary);
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 25px rgba(106, 17, 203, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
 }
 
 .search-icon {
-  padding: 0 12px 0 8px;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1.2rem;
+  padding: 0 12px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 #search-input {
   flex: 1;
-  padding: 10px 5px;
+  padding: 12px 12px 12px 0;
   background: transparent;
   border: none;
-  color: white;
-  font-size: 1rem;
+  color: var(--text);
+  font-size: 0.95rem;
   outline: none;
   font-family: inherit;
+  min-width: 0;
 }
 
 #search-input::placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
 
-/* ===== DATE FILTERS - SUR LA MÊME LIGNE ===== */
+.clear-search {
+  padding: 0 12px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: none;
+  transition: var(--transition);
+  background: none;
+  border: none;
+  flex-shrink: 0;
+}
+
+.clear-search:hover {
+  color: var(--text);
+}
+
+/* ===== DATE FILTERS ===== */
 .date-filters {
   display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 25px;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 20px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
 }
 
-.date-range-container {
-  display: flex;
-  gap: 15px;
-  width: 100%;
-}
-
-.date-range-row {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  gap: 8px;
-  min-width: 0; /* Permet au flex de réduire */
-}
-
-.date-label {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 600;
-  margin-bottom: 2px;
+.date-group {
   display: flex;
   align-items: center;
   gap: 8px;
-  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
 }
 
-.date-label::before {
-  content: "📅";
-  font-size: 0.9rem;
+.date-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-3);
+  white-space: nowrap;
+  min-width: 45px;
+  flex-shrink: 0;
+}
+
+.date-input-wrapper {
+  flex: 1;
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  min-width: 0;
 }
 
 .date-input {
-  padding: 12px 15px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--radius);
-  color: white;
-  font-size: 0.95rem;
-  font-family: inherit;
-  transition: var(--transition);
   width: 100%;
-  box-sizing: border-box;
-}
-
-.date-input:focus {
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 0.9rem;
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
-  background: rgba(255, 255, 255, 0.15);
+  font-family: inherit;
+  min-width: 0;
 }
 
-/* ===== ARTICLES LIST ===== */
+.date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.date-separator {
+  color: var(--accent-2);
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin: 0 5px;
+  flex-shrink: 0;
+}
+
+.clear-filters-btn {
+  background: linear-gradient(135deg, var(--accent-1), #ff5252);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.clear-filters-btn:hover {
+  background: linear-gradient(135deg, #ff5252, #ff4444);
+  transform: translateY(-1px);
+}
+
+/* ===== LOADING STATE ===== */
+#loading-indicator {
+  text-align: center;
+  padding: 30px 15px;
+  color: var(--text-secondary);
+}
+
+.loading-spinner {
+  width: 35px;
+  height: 35px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== ARTICLES CONTAINER - UNE LIGNE PAR ARTICLE ===== */
 #articles-container {
-  padding: 15px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   gap: 15px;
+  min-height: 200px;
   max-width: 800px;
   margin: 0 auto;
 }
 
+/* ===== ARTICLE CARD - STYLE TELEPHONE (UNE LIGNE) ===== */
 .article-card {
   background: var(--card-bg);
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow);
   transition: var(--transition);
   cursor: pointer;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
+  opacity: 0;
+  transform: translateY(20px);
   animation: fadeInUp 0.5s ease forwards;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  height: 100%;
+  position: relative;
+  margin-bottom: 5px;
+  width: 100%;
 }
 
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
   to {
     opacity: 1;
     transform: translateY(0);
@@ -205,17 +295,17 @@ body {
 }
 
 .article-card:hover {
-  transform: translateY(-8px) scale(1.01);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-  border-color: rgba(106, 17, 203, 0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  border-color: rgba(26, 115, 232, 0.3);
 }
 
 /* Article Image Section */
 .article-image-container {
   position: relative;
   width: 100%;
-  height: 220px;
-  background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+  height: 300px;
+  background: linear-gradient(45deg, #000428, #004e92);
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -224,85 +314,142 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.7s ease;
+  transition: transform 0.6s ease;
+  background: linear-gradient(45deg, #000428, #004e92);
 }
 
 .article-card:hover .article-image {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
-.image-overlay {
+/* ===== TITLE OVERLAY - GRAND TITRE BLANC ===== */
+.title-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 20px 15px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent 70%);
+  padding: 25px 20px;
+  background: linear-gradient(to top, 
+    rgba(0, 0, 0, 0.95) 0%, 
+    rgba(0, 0, 0, 0.85) 30%, 
+    rgba(0, 0, 0, 0.7) 60%, 
+    transparent 100%);
+  z-index: 2;
 }
 
-.article-image-title {
-  font-size: 1.3rem;
+/* TITRE PRINCIPAL - TRÈS GRAND ET BLANC */
+.article-main-title {
+  font-size: 2.2rem;
   font-weight: 900;
-  line-height: 1.3;
-  color: white;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
-  margin-bottom: 5px;
+  line-height: 1.15;
+  color: #FFFFFF;
+  margin-bottom: 10px;
+  text-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.8),
+    0 4px 8px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(0, 0, 0, 0.4);
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  letter-spacing: -0.3px;
 }
 
-/* ===== BADGES ===== */
-.image-badges {
+/* Source */
+.article-source {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent-2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.95;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* ===== METADATA BADGES (Date et Catégorie) ===== */
+.metadata-badges {
   position: absolute;
   top: 15px;
   left: 0;
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 0 15px;
-  z-index: 2;
+  padding: 0 20px;
+  z-index: 3;
+  gap: 10px;
 }
 
-.image-badge {
-  padding: 8px 15px;
-  font-size: 0.85rem;
+.metadata-badge {
+  padding: 8px 16px;
+  font-size: 0.9rem;
   font-weight: 800;
-  border-radius: 25px;
+  border-radius: 20px;
   backdrop-filter: blur(10px);
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   gap: 8px;
   transition: var(--transition);
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .date-badge { 
-  background: linear-gradient(135deg, rgba(255, 107, 107, 0.95), rgba(255, 64, 129, 0.9));
+  background: rgba(255, 107, 107, 0.92);
   color: white;
 }
 
 .category-badge { 
-  background: linear-gradient(135deg, rgba(78, 205, 196, 0.95), rgba(76, 175, 80, 0.9));
+  background: rgba(78, 205, 196, 0.92);
   color: white;
 }
 
-.category-badge.ltr { text-align: left; justify-content: flex-start; padding-right: 12px; }
-.category-badge.rtl { text-align: right; justify-content: flex-end; padding-left: 12px; }
+.category-badge.ltr { 
+  text-align: left; 
+  justify-content: flex-start; 
+  padding-right: 12px;
+}
 
-.article-card:hover .image-badge { 
-  transform: translateY(-3px) scale(1.05);
+.category-badge.rtl { 
+  text-align: right; 
+  justify-content: flex-end; 
+  padding-left: 12px;
+}
+
+.article-card:hover .metadata-badge { 
+  transform: translateY(-2px); 
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== TEMPS ÉCOULÉ ===== */
+.time-ago {
+  position: absolute;
+  top: 80px;
+  right: 20px;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.7);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 12px;
+  z-index: 2;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* ===== ARTICLE OVERLAY ===== */
 #article-overlay {
   display: none;
   position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.95);
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%;
+  background: rgba(0, 0, 0, 0.98);
   z-index: 1000;
   animation: fadeIn 0.3s ease;
 }
@@ -315,309 +462,665 @@ body {
   position: relative; 
 }
 
-.overlay-header {
-  padding: 20px;
-  background: rgba(26, 35, 126, 0.95);
+/* ===== OVERLAY HEADER ===== */
+.overlay-header-extended {
+  padding: 15px;
+  padding-top: calc(15px + var(--safe-top));
+  background: rgba(0, 26, 68, 0.95);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 12px;
   position: relative;
   z-index: 2;
   flex-shrink: 0;
+  backdrop-filter: blur(10px);
+}
+
+.overlay-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  gap: 15px;
 }
 
 .overlay-title { 
-  font-size: 1.5rem; 
-  font-weight: 800; 
-  color: var(--text); 
+  font-size: 1.6rem; 
+  font-weight: 900; 
+  color: #FFFFFF; 
   flex: 1; 
-  margin-right: 15px; 
-  line-height: 1.3;
+  line-height: 1.4;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  color: white;
+  min-width: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .close-overlay {
-  width: 45px; 
-  height: 45px; 
+  width: 44px; 
+  height: 44px; 
   border-radius: 50%;
   background: var(--accent-1); 
   border: none; 
   color: white;
-  font-size: 1.8rem; 
+  font-size: 1.5rem; 
   display: flex; 
   align-items: center; 
   justify-content: center;
   cursor: pointer; 
   transition: var(--transition); 
   flex-shrink: 0;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 10;
 }
 
-.close-overlay:hover { 
+.close-overlay:hover,
+.close-overlay:active { 
   background: #ff4444; 
   transform: rotate(90deg) scale(1.1); 
 }
 
+/* ===== SENTIMENT ET MOTS-CLÉS ===== */
+.overlay-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sentiment-display-overlay {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: fit-content;
+}
+
+.sentiment-positive {
+  color: #4CAF50;
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+.sentiment-negative {
+  color: #FF6B6B;
+  border-color: rgba(255, 107, 107, 0.4);
+}
+
+.sentiment-neutral {
+  color: #FFD166;
+  border-color: rgba(255, 209, 102, 0.4);
+}
+
+.keywords-container-overlay {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.keyword-overlay {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  white-space: nowrap;
+}
+
+/* ===== CONTENU ARTICLE ===== */
 .overlay-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   position: relative;
+  min-height: 0;
 }
 
 .article-frame-container {
   flex: 1;
   position: relative;
   background: white;
+  min-height: 0;
 }
 
 #article-frame {
   width: 100%;
   height: 100%;
   border: none;
+  display: block;
 }
 
-/* ===== LOADING & EMPTY STATES ===== */
-#loading-indicator {
-  text-align: center;
-  padding: 80px 20px;
-  color: rgba(255, 255, 255, 0.8);
+/* ===== NO RESULTS & ERROR ===== */
+.no-results, .error-state { 
+  text-align: center; 
+  padding: 40px 15px; 
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
 }
 
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid rgba(255, 255, 255, 0.1);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  margin: 0 auto 25px;
-  animation: spin 1s linear infinite;
+.no-results-icon, .error-icon { 
+  font-size: 3rem; 
+  margin-bottom: 20px; 
+  opacity: 0.5; 
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.no-results, .error-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: rgba(255, 255, 255, 0.8);
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  max-width: 600px;
-  margin: 30px auto;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.no-results-icon, .error-icon {
-  font-size: 3.5rem;
-  margin-bottom: 20px;
-  opacity: 0.6;
-}
-
-.no-results h3, .error-state h3 {
-  font-size: 1.5rem;
-  margin-bottom: 15px;
-  color: white;
-  font-weight: 700;
-}
-
-.clear-search-btn, .retry-button {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
-  border: none;
-  padding: 12px 30px;
-  border-radius: 25px;
-  cursor: pointer;
+.clear-search-btn, .retry-button { 
+  background: var(--primary); 
+  color: white; 
+  border: none; 
+  padding: 12px 24px; 
+  border-radius: 24px; 
+  cursor: pointer; 
   margin-top: 20px;
   font-family: inherit;
-  font-size: 0.95rem;
-  font-weight: 600;
   transition: var(--transition);
-  box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
+  font-size: 1rem;
+  font-weight: 600;
+  min-height: 48px;
 }
 
-.clear-search-btn:hover, .retry-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(106, 17, 203, 0.4);
+.clear-search-btn:hover, 
+.clear-search-btn:active,
+.retry-button:hover,
+.retry-button:active {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn { 
+  from { opacity: 0; } 
+  to { opacity: 1; } 
+}
+
+/* ===== SCROLL TO TOP ===== */
+.scroll-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: none;
+  z-index: 99;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.scroll-top:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== IMAGE ERROR STATE ===== */
+.image-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  height: 100%;
+  text-align: center;
+  padding: 15px;
+  background: linear-gradient(45deg, #000428, #004e92);
+}
+
+/* ===== STATS BAR ===== */
+.stats-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background: rgba(0, 26, 68, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+  gap: 10px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.results-count {
+  font-weight: 600;
+  color: var(--accent-2);
+}
+
+.active-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-tag {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.filter-tag .remove-filter {
+  background: none;
+  border: none;
+  color: var(--accent-1);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
-/* Pour PC - écrans larges */
-@media (min-width: 768px) {
-  .app-header {
-    padding: 25px 20px;
-  }
-  
-  .main-title {
-    font-size: 2.2rem;
-  }
-  
-  .date-range-container {
-    gap: 20px;
-  }
-  
-  #articles-container {
-    padding: 20px;
-    gap: 20px;
-  }
-  
-  .article-image-container {
-    height: 280px;
-  }
-  
-  .article-image-title {
-    font-size: 1.5rem;
-  }
-  
-  .search-wrapper {
-    padding: 10px 20px;
-  }
-  
-  .date-input {
-    padding: 14px 18px;
-  }
-}
 
-/* Pour smartphones */
-@media (max-width: 480px) {
+/* MOBILE SMALL (≤ 375px) */
+@media (max-width: 375px) {
   .app-header {
-    padding: 15px 10px;
+    padding: 10px 12px;
+    padding-top: calc(10px + var(--safe-top));
   }
   
   .main-title {
     font-size: 1.6rem;
   }
   
-  .search-wrapper {
+  .date-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .date-label {
+    min-width: auto;
+  }
+  
+  .date-input-wrapper {
+    width: 100%;
+  }
+  
+  .metadata-badges {
+    padding: 0 15px;
+    top: 12px;
+  }
+  
+  .metadata-badge {
     padding: 6px 12px;
+    font-size: 0.8rem;
   }
   
-  .search-icon {
-    padding: 0 10px 0 6px;
-    font-size: 1.1rem;
+  .article-main-title {
+    font-size: 1.8rem;
+    line-height: 1.15;
+    padding: 0 15px;
   }
   
-  #search-input {
-    padding: 8px 5px;
-    font-size: 0.95rem;
+  .article-image-container {
+    height: 280px;
+  }
+  
+  .time-ago {
+    top: 75px;
+    right: 15px;
+    font-size: 0.8rem;
+  }
+  
+  .title-overlay {
+    padding: 20px 15px;
+  }
+  
+  #articles-container {
+    padding: 8px;
+    gap: 12px;
+  }
+}
+
+/* MOBILE MEDIUM (376px - 480px) */
+@media (min-width: 376px) and (max-width: 480px) {
+  .main-title {
+    font-size: 1.7rem;
+  }
+  
+  .article-main-title {
+    font-size: 2rem;
+  }
+  
+  .article-image-container {
+    height: 300px;
+  }
+  
+  #articles-container {
+    gap: 14px;
+  }
+}
+
+/* TABLET (481px - 768px) */
+@media (min-width: 481px) {
+  .filters-container {
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .search-container {
+    flex: 1;
   }
   
   .date-filters {
-    padding: 15px;
-    gap: 12px;
+    flex: 2;
   }
   
-  .date-range-container {
-    flex-direction: column;
-    gap: 12px;
+  .article-main-title {
+    font-size: 2.3rem;
+  }
+  
+  .article-image-container {
+    height: 350px;
+  }
+  
+  #articles-container {
+    gap: 18px;
+    padding: 15px;
+  }
+  
+  .title-overlay {
+    padding: 30px 25px;
+  }
+}
+
+/* DESKTOP (≥ 769px) */
+@media (min-width: 769px) {
+  .app-header {
+    padding: 15px 20px;
+    padding-top: calc(15px + var(--safe-top));
+  }
+  
+  .main-title {
+    font-size: 2rem;
+  }
+  
+  .article-image-container {
+    height: 400px;
+  }
+  
+  .article-main-title {
+    font-size: 2.5rem;
+    line-height: 1.1;
+    -webkit-line-clamp: 2;
+  }
+  
+  .filters-container {
+    max-width: 800px;
+    margin: 0 auto 20px;
+  }
+  
+  .overlay-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 95vh;
+    margin-top: 2.5vh;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  
+  .scroll-top {
+    width: 55px;
+    height: 55px;
+    font-size: 1.5rem;
+  }
+  
+  #articles-container {
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .title-overlay {
+    padding: 35px 30px;
+  }
+}
+
+/* LARGE DESKTOP (≥ 1025px) */
+@media (min-width: 1025px) {
+  .article-main-title {
+    font-size: 2.8rem;
+  }
+  
+  .stats-bar {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 12px 20px;
+  }
+  
+  .app-header {
+    padding: 18px 25px;
+    padding-top: calc(18px + var(--safe-top));
+  }
+  
+  #articles-container {
+    gap: 25px;
+  }
+}
+
+/* TOUCH DEVICE OPTIMIZATIONS */
+@media (hover: none) and (pointer: coarse) {
+  .article-card:hover {
+    transform: none;
+  }
+  
+  .article-card:active {
+    transform: scale(0.98);
+  }
+  
+  .clear-filters-btn:active,
+  .clear-search-btn:active,
+  .retry-button:active,
+  .scroll-top:active {
+    transform: scale(0.95);
+  }
+  
+  .search-wrapper:active,
+  .date-input-wrapper:active {
+    background: rgba(255, 255, 255, 0.15);
+  }
+  
+  /* Augmenter la taille des éléments cliquables pour les doigts */
+  .clear-search,
+  .close-overlay,
+  .metadata-badge,
+  .keyword-overlay,
+  .filter-tag {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .clear-search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* DARK MODE SUPPORT */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #000c18;
+    --card-bg: #001428;
+  }
+  
+  .article-image-container {
+    background: linear-gradient(45deg, #000214, #003366);
+  }
+}
+
+/* PRINT STYLES */
+@media print {
+  .app-header,
+  .filters-container,
+  .scroll-top,
+  .close-overlay {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+  
+  #articles-container {
+    display: block;
+    padding: 0;
+  }
+  
+  .article-card {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    box-shadow: none;
+    border: 1px solid #ddd;
   }
   
   .article-image-container {
     height: 200px;
   }
-  
-  .article-image-title {
-    font-size: 1.2rem;
+}
+
+/* HIGH CONTRAST MODE */
+@media (prefers-contrast: high) {
+  :root {
+    --primary: #0057d9;
+    --accent-1: #ff3333;
+    --accent-2: #00a3a3;
   }
   
-  .image-badge {
-    padding: 6px 12px;
-    font-size: 0.8rem;
+  .search-wrapper,
+  .date-input-wrapper {
+    border-width: 2px;
+  }
+  
+  .article-main-title {
+    color: #FFFFFF;
+    text-shadow: 0 2px 4px #000000;
   }
 }
 
-/* Pour très petits écrans */
-@media (max-width: 360px) {
-  .main-title {
-    font-size: 1.4rem;
+/* REDUCED MOTION */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
   
-  .article-image-title {
-    font-size: 1.1rem;
+  .article-card {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
-  
-  .date-filters {
-    padding: 12px;
-  }
-  
-  .date-input {
-    padding: 10px 12px;
-  }
-}
-
-/* Animation subtile pour le fond */
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-body {
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
 }
 </style>
 </head>
 
 <body>
 <header class="app-header">
-  <h1 class="main-title">Revue de Presse Hebdomadaire</h1>
-  
-  <!-- Barre de recherche centrée -->
-  <div class="search-container">
-    <div class="search-wrapper">
-      <div class="search-icon">🔍</div>
-      <input type="text" id="search-input" placeholder="ابحث عن مقالات..." autocomplete="off">
-    </div>
-  </div>
-  
-  <!-- Date Filters - Sur la même ligne -->
-  <div class="date-filters">
-    <div class="date-range-container">
-      <div class="date-range-row">
-        <label class="date-label">تاريخ البدء</label>
-        <input type="date" id="start-date" class="date-input">
+  <div class="title-search-container">
+    <h1 class="main-title">Revue de Presse<br>Hebdomadaire</h1>
+    
+    <div class="filters-container">
+      <div class="search-container">
+        <div class="search-wrapper">
+          <div class="search-icon">🔍</div>
+          <input type="text" id="search-input" placeholder="Rechercher des articles..." autocomplete="off" spellcheck="false" enterkeyhint="search">
+          <button class="clear-search" id="clear-search" aria-label="Effacer la recherche">✕</button>
+        </div>
       </div>
       
-      <div class="date-range-row">
-        <label class="date-label">تاريخ الانتهاء</label>
-        <input type="date" id="end-date" class="date-input">
+      <div class="date-filters">
+        <div class="date-group">
+          <span class="date-label">Début:</span>
+          <div class="date-input-wrapper">
+            <input type="date" id="start-date" class="date-input" aria-label="Date de début">
+          </div>
+        </div>
+        
+        <div class="date-separator">→</div>
+        
+        <div class="date-group">
+          <span class="date-label">Fin:</span>
+          <div class="date-input-wrapper">
+            <input type="date" id="end-date" class="date-input" aria-label="Date de fin">
+          </div>
+        </div>
+        
+        <button class="clear-filters-btn" id="clear-filters">
+          <span>🗑️</span>
+          <span>Effacer</span>
+        </button>
       </div>
     </div>
   </div>
 </header>
 
+<div class="stats-bar" id="stats-bar" style="display: none;">
+  <div class="results-count" id="results-count">0 articles</div>
+  <div class="active-filters" id="active-filters">
+    <!-- Filtres actifs apparaîtront ici -->
+  </div>
+</div>
+
 <main id="articles-container">
   <div id="loading-indicator">
     <div class="loading-spinner"></div>
-    <p>جاري تحميل المقالات...</p>
+    <p>Chargement des articles...</p>
   </div>
 </main>
 
-<!-- Overlay pour afficher l'article -->
+<button class="scroll-top" id="scroll-top" aria-label="Retour en haut">↑</button>
+
 <div id="article-overlay">
   <div class="overlay-container">
-    <div class="overlay-header">
-      <div class="overlay-title" id="overlay-article-title"></div>
-      <button class="close-overlay" id="close-overlay" aria-label="Fermer">×</button>
+    <div class="overlay-header-extended">
+      <div class="overlay-header-top">
+        <div class="overlay-title" id="overlay-article-title"></div>
+        <button class="close-overlay" id="close-overlay" aria-label="Fermer">×</button>
+      </div>
+      <div class="overlay-details">
+        <div id="sentiment-display-overlay" class="sentiment-display-overlay sentiment-neutral">
+          <span>Sentiment:</span>
+          <span id="sentiment-value">Chargement...</span>
+        </div>
+        <div class="keywords-container-overlay" id="keywords-container-overlay">
+          <!-- Les mots-clés seront insérés ici -->
+        </div>
+      </div>
     </div>
     <div class="overlay-content">
       <div class="article-frame-container">
-        <iframe id="article-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" title="Contenu de l'article"></iframe>
+        <iframe id="article-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" title="Contenu de l'article" loading="lazy"></iframe>
       </div>
     </div>
   </div>
@@ -628,110 +1131,256 @@ body {
 const CONFIG = {
   jsonUrl: 'data/datajson.json?t=' + Date.now(),
   maxArticles: 100,
-  imagesBasePath: 'images3/'
+  imagesBasePath: 'images3/',
+  debounceDelay: 300,
+  touchDelay: 100
 };
 
-// ===== MEDIA LOGOS MAPPING =====
-const MEDIA_LOGOS = {
-  'al jazeera': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Al_Jazeera_Logo_2016.svg',
-  'الجزيرة': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Al_Jazeera_Logo_2016.svg',
-  'france 24': 'https://upload.wikimedia.org/wikipedia/commons/2/2d/France_24_logo.svg',
-  'arabic.pressbee.net': 'https://cdn-icons-png.flaticon.com/512/60/60543.png',
-  'default': 'https://cdn-icons-png.flaticon.com/512/60/60543.png'
-};
+// ===== TOUCH DETECTION =====
+const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-// ===== ÉLÉMENTS DU DOM =====
-const elements = {
-  searchInput: document.getElementById('search-input'),
-  startDate: document.getElementById('start-date'),
-  endDate: document.getElementById('end-date'),
-  articlesContainer: document.getElementById('articles-container'),
-  loadingIndicator: document.getElementById('loading-indicator'),
-  articleOverlay: document.getElementById('article-overlay'),
-  closeOverlay: document.getElementById('close-overlay'),
-  articleFrame: document.getElementById('article-frame'),
-  overlayArticleTitle: document.getElementById('overlay-article-title')
-};
-
-// ===== ÉTAT DE L'APPLICATION =====
+// ===== APP STATE =====
 let appState = {
   articles: [],
   filteredArticles: [],
   searchQuery: '',
   startDate: null,
   endDate: null,
-  isLoading: true
+  isLoading: true,
+  lastTouchTime: 0
 };
 
-// ===== FONCTIONS UTILITAIRES =====
-function formatDateToDDMMYYYY(date) {
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
+const elements = {
+  searchInput: document.getElementById('search-input'),
+  clearSearch: document.getElementById('clear-search'),
+  startDate: document.getElementById('start-date'),
+  endDate: document.getElementById('end-date'),
+  clearFilters: document.getElementById('clear-filters'),
+  articlesContainer: document.getElementById('articles-container'),
+  articleOverlay: document.getElementById('article-overlay'),
+  closeOverlay: document.getElementById('close-overlay'),
+  articleFrame: document.getElementById('article-frame'),
+  overlayArticleTitle: document.getElementById('overlay-article-title'),
+  sentimentDisplayOverlay: document.getElementById('sentiment-display-overlay'),
+  sentimentValue: document.getElementById('sentiment-value'),
+  keywordsContainerOverlay: document.getElementById('keywords-container-overlay'),
+  loadingIndicator: document.getElementById('loading-indicator'),
+  scrollTop: document.getElementById('scroll-top'),
+  statsBar: document.getElementById('stats-bar'),
+  resultsCount: document.getElementById('results-count'),
+  activeFilters: document.getElementById('active-filters')
+};
+
+function initApp() {
+  setupEventListeners();
+  setupDateDefaults();
+  detectDeviceType();
+  loadArticles();
 }
 
-function parseDDMMYYYY(dateString) {
-  const [day, month, year] = dateString.split('/').map(Number);
-  return new Date(year, month - 1, day);
-}
-
-function getTimeAgo(articleDate) {
-  const [datePart, timePart] = articleDate.split(' ');
-  const [day, month, year] = datePart.split('/').map(Number);
-  const [hours, minutes] = timePart.split(':').map(Number);
-  
-  const articleDateTime = new Date(year, month - 1, day, hours, minutes);
-  const now = new Date();
-  const diffMs = now - articleDateTime;
-  const diffMinutes = Math.floor(diffMs / (1000 * 60));
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  
-  if (diffMinutes < 60) {
-    return `منذ ${diffMinutes} دقيقة`;
-  } else if (diffHours < 24) {
-    return `منذ ${diffHours} ساعة`;
+function detectDeviceType() {
+  if (isTouchDevice) {
+    document.body.classList.add('touch-device');
   } else {
-    return `منذ ${diffDays} يوم`;
+    document.body.classList.add('mouse-device');
   }
 }
 
-function truncateTitle(title, maxLength = 100) {
-  if (!title || title.length <= maxLength) return title;
-  return title.substring(0, maxLength) + '...';
+function setupDateDefaults() {
+  const today = new Date().toISOString().split('T')[0];
+  elements.endDate.value = today;
+  
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  elements.startDate.value = sevenDaysAgo.toISOString().split('T')[0];
+  
+  appState.startDate = elements.startDate.value;
+  appState.endDate = elements.endDate.value;
 }
 
-function isArabic(text) {
-  return /[\u0600-\u06FF]/.test(text);
-}
-
-function getMediaLogo(mediaName) {
-  if (!mediaName) return MEDIA_LOGOS.default;
-  const lower = mediaName.toLowerCase();
+function setupEventListeners() {
+  // Recherche texte avec debounce
+  elements.searchInput.addEventListener('input', function(e) {
+    appState.searchQuery = e.target.value;
+    elements.clearSearch.style.display = appState.searchQuery ? 'flex' : 'none';
+    debounce(filterArticles, CONFIG.debounceDelay)();
+  });
   
-  if (MEDIA_LOGOS[lower]) return MEDIA_LOGOS[lower];
+  // Effacer recherche texte
+  elements.clearSearch.addEventListener('click', () => {
+    elements.searchInput.value = '';
+    appState.searchQuery = '';
+    elements.clearSearch.style.display = 'none';
+    filterArticles();
+    elements.searchInput.focus();
+  });
   
-  for (const key in MEDIA_LOGOS) {
-    if (lower.includes(key) || key.includes(lower)) {
-      return MEDIA_LOGOS[key];
+  // Filtres date
+  elements.startDate.addEventListener('change', function() {
+    appState.startDate = this.value;
+    filterArticles();
+  });
+  
+  elements.endDate.addEventListener('change', function() {
+    appState.endDate = this.value;
+    filterArticles();
+  });
+  
+  // Effacer tous les filtres
+  elements.clearFilters.addEventListener('click', () => {
+    elements.searchInput.value = '';
+    appState.searchQuery = '';
+    elements.clearSearch.style.display = 'none';
+    
+    setupDateDefaults();
+    
+    filterArticles();
+    elements.searchInput.focus();
+  });
+  
+  // Fermer overlay
+  elements.closeOverlay.addEventListener('click', closeArticleOverlay);
+  
+  // Fermer overlay avec ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeArticleOverlay();
+  });
+  
+  // Swipe pour fermer overlay (mobile)
+  let touchStartY = 0;
+  elements.articleOverlay.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+  });
+  
+  elements.articleOverlay.addEventListener('touchmove', (e) => {
+    if (!touchStartY) return;
+    
+    const touchY = e.touches[0].clientY;
+    const diffY = touchStartY - touchY;
+    
+    // Swipe vers le bas pour fermer
+    if (diffY < -100) {
+      closeArticleOverlay();
     }
-  }
+  });
   
-  return MEDIA_LOGOS.default;
+  // Scroll to top
+  elements.scrollTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  
+  // Afficher/masquer bouton scroll
+  window.addEventListener('scroll', () => {
+    elements.scrollTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+  });
+  
+  // Prévenir le double-tap zoom sur mobile
+  let lastTouch = 0;
+  document.addEventListener('touchstart', (event) => {
+    const now = Date.now();
+    if (now - lastTouch <= 300) {
+      event.preventDefault();
+    }
+    lastTouch = now;
+  }, { passive: false });
 }
 
-// ===== GESTION DES IMAGES =====
+// ===== DATE HELPER FUNCTIONS =====
+function parseArticleDate(dateString) {
+  if (!dateString) return null;
+  
+  try {
+    // Format attendu: "jj/mm/aaaa hh:mm" - conversion en format dd/mm/yyyy
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('/');
+    
+    if (!day || !month || !year) return null;
+    
+    // Retourner la date en format dd/mm/yyyy
+    return new Date(year, month - 1, day);
+  } catch (e) {
+    console.warn('Error parsing date:', dateString, e);
+    return null;
+  }
+}
+
+function formatDateToDDMMYYYY(dateString) {
+  if (!dateString) return '';
+  
+  try {
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('/');
+    
+    // Retourner au format dd/mm/yyyy (avec padding des zéros)
+    const paddedDay = day.padStart(2, '0');
+    const paddedMonth = month.padStart(2, '0');
+    
+    return `${paddedDay}/${paddedMonth}/${year}`;
+  } catch (e) {
+    console.warn('Error formatting date:', dateString, e);
+    return dateString || '';
+  }
+}
+
+function getTimeAgo(dateString) {
+  if (!dateString) return '';
+  
+  try {
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('/');
+    const [hours, minutes] = timePart ? timePart.split(':') : [0, 0];
+    
+    const articleDate = new Date(year, month - 1, day, hours, minutes);
+    const now = new Date();
+    const diffMs = now - articleDate;
+    
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    if (diffMins < 1) {
+      return `الآن`;
+    } else if (diffMins < 60) {
+      return `منذ ${diffMins} دقيقة`;
+    } else if (diffHours < 24) {
+      return `منذ ${diffHours} ساعة`;
+    } else if (diffDays === 1) {
+      return `منذ يوم`;
+    } else if (diffDays < 7) {
+      return `منذ ${diffDays} أيام`;
+    } else if (diffDays < 30) {
+      const weeks = Math.floor(diffDays / 7);
+      return `منذ ${weeks} أسبوع`;
+    } else {
+      // Pour les articles plus anciens, afficher la date au format dd/mm/yyyy
+      const formattedDate = formatDateToDDMMYYYY(dateString);
+      return formattedDate;
+    }
+  } catch (e) {
+    return '';
+  }
+}
+
+function isDateInRange(articleDate, startDate, endDate) {
+  if (!articleDate) return false;
+  
+  const articleDateObj = parseArticleDate(articleDate);
+  if (!articleDateObj) return false;
+  
+  const start = startDate ? new Date(startDate) : null;
+  const end = endDate ? new Date(endDate) : null;
+  
+  if (start) start.setHours(0, 0, 0, 0);
+  if (end) end.setHours(23, 59, 59, 999);
+  
+  if (start && articleDateObj < start) return false;
+  if (end && articleDateObj > end) return false;
+  
+  return true;
+}
+
+// ===== IMAGE MANAGEMENT =====
 function getArticleImageUrl(article) {
-  if (article.image_brute) {
-    if (!article.image_brute.startsWith('http') && 
-        !article.image_brute.startsWith('/') &&
-        !article.image_brute.startsWith('images')) {
-      return CONFIG.imagesBasePath + article.image_brute;
-    }
-    return article.image_brute;
-  }
-  
   if (article.image_brute) {
     if (!article.image_brute.startsWith('http') && 
         !article.image_brute.startsWith('/') &&
@@ -753,12 +1402,12 @@ function createImageElement(imageUrl, title) {
                 alt="${title || 'Image de l\'article'}" 
                 class="article-image" 
                 loading="lazy"
-                onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\\'image-error\\'>Image non disponible</div>';"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'image-error\\'>Image non disponible</div>';"
                 onload="this.style.opacity='1'"
                 style="opacity:0; transition: opacity 0.3s ease;">`;
 }
 
-// ===== CHARGEMENT ET TRAITEMENT =====
+// ===== LOAD & PROCESS =====
 async function loadArticles() {
   try {
     showLoading(true);
@@ -772,21 +1421,6 @@ async function loadArticles() {
     showError('Impossible de charger les articles. Veuillez réessayer.');
   } finally {
     showLoading(false);
-  }
-}
-
-function validateAndFormatDate(dateString) {
-  if (!dateString) return { date: 'N/A', time: '', fullDate: 'N/A' };
-  
-  try {
-    const [datePart, timePart] = dateString.split(' ');
-    return {
-      date: datePart || dateString,
-      time: timePart || '',
-      fullDate: dateString
-    };
-  } catch (e) {
-    return { date: dateString, time: '', fullDate: dateString };
   }
 }
 
@@ -809,48 +1443,92 @@ function processArticleData(articles) {
     .slice(0, CONFIG.maxArticles);
 }
 
-// ===== FILTRAGE ET AFFICHAGE =====
 function filterArticles() {
   const query = appState.searchQuery.toLowerCase().trim();
+  const startDate = appState.startDate;
+  const endDate = appState.endDate;
   
-  // Filtrer par date et par texte
   appState.filteredArticles = appState.articles.filter(article => {
-    // Convertir la date de l'article
-    const articleDateStr = article.date_heure.split(' ')[0];
-    const articleDate = parseDDMMYYYY(articleDateStr);
-    
-    // Vérifier si la date de l'article est valide
-    if (isNaN(articleDate.getTime())) {
-      console.log('Date invalide pour l\'article:', articleDateStr);
-      return false;
+    // Filtre par texte
+    let matchesText = true;
+    if (query) {
+      const searchableText = `
+        ${article.titre || ''}
+        ${article.source || ''}
+        ${article.theme || ''}
+        ${article.mots_cles || ''}
+        ${article.langue || ''}
+        ${article.sentiment || ''}
+      `.toLowerCase();
+      
+      matchesText = searchableText.includes(query);
     }
     
-    // Filtrer par date
-    let isInDateRange = true;
+    // Filtre par date
+    const matchesDate = isDateInRange(article.date_heure, startDate, endDate);
     
-    if (appState.startDate && !isNaN(appState.startDate.getTime())) {
-      isInDateRange = articleDate >= appState.startDate;
-    }
-    
-    if (appState.endDate && !isNaN(appState.endDate.getTime())) {
-      isInDateRange = isInDateRange && articleDate <= appState.endDate;
-    }
-    
-    // Filtrer par texte
-    const searchableText = `
-      ${article.titre || ''}
-      ${article.source || ''}
-      ${article.theme || ''}
-      ${article.mots_cles || ''}
-      ${article.sentiment || ''}
-    `.toLowerCase();
-    
-    const matchesSearch = !query || searchableText.includes(query);
-    
-    return isInDateRange && matchesSearch;
+    return matchesText && matchesDate;
   });
   
   displayArticles();
+  updateStatsBar();
+}
+
+function updateStatsBar() {
+  const count = appState.filteredArticles.length;
+  const total = appState.articles.length;
+  
+  elements.resultsCount.textContent = `${count} article${count !== 1 ? 's' : ''} (${total} total)`;
+  elements.statsBar.style.display = 'flex';
+  
+  // Mettre à jour les filtres actifs
+  updateActiveFilters();
+}
+
+function updateActiveFilters() {
+  elements.activeFilters.innerHTML = '';
+  
+  if (appState.searchQuery) {
+    const filterTag = document.createElement('div');
+    filterTag.className = 'filter-tag';
+    filterTag.innerHTML = `
+      <span>🔍 "${appState.searchQuery}"</span>
+      <button class="remove-filter" onclick="clearSearchFilter()" aria-label="Supprimer ce filtre">×</button>
+    `;
+    elements.activeFilters.appendChild(filterTag);
+  }
+  
+  if (appState.startDate || appState.endDate) {
+    // Formater les dates de filtrage au format dd/mm/yyyy
+    const formatFilterDate = (dateStr) => {
+      if (!dateStr) return '';
+      const [year, month, day] = dateStr.split('-');
+      return `${day}/${month}/${year}`;
+    };
+    
+    const start = appState.startDate ? formatFilterDate(appState.startDate) : 'Début';
+    const end = appState.endDate ? formatFilterDate(appState.endDate) : 'Fin';
+    
+    const filterTag = document.createElement('div');
+    filterTag.className = 'filter-tag';
+    filterTag.innerHTML = `
+      <span>📅 ${start} → ${end}</span>
+      <button class="remove-filter" onclick="clearDateFilters()" aria-label="Supprimer ce filtre">×</button>
+    `;
+    elements.activeFilters.appendChild(filterTag);
+  }
+}
+
+function clearSearchFilter() {
+  elements.searchInput.value = '';
+  appState.searchQuery = '';
+  elements.clearSearch.style.display = 'none';
+  filterArticles();
+}
+
+function clearDateFilters() {
+  setupDateDefaults();
+  filterArticles();
 }
 
 function displayArticles() {
@@ -869,63 +1547,118 @@ function displayArticles() {
   });
   
   elements.articlesContainer.appendChild(fragment);
+  
+  // Animation staggered
+  const cards = elements.articlesContainer.querySelectorAll('.article-card');
+  cards.forEach((card, i) => {
+    card.style.animationDelay = `${i * 0.03}s`;
+  });
 }
 
 function createArticleCard(article, index) {
   const card = document.createElement('div');
   card.className = 'article-card';
-  card.style.animationDelay = `${index * 0.05}s`;
   
   const imageUrl = getArticleImageUrl(article);
-  const dateInfo = validateAndFormatDate(article.date_heure);
-  const isCategoryArabic = isArabic(article.theme);
+  const dateInfo = parseArticleDate(article.date_heure);
   
+  // Formater la date au format dd/mm/yyyy
+  const formattedDate = formatDateToDDMMYYYY(article.date_heure);
+  
+  const timeAgo = getTimeAgo(article.date_heure);
+  const isCategoryArabic = /[\u0600-\u06FF]/.test(article.theme || '');
   const imageElement = createImageElement(imageUrl, article.titre);
 
   card.innerHTML = `
     <div class="article-image-container">
       ${imageElement}
-      <div class="image-overlay">
-        <h3 class="article-image-title">${truncateTitle(article.titre || 'Sans titre')}</h3>
-      </div>
-      <div class="image-badges">
-        <div class="image-badge date-badge">
+      <div class="metadata-badges">
+        <div class="metadata-badge date-badge" title="${formattedDate || ''}">
           <span>📅</span>
-          <span>${dateInfo.date}</span>
+          <span>${formattedDate || 'Date inconnue'}</span>
         </div>
-        <div class="image-badge category-badge ${isCategoryArabic ? 'rtl' : 'ltr'}">
+        <div class="metadata-badge category-badge ${isCategoryArabic ? 'rtl' : 'ltr'}" title="${article.theme || ''}">
           <span>🏷️</span>
-          <span>${article.theme || 'Non catégorisé'}</span>
+          <span>${truncateTitle(article.theme || 'Non catégorisé', 20)}</span>
+        </div>
+      </div>
+      ${timeAgo ? `<div class="time-ago">${timeAgo}</div>` : ''}
+      <div class="title-overlay">
+        <h2 class="article-main-title">${truncateTitle(article.titre || 'Sans titre', 150)}</h2>
+        <div class="article-source">
+          <span>📰</span>
+          <span>${article.source || 'Source inconnue'}</span>
         </div>
       </div>
     </div>
   `;
   
-  // CORRECTION : Ajouter l'écouteur d'événement pour ouvrir l'article
-  card.addEventListener('click', () => {
-    openArticleOverlay(article);
-  });
+  // Gestion du clic/touch optimisé
+  if (isTouchDevice) {
+    card.addEventListener('touchstart', (e) => {
+      e.currentTarget.classList.add('active');
+    }, { passive: true });
+    
+    card.addEventListener('touchend', (e) => {
+      e.currentTarget.classList.remove('active');
+      const now = Date.now();
+      if (now - appState.lastTouchTime < CONFIG.touchDelay) return;
+      appState.lastTouchTime = now;
+      openArticleOverlay(article);
+    }, { passive: true });
+  } else {
+    card.addEventListener('click', () => {
+      openArticleOverlay(article);
+    });
+  }
   
   return card;
 }
 
-// ===== GESTION DE L'OVERLAY =====
+function truncateTitle(title, maxLength = 100) {
+  if (!title || title.length <= maxLength) return title;
+  return title.substring(0, maxLength) + '...';
+}
+
 function openArticleOverlay(article) {
   // Mettre à jour le titre
   elements.overlayArticleTitle.textContent = article.titre || 'Article';
   
-  // Charger l'article dans l'iframe
-  if (article.url) {
-    elements.articleFrame.src = article.url;
+  // Charger l'article dans l'iframe avec lazy loading
+  elements.articleFrame.src = article.url || '#';
+  
+  // Mettre à jour le sentiment
+  const sentiment = article.sentiment || 'Non spécifié';
+  elements.sentimentValue.textContent = sentiment;
+  
+  // Appliquer la classe CSS appropriée
+  elements.sentimentDisplayOverlay.className = 'sentiment-display-overlay';
+  if (sentiment.toLowerCase().includes('positif') || sentiment.toLowerCase().includes('positive')) {
+    elements.sentimentDisplayOverlay.classList.add('sentiment-positive');
+  } else if (sentiment.toLowerCase().includes('négatif') || sentiment.toLowerCase().includes('negative')) {
+    elements.sentimentDisplayOverlay.classList.add('sentiment-negative');
   } else {
-    elements.articleFrame.src = 'about:blank';
+    elements.sentimentDisplayOverlay.classList.add('sentiment-neutral');
   }
+  
+  // Mettre à jour les mots-clés
+  const keywords = article.mots_cles ? 
+    article.mots_cles.split(',').map(k => k.trim()).filter(k => k) : 
+    [];
+  
+  elements.keywordsContainerOverlay.innerHTML = '';
+  keywords.forEach(keyword => {
+    const keywordElement = document.createElement('div');
+    keywordElement.className = 'keyword-overlay';
+    keywordElement.textContent = keyword;
+    elements.keywordsContainerOverlay.appendChild(keywordElement);
+  });
   
   // Afficher l'overlay
   elements.articleOverlay.style.display = 'block';
   document.body.style.overflow = 'hidden';
   
-  // Focus sur le bouton de fermeture
+  // Focus sur le bouton de fermeture pour l'accessibilité
   setTimeout(() => elements.closeOverlay.focus(), 100);
 }
 
@@ -938,37 +1671,39 @@ function closeArticleOverlay() {
   elements.searchInput.focus();
 }
 
+function showLoading(show) {
+  appState.isLoading = show;
+  if (elements.loadingIndicator) {
+    elements.loadingIndicator.style.display = show ? 'block' : 'none';
+  }
+}
+
 function showNoResults() {
   elements.articlesContainer.innerHTML = `
     <div class="no-results">
       <div class="no-results-icon">🔍</div>
-      <h3>لا توجد نتائج</h3>
-      <p>لا توجد مقالات تطابق معايير البحث الخاصة بك</p>
-      <button class="clear-search-btn" onclick="elements.searchInput.value=''; filterArticles();">
-        إعادة تعيين البحث
+      <h3>Aucun résultat trouvé</h3>
+      <p>Aucun article ne correspond à vos critères de recherche</p>
+      <button class="clear-search-btn" onclick="elements.clearFilters.click()">
+        Effacer tous les filtres
       </button>
     </div>
   `;
+  elements.statsBar.style.display = 'none';
 }
 
 function showError(message) {
   elements.articlesContainer.innerHTML = `
     <div class="error-state">
       <div class="error-icon">⚠️</div>
-      <h3>خطأ</h3>
+      <h3>Erreur</h3>
       <p>${message}</p>
       <button class="retry-button" onclick="loadArticles()">
-        إعادة المحاولة
+        Réessayer
       </button>
     </div>
   `;
-}
-
-function showLoading(show) {
-  appState.isLoading = show;
-  if (elements.loadingIndicator) {
-    elements.loadingIndicator.style.display = show ? 'block' : 'none';
-  }
+  elements.statsBar.style.display = 'none';
 }
 
 function debounce(func, wait) {
@@ -979,85 +1714,7 @@ function debounce(func, wait) {
   };
 }
 
-// ===== INITIALISATION DES DATES =====
-function initializeDates() {
-  const today = new Date();
-  const defaultEndDate = new Date(today);
-  defaultEndDate.setDate(today.getDate() - 7);
-  
-  const defaultStartDate = new Date(defaultEndDate);
-  
-  const formatForInput = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-  
-  // CORRECTION : Assurer que les dates sont valides
-  if (!isNaN(defaultStartDate.getTime())) {
-    elements.startDate.value = formatForInput(defaultStartDate);
-    appState.startDate = new Date(defaultStartDate.getFullYear(), defaultStartDate.getMonth(), defaultStartDate.getDate());
-  }
-  
-  if (!isNaN(today.getTime())) {
-    elements.endDate.value = formatForInput(today);
-    appState.endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  }
-}
-
-// ===== INITIALISATION DE L'APPLICATION =====
-function initApp() {
-  initializeDates();
-  
-  // Écouteurs d'événements
-  elements.searchInput.addEventListener('input', function(e) {
-    appState.searchQuery = e.target.value;
-    debounce(filterArticles, 300)();
-  });
-  
-  elements.startDate.addEventListener('change', function(e) {
-    if (e.target.value) {
-      const date = new Date(e.target.value);
-      if (!isNaN(date.getTime())) {
-        appState.startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-        filterArticles();
-      }
-    } else {
-      appState.startDate = null;
-      filterArticles();
-    }
-  });
-  
-  elements.endDate.addEventListener('change', function(e) {
-    if (e.target.value) {
-      const date = new Date(e.target.value);
-      if (!isNaN(date.getTime())) {
-        appState.endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-        filterArticles();
-      }
-    } else {
-      appState.endDate = null;
-      filterArticles();
-    }
-  });
-  
-  // Fermer l'overlay
-  elements.closeOverlay.addEventListener('click', closeArticleOverlay);
-  
-  // Fermer avec ESC
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeArticleOverlay();
-  });
-  
-  // Focus sur la barre de recherche au chargement
-  setTimeout(() => {
-    elements.searchInput.focus();
-  }, 500);
-  
-  loadArticles();
-}
-
+// Initialiser l'application
 document.addEventListener('DOMContentLoaded', initApp);
 </script>
 </body>
