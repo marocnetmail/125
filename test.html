@@ -102,10 +102,10 @@ body {
   color: rgba(255, 255, 255, 0.5);
 }
 
-/* ===== DATE FILTERS ===== */
+/* ===== DATE FILTERS - SUR LA MÊME LIGNE ===== */
 .date-filters {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 15px;
   margin-bottom: 25px;
   background: rgba(255, 255, 255, 0.1);
@@ -119,10 +119,18 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.date-row {
+.date-range-container {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+}
+
+.date-range-row {
   display: flex;
   flex-direction: column;
+  flex: 1;
   gap: 8px;
+  min-width: 0; /* Permet au flex de réduire */
 }
 
 .date-label {
@@ -133,6 +141,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+  white-space: nowrap;
 }
 
 .date-label::before {
@@ -149,6 +158,8 @@ body {
   font-size: 0.95rem;
   font-family: inherit;
   transition: var(--transition);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .date-input:focus {
@@ -286,6 +297,91 @@ body {
   transform: translateY(-3px) scale(1.05);
 }
 
+/* ===== ARTICLE OVERLAY ===== */
+#article-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.overlay-container { 
+  width: 100%; 
+  height: 100%; 
+  display: flex; 
+  flex-direction: column; 
+  position: relative; 
+}
+
+.overlay-header {
+  padding: 20px;
+  background: rgba(26, 35, 126, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.overlay-title { 
+  font-size: 1.5rem; 
+  font-weight: 800; 
+  color: var(--text); 
+  flex: 1; 
+  margin-right: 15px; 
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: white;
+}
+
+.close-overlay {
+  width: 45px; 
+  height: 45px; 
+  border-radius: 50%;
+  background: var(--accent-1); 
+  border: none; 
+  color: white;
+  font-size: 1.8rem; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  cursor: pointer; 
+  transition: var(--transition); 
+  flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.close-overlay:hover { 
+  background: #ff4444; 
+  transform: rotate(90deg) scale(1.1); 
+}
+
+.overlay-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.article-frame-container {
+  flex: 1;
+  position: relative;
+  background: white;
+}
+
+#article-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
 /* ===== LOADING & EMPTY STATES ===== */
 #loading-indicator {
   text-align: center;
@@ -364,14 +460,8 @@ body {
     font-size: 2.2rem;
   }
   
-  .date-filters {
-    grid-template-columns: repeat(2, 1fr);
+  .date-range-container {
     gap: 20px;
-    padding: 25px;
-  }
-  
-  .date-row {
-    flex-direction: column;
   }
   
   #articles-container {
@@ -422,6 +512,11 @@ body {
   
   .date-filters {
     padding: 15px;
+    gap: 12px;
+  }
+  
+  .date-range-container {
+    flex-direction: column;
     gap: 12px;
   }
   
@@ -490,16 +585,18 @@ body {
     </div>
   </div>
   
-  <!-- Date Filters -->
+  <!-- Date Filters - Sur la même ligne -->
   <div class="date-filters">
-    <div class="date-row">
-      <label class="date-label">تاريخ البدء</label>
-      <input type="date" id="start-date" class="date-input">
-    </div>
-    
-    <div class="date-row">
-      <label class="date-label">تاريخ الانتهاء</label>
-      <input type="date" id="end-date" class="date-input">
+    <div class="date-range-container">
+      <div class="date-range-row">
+        <label class="date-label">تاريخ البدء</label>
+        <input type="date" id="start-date" class="date-input">
+      </div>
+      
+      <div class="date-range-row">
+        <label class="date-label">تاريخ الانتهاء</label>
+        <input type="date" id="end-date" class="date-input">
+      </div>
     </div>
   </div>
 </header>
@@ -510,6 +607,21 @@ body {
     <p>جاري تحميل المقالات...</p>
   </div>
 </main>
+
+<!-- Overlay pour afficher l'article -->
+<div id="article-overlay">
+  <div class="overlay-container">
+    <div class="overlay-header">
+      <div class="overlay-title" id="overlay-article-title"></div>
+      <button class="close-overlay" id="close-overlay" aria-label="Fermer">×</button>
+    </div>
+    <div class="overlay-content">
+      <div class="article-frame-container">
+        <iframe id="article-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" title="Contenu de l'article"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 // ===== APP CONFIGURATION =====
@@ -534,7 +646,11 @@ const elements = {
   startDate: document.getElementById('start-date'),
   endDate: document.getElementById('end-date'),
   articlesContainer: document.getElementById('articles-container'),
-  loadingIndicator: document.getElementById('loading-indicator')
+  loadingIndicator: document.getElementById('loading-indicator'),
+  articleOverlay: document.getElementById('article-overlay'),
+  closeOverlay: document.getElementById('close-overlay'),
+  articleFrame: document.getElementById('article-frame'),
+  overlayArticleTitle: document.getElementById('overlay-article-title')
 };
 
 // ===== ÉTAT DE L'APPLICATION =====
@@ -699,16 +815,25 @@ function filterArticles() {
   
   // Filtrer par date et par texte
   appState.filteredArticles = appState.articles.filter(article => {
-    // Filtrer par date
-    const articleDate = parseDDMMYYYY(article.date_heure.split(' ')[0]);
+    // Convertir la date de l'article
+    const articleDateStr = article.date_heure.split(' ')[0];
+    const articleDate = parseDDMMYYYY(articleDateStr);
     
+    // Vérifier si la date de l'article est valide
+    if (isNaN(articleDate.getTime())) {
+      console.log('Date invalide pour l\'article:', articleDateStr);
+      return false;
+    }
+    
+    // Filtrer par date
     let isInDateRange = true;
-    if (appState.startDate && appState.endDate) {
-      isInDateRange = articleDate >= appState.startDate && articleDate <= appState.endDate;
-    } else if (appState.startDate) {
+    
+    if (appState.startDate && !isNaN(appState.startDate.getTime())) {
       isInDateRange = articleDate >= appState.startDate;
-    } else if (appState.endDate) {
-      isInDateRange = articleDate <= appState.endDate;
+    }
+    
+    if (appState.endDate && !isNaN(appState.endDate.getTime())) {
+      isInDateRange = isInDateRange && articleDate <= appState.endDate;
     }
     
     // Filtrer par texte
@@ -776,12 +901,41 @@ function createArticleCard(article, index) {
     </div>
   `;
   
+  // CORRECTION : Ajouter l'écouteur d'événement pour ouvrir l'article
   card.addEventListener('click', () => {
-    console.log('Article cliqué:', article);
-    // Ici vous pouvez ajouter la logique pour ouvrir l'article
+    openArticleOverlay(article);
   });
   
   return card;
+}
+
+// ===== GESTION DE L'OVERLAY =====
+function openArticleOverlay(article) {
+  // Mettre à jour le titre
+  elements.overlayArticleTitle.textContent = article.titre || 'Article';
+  
+  // Charger l'article dans l'iframe
+  if (article.url) {
+    elements.articleFrame.src = article.url;
+  } else {
+    elements.articleFrame.src = 'about:blank';
+  }
+  
+  // Afficher l'overlay
+  elements.articleOverlay.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  
+  // Focus sur le bouton de fermeture
+  setTimeout(() => elements.closeOverlay.focus(), 100);
+}
+
+function closeArticleOverlay() {
+  elements.articleOverlay.style.display = 'none';
+  elements.articleFrame.src = '';
+  document.body.style.overflow = '';
+  
+  // Focus sur la recherche
+  elements.searchInput.focus();
 }
 
 function showNoResults() {
@@ -840,11 +994,16 @@ function initializeDates() {
     return `${year}-${month}-${day}`;
   };
   
-  elements.startDate.value = formatForInput(defaultStartDate);
-  elements.endDate.value = formatForInput(today);
+  // CORRECTION : Assurer que les dates sont valides
+  if (!isNaN(defaultStartDate.getTime())) {
+    elements.startDate.value = formatForInput(defaultStartDate);
+    appState.startDate = new Date(defaultStartDate.getFullYear(), defaultStartDate.getMonth(), defaultStartDate.getDate());
+  }
   
-  appState.startDate = defaultStartDate;
-  appState.endDate = today;
+  if (!isNaN(today.getTime())) {
+    elements.endDate.value = formatForInput(today);
+    appState.endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  }
 }
 
 // ===== INITIALISATION DE L'APPLICATION =====
@@ -859,20 +1018,36 @@ function initApp() {
   
   elements.startDate.addEventListener('change', function(e) {
     if (e.target.value) {
-      appState.startDate = new Date(e.target.value);
+      const date = new Date(e.target.value);
+      if (!isNaN(date.getTime())) {
+        appState.startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        filterArticles();
+      }
     } else {
       appState.startDate = null;
+      filterArticles();
     }
-    filterArticles();
   });
   
   elements.endDate.addEventListener('change', function(e) {
     if (e.target.value) {
-      appState.endDate = new Date(e.target.value);
+      const date = new Date(e.target.value);
+      if (!isNaN(date.getTime())) {
+        appState.endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        filterArticles();
+      }
     } else {
       appState.endDate = null;
+      filterArticles();
     }
-    filterArticles();
+  });
+  
+  // Fermer l'overlay
+  elements.closeOverlay.addEventListener('click', closeArticleOverlay);
+  
+  // Fermer avec ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeArticleOverlay();
   });
   
   // Focus sur la barre de recherche au chargement
