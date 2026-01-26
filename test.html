@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#001122">
+<title>Revue de Presse Hebdomadaire</title>
+<style>
+/* ===== RESET & VARIABLES ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --primary: #6a11cb;
+  --primary-dark: #2575fc;
+  --background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+  --card-bg: #ffffff;
+  --text: #333333;
+  --text-secondary: #666666;
+  --accent-1: #FF6B6B;
+  --accent-2: #4ECDC4;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --radius: 10px;
+  --transition: all 0.3s ease;
+}
+
+/* ===== BASE STYLES ===== */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--background);
+  color: #ffffff;
+  line-height: 1.5;
+  min-height: 100vh;
+  background-attachment: fixed;
+}
+
+/* ===== HEADER ===== */
+.app-header {
+  background: rgba(26, 35, 126, 0.8);
+  padding: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.main-title {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.5px;
+}
+
+/* ===== SEARCH BAR - CENTRÉE ===== */
+.search-container {
+  max-width: 600px;
+  margin: 0 auto 20px auto;
+  width: 100%;
+}
+
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 30px;
+  padding: 8px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.search-wrapper:focus-within {
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 25px rgba(106, 17, 203, 0.3);
+}
+
+.search-icon {
+  padding: 0 12px 0 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.2rem;
+}
+
+#search-input {
+  flex: 1;
+  padding: 10px 5px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  font-family: inherit;
+}
+
+#search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ===== DATE FILTERS ===== */
+.date-filters {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  margin-bottom: 25px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.date-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.date-label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date-label::before {
+  content: "📅";
+  font-size: 0.9rem;
+}
+
+.date-input {
+  padding: 12px 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius);
+  color: white;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ===== ARTICLES LIST ===== */
+#articles-container {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.article-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  cursor: pointer;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  animation: fadeInUp 0.5s ease forwards;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.article-card:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  border-color: rgba(106, 17, 203, 0.5);
+}
+
+/* Article Image Section */
+.article-image-container {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.article-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+
+.article-card:hover .article-image {
+  transform: scale(1.08);
+}
+
+.image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px 15px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent 70%);
+}
+
+.article-image-title {
+  font-size: 1.3rem;
+  font-weight: 900;
+  line-height: 1.3;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+  margin-bottom: 5px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===== BADGES ===== */
+.image-badges {
+  position: absolute;
+  top: 15px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15px;
+  z-index: 2;
+}
+
+.image-badge {
+  padding: 8px 15px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.date-badge { 
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.95), rgba(255, 64, 129, 0.9));
+  color: white;
+}
+
+.category-badge { 
+  background: linear-gradient(135deg, rgba(78, 205, 196, 0.95), rgba(76, 175, 80, 0.9));
+  color: white;
+}
+
+.category-badge.ltr { text-align: left; justify-content: flex-start; padding-right: 12px; }
+.category-badge.rtl { text-align: right; justify-content: flex-end; padding-left: 12px; }
+
+.article-card:hover .image-badge { 
+  transform: translateY(-3px) scale(1.05);
+}
+
+/* ===== LOADING & EMPTY STATES ===== */
+#loading-indicator {
+  text-align: center;
+  padding: 80px 20px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  margin: 0 auto 25px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.no-results, .error-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-width: 600px;
+  margin: 30px auto;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.no-results-icon, .error-icon {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  opacity: 0.6;
+}
+
+.no-results h3, .error-state h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: white;
+  font-weight: 700;
+}
+
+.clear-search-btn, .retry-button {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
+}
+
+.clear-search-btn:hover, .retry-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(106, 17, 203, 0.4);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+/* Pour PC - écrans larges */
+@media (min-width: 768px) {
+  .app-header {
+    padding: 25px 20px;
+  }
+  
+  .main-title {
+    font-size: 2.2rem;
+  }
+  
+  .date-filters {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 25px;
+  }
+  
+  .date-row {
+    flex-direction: column;
+  }
+  
+  #articles-container {
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  .article-image-container {
+    height: 280px;
+  }
+  
+  .article-image-title {
+    font-size: 1.5rem;
+  }
+  
+  .search-wrapper {
+    padding: 10px 20px;
+  }
+  
+  .date-input {
+    padding: 14px 18px;
+  }
+}
+
+/* Pour smartphones */
+@media (max-width: 480px) {
+  .app-header {
+    padding: 15px 10px;
+  }
+  
+  .main-title {
+    font-size: 1.6rem;
+  }
+  
+  .search-wrapper {
+    padding: 6px 12px;
+  }
+  
+  .search-icon {
+    padding: 0 10px 0 6px;
+    font-size: 1.1rem;
+  }
+  
+  #search-input {
+    padding: 8px 5px;
+    font-size: 0.95rem;
+  }
+  
+  .date-filters {
+    padding: 15px;
+    gap: 12px;
+  }
+  
+  .article-image-container {
+    height: 200px;
+  }
+  
+  .article-image-title {
+    font-size: 1.2rem;
+  }
+  
+  .image-badge {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Pour très petits écrans */
+@media (max-width: 360px) {
+  .main-title {
+    font-size: 1.4rem;
+  }
+  
+  .article-image-title {
+    font-size: 1.1rem;
+  }
+  
+  .date-filters {
+    padding: 12px;
+  }
+  
+  .date-input {
+    padding: 10px 12px;
+  }
+}
+
+/* Animation subtile pour le fond */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+body {
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+</style>
+</head>
+
+<body>
+<header class="app-header">
+  <h1 class="main-title">Revue de Presse Hebdomadaire</h1>
+  
+  <!-- Barre de recherche centrée -->
+  <div class="search-container">
+    <div class="search-wrapper">
+      <div class="search-icon">🔍</div>
+      <input type="text" id="search-input" placeholder="ابحث عن مقالات..." autocomplete="off">
+    </div>
+  </div>
+  
+  <!-- Date Filters -->
+  <div class="date-filters">
+    <div class="date-row">
+      <label class="date-label">تاريخ البدء</label>
+      <input type="date" id="start-date" class="date-input">
+    </div>
+    
+    <div class="date-row">
+      <label class="date-label">تاريخ الانتهاء</label>
+      <input type="date" id="end-date" class="date-input">
+    </div>
+  </div>
+</header>
+
+<main id="articles-container">
+  <div id="loading-indicator">
+    <div class="loading-spinner"></div>
+    <p>جاري تحميل المقالات...</p>
+  </div>
+</main>
+
+<script>
+// ===== APP CONFIGURATION =====
+const CONFIG = {
+  jsonUrl: 'data/datajson.json?t=' + Date.now(),
+  maxArticles: 100,
+  imagesBasePath: 'images3/'
+};
+
+// ===== MEDIA LOGOS MAPPING =====
+const MEDIA_LOGOS = {
+  'al jazeera': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Al_Jazeera_Logo_2016.svg',
+  'الجزيرة': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Al_Jazeera_Logo_2016.svg',
+  'france 24': 'https://upload.wikimedia.org/wikipedia/commons/2/2d/France_24_logo.svg',
+  'arabic.pressbee.net': 'https://cdn-icons-png.flaticon.com/512/60/60543.png',
+  'default': 'https://cdn-icons-png.flaticon.com/512/60/60543.png'
+};
+
+// ===== ÉLÉMENTS DU DOM =====
+const elements = {
+  searchInput: document.getElementById('search-input'),
+  startDate: document.getElementById('start-date'),
+  endDate: document.getElementById('end-date'),
+  articlesContainer: document.getElementById('articles-container'),
+  loadingIndicator: document.getElementById('loading-indicator')
+};
+
+// ===== ÉTAT DE L'APPLICATION =====
+let appState = {
+  articles: [],
+  filteredArticles: [],
+  searchQuery: '',
+  startDate: null,
+  endDate: null,
+  isLoading: true
+};
+
+// ===== FONCTIONS UTILITAIRES =====
+function formatDateToDDMMYYYY(date) {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
+function parseDDMMYYYY(dateString) {
+  const [day, month, year] = dateString.split('/').map(Number);
+  return new Date(year, month - 1, day);
+}
+
+function getTimeAgo(articleDate) {
+  const [datePart, timePart] = articleDate.split(' ');
+  const [day, month, year] = datePart.split('/').map(Number);
+  const [hours, minutes] = timePart.split(':').map(Number);
+  
+  const articleDateTime = new Date(year, month - 1, day, hours, minutes);
+  const now = new Date();
+  const diffMs = now - articleDateTime;
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  
+  if (diffMinutes < 60) {
+    return `منذ ${diffMinutes} دقيقة`;
+  } else if (diffHours < 24) {
+    return `منذ ${diffHours} ساعة`;
+  } else {
+    return `منذ ${diffDays} يوم`;
+  }
+}
+
+function truncateTitle(title, maxLength = 100) {
+  if (!title || title.length <= maxLength) return title;
+  return title.substring(0, maxLength) + '...';
+}
+
+function isArabic(text) {
+  return /[\u0600-\u06FF]/.test(text);
+}
+
+function getMediaLogo(mediaName) {
+  if (!mediaName) return MEDIA_LOGOS.default;
+  const lower = mediaName.toLowerCase();
+  
+  if (MEDIA_LOGOS[lower]) return MEDIA_LOGOS[lower];
+  
+  for (const key in MEDIA_LOGOS) {
+    if (lower.includes(key) || key.includes(lower)) {
+      return MEDIA_LOGOS[key];
+    }
+  }
+  
+  return MEDIA_LOGOS.default;
+}
+
+// ===== GESTION DES IMAGES =====
+function getArticleImageUrl(article) {
+  if (article.image_brute) {
+    if (!article.image_brute.startsWith('http') && 
+        !article.image_brute.startsWith('/') &&
+        !article.image_brute.startsWith('images')) {
+      return CONFIG.imagesBasePath + article.image_brute;
+    }
+    return article.image_brute;
+  }
+  
+  if (article.image_brute) {
+    if (!article.image_brute.startsWith('http') && 
+        !article.image_brute.startsWith('/') &&
+        !article.image_brute.startsWith('images')) {
+      return CONFIG.imagesBasePath + article.image_brute;
+    }
+    return article.image_brute;
+  }
+  
+  return null;
+}
+
+function createImageElement(imageUrl, title) {
+  if (!imageUrl) {
+    return '<div class="image-error">Image non disponible</div>';
+  }
+  
+  return `<img src="${imageUrl}" 
+                alt="${title || 'Image de l\'article'}" 
+                class="article-image" 
+                loading="lazy"
+                onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\\'image-error\\'>Image non disponible</div>';"
+                onload="this.style.opacity='1'"
+                style="opacity:0; transition: opacity 0.3s ease;">`;
+}
+
+// ===== CHARGEMENT ET TRAITEMENT =====
+async function loadArticles() {
+  try {
+    showLoading(true);
+    const response = await fetch(CONFIG.jsonUrl);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
+    appState.articles = processArticleData(data);
+    filterArticles();
+  } catch (error) {
+    console.error('Error loading articles:', error);
+    showError('Impossible de charger les articles. Veuillez réessayer.');
+  } finally {
+    showLoading(false);
+  }
+}
+
+function validateAndFormatDate(dateString) {
+  if (!dateString) return { date: 'N/A', time: '', fullDate: 'N/A' };
+  
+  try {
+    const [datePart, timePart] = dateString.split(' ');
+    return {
+      date: datePart || dateString,
+      time: timePart || '',
+      fullDate: dateString
+    };
+  } catch (e) {
+    return { date: dateString, time: '', fullDate: dateString };
+  }
+}
+
+function processArticleData(articles) {
+  return articles
+    .filter(a => a.visible === true || a.visible === "true")
+    .sort((a, b) => {
+      try {
+        const parseDate = (str) => {
+          const [date, time] = str.split(' ');
+          const [d, m, y] = date.split('/');
+          const [h, min] = time ? time.split(':') : [0, 0];
+          return new Date(y, m - 1, d, h, min);
+        };
+        return parseDate(b.date_heure) - parseDate(a.date_heure);
+      } catch (e) {
+        return 0;
+      }
+    })
+    .slice(0, CONFIG.maxArticles);
+}
+
+// ===== FILTRAGE ET AFFICHAGE =====
+function filterArticles() {
+  const query = appState.searchQuery.toLowerCase().trim();
+  
+  // Filtrer par date et par texte
+  appState.filteredArticles = appState.articles.filter(article => {
+    // Filtrer par date
+    const articleDate = parseDDMMYYYY(article.date_heure.split(' ')[0]);
+    
+    let isInDateRange = true;
+    if (appState.startDate && appState.endDate) {
+      isInDateRange = articleDate >= appState.startDate && articleDate <= appState.endDate;
+    } else if (appState.startDate) {
+      isInDateRange = articleDate >= appState.startDate;
+    } else if (appState.endDate) {
+      isInDateRange = articleDate <= appState.endDate;
+    }
+    
+    // Filtrer par texte
+    const searchableText = `
+      ${article.titre || ''}
+      ${article.source || ''}
+      ${article.theme || ''}
+      ${article.mots_cles || ''}
+      ${article.sentiment || ''}
+    `.toLowerCase();
+    
+    const matchesSearch = !query || searchableText.includes(query);
+    
+    return isInDateRange && matchesSearch;
+  });
+  
+  displayArticles();
+}
+
+function displayArticles() {
+  elements.articlesContainer.innerHTML = '';
+  
+  if (appState.filteredArticles.length === 0) {
+    showNoResults();
+    return;
+  }
+  
+  const fragment = document.createDocumentFragment();
+  
+  appState.filteredArticles.forEach((article, index) => {
+    const card = createArticleCard(article, index);
+    fragment.appendChild(card);
+  });
+  
+  elements.articlesContainer.appendChild(fragment);
+}
+
+function createArticleCard(article, index) {
+  const card = document.createElement('div');
+  card.className = 'article-card';
+  card.style.animationDelay = `${index * 0.05}s`;
+  
+  const imageUrl = getArticleImageUrl(article);
+  const dateInfo = validateAndFormatDate(article.date_heure);
+  const isCategoryArabic = isArabic(article.theme);
+  
+  const imageElement = createImageElement(imageUrl, article.titre);
+
+  card.innerHTML = `
+    <div class="article-image-container">
+      ${imageElement}
+      <div class="image-overlay">
+        <h3 class="article-image-title">${truncateTitle(article.titre || 'Sans titre')}</h3>
+      </div>
+      <div class="image-badges">
+        <div class="image-badge date-badge">
+          <span>📅</span>
+          <span>${dateInfo.date}</span>
+        </div>
+        <div class="image-badge category-badge ${isCategoryArabic ? 'rtl' : 'ltr'}">
+          <span>🏷️</span>
+          <span>${article.theme || 'Non catégorisé'}</span>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  card.addEventListener('click', () => {
+    console.log('Article cliqué:', article);
+    // Ici vous pouvez ajouter la logique pour ouvrir l'article
+  });
+  
+  return card;
+}
+
+function showNoResults() {
+  elements.articlesContainer.innerHTML = `
+    <div class="no-results">
+      <div class="no-results-icon">🔍</div>
+      <h3>لا توجد نتائج</h3>
+      <p>لا توجد مقالات تطابق معايير البحث الخاصة بك</p>
+      <button class="clear-search-btn" onclick="elements.searchInput.value=''; filterArticles();">
+        إعادة تعيين البحث
+      </button>
+    </div>
+  `;
+}
+
+function showError(message) {
+  elements.articlesContainer.innerHTML = `
+    <div class="error-state">
+      <div class="error-icon">⚠️</div>
+      <h3>خطأ</h3>
+      <p>${message}</p>
+      <button class="retry-button" onclick="loadArticles()">
+        إعادة المحاولة
+      </button>
+    </div>
+  `;
+}
+
+function showLoading(show) {
+  appState.isLoading = show;
+  if (elements.loadingIndicator) {
+    elements.loadingIndicator.style.display = show ? 'block' : 'none';
+  }
+}
+
+function debounce(func, wait) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
+
+// ===== INITIALISATION DES DATES =====
+function initializeDates() {
+  const today = new Date();
+  const defaultEndDate = new Date(today);
+  defaultEndDate.setDate(today.getDate() - 7);
+  
+  const defaultStartDate = new Date(defaultEndDate);
+  
+  const formatForInput = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+  
+  elements.startDate.value = formatForInput(defaultStartDate);
+  elements.endDate.value = formatForInput(today);
+  
+  appState.startDate = defaultStartDate;
+  appState.endDate = today;
+}
+
+// ===== INITIALISATION DE L'APPLICATION =====
+function initApp() {
+  initializeDates();
+  
+  // Écouteurs d'événements
+  elements.searchInput.addEventListener('input', function(e) {
+    appState.searchQuery = e.target.value;
+    debounce(filterArticles, 300)();
+  });
+  
+  elements.startDate.addEventListener('change', function(e) {
+    if (e.target.value) {
+      appState.startDate = new Date(e.target.value);
+    } else {
+      appState.startDate = null;
+    }
+    filterArticles();
+  });
+  
+  elements.endDate.addEventListener('change', function(e) {
+    if (e.target.value) {
+      appState.endDate = new Date(e.target.value);
+    } else {
+      appState.endDate = null;
+    }
+    filterArticles();
+  });
+  
+  // Focus sur la barre de recherche au chargement
+  setTimeout(() => {
+    elements.searchInput.focus();
+  }, 500);
+  
+  loadArticles();
+}
+
+document.addEventListener('DOMContentLoaded', initApp);
+</script>
+</body>
+</html>
