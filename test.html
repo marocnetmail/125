@@ -80,17 +80,20 @@ body {
   letter-spacing: -0.5px;
 }
 
-/* ===== FILTERS CONTAINER ===== */
+/* ===== FILTERS CONTAINER - UNE SEULE LIGNE ===== */
 .filters-container {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex-direction: row;
+  gap: 10px;
   margin-bottom: 15px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 /* ===== SEARCH BAR ===== */
 .search-container {
-  width: 100%;
+  flex: 1;
+  min-width: 200px;
 }
 
 .search-wrapper {
@@ -152,18 +155,19 @@ body {
   color: var(--text);
 }
 
-/* ===== DATE FILTERS ===== */
+/* ===== DATE FILTERS - UNE SEULE LIGNE ===== */
 .date-filters {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
+  flex: 2;
+  min-width: 300px;
 }
 
 .date-group {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex: 1;
   min-width: 0;
 }
@@ -173,7 +177,7 @@ body {
   font-weight: 600;
   color: var(--accent-3);
   white-space: nowrap;
-  min-width: 45px;
+  min-width: 40px;
   flex-shrink: 0;
 }
 
@@ -209,7 +213,7 @@ body {
   color: var(--accent-2);
   font-weight: bold;
   font-size: 1.2rem;
-  margin: 0 5px;
+  margin: 0 2px;
   flex-shrink: 0;
 }
 
@@ -228,6 +232,7 @@ body {
   align-items: center;
   gap: 6px;
   flex-shrink: 0;
+  margin-left: 5px;
 }
 
 .clear-filters-btn:hover {
@@ -749,6 +754,16 @@ body {
     font-size: 1.6rem;
   }
   
+  .filters-container {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .search-container,
+  .date-filters {
+    min-width: 100%;
+  }
+  
   .date-group {
     flex-direction: column;
     align-items: flex-start;
@@ -797,6 +812,13 @@ body {
     padding: 8px;
     gap: 12px;
   }
+  
+  .clear-filters-btn {
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
+    margin-top: 5px;
+  }
 }
 
 /* MOBILE MEDIUM (376px - 480px) */
@@ -822,8 +844,7 @@ body {
 @media (min-width: 481px) {
   .filters-container {
     flex-direction: row;
-    align-items: center;
-    gap: 15px;
+    flex-wrap: nowrap;
   }
   
   .search-container {
@@ -832,6 +853,7 @@ body {
   
   .date-filters {
     flex: 2;
+    min-width: 350px;
   }
   
   .article-main-title {
@@ -863,6 +885,11 @@ body {
     font-size: 2rem;
   }
   
+  .filters-container {
+    max-width: 800px;
+    margin: 0 auto 20px;
+  }
+  
   .article-image-container {
     height: 400px;
   }
@@ -871,11 +898,6 @@ body {
     font-size: 2.5rem;
     line-height: 1.1;
     -webkit-line-clamp: 2;
-  }
-  
-  .filters-container {
-    max-width: 800px;
-    margin: 0 auto 20px;
   }
   
   .overlay-container {
@@ -1132,12 +1154,8 @@ const CONFIG = {
   jsonUrl: 'data/datajson.json?t=' + Date.now(),
   maxArticles: 100,
   imagesBasePath: 'images3/',
-  debounceDelay: 300,
-  touchDelay: 100
+  debounceDelay: 300
 };
-
-// ===== TOUCH DETECTION =====
-const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
 // ===== APP STATE =====
 let appState = {
@@ -1147,7 +1165,7 @@ let appState = {
   startDate: null,
   endDate: null,
   isLoading: true,
-  lastTouchTime: 0
+  isProcessingClick: false // Nouveau flag pour prévenir les clics multiples
 };
 
 const elements = {
@@ -1174,16 +1192,7 @@ const elements = {
 function initApp() {
   setupEventListeners();
   setupDateDefaults();
-  detectDeviceType();
   loadArticles();
-}
-
-function detectDeviceType() {
-  if (isTouchDevice) {
-    document.body.classList.add('touch-device');
-  } else {
-    document.body.classList.add('mouse-device');
-  }
 }
 
 function setupDateDefaults() {
@@ -1246,24 +1255,6 @@ function setupEventListeners() {
     if (e.key === 'Escape') closeArticleOverlay();
   });
   
-  // Swipe pour fermer overlay (mobile)
-  let touchStartY = 0;
-  elements.articleOverlay.addEventListener('touchstart', (e) => {
-    touchStartY = e.touches[0].clientY;
-  });
-  
-  elements.articleOverlay.addEventListener('touchmove', (e) => {
-    if (!touchStartY) return;
-    
-    const touchY = e.touches[0].clientY;
-    const diffY = touchStartY - touchY;
-    
-    // Swipe vers le bas pour fermer
-    if (diffY < -100) {
-      closeArticleOverlay();
-    }
-  });
-  
   // Scroll to top
   elements.scrollTop.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1273,16 +1264,6 @@ function setupEventListeners() {
   window.addEventListener('scroll', () => {
     elements.scrollTop.style.display = window.scrollY > 300 ? 'block' : 'none';
   });
-  
-  // Prévenir le double-tap zoom sur mobile
-  let lastTouch = 0;
-  document.addEventListener('touchstart', (event) => {
-    const now = Date.now();
-    if (now - lastTouch <= 300) {
-      event.preventDefault();
-    }
-    lastTouch = now;
-  }, { passive: false });
 }
 
 // ===== DATE HELPER FUNCTIONS =====
@@ -1290,13 +1271,11 @@ function parseArticleDate(dateString) {
   if (!dateString) return null;
   
   try {
-    // Format attendu: "jj/mm/aaaa hh:mm" - conversion en format dd/mm/yyyy
     const [datePart, timePart] = dateString.split(' ');
     const [day, month, year] = datePart.split('/');
     
     if (!day || !month || !year) return null;
     
-    // Retourner la date en format dd/mm/yyyy
     return new Date(year, month - 1, day);
   } catch (e) {
     console.warn('Error parsing date:', dateString, e);
@@ -1311,7 +1290,6 @@ function formatDateToDDMMYYYY(dateString) {
     const [datePart, timePart] = dateString.split(' ');
     const [day, month, year] = datePart.split('/');
     
-    // Retourner au format dd/mm/yyyy (avec padding des zéros)
     const paddedDay = day.padStart(2, '0');
     const paddedMonth = month.padStart(2, '0');
     
@@ -1352,7 +1330,6 @@ function getTimeAgo(dateString) {
       const weeks = Math.floor(diffDays / 7);
       return `منذ ${weeks} أسبوع`;
     } else {
-      // Pour les articles plus anciens, afficher la date au format dd/mm/yyyy
       const formattedDate = formatDateToDDMMYYYY(dateString);
       return formattedDate;
     }
@@ -1481,7 +1458,6 @@ function updateStatsBar() {
   elements.resultsCount.textContent = `${count} article${count !== 1 ? 's' : ''} (${total} total)`;
   elements.statsBar.style.display = 'flex';
   
-  // Mettre à jour les filtres actifs
   updateActiveFilters();
 }
 
@@ -1499,7 +1475,6 @@ function updateActiveFilters() {
   }
   
   if (appState.startDate || appState.endDate) {
-    // Formater les dates de filtrage au format dd/mm/yyyy
     const formatFilterDate = (dateStr) => {
       if (!dateStr) return '';
       const [year, month, day] = dateStr.split('-');
@@ -1548,23 +1523,20 @@ function displayArticles() {
   
   elements.articlesContainer.appendChild(fragment);
   
-  // Animation staggered
   const cards = elements.articlesContainer.querySelectorAll('.article-card');
   cards.forEach((card, i) => {
     card.style.animationDelay = `${i * 0.03}s`;
   });
 }
 
+// ===== CORRECTION DU CLIC - Fonction améliorée =====
 function createArticleCard(article, index) {
   const card = document.createElement('div');
   card.className = 'article-card';
+  card.dataset.articleId = index;
   
   const imageUrl = getArticleImageUrl(article);
-  const dateInfo = parseArticleDate(article.date_heure);
-  
-  // Formater la date au format dd/mm/yyyy
   const formattedDate = formatDateToDDMMYYYY(article.date_heure);
-  
   const timeAgo = getTimeAgo(article.date_heure);
   const isCategoryArabic = /[\u0600-\u06FF]/.test(article.theme || '');
   const imageElement = createImageElement(imageUrl, article.titre);
@@ -1593,24 +1565,24 @@ function createArticleCard(article, index) {
     </div>
   `;
   
-  // Gestion du clic/touch optimisé
-  if (isTouchDevice) {
-    card.addEventListener('touchstart', (e) => {
-      e.currentTarget.classList.add('active');
-    }, { passive: true });
+  // ===== CORRECTION DU PROBLÈME DE CLIC =====
+  // Utiliser un seul gestionnaire d'événements pour éviter les conflits
+  card.addEventListener('click', function(event) {
+    // Empêcher les clics multiples rapides
+    if (appState.isProcessingClick) {
+      event.stopPropagation();
+      event.preventDefault();
+      return;
+    }
     
-    card.addEventListener('touchend', (e) => {
-      e.currentTarget.classList.remove('active');
-      const now = Date.now();
-      if (now - appState.lastTouchTime < CONFIG.touchDelay) return;
-      appState.lastTouchTime = now;
+    appState.isProcessingClick = true;
+    
+    // Ouvrir l'article avec un léger délai pour éviter les doubles clics
+    setTimeout(() => {
       openArticleOverlay(article);
-    }, { passive: true });
-  } else {
-    card.addEventListener('click', () => {
-      openArticleOverlay(article);
-    });
-  }
+      appState.isProcessingClick = false;
+    }, 150);
+  }, { passive: true });
   
   return card;
 }
@@ -1624,7 +1596,7 @@ function openArticleOverlay(article) {
   // Mettre à jour le titre
   elements.overlayArticleTitle.textContent = article.titre || 'Article';
   
-  // Charger l'article dans l'iframe avec lazy loading
+  // Charger l'article dans l'iframe
   elements.articleFrame.src = article.url || '#';
   
   // Mettre à jour le sentiment
@@ -1658,7 +1630,7 @@ function openArticleOverlay(article) {
   elements.articleOverlay.style.display = 'block';
   document.body.style.overflow = 'hidden';
   
-  // Focus sur le bouton de fermeture pour l'accessibilité
+  // Focus sur le bouton de fermeture
   setTimeout(() => elements.closeOverlay.focus(), 100);
 }
 
@@ -1666,8 +1638,6 @@ function closeArticleOverlay() {
   elements.articleOverlay.style.display = 'none';
   elements.articleFrame.src = '';
   document.body.style.overflow = '';
-  
-  // Focus sur la recherche
   elements.searchInput.focus();
 }
 
