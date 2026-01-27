@@ -2,31 +2,26 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<!-- META TAGS CRUCIAUX POUR MOBILE -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <meta name="theme-color" content="#001122">
-<meta name="description" content="مراجعة الصحافة الأسبوعية">
-<meta name="format-detection" content="telephone=no">
-<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta name="description" content="مراجعة الصحافة الأسبوعية">
 <title>مراجعة الصحافة الأسبوعية</title>
 <link rel="icon" type="image/png" href="images1/00011.png">
-<!-- Bibliothèque html2pdf pour générer des PDFs avec support arabe -->
+<!-- Bibliothèque html2pdf -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<!-- Police arabe optimisée pour mobile -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
+<!-- Police arabe optimisée -->
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
-/* ===== CSS RESET & VARIABLES ===== */
+/* ===== CSS RESET OPTIMISÉ POUR MOBILE ===== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
-  text-size-adjust: 100%;
 }
 :root {
   --primary: #1a73e8;
@@ -40,313 +35,186 @@
   --accent-3: #FFD166;
   --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   --radius: 8px;
-  --radius-sm: 6px;
-  --radius-lg: 12px;
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --safe-top: env(safe-area-inset-top);
-  --safe-bottom: env(safe-area-inset-bottom);
-  --safe-left: env(safe-area-inset-left);
-  --safe-right: env(safe-area-inset-right);
+  --transition: all 0.3s ease;
 }
-/* ===== BASE STYLES MOBILE OPTIMIZED ===== */
+/* ===== BASE STYLES ===== */
 html {
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  height: 100%;
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 body {
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--background);
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.4;
   overflow-x: hidden;
   min-height: 100vh;
-  min-height: -webkit-fill-available;
-  height: 100%;
-  width: 100%;
-  padding-top: var(--safe-top);
-  padding-bottom: var(--safe-bottom);
-  padding-left: var(--safe-left);
-  padding-right: var(--safe-right);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  font-size: 16px;
+  padding: 0;
+  margin: 0;
 }
-/* ===== COMPACT HEADER MOBILE ===== */
+/* ===== HEADER OPTIMISÉ POUR MOBILE ===== */
 .app-header {
-  background: linear-gradient(135deg, #001122 0%, #002244 100%);
-  padding: 12px;
-  padding-top: calc(12px + var(--safe-top));
-  box-shadow: var(--shadow);
+  background: #001122;
+  padding: 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   position: sticky;
   top: 0;
   z-index: 100;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-.title-search-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
   width: 100%;
 }
 .main-title {
-  font-size: clamp(1.5rem, 5vw, 1.8rem);
+  font-size: 1.5rem;
   font-weight: 900;
   color: white;
   line-height: 1.2;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
   text-align: center;
-  letter-spacing: -0.5px;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  margin-bottom: 15px;
+  padding: 0 5px;
 }
-/* ===== FILTERS CONTAINER MOBILE ===== */
+/* ===== FILTRES MOBILE ===== */
 .filters-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-bottom: 10px;
-  width: 100%;
 }
-/* ===== SEARCH BAR MOBILE ===== */
 .search-container {
   width: 100%;
-  touch-action: manipulation;
 }
 .search-wrapper {
-  position: relative;
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius);
-  padding: 4px;
+  border-radius: 8px;
+  padding: 5px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transition: var(--transition);
-  min-height: 48px;
-}
-.search-wrapper:focus-within {
-  border-color: var(--primary);
-  background: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
 }
 .search-icon {
-  padding: 0 12px;
+  padding: 0 10px;
   color: var(--text-secondary);
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  pointer-events: none;
 }
 #search-input {
   flex: 1;
-  padding: 12px 8px 12px 0;
+  padding: 12px 10px 12px 0;
   background: transparent;
   border: none;
   color: var(--text);
   font-size: 16px;
   outline: none;
   font-family: inherit;
-  min-width: 0;
   text-align: right;
   direction: rtl;
-  line-height: 1.5;
+  width: 100%;
 }
 #search-input::placeholder {
   color: rgba(255, 255, 255, 0.5);
-  text-align: right;
-  font-size: 15px;
 }
 .clear-search {
-  padding: 0 12px;
+  padding: 0 10px;
   color: var(--text-secondary);
-  font-size: 1.2rem;
-  cursor: pointer;
-  display: none;
-  transition: var(--transition);
+  font-size: 1.1rem;
   background: none;
   border: none;
-  flex-shrink: 0;
-  min-width: 44px;
-  min-height: 44px;
-  align-items: center;
-  justify-content: center;
-  touch-action: manipulation;
-}
-.clear-search:hover, .clear-search:active {
-  color: var(--text);
-  transform: scale(1.1);
+  cursor: pointer;
 }
 /* ===== DATE FILTERS MOBILE ===== */
 .date-filters {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  align-items: stretch;
 }
 .date-group {
   display: flex;
   align-items: center;
-  gap: 8px;
-  width: 100%;
+  gap: 10px;
 }
 .date-label {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--accent-3);
-  white-space: nowrap;
-  min-width: 50px;
-  flex-shrink: 0;
+  min-width: 60px;
 }
 .date-input-wrapper {
   flex: 1;
-  position: relative;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius);
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  overflow: hidden;
-  transition: var(--transition);
-}
-.date-input-wrapper:focus-within {
-  border-color: var(--primary);
-  background: rgba(255, 255, 255, 0.15);
 }
 .date-input {
   width: 100%;
-  padding: 10px 12px;
+  padding: 12px;
   background: transparent;
   border: none;
   color: var(--text);
   font-size: 16px;
   outline: none;
-  font-family: inherit;
-  min-height: 48px;
   text-align: right;
   direction: rtl;
-  -webkit-appearance: none;
-  appearance: none;
 }
-.date-input::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-  opacity: 0.7;
-  cursor: pointer;
-  padding: 4px;
-  width: 24px;
-  height: 24px;
-}
-.date-separator {
-  display: none;
-}
-/* ===== PRÉDÉFINIS DE PÉRIODE MOBILE ===== */
+/* ===== BOUTONS PÉRIODE ===== */
 .period-presets {
   display: flex;
-  flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 10px;
-  justify-content: center;
-  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 5px;
+  -webkit-overflow-scrolling: touch;
 }
 .preset-btn {
   background: rgba(255, 255, 255, 0.1);
   color: var(--text);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 12px 16px;
-  border-radius: var(--radius);
+  padding: 12px 15px;
+  border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: var(--transition);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  white-space: nowrap;
   min-width: 100px;
   text-align: center;
-  flex: 1;
-  max-width: 120px;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-  touch-action: manipulation;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
-  min-height: 48px;
-}
-.preset-btn:hover, .preset-btn:active {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: var(--primary);
-  transform: translateY(-1px);
 }
 .preset-btn.active {
   background: var(--primary);
   border-color: var(--primary);
   color: white;
-  box-shadow: 0 0 10px rgba(26, 115, 232, 0.4);
 }
-/* ===== BOUTONS D'ACTION MOBILE ===== */
+/* ===== BOUTONS ACTION ===== */
 .action-buttons {
   display: flex;
-  flex-wrap: wrap;
   gap: 10px;
   margin-top: 10px;
-  justify-content: center;
-  width: 100%;
 }
 .clear-filters-btn, .download-pdf-btn {
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: var(--radius);
-  font-size: 0.9rem;
+  flex: 1;
+  padding: 14px 10px;
+  border-radius: 8px;
+  font-size: 1rem;
   font-weight: 600;
+  border: none;
   cursor: pointer;
-  transition: var(--transition);
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  flex-shrink: 1;
-  min-width: 120px;
-  min-height: 48px;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-  touch-action: manipulation;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
-  letter-spacing: 0.5px;
+  text-align: center;
+  color: white;
 }
 .clear-filters-btn {
   background: linear-gradient(135deg, var(--accent-1), #ff5252);
 }
-.clear-filters-btn:hover, .clear-filters-btn:active {
-  background: linear-gradient(135deg, #ff5252, #ff4444);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
-}
 .download-pdf-btn {
   background: linear-gradient(135deg, #4CAF50, #2E7D32);
-}
-.download-pdf-btn:hover, .download-pdf-btn:active {
-  background: linear-gradient(135deg, #2E7D32, #1B5E20);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
 }
 .download-pdf-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  transform: none !important;
-  filter: grayscale(0.5);
 }
-/* ===== LOADING STATE ===== */
+/* ===== LOADING ===== */
 #loading-indicator {
   text-align: center;
-  padding: 40px 20px;
+  padding: 40px 15px;
   color: var(--text-secondary);
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
 }
 .loading-spinner {
   width: 40px;
@@ -356,291 +224,196 @@ body {
   border-radius: 50%;
   margin: 0 auto 15px;
   animation: spin 1s linear infinite;
-  will-change: transform;
 }
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 /* ===== ARTICLES CONTAINER ===== */
 #articles-container {
-  padding: 12px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  min-height: 200px;
-  max-width: 800px;
+  gap: 15px;
+  max-width: 100%;
   margin: 0 auto;
-  width: 100%;
 }
 /* ===== ARTICLE CARD MOBILE ===== */
 .article-card {
   background: var(--card-bg);
-  border-radius: var(--radius-lg);
+  border-radius: 10px;
   overflow: hidden;
   box-shadow: var(--shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  cursor: pointer;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  display: flex;
-  flex-direction: column;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeInUp 0.5s ease forwards;
-  height: 100%;
-  position: relative;
-  margin-bottom: 5px;
-  width: 100%;
-  will-change: transform, opacity;
+  cursor: pointer;
+  animation: fadeIn 0.3s ease;
 }
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-.article-card:active {
-  transform: scale(0.98);
-}
-/* Article Image Section Mobile */
 .article-image-container {
   position: relative;
   width: 100%;
-  height: 220px;
+  height: 200px;
   background: linear-gradient(45deg, #000428, #004e92);
   overflow: hidden;
-  flex-shrink: 0;
 }
 .article-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s ease;
-  background: linear-gradient(45deg, #000428, #004e92);
   display: block;
 }
-/* ===== TITLE OVERLAY MOBILE ===== */
+/* ===== TITRE ARTICLE ===== */
 .title-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 20px 15px 15px;
-  background: linear-gradient(to top,
-    rgba(0, 0, 0, 0.95) 0%,
-    rgba(0, 0, 0, 0.85) 40%,
-    rgba(0, 0, 0, 0.6) 70%,
-    transparent 100%);
-  z-index: 2;
+  padding: 15px;
+  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
 }
-/* TITRE PRINCIPAL MOBILE */
 .article-main-title {
-  font-size: clamp(1.3rem, 4.5vw, 1.6rem);
+  font-size: 1.3rem;
   font-weight: 900;
+  color: white;
   line-height: 1.3;
-  color: #FFFFFF;
-  margin-bottom: 8px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8),
-    0 4px 8px rgba(0, 0, 0, 0.6);
+  margin-bottom: 5px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  letter-spacing: -0.3px;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-  text-align: right;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
 }
-/* Source Mobile */
 .article-source {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--accent-2);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  opacity: 0.95;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-  text-align: right;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
 }
-/* ===== METADATA BADGES MOBILE ===== */
+/* ===== BADGES ===== */
 .metadata-badges {
   position: absolute;
-  top: 12px;
+  top: 10px;
   left: 0;
   width: 100%;
   display: flex;
-  justify-content: space-between;
-  padding: 0 12px;
-  z-index: 3;
+  flex-direction: column;
   gap: 8px;
-  pointer-events: none;
+  padding: 0 10px;
 }
 .metadata-badge {
-  padding: 6px 10px;
+  padding: 8px 12px;
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 800;
   border-radius: 20px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
   display: flex;
   align-items: center;
-  gap: 4px;
-  transition: transform 0.2s;
-  flex-shrink: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-  max-width: 48%;
-  pointer-events: auto;
+  gap: 6px;
+  max-width: fit-content;
 }
 .date-badge {
-  background: rgba(255, 107, 107, 0.92);
+  background: rgba(255, 107, 107, 0.9);
   color: white;
+  align-self: flex-end;
 }
 .category-badge {
-  background: rgba(78, 205, 196, 0.92);
+  background: rgba(78, 205, 196, 0.9);
   color: white;
+  align-self: flex-end;
 }
-.category-badge.ltr {
-  text-align: left;
-  justify-content: flex-start;
-  padding-right: 10px;
-}
-.category-badge.rtl {
-  text-align: right;
-  justify-content: flex-end;
-  padding-left: 10px;
-}
-/* ===== LOGO DES MÉDIAS MOBILE ===== */
+/* ===== LOGO MÉDIA ===== */
 .media-logo-container {
   position: absolute;
-  bottom: 12px;
-  left: 12px;
-  z-index: 4;
-  width: 55px;
-  height: 28px;
+  bottom: 10px;
+  left: 10px;
+  width: 50px;
+  height: 25px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: var(--transition);
-  overflow: hidden;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+  background: transparent;
 }
 .media-logo {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.6));
-  transition: var(--transition);
-  opacity: 0.9;
 }
-/* ===== TEMPS ÉCOULÉ MOBILE ===== */
+/* ===== TEMPS ÉCOULÉ ===== */
 .time-ago {
   position: absolute;
-  top: 60px;
-  right: 12px;
+  top: 10px;
+  right: 10px;
   padding: 5px 10px;
-  background: rgba(0, 0, 0, 0.75);
-  color: rgba(255, 255, 255, 0.9);
+  background: rgba(0,0,0,0.7);
+  color: rgba(255,255,255,0.9);
   font-size: 0.75rem;
   font-weight: 600;
-  border-radius: 12px;
-  z-index: 2;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
 }
 /* ===== PAGINATION MOBILE ===== */
 .pagination-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px 12px;
-  gap: 8px;
-  margin-top: 20px;
+  padding: 15px 10px;
+  gap: 5px;
+  margin-top: 15px;
   flex-wrap: wrap;
 }
 .pagination-btn {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.1);
   color: var(--text);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 10px 14px;
-  border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 10px 12px;
+  border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: var(--transition);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  min-width: 44px;
-  min-height: 44px;
+  min-width: 40px;
+  min-height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  touch-action: manipulation;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-}
-.pagination-btn:hover:not(:disabled), .pagination-btn:active:not(:disabled) {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: var(--primary);
-  transform: translateY(-1px);
 }
 .pagination-btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
-  transform: none !important;
 }
 .pagination-numbers {
   display: flex;
-  gap: 6px;
+  gap: 5px;
   flex-wrap: wrap;
   justify-content: center;
 }
 .pagination-number {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.1);
   color: var(--text);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,0.2);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: var(--transition);
-  touch-action: manipulation;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-}
-.pagination-number:hover:not(.active), .pagination-number:active:not(.active) {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: var(--primary);
 }
 .pagination-number.active {
   background: var(--primary);
   border-color: var(--primary);
   color: white;
-  box-shadow: 0 0 10px rgba(26, 115, 232, 0.4);
 }
 .pagination-info {
   font-size: 0.85rem;
   color: var(--text-secondary);
-  margin: 0 5px;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
   width: 100%;
   text-align: center;
-  margin-top: 10px;
+  margin-top: 8px;
 }
-/* ===== ARTICLE OVERLAY MOBILE ===== */
+/* ===== OVERLAY ARTICLE MOBILE ===== */
 #article-overlay {
   display: none;
   position: fixed;
@@ -648,155 +421,61 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  height: -webkit-fill-available;
-  background: rgba(0, 0, 0, 0.98);
+  background: rgba(0,0,0,0.98);
   z-index: 1000;
-  animation: fadeIn 0.3s ease;
-  overflow: hidden;
 }
 .overlay-container {
   width: 100%;
   height: 100%;
-  max-height: 100vh;
-  max-height: -webkit-fill-available;
   display: flex;
   flex-direction: column;
-  position: relative;
-  overflow: hidden;
 }
-/* ===== OVERLAY HEADER MOBILE ===== */
 .overlay-header-extended {
-  padding: 12px;
-  padding-top: calc(12px + var(--safe-top));
-  background: rgba(0, 26, 68, 0.95);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  position: relative;
-  z-index: 2;
+  padding: 15px;
+  background: rgba(0,26,68,0.95);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
   flex-shrink: 0;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 .overlay-header-top {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  width: 100%;
-  gap: 12px;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 .overlay-title {
-  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  font-size: 1.3rem;
   font-weight: 900;
-  color: #FFFFFF;
+  color: white;
   flex: 1;
-  line-height: 1.4;
+  line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-width: 0;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-  text-align: right;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 .close-overlay {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--accent-1);
   border: none;
   color: white;
-  font-size: 1.8rem;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 1.5rem;
   cursor: pointer;
-  transition: var(--transition);
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-  position: relative;
-  z-index: 10;
-  touch-action: manipulation;
 }
-.close-overlay:hover, .close-overlay:active {
-  background: #ff4444;
-  transform: rotate(90deg) scale(1.05);
-}
-/* ===== SENTIMENT ET MOTS-CLÉS MOBILE ===== */
-.overlay-details {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.sentiment-display-overlay {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  border-radius: 20px;
-  font-weight: 700;
-  font-size: 0.85rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  width: fit-content;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-}
-.sentiment-positive {
-  color: #4CAF50;
-  border-color: rgba(76, 175, 80, 0.4);
-  background: rgba(76, 175, 80, 0.1);
-}
-.sentiment-negative {
-  color: #FF6B6B;
-  border-color: rgba(255, 107, 107, 0.4);
-  background: rgba(255, 107, 107, 0.1);
-}
-.sentiment-neutral {
-  color: #FFD166;
-  border-color: rgba(255, 209, 102, 0.4);
-  background: rgba(255, 209, 102, 0.1);
-}
-.keywords-container-overlay {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  max-height: 80px;
-  overflow-y: auto;
-}
-.keyword-overlay {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
-  font-size: 0.8rem;
-  padding: 5px 10px;
-  border-radius: 14px;
-  font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  white-space: nowrap;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-}
-/* ===== CONTENU ARTICLE MOBILE ===== */
+/* ===== CONTENU ARTICLE ===== */
 .overlay-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  position: relative;
   min-height: 0;
-  overflow: hidden;
 }
 .article-frame-container {
   flex: 1;
   position: relative;
   background: white;
-  min-height: 0;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
 }
 #article-frame {
   width: 100%;
@@ -804,468 +483,165 @@ body {
   border: none;
   display: block;
 }
-/* ===== NO RESULTS & ERROR MOBILE ===== */
-.no-results, .error-state {
-  text-align: center;
-  padding: 50px 20px;
-  color: var(--text-secondary);
+/* ===== STATS BAR ===== */
+.stats-bar {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 300px;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  gap: 8px;
+  padding: 10px;
+  background: rgba(0,26,68,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
 }
-.no-results-icon, .error-icon {
-  font-size: 3.5rem;
-  margin-bottom: 20px;
-  opacity: 0.6;
-}
-.clear-search-btn, .retry-button {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 14px 28px;
-  border-radius: 25px;
-  cursor: pointer;
-  margin-top: 25px;
-  font-family: inherit;
-  transition: var(--transition);
-  font-size: 1rem;
+.results-count {
   font-weight: 600;
-  min-height: 52px;
-  min-width: 160px;
-  touch-action: manipulation;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  color: var(--accent-2);
 }
-.clear-search-btn:hover, .clear-search-btn:active,
-.retry-button:hover, .retry-button:active {
-  background: var(--primary-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.4);
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
-/* ===== ANIMATIONS ===== */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.filter-tag {
+  background: rgba(255,255,255,0.1);
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-/* ===== SCROLL TO TOP MOBILE ===== */
+/* ===== BOUTON SCROLL TOP ===== */
 .scroll-top {
   position: fixed;
-  bottom: calc(20px + var(--safe-bottom));
-  right: calc(20px + var(--safe-right));
+  bottom: 20px;
+  right: 20px;
   width: 50px;
   height: 50px;
   border-radius: 50%;
   background: var(--primary);
   color: white;
   border: none;
-  font-size: 1.4rem;
-  line-height: 1;
+  font-size: 1.3rem;
   cursor: pointer;
   display: none;
   z-index: 99;
-  transition: var(--transition);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  touch-action: manipulation;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
-.scroll-top:hover, .scroll-top:active {
-  background: var(--primary-dark);
-  transform: translateY(-3px) scale(1.1);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-}
-/* ===== IMAGE ERROR STATE ===== */
-.image-error {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
-  height: 100%;
+/* ===== MESSAGES D'ERREUR ===== */
+.no-results, .error-state {
   text-align: center;
-  padding: 20px;
-  background: linear-gradient(45deg, #000428, #004e92);
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-}
-/* ===== STATS BAR MOBILE ===== */
-.stats-bar {
+  padding: 40px 15px;
+  color: var(--text-secondary);
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  padding: 12px;
-  background: rgba(0, 26, 68, 0.6);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  gap: 10px;
-  max-width: 800px;
-  margin: 0 auto;
-  width: 100%;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-}
-.results-count {
-  font-weight: 700;
-  color: var(--accent-2);
-  font-size: 1rem;
-  text-align: center;
-}
-.active-filters {
-  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  min-height: 250px;
 }
-.filter-tag {
-  background: rgba(255, 255, 255, 0.15);
-  padding: 6px 12px;
-  border-radius: 15px;
-  font-size: 0.8rem;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.no-results-icon, .error-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  opacity: 0.5;
 }
-.filter-tag .remove-filter {
-  background: none;
-  border: none;
-  color: var(--accent-1);
-  cursor: pointer;
-  font-size: 1.1rem;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 24px;
-  min-height: 24px;
-  touch-action: manipulation;
-}
-/* ===== STYLES SPÉCIFIQUES POUR PDF ===== */
-.pdf-container {
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-  direction: rtl;
-  text-align: right;
-  padding: 20px;
-  background: white;
-  color: black;
-  max-width: 800px;
-  margin: 0 auto;
-  display: block !important;
-  position: relative !important;
-  overflow: visible !important;
-}
-.pdf-header {
-  text-align: center;
-  margin-bottom: 30px;
-  border-bottom: 2px solid #1a73e8;
-  padding-bottom: 20px;
-}
-.pdf-title {
-  font-size: 28px;
-  font-weight: bold;
-  color: #1a73e8;
-  margin-bottom: 10px;
-}
-.pdf-subtitle {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 10px;
-}
-.pdf-date-range {
-  font-size: 14px;
-  color: #888;
-}
-.pdf-article {
-  margin-bottom: 25px;
-  page-break-inside: avoid;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  background: #f9f9f9;
-  overflow: hidden;
-}
-.pdf-article-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
-  line-height: 1.4;
-}
-.pdf-article-meta {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 8px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-.pdf-article-image {
-  max-width: 100%;
-  height: auto;
-  margin: 10px 0;
-  border-radius: 4px;
-  display: block;
-}
-.pdf-article-content {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #444;
-  margin-top: 10px;
-}
-.pdf-keywords {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-.pdf-keyword {
-  background: #1a73e8;
+.clear-search-btn, .retry-button {
+  background: var(--primary);
   color: white;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 24px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 1rem;
+  font-weight: 600;
 }
-.pdf-footer {
-  text-align: center;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #ddd;
-  font-size: 12px;
-  color: #888;
-}
-#pdf-temp-container {
-  position: absolute;
-  left: -9999px;
-  top: 0;
-  width: 210mm;
-  min-height: 297mm;
-  background: white;
-  z-index: -1;
-  opacity: 0;
-  pointer-events: none;
-}
-/* ===== RESPONSIVE BREAKPOINTS OPTIMISÉS ===== */
-/* VERY SMALL PHONES (≤ 360px) */
-@media (max-width: 360px) {
+/* ===== MEDIA QUERIES ===== */
+/* Tablette */
+@media (min-width: 481px) {
   .main-title {
-    font-size: 1.4rem;
-  }
-  .article-main-title {
-    font-size: 1.2rem;
-    -webkit-line-clamp: 3;
-  }
-  .metadata-badge {
-    font-size: 0.7rem;
-    padding: 4px 8px;
-  }
-  .preset-btn {
-    min-width: 80px;
-    padding: 10px 12px;
-    font-size: 0.8rem;
-  }
-}
-/* SMALL PHONES (361px - 480px) */
-@media (min-width: 361px) and (max-width: 480px) {
-  .main-title {
-    font-size: 1.6rem;
-  }
-  .article-main-title {
-    font-size: 1.4rem;
+    font-size: 1.8rem;
   }
   .article-image-container {
-    height: 240px;
+    height: 220px;
   }
-}
-/* MEDIUM PHONES / LARGE PHONES (481px - 768px) */
-@media (min-width: 481px) and (max-width: 768px) {
-  .date-filters {
-    flex-direction: row;
-    flex-wrap: wrap;
+  .article-main-title {
+    font-size: 1.5rem;
   }
-  .date-group {
-    flex: 1;
-    min-width: 140px;
-  }
-  .date-separator {
-    display: block;
-    color: var(--accent-2);
-    font-weight: bold;
-    font-size: 1.2rem;
-  }
-  .article-image-container {
-    height: 280px;
-  }
-  .stats-bar {
+  .metadata-badges {
     flex-direction: row;
     justify-content: space-between;
+  }
+  .date-badge, .category-badge {
+    align-self: auto;
+  }
+  .date-filters {
+    flex-direction: row;
     align-items: center;
   }
-  .pagination-info {
-    width: auto;
-    margin-top: 0;
+  .period-presets {
+    justify-content: center;
   }
 }
-/* TABLET & SMALL DESKTOP (769px - 1024px) */
+/* Desktop */
 @media (min-width: 769px) {
-  .app-header {
-    padding: 15px 20px;
-    padding-top: calc(15px + var(--safe-top));
-  }
   .main-title {
     font-size: 2rem;
   }
-  .filters-container {
-    flex-direction: row;
-    align-items: center;
-  }
-  .search-container {
-    flex: 1;
-  }
-  .date-filters {
-    flex: 2;
-    flex-direction: row;
-  }
-  .date-separator {
-    display: block;
-    color: var(--accent-2);
-    font-weight: bold;
-  }
   .article-image-container {
-    height: 300px;
+    height: 250px;
   }
   .article-main-title {
-    font-size: 1.9rem;
-  }
-  .stats-bar {
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 12px 20px;
-  }
-  .pagination-info {
-    width: auto;
-    margin-top: 0;
-  }
-  .overlay-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    height: 95vh;
-    margin-top: 2.5vh;
-    border-radius: var(--radius-lg);
-  }
-}
-/* LARGE DESKTOP (≥ 1025px) */
-@media (min-width: 1025px) {
-  .article-main-title {
-    font-size: 2.1rem;
+    font-size: 1.8rem;
   }
   #articles-container {
-    gap: 20px;
+    max-width: 800px;
+  }
+  .overlay-container {
+    max-width: 900px;
+    margin: 20px auto;
+    height: calc(100vh - 40px);
+    border-radius: 10px;
+    overflow: hidden;
   }
 }
-/* LANDSCAPE ORIENTATION MOBILE */
-@media (max-height: 500px) and (orientation: landscape) {
-  .app-header {
-    position: relative;
-  }
+/* Large Desktop */
+@media (min-width: 1025px) {
   .article-image-container {
-    height: 180px;
+    height: 280px;
   }
-  .overlay-header-extended {
-    padding: 8px 12px;
-    gap: 8px;
-  }
-  .keywords-container-overlay {
-    max-height: 60px;
+  .article-main-title {
+    font-size: 2rem;
   }
 }
-/* TOUCH DEVICE OPTIMIZATIONS */
+/* Support tactile */
 @media (hover: none) and (pointer: coarse) {
-  .article-card:hover {
-    transform: none;
-  }
   .article-card:active {
     transform: scale(0.98);
   }
-  .clear-filters-btn:active, .download-pdf-btn:active,
-  .clear-search-btn:active, .retry-button:active,
-  .scroll-top:active, .pagination-btn:active,
-  .preset-btn:active, .pagination-number:active {
+  .clear-filters-btn:active,
+  .download-pdf-btn:active,
+  .preset-btn:active,
+  .pagination-btn:active,
+  .pagination-number:active {
     transform: scale(0.95);
-    opacity: 0.9;
-  }
-  .search-wrapper:active, .date-input-wrapper:active {
-    background: rgba(255, 255, 255, 0.2);
-  }
-  /* Suppression du délai tactil sur certains navigateurs */
-  a, button, .article-card, .pagination-btn, .preset-btn {
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
   }
 }
-/* DARK MODE SUPPORT */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #000c18;
-    --card-bg: #001428;
-  }
-  .article-image-container {
-    background: linear-gradient(45deg, #000214, #003366);
-  }
-}
-/* REDUCED MOTION ACCESSIBILITY */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-  .article-card {
-    animation: none;
-    opacity: 1;
-    transform: none;
-  }
-  .loading-spinner {
-    animation: none;
-    border-top-color: transparent;
-    opacity: 0.5;
-  }
-}
-/* HIGH CONTRAST MODE */
-@media (prefers-contrast: high) {
-  :root {
-    --primary: #0057d9;
-    --accent-1: #ff3333;
-    --accent-2: #00a3a3;
-  }
-  .search-wrapper, .date-input-wrapper {
-    border-width: 2px;
-  }
-  .article-main-title {
-    color: #FFFFFF;
-    text-shadow: 0 2px 4px #000000;
-  }
-  .metadata-badge {
-    border-width: 2px;
-  }
-}
-/* PRINT STYLES */
+/* Print */
 @media print {
-  .app-header, .filters-container, .period-presets,
-  .action-buttons, .scroll-top, .close-overlay,
-  .pagination-container, .stats-bar {
+  .app-header,
+  .filters-container,
+  .scroll-top,
+  .close-overlay,
+  .pagination-container,
+  .period-presets,
+  .download-pdf-btn,
+  .stats-bar {
     display: none !important;
   }
   body {
-    background: white !important;
-    color: black !important;
-    padding: 0;
+    background: white;
+    color: black;
   }
   #articles-container {
     display: block;
@@ -1275,29 +651,7 @@ body {
     break-inside: avoid;
     margin-bottom: 20px;
     box-shadow: none;
-    border: 1px solid #ccc;
-    page-break-inside: avoid;
-  }
-  .article-image-container {
-    height: 200px;
-  }
-  .media-logo-container {
-    display: none !important;
-  }
-}
-/* IOS SAFARI SPECIFIC FIXES */
-@supports (-webkit-touch-callout: none) {
-  body {
-    min-height: -webkit-fill-available;
-  }
-  .date-input {
-    font-size: 16px; /* Empêche le zoom sur iOS */
-  }
-  #search-input {
-    font-size: 16px;
-  }
-  .overlay-container {
-    height: -webkit-fill-available;
+    border: 1px solid #ddd;
   }
 }
 </style>
@@ -1323,8 +677,6 @@ body {
             <input type="date" id="start-date" class="date-input" aria-label="تاريخ البداية">
           </div>
         </div>
-      
-        <div class="date-separator">→</div>
      
         <div class="date-group">
           <span class="date-label">نهاية:</span>
@@ -1353,30 +705,33 @@ body {
     </div>
   </div>
 </header>
+
 <div class="stats-bar" id="stats-bar" style="display: none;">
   <div class="results-count" id="results-count">0 مقال</div>
-  <div class="active-filters" id="active-filters">
-  </div>
+  <div class="active-filters" id="active-filters"></div>
 </div>
+
 <main id="articles-container">
   <div id="loading-indicator">
     <div class="loading-spinner"></div>
     <p>جاري تحميل المقالات...</p>
   </div>
 </main>
+
 <div class="pagination-container" id="pagination-container" style="display: none;">
   <button class="pagination-btn" id="first-btn" title="الصفحة الأولى">««</button>
   <button class="pagination-btn" id="prev-btn" title="الصفحة السابقة">‹</button>
 
-  <div class="pagination-numbers" id="pagination-numbers">
-  </div>
+  <div class="pagination-numbers" id="pagination-numbers"></div>
 
   <button class="pagination-btn" id="next-btn" title="الصفحة التالية">›</button>
   <button class="pagination-btn" id="last-btn" title="الصفحة الأخيرة">»»</button>
 
   <div class="pagination-info" id="pagination-info">الصفحة 1 من 1</div>
 </div>
+
 <button class="scroll-top" id="scroll-top" aria-label="العودة للأعلى">↑</button>
+
 <div id="article-overlay">
   <div class="overlay-container">
     <div class="overlay-header-extended">
@@ -1384,39 +739,29 @@ body {
         <div class="overlay-title" id="overlay-article-title"></div>
         <button class="close-overlay" id="close-overlay" aria-label="إغلاق">×</button>
       </div>
-      <div class="overlay-details">
-        <div id="sentiment-display-overlay" class="sentiment-display-overlay sentiment-neutral">
-          <span>المشاعر:</span>
-          <span id="sentiment-value">جار التحميل...</span>
-        </div>
-        <div class="keywords-container-overlay" id="keywords-container-overlay">
-        </div>
-      </div>
     </div>
     <div class="overlay-content">
       <div class="article-frame-container">
-        <iframe id="article-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" title="محتوى المقال" loading="lazy"></iframe>
+        <iframe id="article-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" title="محتوى المقال"></iframe>
       </div>
     </div>
   </div>
 </div>
+
 <div id="pdf-temp-container"></div>
+
 <script>
-// ===== VARIABLE GLOBALE POUR LES LOGOS =====
-let mediaLogos = [];
-// ===== APP CONFIGURATION =====
+// ===== CONFIGURATION =====
 const CONFIG = {
   jsonUrl: 'data/datajson.json?t=' + Date.now(),
   logosUrl: 'data/logo_media.json?t=' + Date.now(),
   maxArticles: 1000,
   imagesBasePath: 'images3/',
   debounceDelay: 300,
-  touchDelay: 100,
   articlesPerPage: 10
 };
-// ===== TOUCH DETECTION =====
-const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-// ===== APP STATE =====
+
+// ===== STATE =====
 let appState = {
   articles: [],
   filteredArticles: [],
@@ -1424,10 +769,13 @@ let appState = {
   startDate: null,
   endDate: null,
   isLoading: true,
-  lastTouchTime: 0,
   currentPage: 1,
   activePeriod: 'week'
 };
+
+let mediaLogos = [];
+
+// ===== ELEMENTS =====
 const elements = {
   searchInput: document.getElementById('search-input'),
   clearSearch: document.getElementById('clear-search'),
@@ -1439,9 +787,6 @@ const elements = {
   closeOverlay: document.getElementById('close-overlay'),
   articleFrame: document.getElementById('article-frame'),
   overlayArticleTitle: document.getElementById('overlay-article-title'),
-  sentimentDisplayOverlay: document.getElementById('sentiment-display-overlay'),
-  sentimentValue: document.getElementById('sentiment-value'),
-  keywordsContainerOverlay: document.getElementById('keywords-container-overlay'),
   loadingIndicator: document.getElementById('loading-indicator'),
   scrollTop: document.getElementById('scroll-top'),
   statsBar: document.getElementById('stats-bar'),
@@ -1458,47 +803,26 @@ const elements = {
   downloadPdfBtn: document.getElementById('download-pdf-btn'),
   pdfTempContainer: document.getElementById('pdf-temp-container')
 };
+
+// ===== INITIALIZATION =====
 async function initApp() {
   setupEventListeners();
   await loadMediaLogos();
   setupPeriodPresets();
   loadArticles();
-  setupMobileOptimizations();
 }
-function setupMobileOptimizations() {
-  // Empêcher le rebond sur iOS
-  document.body.addEventListener('touchmove', function(e) {
-    if (e.target.closest('#article-overlay')) return;
-    if (window.scrollY <= 0 && e.touches[0].clientY > 0) {
-      e.preventDefault();
-    }
-  }, { passive: false });
-  
-  // Gestion du viewport dynamique sur mobile
-  let vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty('--vh', `${vh}px`);
-  
-  window.addEventListener('resize', () => {
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-  });
-  
-  // Corriger le problème de "sticky hover" sur mobile
-  if (isTouchDevice) {
-    document.body.addEventListener('touchstart', function(){}, {passive: true});
-  }
-}
+
 async function loadMediaLogos() {
   try {
     const response = await fetch(CONFIG.logosUrl);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    mediaLogos = await response.json();
-    console.log('Logos des médias chargés:', mediaLogos.length, 'logos');
+    if (response.ok) {
+      mediaLogos = await response.json();
+    }
   } catch (error) {
-    console.error('Erreur de chargement des logos:', error);
-    mediaLogos = [];
+    console.log('Impossible de charger les logos');
   }
 }
+
 function setupPeriodPresets() {
   setPeriod('week');
 
@@ -1509,6 +833,7 @@ function setupPeriodPresets() {
     });
   });
 }
+
 function setPeriod(period) {
   const today = new Date();
   const startDate = new Date();
@@ -1518,19 +843,16 @@ function setPeriod(period) {
   switch(period) {
     case 'week':
       startDate.setDate(today.getDate() - 7);
-      elements.startDate.value = startDate.toISOString().split('T')[0];
       break;
-    
     case 'biweekly':
       startDate.setDate(today.getDate() - 15);
-      elements.startDate.value = startDate.toISOString().split('T')[0];
       break;
-    
     case 'month':
       startDate.setDate(today.getDate() - 30);
-      elements.startDate.value = startDate.toISOString().split('T')[0];
       break;
   }
+
+  elements.startDate.value = startDate.toISOString().split('T')[0];
 
   appState.startDate = elements.startDate.value;
   appState.endDate = elements.endDate.value;
@@ -1538,19 +860,17 @@ function setPeriod(period) {
   appState.currentPage = 1;
 
   elements.periodPresets.forEach(btn => {
+    btn.classList.remove('active');
     if (btn.getAttribute('data-period') === period) {
       btn.classList.add('active');
-    } else {
-      btn.classList.remove('active');
     }
   });
 
   filterArticles();
 }
+
+// ===== EVENT LISTENERS =====
 function setupEventListeners() {
-  // Optimisation pour les événements tactiles sur mobile
-  let touchStartY = 0;
-  
   elements.searchInput.addEventListener('input', function(e) {
     appState.searchQuery = e.target.value;
     elements.clearSearch.style.display = appState.searchQuery ? 'flex' : 'none';
@@ -1562,7 +882,6 @@ function setupEventListeners() {
     appState.searchQuery = '';
     elements.clearSearch.style.display = 'none';
     filterArticles();
-    elements.searchInput.focus();
   });
 
   elements.startDate.addEventListener('change', function() {
@@ -1584,8 +903,6 @@ function setupEventListeners() {
     appState.searchQuery = '';
     elements.clearSearch.style.display = 'none';
     setPeriod('week');
-    filterArticles();
-    elements.searchInput.focus();
   });
 
   elements.closeOverlay.addEventListener('click', closeArticleOverlay);
@@ -1594,29 +911,13 @@ function setupEventListeners() {
     if (e.key === 'Escape') closeArticleOverlay();
   });
 
-  // Gestion améliorée du swipe pour fermer l'overlay sur mobile
-  elements.articleOverlay.addEventListener('touchstart', (e) => {
-    touchStartY = e.touches[0].clientY;
-  }, {passive: true});
-
-  elements.articleOverlay.addEventListener('touchmove', (e) => {
-    if (!touchStartY) return;
-   
-    const touchY = e.touches[0].clientY;
-    const diffY = touchStartY - touchY;
-   
-    if (diffY < -80 && e.target.closest('.overlay-header-extended')) {
-      closeArticleOverlay();
-    }
-  }, {passive: true});
-
   elements.scrollTop.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
   window.addEventListener('scroll', () => {
-    elements.scrollTop.style.display = window.scrollY > 300 ? 'flex' : 'none';
-  }, {passive: true});
+    elements.scrollTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+  });
 
   elements.firstBtn.addEventListener('click', () => goToPage(1));
   elements.prevBtn.addEventListener('click', () => goToPage(appState.currentPage - 1));
@@ -1624,157 +925,131 @@ function setupEventListeners() {
   elements.lastBtn.addEventListener('click', () => goToPage(getTotalPages()));
 
   elements.downloadPdfBtn.addEventListener('click', generatePDF);
-
-  // Double tap prevention
-  let lastTouch = 0;
-  document.addEventListener('touchstart', (event) => {
-    const now = Date.now();
-    if (now - lastTouch <= 300) {
-      event.preventDefault();
-    }
-    lastTouch = now;
-  }, { passive: false });
+  
+  // Support tactile
+  document.addEventListener('touchstart', function() {}, {passive: true});
 }
+
 function updatePeriodButtons() {
   elements.periodPresets.forEach(btn => {
     btn.classList.remove('active');
   });
 }
-// ===== DATE HELPER FUNCTIONS =====
+
+// ===== DATE FUNCTIONS =====
 function parseArticleDate(dateString) {
   if (!dateString) return null;
-
   try {
     const [datePart, timePart] = dateString.split(' ');
     const [day, month, year] = datePart.split('/');
-   
-    if (!day || !month || !year) return null;
-   
     return new Date(year, month - 1, day);
   } catch (e) {
-    console.warn('Error parsing date:', dateString, e);
     return null;
   }
 }
+
 function formatDateToDDMMYYYY(dateString) {
   if (!dateString) return '';
-
   try {
     const [datePart, timePart] = dateString.split(' ');
     const [day, month, year] = datePart.split('/');
-   
     const paddedDay = day.padStart(2, '0');
     const paddedMonth = month.padStart(2, '0');
-   
     return `${paddedDay}/${paddedMonth}/${year}`;
   } catch (e) {
-    console.warn('Error formatting date:', dateString, e);
     return dateString || '';
   }
 }
+
 function getTimeAgo(dateString) {
   if (!dateString) return '';
-
   try {
     const [datePart, timePart] = dateString.split(' ');
     const [day, month, year] = datePart.split('/');
-    const [hours, minutes] = timePart ? timePart.split(':') : [0, 0];
-   
-    const articleDate = new Date(year, month - 1, day, hours, minutes);
+    const articleDate = new Date(year, month - 1, day);
     const now = new Date();
     const diffMs = now - articleDate;
-   
-    const diffMins = Math.floor(diffMs / (1000 * 60));
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-   
-    if (diffMins < 1) {
-      return `الآن`;
-    } else if (diffMins < 60) {
-      return `منذ ${diffMins} دقيقة`;
-    } else if (diffHours < 24) {
-      return `منذ ${diffHours} ساعة`;
-    } else if (diffDays === 1) {
-      return `منذ يوم`;
-    } else if (diffDays < 7) {
-      return `منذ ${diffDays} أيام`;
-    } else if (diffDays < 30) {
+    
+    if (diffDays === 0) return 'اليوم';
+    if (diffDays === 1) return 'أمس';
+    if (diffDays < 7) return `منذ ${diffDays} أيام`;
+    if (diffDays < 30) {
       const weeks = Math.floor(diffDays / 7);
       return `منذ ${weeks} أسبوع`;
-    } else {
-      const formattedDate = formatDateToDDMMYYYY(dateString);
-      return formattedDate;
     }
+    return formatDateToDDMMYYYY(dateString);
   } catch (e) {
     return '';
   }
 }
+
 function isDateInRange(articleDate, startDate, endDate) {
   if (!articleDate) return false;
-
   const articleDateObj = parseArticleDate(articleDate);
   if (!articleDateObj) return false;
-
   if (!startDate && !endDate) return true;
-
+  
   const start = startDate ? new Date(startDate) : null;
   const end = endDate ? new Date(endDate) : null;
-
+  
   if (start) start.setHours(0, 0, 0, 0);
   if (end) end.setHours(23, 59, 59, 999);
-
+  
   if (start && articleDateObj < start) return false;
   if (end && articleDateObj > end) return false;
-
+  
   return true;
 }
-// ===== PAGINATION FUNCTIONS =====
+
+// ===== PAGINATION =====
 function getTotalPages() {
   return Math.ceil(appState.filteredArticles.length / CONFIG.articlesPerPage);
 }
+
 function getCurrentPageArticles() {
   const startIndex = (appState.currentPage - 1) * CONFIG.articlesPerPage;
   const endIndex = startIndex + CONFIG.articlesPerPage;
   return appState.filteredArticles.slice(startIndex, endIndex);
 }
+
 function goToPage(page) {
   const totalPages = getTotalPages();
-
   if (page < 1 || page > totalPages) return;
-
+  
   appState.currentPage = page;
   displayArticles();
   updatePagination();
-
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
 function updatePagination() {
   const totalPages = getTotalPages();
   const currentPage = appState.currentPage;
-
+  
   if (totalPages <= 1) {
     elements.paginationContainer.style.display = 'none';
     return;
   }
-
+  
   elements.paginationContainer.style.display = 'flex';
-
+  
   elements.firstBtn.disabled = currentPage === 1;
   elements.prevBtn.disabled = currentPage === 1;
   elements.nextBtn.disabled = currentPage === totalPages;
   elements.lastBtn.disabled = currentPage === totalPages;
-
+  
   elements.paginationInfo.textContent = `الصفحة ${currentPage} من ${totalPages}`;
-
+  
   elements.paginationNumbers.innerHTML = '';
-
-  let startPage = Math.max(1, currentPage - 1);
-  let endPage = Math.min(totalPages, startPage + 2);
-
-  if (endPage - startPage < 2) {
-    startPage = Math.max(1, endPage - 2);
+  
+  let startPage = Math.max(1, currentPage - 2);
+  let endPage = Math.min(totalPages, startPage + 4);
+  
+  if (endPage - startPage < 4) {
+    startPage = Math.max(1, endPage - 4);
   }
-
+  
   for (let i = startPage; i <= endPage; i++) {
     const pageBtn = document.createElement('div');
     pageBtn.className = `pagination-number ${i === currentPage ? 'active' : ''}`;
@@ -1783,7 +1058,8 @@ function updatePagination() {
     elements.paginationNumbers.appendChild(pageBtn);
   }
 }
-// ===== IMAGE MANAGEMENT =====
+
+// ===== IMAGE & LOGO FUNCTIONS =====
 function getArticleImageUrl(article) {
   if (article.image_brute) {
     if (!article.image_brute.startsWith('http') &&
@@ -1793,62 +1069,43 @@ function getArticleImageUrl(article) {
     }
     return article.image_brute;
   }
-
   return null;
 }
-// ===== LOGO MEDIA MANAGEMENT =====
+
 function getMediaLogoUrl(source) {
   if (!source || mediaLogos.length === 0) return null;
-
+  
   const media = mediaLogos.find(item =>
     item.domaine && source && (
       item.domaine.toLowerCase() === source.toLowerCase() ||
       source.toLowerCase().includes(item.domaine.toLowerCase())
     )
   );
-
+  
   return media ? media.url : null;
 }
+
 function createImageElement(imageUrl, title) {
   if (!imageUrl) {
-    return '<div class="image-error">صورة غير متوفرة</div>';
+    return '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.7);">صورة غير متوفرة</div>';
   }
-
-  return `<img src="${imageUrl}"
-                alt="${title || 'صورة المقال'}"
-                class="article-image"
-                loading="lazy"
-                decoding="async"
-                onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'image-error\\'>صورة غير متوفرة</div>';"
-                onload="this.style.opacity='1'"
-                style="opacity:0; transition: opacity 0.3s ease;">`;
+  
+  return `<img src="${imageUrl}" alt="${title || 'صورة المقال'}" style="width:100%;height:100%;object-fit:cover;">`;
 }
+
 function createMediaLogoElement(source) {
   const logoUrl = getMediaLogoUrl(source);
-
-  if (!logoUrl) {
-    return '';
-  }
-
-  return `
-    <div class="media-logo-container">
-      <img src="${logoUrl}"
-           alt="شعار ${source}"
-           class="media-logo"
-           loading="lazy"
-           decoding="async"
-           onerror="this.style.display='none';"
-           onload="this.style.opacity='1'"
-           style="opacity:0; transition: opacity 0.3s ease;">
-    </div>
-  `;
+  if (!logoUrl) return '';
+  
+  return `<div class="media-logo-container"><img src="${logoUrl}" alt="شعار ${source}" class="media-logo"></div>`;
 }
-// ===== LOAD & PROCESS =====
+
+// ===== LOAD & PROCESS ARTICLES =====
 async function loadArticles() {
   try {
     showLoading(true);
     const response = await fetch(CONFIG.jsonUrl);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    if (!response.ok) throw new Error('HTTP error');
     const data = await response.json();
     appState.articles = processArticleData(data);
     filterArticles();
@@ -1859,6 +1116,7 @@ async function loadArticles() {
     showLoading(false);
   }
 }
+
 function processArticleData(articles) {
   return articles
     .filter(a => a.visible === true || a.visible === "true")
@@ -1877,6 +1135,7 @@ function processArticleData(articles) {
     })
     .slice(0, CONFIG.maxArticles);
 }
+
 function filterArticles() {
   const query = appState.searchQuery.toLowerCase().trim();
   const startDate = appState.startDate;
@@ -1890,38 +1149,33 @@ function filterArticles() {
         ${article.source || ''}
         ${article.theme || ''}
         ${article.mots_cles || ''}
-        ${article.langue || ''}
-        ${article.sentiment || ''}
       `.toLowerCase();
-     
       matchesText = searchableText.includes(query);
     }
-   
+    
     const matchesDate = isDateInRange(article.date_heure, startDate, endDate);
-   
     return matchesText && matchesDate;
   });
 
   appState.currentPage = 1;
-
   displayArticles();
   updateStatsBar();
   updatePagination();
-
   elements.downloadPdfBtn.disabled = appState.filteredArticles.length === 0;
 }
+
 function updateStatsBar() {
   const count = appState.filteredArticles.length;
   const total = appState.articles.length;
-
+  
   elements.resultsCount.textContent = `${count} مقال${count !== 1 ? 'ات' : ''} (${total} المجموع)`;
   elements.statsBar.style.display = 'flex';
-
   updateActiveFilters();
 }
+
 function updateActiveFilters() {
   elements.activeFilters.innerHTML = '';
-
+  
   if (appState.searchQuery) {
     const filterTag = document.createElement('div');
     filterTag.className = 'filter-tag';
@@ -1931,17 +1185,17 @@ function updateActiveFilters() {
     `;
     elements.activeFilters.appendChild(filterTag);
   }
-
+  
   if (appState.startDate || appState.endDate) {
     const formatFilterDate = (dateStr) => {
       if (!dateStr) return '';
       const [year, month, day] = dateStr.split('-');
       return `${day}/${month}/${year}`;
     };
-   
+    
     const start = appState.startDate ? formatFilterDate(appState.startDate) : 'البداية';
     const end = appState.endDate ? formatFilterDate(appState.endDate) : 'النهاية';
-   
+    
     const filterTag = document.createElement('div');
     filterTag.className = 'filter-tag';
     filterTag.innerHTML = `
@@ -1950,64 +1204,45 @@ function updateActiveFilters() {
     `;
     elements.activeFilters.appendChild(filterTag);
   }
-
-  let periodText = '';
-  switch(appState.activePeriod) {
-    case 'week': periodText = 'أسبوعي'; break;
-    case 'biweekly': periodText = 'نصف شهري'; break;
-    case 'month': periodText = 'شهري'; break;
-    case 'custom': periodText = 'مخصص'; break;
-  }
-
-  const periodTag = document.createElement('div');
-  periodTag.className = 'filter-tag';
-  periodTag.innerHTML = `
-    <span>⏰ ${periodText}</span>
-  `;
-  elements.activeFilters.appendChild(periodTag);
 }
+
 function clearSearchFilter() {
   elements.searchInput.value = '';
   appState.searchQuery = '';
   elements.clearSearch.style.display = 'none';
   filterArticles();
 }
+
 function clearDateFilters() {
   setPeriod('week');
 }
+
 function displayArticles() {
   elements.articlesContainer.innerHTML = '';
-
+  
   if (appState.filteredArticles.length === 0) {
     showNoResults();
     return;
   }
-
+  
   const currentArticles = getCurrentPageArticles();
-  const fragment = document.createDocumentFragment();
-
+  
   currentArticles.forEach((article, index) => {
     const card = createArticleCard(article, index);
-    fragment.appendChild(card);
-  });
-
-  elements.articlesContainer.appendChild(fragment);
-
-  const cards = elements.articlesContainer.querySelectorAll('.article-card');
-  cards.forEach((card, i) => {
-    card.style.animationDelay = `${i * 0.05}s`;
+    elements.articlesContainer.appendChild(card);
   });
 }
+
 function createArticleCard(article, index) {
   const card = document.createElement('div');
   card.className = 'article-card';
-
+  
   const imageUrl = getArticleImageUrl(article);
   const formattedDate = formatDateToDDMMYYYY(article.date_heure);
   const timeAgo = getTimeAgo(article.date_heure);
-  const isCategoryArabic = /[\u0600-\u06FF]/.test(article.theme || '');
   const imageElement = createImageElement(imageUrl, article.titre);
   const mediaLogoElement = createMediaLogoElement(article.source);
+  
   card.innerHTML = `
     <div class="article-image-container">
       ${imageElement}
@@ -2017,7 +1252,7 @@ function createArticleCard(article, index) {
           <span>📅</span>
           <span>${formattedDate || 'تاريخ غير معروف'}</span>
         </div>
-        <div class="metadata-badge category-badge ${isCategoryArabic ? 'rtl' : 'ltr'}" title="${article.theme || ''}">
+        <div class="metadata-badge category-badge" title="${article.theme || ''}">
           <span>🏷️</span>
           <span>${truncateTitle(article.theme || 'غير مصنف', 20)}</span>
         </div>
@@ -2032,99 +1267,36 @@ function createArticleCard(article, index) {
       </div>
     </div>
   `;
-
-  // Gestion tactile améliorée pour mobile
-  if (isTouchDevice) {
-    let touchStartTime = 0;
-    
-    card.addEventListener('touchstart', (e) => {
-      touchStartTime = Date.now();
-      card.style.transform = 'scale(0.98)';
-      card.style.transition = 'transform 0.1s';
-    }, {passive: true});
-   
-    card.addEventListener('touchend', (e) => {
-      card.style.transform = '';
-      card.style.transition = '';
-      
-      const touchDuration = Date.now() - touchStartTime;
-      if (touchDuration < 500) { // Éviter les appuis longs accidentels
-        const now = Date.now();
-        if (now - appState.lastTouchTime < CONFIG.touchDelay) return;
-        appState.lastTouchTime = now;
-        openArticleOverlay(article);
-      }
-    }, {passive: true});
-    
-    card.addEventListener('touchcancel', () => {
-      card.style.transform = '';
-      card.style.transition = '';
-    }, {passive: true});
-  } else {
-    card.addEventListener('click', () => {
-      openArticleOverlay(article);
-    });
-  }
-
+  
+  card.addEventListener('click', () => {
+    openArticleOverlay(article);
+  });
+  
   return card;
 }
+
 function truncateTitle(title, maxLength = 100) {
   if (!title || title.length <= maxLength) return title;
   return title.substring(0, maxLength) + '...';
 }
+
 function openArticleOverlay(article) {
   elements.overlayArticleTitle.textContent = article.titre || 'المقال';
   elements.articleFrame.src = article.url || '#';
-
-  const sentiment = article.sentiment || 'غير محدد';
-  elements.sentimentValue.textContent = sentiment;
-
-  elements.sentimentDisplayOverlay.className = 'sentiment-display-overlay';
-  if (sentiment.toLowerCase().includes('positif') || sentiment.toLowerCase().includes('positive') || sentiment.toLowerCase().includes('إيجابي')) {
-    elements.sentimentDisplayOverlay.classList.add('sentiment-positive');
-  } else if (sentiment.toLowerCase().includes('négatif') || sentiment.toLowerCase().includes('negative') || sentiment.toLowerCase().includes('سلبي')) {
-    elements.sentimentDisplayOverlay.classList.add('sentiment-negative');
-  } else {
-    elements.sentimentDisplayOverlay.classList.add('sentiment-neutral');
-  }
-
-  const keywords = article.mots_cles ?
-    article.mots_cles.split(',').map(k => k.trim()).filter(k => k) :
-    [];
-
-  elements.keywordsContainerOverlay.innerHTML = '';
-  keywords.forEach(keyword => {
-    const keywordElement = document.createElement('div');
-    keywordElement.className = 'keyword-overlay';
-    keywordElement.textContent = keyword;
-    elements.keywordsContainerOverlay.appendChild(keywordElement);
-  });
-
   elements.articleOverlay.style.display = 'block';
   document.body.style.overflow = 'hidden';
-  document.body.style.position = 'fixed';
-  document.body.style.width = '100%';
-  document.body.style.top = `-${window.scrollY}px`;
-
-  setTimeout(() => elements.closeOverlay.focus(), 100);
 }
+
 function closeArticleOverlay() {
-  const scrollY = document.body.style.top;
   elements.articleOverlay.style.display = 'none';
   elements.articleFrame.src = '';
   document.body.style.overflow = '';
-  document.body.style.position = '';
-  document.body.style.width = '';
-  document.body.style.top = '';
-  window.scrollTo(0, parseInt(scrollY || '0') * -1);
-  elements.searchInput.focus();
 }
+
 function showLoading(show) {
-  appState.isLoading = show;
-  if (elements.loadingIndicator) {
-    elements.loadingIndicator.style.display = show ? 'block' : 'none';
-  }
+  elements.loadingIndicator.style.display = show ? 'block' : 'none';
 }
+
 function showNoResults() {
   elements.articlesContainer.innerHTML = `
     <div class="no-results">
@@ -2139,6 +1311,7 @@ function showNoResults() {
   elements.statsBar.style.display = 'none';
   elements.paginationContainer.style.display = 'none';
 }
+
 function showError(message) {
   elements.articlesContainer.innerHTML = `
     <div class="error-state">
@@ -2154,59 +1327,37 @@ function showError(message) {
   elements.paginationContainer.style.display = 'none';
 }
 
-// ===== PDF GENERATION OPTIMISÉ POUR MOBILE =====
+// ===== PDF GENERATION =====
 async function generatePDF() {
   try {
     if (appState.filteredArticles.length === 0) {
-      alert('لا توجد مقالات لتحميلها. يرجى تصفية المقالات أولاً.');
+      alert('لا توجد مقالات لتحميلها');
       return;
     }
-    
-    // Détection mobile et ajustement
-    const isMobile = window.innerWidth <= 768;
     
     elements.downloadPdfBtn.disabled = true;
     const originalText = elements.downloadPdfBtn.innerHTML;
     elements.downloadPdfBtn.innerHTML = '<span>⏳</span><span>جار التوليد...</span>';
     
-    // Délai supplémentaire sur mobile pour permettre le rendu UI
-    if (isMobile) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
-    
     const pdfContent = createPdfContent();
-    
     elements.pdfTempContainer.innerHTML = '';
     elements.pdfTempContainer.appendChild(pdfContent);
     
     await waitForImages(pdfContent);
     
-    // Options ajustées pour mobile
     const options = {
-      margin: isMobile ? [5, 5, 5, 5] : [10, 10, 10, 10],
+      margin: [10, 10, 10, 10],
       filename: `مراجعة_الصحافة_${new Date().toISOString().split('T')[0]}.pdf`,
-      image: {
-        type: 'jpeg',
-        quality: isMobile ? 0.85 : 0.95
-      },
+      image: { type: 'jpeg', quality: 0.95 },
       html2canvas: {
-        scale: isMobile ? 1.5 : 2,
+        scale: 2,
         useCORS: true,
-        allowTaint: true,
-        logging: false,
-        backgroundColor: '#ffffff',
-        letterRendering: true,
-        foreignObjectRendering: false,
-        scrollX: 0,
-        scrollY: 0
+        backgroundColor: '#ffffff'
       },
       jsPDF: {
         unit: 'mm',
         format: 'a4',
-        orientation: 'portrait',
-        hotfixes: ["px_scaling"],
-        compress: true,
-        putOnlyUsedFonts: true
+        orientation: 'portrait'
       }
     };
     
@@ -2217,8 +1368,8 @@ async function generatePDF() {
     elements.downloadPdfBtn.innerHTML = originalText;
     
   } catch (error) {
-    console.error('Erreur lors de la génération du PDF:', error);
-    alert('حدث خطأ أثناء إنشاء ملف PDF. يرجى المحاولة مرة أخرى.');
+    console.error('Erreur PDF:', error);
+    alert('حدث خطأ أثناء إنشاء ملف PDF');
     elements.downloadPdfBtn.disabled = false;
     elements.downloadPdfBtn.innerHTML = '<span>📄</span><span>تحميل PDF</span>';
     if (elements.pdfTempContainer) {
@@ -2234,19 +1385,19 @@ function waitForImages(container) {
     const total = images.length;
     
     if (total === 0) {
-      setTimeout(resolve, 300);
+      resolve();
       return;
     }
     
     const checkComplete = () => {
       loaded++;
       if (loaded >= total) {
-        setTimeout(resolve, 300);
+        setTimeout(resolve, 500);
       }
     };
     
     images.forEach(img => {
-      if (img.complete && img.naturalHeight !== 0) {
+      if (img.complete) {
         checkComplete();
       } else {
         img.onload = checkComplete;
@@ -2254,130 +1405,60 @@ function waitForImages(container) {
       }
     });
     
-    setTimeout(resolve, 8000);
+    setTimeout(resolve, 5000);
   });
 }
 
 function createPdfContent() {
   const container = document.createElement('div');
-  container.className = 'pdf-container';
-  container.style.display = 'block';
-  container.style.position = 'relative';
-  container.style.width = '210mm';
-  container.style.minHeight = '297mm';
-  container.style.padding = '20mm 15mm';
-  container.style.backgroundColor = 'white';
-  container.style.color = 'black';
-  container.style.fontFamily = "'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif";
+  container.style.fontFamily = "'Tajawal', sans-serif";
   container.style.direction = 'rtl';
   container.style.textAlign = 'right';
-
+  container.style.padding = '20px';
+  container.style.background = 'white';
+  container.style.color = 'black';
+  
   const header = document.createElement('div');
-  header.className = 'pdf-header';
   header.style.textAlign = 'center';
   header.style.marginBottom = '20px';
   header.style.borderBottom = '2px solid #1a73e8';
   header.style.paddingBottom = '15px';
-
+  
   const title = document.createElement('h1');
-  title.className = 'pdf-title';
-  title.textContent = 'مراجعة الصحافة الأسبوعية';
+  title.textContent = '2مراجعة الصحافة الأسبوعية';
   title.style.fontSize = '24px';
   title.style.color = '#1a73e8';
   title.style.marginBottom = '8px';
-  title.style.fontWeight = 'bold';
-
+  
   const subtitle = document.createElement('div');
-  subtitle.className = 'pdf-subtitle';
   subtitle.textContent = 'Revue de Presse Hebdomadaire';
   subtitle.style.fontSize = '14px';
   subtitle.style.color = '#666';
   subtitle.style.marginBottom = '10px';
-
+  
   header.appendChild(title);
   header.appendChild(subtitle);
-
-  if (appState.startDate && appState.endDate) {
-    const formatDate = (dateStr) => {
-      if (!dateStr) return '';
-      const [year, month, day] = dateStr.split('-');
-      return `${day}/${month}/${year}`;
-    };
-    
-    const start = formatDate(appState.startDate);
-    const end = formatDate(appState.endDate);
-    
-    const dateRange = document.createElement('div');
-    dateRange.className = 'pdf-date-range';
-    dateRange.style.fontSize = '12px';
-    dateRange.style.color = '#888';
-    dateRange.innerHTML = `<strong>الفترة:</strong> ${start} - ${end}`;
-    header.appendChild(dateRange);
-  }
-
-  const count = appState.filteredArticles.length;
-  const total = appState.articles.length;
-  const stats = document.createElement('div');
-  stats.className = 'pdf-date-range';
-  stats.style.fontSize = '12px';
-  stats.style.color = '#888';
-  stats.innerHTML = `<strong>عدد المقالات:</strong> ${count} مقال${count !== 1 ? 'ات' : ''} (${total} المجموع)`;
-  header.appendChild(stats);
-
   container.appendChild(header);
-
+  
   appState.filteredArticles.forEach((article, index) => {
     const articleDiv = document.createElement('div');
-    articleDiv.className = 'pdf-article';
-    articleDiv.style.marginBottom = '15px';
-    articleDiv.style.pageBreakInside = 'avoid';
+    articleDiv.style.marginBottom = '20px';
     articleDiv.style.border = '1px solid #ddd';
     articleDiv.style.borderRadius = '8px';
-    articleDiv.style.padding = '12px';
+    articleDiv.style.padding = '15px';
     articleDiv.style.background = '#f9f9f9';
     
     const title = document.createElement('h2');
-    title.className = 'pdf-article-title';
     title.textContent = `${index + 1}. ${article.titre || 'بدون عنوان'}`;
     title.style.fontSize = '16px';
     title.style.fontWeight = 'bold';
-    title.style.color = '#333';
     title.style.marginBottom = '8px';
-    title.style.lineHeight = '1.4';
     articleDiv.appendChild(title);
     
-    const imageUrl = getArticleImageUrl(article);
-    if (imageUrl) {
-      const imgContainer = document.createElement('div');
-      imgContainer.style.textAlign = 'center';
-      imgContainer.style.margin = '8px 0';
-      
-      const img = document.createElement('img');
-      img.className = 'pdf-article-image';
-      img.src = imageUrl;
-      img.style.maxWidth = '100%';
-      img.style.maxHeight = '120px';
-      img.style.objectFit = 'contain';
-      img.style.borderRadius = '4px';
-      img.style.display = 'block';
-      img.style.margin = '0 auto';
-      
-      img.onerror = function() {
-        this.style.display = 'none';
-      };
-      
-      imgContainer.appendChild(img);
-      articleDiv.appendChild(imgContainer);
-    }
-    
     const meta = document.createElement('div');
-    meta.className = 'pdf-article-meta';
     meta.style.fontSize = '12px';
     meta.style.color = '#666';
-    meta.style.marginBottom = '6px';
-    meta.style.display = 'flex';
-    meta.style.flexWrap = 'wrap';
-    meta.style.gap = '10px';
+    meta.style.marginBottom = '8px';
     
     const formattedDate = formatDateToDDMMYYYY(article.date_heure) || 'تاريخ غير معروف';
     
@@ -2385,7 +1466,6 @@ function createPdfContent() {
       <div><strong>المصدر:</strong> ${article.source || 'غير معروف'}</div>
       <div><strong>التاريخ:</strong> ${formattedDate}</div>
       ${article.theme ? `<div><strong>الفئة:</strong> ${article.theme}</div>` : ''}
-      ${article.sentiment ? `<div><strong>المشاعر:</strong> ${article.sentiment}</div>` : ''}
     `;
     
     articleDiv.appendChild(meta);
@@ -2394,7 +1474,6 @@ function createPdfContent() {
       const keywords = article.mots_cles.split(',').map(k => k.trim()).filter(k => k);
       if (keywords.length > 0) {
         const keywordsDiv = document.createElement('div');
-        keywordsDiv.className = 'pdf-keywords';
         keywordsDiv.style.display = 'flex';
         keywordsDiv.style.flexWrap = 'wrap';
         keywordsDiv.style.gap = '5px';
@@ -2402,11 +1481,10 @@ function createPdfContent() {
         
         keywords.forEach(keyword => {
           const keywordSpan = document.createElement('span');
-          keywordSpan.className = 'pdf-keyword';
           keywordSpan.textContent = keyword;
           keywordSpan.style.background = '#1a73e8';
           keywordSpan.style.color = 'white';
-          keywordSpan.style.padding = '3px 8px';
+          keywordSpan.style.padding = '3px 10px';
           keywordSpan.style.borderRadius = '10px';
           keywordSpan.style.fontSize = '11px';
           keywordsDiv.appendChild(keywordSpan);
@@ -2416,37 +1494,8 @@ function createPdfContent() {
       }
     }
     
-    if (article.url) {
-      const urlDiv = document.createElement('div');
-      urlDiv.style.marginTop = '8px';
-      urlDiv.style.fontSize = '9px';
-      urlDiv.style.color = '#999';
-      urlDiv.style.wordBreak = 'break-all';
-      urlDiv.innerHTML = `<strong>URL:</strong> ${article.url}`;
-      articleDiv.appendChild(urlDiv);
-    }
-    
     container.appendChild(articleDiv);
   });
-
-  const footer = document.createElement('div');
-  footer.className = 'pdf-footer';
-  footer.style.textAlign = 'center';
-  footer.style.marginTop = '20px';
-  footer.style.paddingTop = '15px';
-  footer.style.borderTop = '1px solid #ddd';
-  footer.style.fontSize = '11px';
-  footer.style.color = '#888';
-
-  const today = new Date();
-  const dateAr = today.toLocaleDateString('ar-EG');
-
-  footer.innerHTML = `
-    تم إنشاء هذا التقرير بتاريخ ${dateAr}<br>
-    <em>مراجعة الصحافة الأسبوعية</em>
-  `;
-
-  container.appendChild(footer);
   
   return container;
 }
@@ -2458,17 +1507,9 @@ function debounce(func, wait) {
     timeout = setTimeout(() => func(...args), wait);
   };
 }
-// Initialiser l'application
+
+// ===== INITIALIZE APP =====
 document.addEventListener('DOMContentLoaded', initApp);
-// Gestion de la visibilité de la page pour optimiser les performances sur mobile
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) {
-    // Arrêter les animations non essentielles
-    document.body.style.animationPlayState = 'paused';
-  } else {
-    document.body.style.animationPlayState = 'running';
-  }
-});
 </script>
 </body>
 </html>
