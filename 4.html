@@ -2,320 +2,211 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<meta name="theme-color" content="#001122">
-<meta name="description" content="مراجعة الصحافة الأسبوعية">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>مراجعة الصحافة الأسبوعية</title>
-<link rel="icon" type="image/png" href="images1/00011.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
 
 <style>
-/* Style optimisé pour la performance */
 :root {
   --primary: #1a73e8;
   --background: #001122;
   --card-bg: #001a44;
   --text: #ffffff;
-  --accent-1: #FF6B6B;
-  --accent-2: #4ECDC4;
-  --safe-top: env(safe-area-inset-top, 0px);
 }
-
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
   font-family: 'Tajawal', sans-serif;
   background: var(--background);
   color: var(--text);
-  line-height: 1.5;
-  padding-top: var(--safe-top);
-  overflow-x: hidden;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Header Collapsible sur Mobile */
-.app-header {
-  background: linear-gradient(135deg, #001122 0%, #002244 100%);
-  padding: 12px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.main-title { font-size: 1.5rem; text-align: center; margin-bottom: 15px; }
-
-/* Conteneur Filtres */
-.filters-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.search-wrapper {
-  display: flex;
-  background: rgba(255,255,255,0.1);
-  border-radius: 8px;
-  padding: 8px;
-  border: 1px solid rgba(255,255,255,0.2);
-}
-
-#search-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: white;
-  padding: 8px;
-  font-family: inherit;
-  outline: none;
-  text-align: right;
-}
-
-/* Grille d'articles optimisée */
+/* --- OPTIMISATION GRILLE --- */
 #articles-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 20px;
   padding: 15px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-@media (max-width: 600px) {
-  #articles-container { grid-template-columns: 1fr; }
-  .date-filters { flex-direction: column; }
-}
-
-/* Article Card */
+/* --- CARTE ARTICLE OPTIMISÉE --- */
 .article-card {
   background: var(--card-bg);
-  border-radius: 12px;
+  border-radius: 15px;
   overflow: hidden;
-  transition: transform 0.2s;
-  cursor: pointer;
   position: relative;
+  height: 380px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  transition: transform 0.3s ease;
+}
+
+.article-image-container {
   height: 100%;
+  width: 100%;
+  position: relative;
 }
 
 .article-image {
   width: 100%;
-  height: 200px;
+  height: 100%;
   object-fit: cover;
-  background: #000;
+  background: #002244; /* Placeholder couleur si image absente */
 }
 
+/* Dégradé pour lisibilité du titre */
 .title-overlay {
   position: absolute;
-  bottom: 0; right: 0; left: 0;
-  padding: 15px;
-  background: linear-gradient(transparent, rgba(0,0,0,0.9));
+  bottom: 0;
+  right: 0;
+  left: 0;
+  padding: 20px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.9) 70%);
+  z-index: 2;
 }
 
-.article-main-title { font-size: 1.2rem; font-weight: 700; }
-
-/* Overlay plein écran */
-#article-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: #000;
-  z-index: 2000;
+.article-main-title {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 8px;
+  line-height: 1.3;
 }
 
-/* PDF Hidden Container */
-#pdf-temp-container {
+/* Logo Média - Correction visibilité */
+.media-logo-container {
   position: absolute;
-  left: -9999px;
-  top: 0;
-  width: 210mm;
-  background: white;
+  top: 15px;
+  left: 15px;
+  z-index: 5;
+  background: rgba(255,255,255,0.9);
+  padding: 5px;
+  border-radius: 8px;
+  width: 60px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Boutons tactiles optimisés */
-.btn-touch {
-  min-height: 44px;
+.media-logo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* --- BOUTONS TACTILES --- */
+.action-btn {
+  min-height: 48px;
   padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
-  cursor: pointer;
-  font-weight: 600;
   font-family: inherit;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* PDF HIDDEN AREA */
+#pdf-temp-container {
+  display: none;
 }
 </style>
 </head>
 <body>
 
-<header class="app-header">
-  <h1 class="main-title">مراجعة الصحافة</h1>
-  <div class="filters-container">
-    <div class="search-wrapper">
-      <input type="text" id="search-input" placeholder="بحث..." enterkeyhint="search">
-    </div>
-    <div class="date-filters" style="display: flex; gap: 10px; justify-content: center;">
-      <input type="date" id="start-date" class="btn-touch" style="flex:1">
-      <input type="date" id="end-date" class="btn-touch" style="flex:1">
-    </div>
-    <div class="action-buttons" style="display: flex; gap: 10px; justify-content: center;">
-      <button id="download-pdf-btn" class="btn-touch" style="background: #2E7D32; color: white;">تحميل PDF</button>
-      <button id="clear-filters" class="btn-touch" style="background: var(--accent-1); color: white;">مسح</button>
-    </div>
+<header style="padding: 20px; text-align: center; background: #001a44;">
+  <h1 style="margin-bottom: 15px;">مراجعة الصحافة</h1>
+  <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+    <input type="text" id="search-input" placeholder="بحث..." style="padding: 12px; border-radius: 8px; border: none; width: 250px;">
+    <button id="download-pdf-btn" class="action-btn" style="background: #2E7D32; color: white;">تحميل التقرير PDF</button>
   </div>
 </header>
 
 <main id="articles-container">
   </main>
 
-<div id="article-overlay">
-  <div style="height: 60px; display: flex; align-items: center; padding: 0 15px; background: #001a44;">
-    <button onclick="closeOverlay()" class="btn-touch" style="background: var(--accent-1); color: white;">إغلاق</button>
-    <h3 id="overlay-title-text" style="margin-right: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></h3>
-  </div>
-  <iframe id="article-frame" style="width: 100%; height: calc(100% - 60px); border: none;"></iframe>
-</div>
-
-<div id="pdf-temp-container"></div>
-
 <script>
-// Configuration & État
-let allArticles = [];
-let filteredArticles = [];
-const DEBOUNCE_DELAY = 300; // ms
-
-// --- OPTIMISATION : Chargement des données ---
-async function fetchArticles() {
-  const container = document.getElementById('articles-container');
-  try {
-    // Simulation ou Fetch réel
-    const response = await fetch('articles.json'); 
-    allArticles = await response.json();
-    renderArticles(allArticles);
-  } catch (error) {
-    container.innerHTML = `<p style="text-align:center">خطأ في تحميل البيانات</p>`;
+// Exemple de données avec sécurité d'affichage
+const articles = [
+  {
+    title: "عنوان المقال الأول الهام",
+    image: "images1/art1.jpg",
+    media: "images1/logo-news.png",
+    date: "2024-05-20",
+    url: "#"
   }
-}
+];
 
-// --- OPTIMISATION : Debouncing pour la recherche (Évite les lags PC/Mobile) ---
-function debounce(func, delay) {
-  let timeout;
-  return (...args) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), delay);
-  };
-}
-
-const handleSearch = debounce(() => {
-  const query = document.getElementById('search-input').value.toLowerCase();
-  const start = document.getElementById('start-date').value;
-  const end = document.getElementById('end-date').value;
-
-  filteredArticles = allArticles.filter(art => {
-    const matchesQuery = art.title.toLowerCase().includes(query) || art.content.toLowerCase().includes(query);
-    const artDate = art.date; 
-    const matchesDate = (!start || artDate >= start) && (!end || artDate <= end);
-    return matchesQuery && matchesDate;
-  });
-
-  renderArticles(filteredArticles);
-}, DEBOUNCE_DELAY);
-
-// --- OPTIMISATION : Rendu performant ---
-function renderArticles(articles) {
+function renderArticles(data) {
   const container = document.getElementById('articles-container');
-  container.innerHTML = ''; // Nettoyage mémoire
-  
-  const fragment = document.createDocumentFragment();
-  
-  articles.forEach((art, index) => {
-    const card = document.createElement('div');
-    card.className = 'article-card';
-    card.style.animationDelay = `${index * 0.05}s`;
-    
-    // Lazy loading natif pour mobile
-    card.innerHTML = `
-      <img src="${art.image}" class="article-image" loading="lazy" alt="">
-      <div class="title-overlay">
-        <div class="article-main-title">${art.title}</div>
-        <div style="font-size: 0.8rem; color: var(--accent-2)">${art.source} | ${art.date}</div>
+  container.innerHTML = data.map(art => `
+    <div class="article-card" onclick="window.open('${art.url}', '_blank')">
+      <div class="media-logo-container">
+        <img src="${art.media}" class="media-logo" onerror="this.parentElement.style.display='none'">
       </div>
-    `;
-    
-    card.onclick = () => openOverlay(art.url, art.title);
-    fragment.appendChild(card);
-  });
-  
-  container.appendChild(fragment);
+      
+      <div class="article-image-container">
+        <img src="${art.image}" class="article-image" 
+             onerror="this.src='https://via.placeholder.com/400x300/001a44/ffffff?text=Image+Indisponible'" 
+             loading="lazy">
+        
+        <div class="title-overlay">
+          <div class="article-main-title">${art.title}</div>
+          <div style="color: #4ECDC4; font-size: 0.9rem;">${art.date}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
 }
 
-// --- GESTION OVERLAY ---
-function openOverlay(url, title) {
-  const overlay = document.getElementById('article-overlay');
-  document.getElementById('overlay-title-text').innerText = title;
-  document.getElementById('article-frame').src = url;
-  overlay.style.display = 'block';
-  document.body.style.overflow = 'hidden'; // Stop scroll fond
-}
-
-function closeOverlay() {
-  document.getElementById('article-overlay').style.display = 'none';
-  document.getElementById('article-frame').src = '';
-  document.body.style.overflow = 'auto';
-}
-
-// --- OPTIMISATION PDF (Assure la compatibilité mobile) ---
+// OPTIMISATION PDF : Assure que tout le contenu est rendu avant capture
 async function generatePDF() {
   const btn = document.getElementById('download-pdf-btn');
-  btn.disabled = true;
-  btn.innerText = 'جاري التحضير...';
-
-  const tempDir = document.getElementById('pdf-temp-container');
-  tempDir.innerHTML = `<h1 style="text-align:center; color:#1a73e8;">تقرير الصحافة</h1>`;
+  btn.innerText = "جاري التحميل...";
   
-  const targetArticles = filteredArticles.length > 0 ? filteredArticles : allArticles;
-
-  targetArticles.forEach(art => {
-    tempDir.innerHTML += `
-      <div style="margin-bottom: 30px; border-bottom: 1px solid #ccc; padding: 10px; direction: rtl;">
-        <h2 style="color: #333;">${art.title}</h2>
-        <p style="color: #666;">${art.date} | المصدر: ${art.source}</p>
-        <p>${art.content}</p>
+  const element = document.createElement('div');
+  element.style.padding = "20px";
+  element.style.color = "black";
+  element.style.background = "white";
+  element.dir = "rtl";
+  
+  element.innerHTML = `
+    <h1 style="text-align:center; color:#1a73e8">تقرير الصحافة الأسبوعية</h1>
+    ${articles.map(art => `
+      <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+        <h3>${art.title}</h3>
+        <p>التاريخ: ${art.date}</p>
       </div>
-    `;
-  });
+    `).join('')}
+  `;
 
   const opt = {
     margin: 10,
-    filename: `press_review_${new Date().getTime()}.pdf`,
+    filename: 'report.pdf',
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+    html2canvas: { scale: 2 },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
-  try {
-    await html2pdf().set(opt).from(tempDir).save();
-  } finally {
-    btn.disabled = false;
-    btn.innerText = 'تحميل PDF';
-    tempDir.innerHTML = '';
-  }
+  html2pdf().set(opt).from(element).save().then(() => {
+    btn.innerText = "تحميل التقرير PDF";
+  });
 }
 
-// Events
-document.getElementById('search-input').addEventListener('input', handleSearch);
-document.getElementById('start-date').addEventListener('change', handleSearch);
-document.getElementById('end-date').addEventListener('change', handleSearch);
 document.getElementById('download-pdf-btn').addEventListener('click', generatePDF);
-document.getElementById('clear-filters').addEventListener('click', () => {
-  document.getElementById('search-input').value = '';
-  document.getElementById('start-date').value = '';
-  document.getElementById('end-date').value = '';
-  renderArticles(allArticles);
+document.getElementById('search-input').addEventListener('input', (e) => {
+  const val = e.target.value.toLowerCase();
+  const filtered = articles.filter(a => a.title.toLowerCase().includes(val));
+  renderArticles(filtered);
 });
 
-// Init
-window.onload = fetchArticles;
+// Initialisation
+renderArticles(articles);
 </script>
 
 </body>
