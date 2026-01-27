@@ -2,212 +2,2726 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<meta name="theme-color" content="#001122">
+<meta name="description" content="مراجعة الصحافة الأسبوعية">
 <title>مراجعة الصحافة الأسبوعية</title>
+<link rel="icon" type="image/png" href="images1/00011.png">
+<!-- Bibliothèque html2pdf pour générer des PDFs avec support arabe -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-
+<!-- Police arabe -->
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
+/* ===== CSS RESET & VARIABLES ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
 :root {
   --primary: #1a73e8;
+  --primary-dark: #0d5cb6;
   --background: #001122;
   --card-bg: #001a44;
   --text: #ffffff;
+  --text-secondary: #cccccc;
+  --accent-1: #FF6B6B;
+  --accent-2: #4ECDC4;
+  --accent-3: #FFD166;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  --radius: 8px;
+  --radius-sm: 6px;
+  --radius-lg: 12px;
+  --transition: all 0.3s ease;
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
 }
-
+/* ===== BASE STYLES ===== */
 body {
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   background: var(--background);
   color: var(--text);
-  margin: 0;
+  line-height: 1.5;
+  overflow-x: hidden;
+  min-height: 100vh;
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-
-/* --- OPTIMISATION GRILLE --- */
-#articles-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
-  padding: 15px;
-  max-width: 1200px;
-  margin: 0 auto;
+/* ===== COMPACT HEADER ===== */
+.app-header {
+  background: linear-gradient(135deg, #001122 0%, #002244 100%);
+  padding: 12px 15px;
+  padding-top: calc(12px + var(--safe-top));
+  box-shadow: var(--shadow);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
 }
-
-/* --- CARTE ARTICLE OPTIMISÉE --- */
-.article-card {
-  background: var(--card-bg);
-  border-radius: 15px;
-  overflow: hidden;
-  position: relative;
-  height: 380px;
+.title-search-container {
   display: flex;
   flex-direction: column;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  transition: transform 0.3s ease;
+  gap: 12px;
+  margin-bottom: 10px;
 }
-
-.article-image-container {
-  height: 100%;
+.main-title {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: white;
+  line-height: 1.1;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  letter-spacing: -0.5px;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+/* ===== FILTERS CONTAINER ===== */
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+/* ===== SEARCH BAR ===== */
+.search-container {
   width: 100%;
-  position: relative;
 }
-
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  transition: var(--transition);
+}
+.search-wrapper:focus-within {
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+}
+.search-icon {
+  padding: 0 12px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+#search-input {
+  flex: 1;
+  padding: 12px 12px 12px 0;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 0.95rem;
+  outline: none;
+  font-family: inherit;
+  min-width: 0;
+  text-align: right;
+  direction: rtl;
+}
+#search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  text-align: right;
+}
+.clear-search {
+  padding: 0 12px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: none;
+  transition: var(--transition);
+  background: none;
+  border: none;
+  flex-shrink: 0;
+}
+.clear-search:hover {
+  color: var(--text);
+}
+/* ===== DATE FILTERS ET PRÉDÉFINIS ===== */
+.date-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.date-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+.date-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-3);
+  white-space: nowrap;
+  min-width: 45px;
+  flex-shrink: 0;
+}
+.date-input-wrapper {
+  flex: 1;
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  min-width: 0;
+}
+.date-input {
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 0.9rem;
+  outline: none;
+  font-family: inherit;
+  min-width: 0;
+  text-align: right;
+  direction: rtl;
+}
+.date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.7;
+  cursor: pointer;
+}
+.date-separator {
+  color: var(--accent-2);
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin: 0 5px;
+  flex-shrink: 0;
+}
+/* ===== PRÉDÉFINIS DE PÉRIODE ===== */
+.period-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+  justify-content: center;
+  width: 100%;
+}
+.preset-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  backdrop-filter: blur(10px);
+  min-width: 120px;
+  text-align: center;
+  flex: 1;
+  max-width: 150px;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+.preset-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+.preset-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  box-shadow: 0 0 10px rgba(26, 115, 232, 0.4);
+}
+/* ===== BOUTONS D'ACTION ===== */
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+  justify-content: center;
+  width: 100%;
+}
+.clear-filters-btn {
+  background: linear-gradient(135deg, var(--accent-1), #ff5252);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  min-width: 120px;
+  justify-content: center;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+.clear-filters-btn:hover {
+  background: linear-gradient(135deg, #ff5252, #ff4444);
+  transform: translateY(-1px);
+}
+.download-pdf-btn {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  min-width: 120px;
+  justify-content: center;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+.download-pdf-btn:hover {
+  background: linear-gradient(135deg, #2E7D32, #1B5E20);
+  transform: translateY(-1px);
+}
+.download-pdf-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+/* ===== LOADING STATE ===== */
+#loading-indicator {
+  text-align: center;
+  padding: 30px 15px;
+  color: var(--text-secondary);
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+.loading-spinner {
+  width: 35px;
+  height: 35px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+/* ===== ARTICLES CONTAINER - 10 ARTICLES PAR DÉFAUT ===== */
+#articles-container {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  min-height: 200px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+/* ===== ARTICLE CARD ===== */
+.article-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease forwards;
+  height: 100%;
+  position: relative;
+  margin-bottom: 5px;
+  width: 100%;
+}
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.article-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  border-color: rgba(26, 115, 232, 0.3);
+}
+/* Article Image Section */
+.article-image-container {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  background: linear-gradient(45deg, #000428, #004e92);
+  overflow: hidden;
+  flex-shrink: 0;
+}
 .article-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background: #002244; /* Placeholder couleur si image absente */
+  transition: transform 0.6s ease;
+  background: linear-gradient(45deg, #000428, #004e92);
 }
-
-/* Dégradé pour lisibilité du titre */
+.article-card:hover .article-image {
+  transform: scale(1.05);
+}
+/* ===== TITLE OVERLAY - GRAND TITRE BLANC ===== */
 .title-overlay {
   position: absolute;
   bottom: 0;
-  right: 0;
   left: 0;
-  padding: 20px;
-  background: linear-gradient(transparent, rgba(0,0,0,0.9) 70%);
+  width: 100%;
+  padding: 20px 15px;
+  background: linear-gradient(to top,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.85) 30%,
+    rgba(0, 0, 0, 0.7) 60%,
+    transparent 100%);
   z-index: 2;
 }
-
+/* TITRE PRINCIPAL - TRÈS GRAND ET BLANC */
 .article-main-title {
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   font-weight: 900;
-  color: #fff;
+  line-height: 1.15;
+  color: #FFFFFF;
   margin-bottom: 8px;
-  line-height: 1.3;
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.8),
+    0 4px 8px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(0, 0, 0, 0.4);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  letter-spacing: -0.3px;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  text-align: right;
 }
-
-/* Logo Média - Correction visibilité */
-.media-logo-container {
+/* Source */
+.article-source {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.95;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  text-align: right;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+/* ===== METADATA BADGES (Date et Catégorie) ===== */
+.metadata-badges {
   position: absolute;
   top: 15px;
-  left: 15px;
-  z-index: 5;
-  background: rgba(255,255,255,0.9);
-  padding: 5px;
-  border-radius: 8px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15px;
+  z-index: 3;
+  gap: 8px;
+}
+.metadata-badge {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition);
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+.date-badge {
+  background: rgba(255, 107, 107, 0.92);
+  color: white;
+}
+.category-badge {
+  background: rgba(78, 205, 196, 0.92);
+  color: white;
+}
+.category-badge.ltr {
+  text-align: left;
+  justify-content: flex-start;
+  padding-right: 12px;
+}
+.category-badge.rtl {
+  text-align: right;
+  justify-content: flex-end;
+  padding-left: 12px;
+}
+.article-card:hover .metadata-badge {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.5);
+}
+/* ===== LOGO DES MÉDIAS EN BAS À DROITE (TRANSPARENT) ===== */
+.media-logo-container {
+  position: absolute;
+  bottom: 15px;
+  left: 15px; /* RTL: à gauche pour être à l'extrême droite visuellement */
+  z-index: 4;
   width: 60px;
-  height: 35px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: var(--transition);
+  overflow: hidden;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
-
 .media-logo {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  transition: var(--transition);
+  opacity: 0.9;
 }
-
-/* --- BOUTONS TACTILES --- */
-.action-btn {
-  min-height: 48px;
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: none;
-  font-family: inherit;
-  font-weight: bold;
+.article-card:hover .media-logo {
+  opacity: 1;
+  transform: scale(1.05);
+}
+/* ===== TEMPS ÉCOULÉ ===== */
+.time-ago {
+  position: absolute;
+  top: 70px;
+  right: 15px;
+  padding: 5px 10px;
+  background: rgba(0, 0, 0, 0.7);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 12px;
+  z-index: 2;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+/* ===== PAGINATION ===== */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 15px;
+  gap: 10px;
+  margin-top: 20px;
+}
+.pagination-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
+  transition: var(--transition);
+  backdrop-filter: blur(10px);
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+.pagination-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+.pagination-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none !important;
+}
+.pagination-numbers {
+  display: flex;
+  gap: 5px;
+}
+.pagination-number {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+.pagination-number:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--primary);
+}
+.pagination-number.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  box-shadow: 0 0 10px rgba(26, 115, 232, 0.4);
+}
+.pagination-info {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0 10px;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+/* ===== ARTICLE OVERLAY ===== */
+#article-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.98);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+.overlay-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+/* ===== OVERLAY HEADER ===== */
+.overlay-header-extended {
+  padding: 15px;
+  padding-top: calc(15px + var(--safe-top));
+  background: rgba(0, 26, 68, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  backdrop-filter: blur(10px);
+}
+.overlay-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  gap: 15px;
+}
+.overlay-title {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #FFFFFF;
+  flex: 1;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-width: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  text-align: right;
+}
+.close-overlay {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent-1);
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 10;
+}
+.close-overlay:hover,
+.close-overlay:active {
+  background: #ff4444;
+  transform: rotate(90deg) scale(1.1);
+}
+/* ===== SENTIMENT ET MOTS-CLÉS ===== */
+.overlay-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.sentiment-display-overlay {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: fit-content;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+.sentiment-positive {
+  color: #4CAF50;
+  border-color: rgba(76, 175, 80, 0.4);
+}
+.sentiment-negative {
+  color: #FF6B6B;
+  border-color: rgba(255, 107, 107, 0.4);
+}
+.sentiment-neutral {
+  color: #FFD166;
+  border-color: rgba(255, 209, 102, 0.4);
+}
+.keywords-container-overlay {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.keyword-overlay {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  white-space: nowrap;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+/* ===== CONTENU ARTICLE ===== */
+.overlay-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 0;
+}
+.article-frame-container {
+  flex: 1;
+  position: relative;
+  background: white;
+  min-height: 0;
+}
+#article-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+/* ===== NO RESULTS & ERROR ===== */
+.no-results, .error-state {
+  text-align: center;
+  padding: 40px 15px;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+.no-results-icon, .error-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+.clear-search-btn, .retry-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 24px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-family: inherit;
+  transition: var(--transition);
+  font-size: 1rem;
+  font-weight: 600;
+  min-height: 48px;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+.clear-search-btn:hover,
+.clear-search-btn:active,
+.retry-button:hover,
+.retry-button:active {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+/* ===== SCROLL TO TOP ===== */
+.scroll-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: none;
+  z-index: 99;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.scroll-top:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+/* ===== IMAGE ERROR STATE ===== */
+.image-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  height: 100%;
+  text-align: center;
+  padding: 15px;
+  background: linear-gradient(45deg, #000428, #004e92);
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+/* ===== STATS BAR ===== */
+.stats-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background: rgba(0, 26, 68, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+  gap: 10px;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+.results-count {
+  font-weight: 600;
+  color: var(--accent-2);
+}
+.active-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.filter-tag {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+.filter-tag .remove-filter {
+  background: none;
+  border: none;
+  color: var(--accent-1);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+/* ===== STYLES SPÉCIFIQUES POUR PDF - CORRIGÉS ===== */
+.pdf-container {
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  direction: rtl;
+  text-align: right;
+  padding: 20px;
+  background: white;
+  color: black;
+  max-width: 800px;
+  margin: 0 auto;
+  /* Assurer que le contenu est visible pour html2pdf */
+  display: block !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+.pdf-header {
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #1a73e8;
+  padding-bottom: 20px;
+}
+.pdf-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #1a73e8;
+  margin-bottom: 10px;
+}
+.pdf-subtitle {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 10px;
+}
+.pdf-date-range {
+  font-size: 14px;
+  color: #888;
+}
+.pdf-article {
+  margin-bottom: 25px;
+  page-break-inside: avoid;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  background: #f9f9f9;
+  overflow: hidden;
+}
+.pdf-article-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+.pdf-article-meta {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+.pdf-article-image {
+  max-width: 100%;
+  height: auto;
+  margin: 10px 0;
+  border-radius: 4px;
+  display: block;
+}
+.pdf-article-content {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #444;
+  margin-top: 10px;
+}
+.pdf-keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.pdf-keyword {
+  background: #1a73e8;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+.pdf-footer {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+  font-size: 12px;
+  color: #888;
+}
+/* Conteneur PDF temporaire - rendu hors écran mais visible pour html2pdf */
+#pdf-temp-container {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  width: 210mm;
+  min-height: 297mm;
+  background: white;
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
+}
+/* ===== RESPONSIVE DESIGN ===== */
+/* MOBILE SMALL (≤ 375px) */
+@media (max-width: 375px) {
+  .app-header {
+    padding: 10px 12px;
+    padding-top: calc(10px + var(--safe-top));
+  }
+
+  .main-title {
+    font-size: 1.6rem;
+  }
+
+  .date-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .date-label {
+    min-width: auto;
+  }
+
+  .date-input-wrapper {
+    width: 100%;
+  }
+
+  .metadata-badges {
+    padding: 0 12px;
+    top: 12px;
+  }
+
+  .metadata-badge {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+  }
+
+  /* Logo media mobile */
+  .media-logo-container {
+    width: 50px;
+    height: 25px;
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .article-main-title {
+    font-size: 1.5rem;
+    line-height: 1.15;
+    padding: 0 12px;
+  }
+
+  .article-image-container {
+    height: 220px;
+  }
+
+  .time-ago {
+    top: 65px;
+    right: 12px;
+    font-size: 0.75rem;
+  }
+
+  .title-overlay {
+    padding: 15px 12px;
+  }
+
+  #articles-container {
+    padding: 8px;
+    gap: 12px;
+  }
+
+  .period-presets {
+    gap: 6px;
+  }
+
+  .preset-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    min-width: 100px;
+  }
+
+  .pagination-number {
+    width: 32px;
+    height: 32px;
+  }
+
+  .clear-filters-btn,
+  .download-pdf-btn {
+    padding: 8px 12px;
+    min-width: 100px;
+    font-size: 0.85rem;
+  }
+}
+/* MOBILE MEDIUM (376px - 480px) */
+@media (min-width: 376px) and (max-width: 480px) {
+  .main-title {
+    font-size: 1.7rem;
+  }
+
+  .article-main-title {
+    font-size: 1.6rem;
+  }
+
+  /* Logo media mobile medium */
+  .media-logo-container {
+    width: 55px;
+    height: 28px;
+  }
+
+  .article-image-container {
+    height: 230px;
+  }
+
+  #articles-container {
+    gap: 14px;
+  }
+
+  .period-presets {
+    justify-content: center;
+  }
+
+  .preset-btn {
+    min-width: 110px;
+  }
+}
+/* TABLET (481px - 768px) */
+@media (min-width: 481px) {
+  .filters-container {
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .search-container {
+    flex: 1;
+  }
+
+  .date-filters {
+    flex: 2;
+  }
+
+  .article-main-title {
+    font-size: 1.9rem;
+  }
+
+  /* Logo media tablet */
+  .media-logo-container {
+    width: 70px;
+    height: 35px;
+    bottom: 20px;
+    left: 20px;
+  }
+
+  .article-image-container {
+    height: 260px;
+  }
+
+  #articles-container {
+    gap: 18px;
+    padding: 15px;
+  }
+
+  .title-overlay {
+    padding: 25px 20px;
+  }
+
+  .period-presets {
+    justify-content: center;
+  }
+}
+/* DESKTOP (≥ 769px) */
+@media (min-width: 769px) {
+  .app-header {
+    padding: 15px 20px;
+    padding-top: calc(15px + var(--safe-top));
+  }
+
+  .main-title {
+    font-size: 2rem;
+  }
+
+  .article-image-container {
+    height: 280px;
+  }
+
+  /* Logo media desktop */
+  .media-logo-container {
+    width: 80px;
+    height: 40px;
+    bottom: 25px;
+    left: 25px;
+  }
+
+  .article-main-title {
+    font-size: 2.1rem;
+    line-height: 1.1;
+    -webkit-line-clamp: 2;
+  }
+
+  .filters-container {
+    max-width: 800px;
+    margin: 0 auto 20px;
+  }
+
+  .overlay-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 95vh;
+    margin-top: 2.5vh;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .scroll-top {
+    width: 55px;
+    height: 55px;
+    font-size: 1.5rem;
+  }
+
+  #articles-container {
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .title-overlay {
+    padding: 30px 25px;
+  }
+
+  .period-presets {
+    justify-content: center;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .action-buttons {
+    justify-content: center;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+/* LARGE DESKTOP (≥ 1025px) */
+@media (min-width: 1025px) {
+  .article-main-title {
+    font-size: 2.2rem;
+  }
+
+  /* Logo media large desktop */
+  .media-logo-container {
+    width: 90px;
+    height: 45px;
+  }
+
+  .stats-bar {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 12px 20px;
+  }
+
+  .app-header {
+    padding: 18px 25px;
+    padding-top: calc(18px + var(--safe-top));
+  }
+
+  #articles-container {
+    gap: 22px;
+  }
+}
+/* TOUCH DEVICE OPTIMIZATIONS */
+@media (hover: none) and (pointer: coarse) {
+  .article-card:hover {
+    transform: none;
+  }
+
+  .article-card:active {
+    transform: scale(0.98);
+  }
+
+  .clear-filters-btn:active,
+  .clear-search-btn:active,
+  .retry-button:active,
+  .scroll-top:active,
+  .pagination-btn:active,
+  .preset-btn:active,
+  .download-pdf-btn:active {
+    transform: scale(0.95);
+  }
+
+  .search-wrapper:active,
+  .date-input-wrapper:active {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  /* Augmenter la taille des éléments cliquables pour les doigts */
+  .clear-search,
+  .close-overlay,
+  .metadata-badge,
+  .keyword-overlay,
+  .filter-tag,
+  .pagination-btn,
+  .preset-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .clear-search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+/* DARK MODE SUPPORT */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #000c18;
+    --card-bg: #001428;
+  }
+
+  .article-image-container {
+    background: linear-gradient(45deg, #000214, #003366);
+  }
+}
+/* PRINT STYLES */
+@media print {
+  .app-header,
+  .filters-container,
+  .scroll-top,
+  .close-overlay,
+  .pagination-container,
+  .period-presets,
+  .download-pdf-btn,
+  .stats-bar {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+
+  #articles-container {
+    display: block;
+    padding: 0;
+  }
+
+  .article-card {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+
+  .article-image-container {
+    height: 200px;
+  }
+
+  .media-logo-container {
+    display: none !important;
+  }
+}
+/* HIGH CONTRAST MODE */
+@media (prefers-contrast: high) {
+  :root {
+    --primary: #0057d9;
+    --accent-1: #ff3333;
+    --accent-2: #00a3a3;
+  }
+
+  .search-wrapper,
+  .date-input-wrapper {
+    border-width: 2px;
+  }
+
+  .article-main-title {
+    color: #FFFFFF;
+    text-shadow: 0 2px 4px #000000;
+  }
+
+  .media-logo-container {
+    filter: brightness(1.5) contrast(1.5);
+  }
+}
+/* REDUCED MOTION */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .article-card {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .article-card:hover .media-logo-container {
+    transform: none;
+  }
+
+  .pagination-btn:hover,
+  .preset-btn:hover,
+  .download-pdf-btn:hover {
+    transform: none !important;
+  }
 }
 
-/* PDF HIDDEN AREA */
-#pdf-temp-container {
-  display: none;
+/* ===== CORRECTIONS CRITIQUES POUR SMARTPHONE ===== */
+
+/* Désactiver les effets lourds sur mobile */
+@media (max-width: 768px) {
+  * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+  }
+  
+  .article-card {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  
+  .article-card:hover {
+    transform: none !important;
+    box-shadow: var(--shadow) !important;
+  }
+  
+  .search-wrapper,
+  .date-input-wrapper,
+  .metadata-badge,
+  .preset-btn {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  
+  /* Corriger l'overlay sur Android */
+  #article-overlay {
+    position: fixed !important;
+    height: 100% !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  .overlay-container {
+    min-height: 100vh !important;
+    overflow-y: auto !important;
+  }
+  
+  /* Optimiser les images pour mobile */
+  .article-image-container {
+    height: 200px !important;
+  }
+  
+  .article-image {
+    object-fit: cover !important;
+    background: linear-gradient(45deg, #000428, #004e92) !important;
+  }
+  
+  /* Désactiver les transitions gourmandes */
+  .article-card:hover .article-image {
+    transform: none !important;
+  }
+  
+  /* Agrandir les zones cliquables */
+  .metadata-badge,
+  .preset-btn,
+  .clear-search,
+  .close-overlay {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+  
+  /* Corriger le rendu du texte */
+  .article-main-title {
+    font-size: 1.4rem !important;
+    line-height: 1.3 !important;
+    -webkit-line-clamp: 3 !important;
+  }
+  
+  /* Optimiser la pagination mobile */
+  .pagination-container {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  
+  .pagination-number {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 0.9rem !important;
+  }
+  
+  /* Désactiver les effets de survol sur mobile */
+  .pagination-btn:hover,
+  .preset-btn:hover,
+  .download-pdf-btn:hover,
+  .clear-filters-btn:hover {
+    transform: none !important;
+  }
+}
+
+/* Correction spécifique pour iOS */
+@supports (-webkit-touch-callout: none) {
+  .app-header {
+    padding-top: max(12px, env(safe-area-inset-top)) !important;
+  }
+  
+  #article-overlay {
+    height: -webkit-fill-available !important;
+  }
+}
+
+/* Correction pour Chrome Android */
+@media (max-width: 768px) and (hover: none) and (pointer: coarse) {
+  body {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .article-card:active {
+    transform: scale(0.98) !important;
+    transition: transform 0.1s ease !important;
+  }
+  
+  /* Éviter le zoom sur les inputs */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+  
+  .date-input {
+    font-size: 16px !important;
+    min-height: 44px !important;
+  }
 }
 </style>
 </head>
 <body>
-
-<header style="padding: 20px; text-align: center; background: #001a44;">
-  <h1 style="margin-bottom: 15px;">مراجعة الصحافة</h1>
-  <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-    <input type="text" id="search-input" placeholder="بحث..." style="padding: 12px; border-radius: 8px; border: none; width: 250px;">
-    <button id="download-pdf-btn" class="action-btn" style="background: #2E7D32; color: white;">تحميل التقرير PDF</button>
-  </div>
-</header>
-
-<main id="articles-container">
-  </main>
-
-<script>
-// Exemple de données avec sécurité d'affichage
-const articles = [
-  {
-    title: "عنوان المقال الأول الهام",
-    image: "images1/art1.jpg",
-    media: "images1/logo-news.png",
-    date: "2024-05-20",
-    url: "#"
-  }
-];
-
-function renderArticles(data) {
-  const container = document.getElementById('articles-container');
-  container.innerHTML = data.map(art => `
-    <div class="article-card" onclick="window.open('${art.url}', '_blank')">
-      <div class="media-logo-container">
-        <img src="${art.media}" class="media-logo" onerror="this.parentElement.style.display='none'">
+<header class="app-header">
+  <div class="title-search-container">
+    <h1 class="main-title">مراجعة الصحافة<br>الأسبوعية</h1>
+   
+    <div class="filters-container">
+      <div class="search-container">
+        <div class="search-wrapper">
+          <div class="search-icon">🔍</div>
+          <input type="text" id="search-input" placeholder="بحث في المقالات..." autocomplete="off" spellcheck="false" enterkeyhint="search">
+          <button class="clear-search" id="clear-search" aria-label="مسح البحث">✕</button>
+        </div>
       </div>
+     
+      <div class="date-filters">
+        <div class="date-group">
+          <span class="date-label">بداية:</span>
+          <div class="date-input-wrapper">
+            <input type="date" id="start-date" class="date-input" aria-label="تاريخ البداية">
+          </div>
+        </div>
       
-      <div class="article-image-container">
-        <img src="${art.image}" class="article-image" 
-             onerror="this.src='https://via.placeholder.com/400x300/001a44/ffffff?text=Image+Indisponible'" 
-             loading="lazy">
-        
-        <div class="title-overlay">
-          <div class="article-main-title">${art.title}</div>
-          <div style="color: #4ECDC4; font-size: 0.9rem;">${art.date}</div>
+        <div class="date-separator">→</div>
+     
+        <div class="date-group">
+          <span class="date-label">نهاية:</span>
+          <div class="date-input-wrapper">
+            <input type="date" id="end-date" class="date-input" aria-label="تاريخ النهاية">
+          </div>
         </div>
       </div>
     </div>
-  `).join('');
-}
+  
+    <!-- Boutons de période prédéfinis - Centrés -->
+    <div class="period-presets">
+      <button class="preset-btn active" data-period="week">أسبوعي</button>
+      <button class="preset-btn" data-period="biweekly">نصف شهري</button>
+      <button class="preset-btn" data-period="month">شهري</button>
+    </div>
+  
+    <!-- Boutons d'action - Centrés -->
+    <div class="action-buttons">
+      <button class="clear-filters-btn" id="clear-filters">
+        <span>🗑️</span>
+        <span>مسح الكل</span>
+      </button>
+      <button class="download-pdf-btn" id="download-pdf-btn">
+        <span>📄</span>
+        <span>تحميل PDF</span>
+      </button>
+    </div>
+  </div>
+</header>
+<div class="stats-bar" id="stats-bar" style="display: none;">
+  <div class="results-count" id="results-count">0 مقال</div>
+  <div class="active-filters" id="active-filters">
+    <!-- Filtres actifs apparaîtront ici -->
+  </div>
+</div>
+<main id="articles-container">
+  <div id="loading-indicator">
+    <div class="loading-spinner"></div>
+    <p>جاري تحميل المقالات...</p>
+  </div>
+</main>
+<!-- Pagination -->
+<div class="pagination-container" id="pagination-container" style="display: none;">
+  <button class="pagination-btn" id="first-btn" title="الصفحة الأولى">««</button>
+  <button class="pagination-btn" id="prev-btn" title="الصفحة السابقة">‹</button>
 
-// OPTIMISATION PDF : Assure que tout le contenu est rendu avant capture
-async function generatePDF() {
-  const btn = document.getElementById('download-pdf-btn');
-  btn.innerText = "جاري التحميل...";
-  
-  const element = document.createElement('div');
-  element.style.padding = "20px";
-  element.style.color = "black";
-  element.style.background = "white";
-  element.dir = "rtl";
-  
-  element.innerHTML = `
-    <h1 style="text-align:center; color:#1a73e8">تقرير الصحافة الأسبوعية</h1>
-    ${articles.map(art => `
-      <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-        <h3>${art.title}</h3>
-        <p>التاريخ: ${art.date}</p>
+  <div class="pagination-numbers" id="pagination-numbers">
+    <!-- Les numéros de page seront générés ici -->
+  </div>
+
+  <button class="pagination-btn" id="next-btn" title="الصفحة التالية">›</button>
+  <button class="pagination-btn" id="last-btn" title="الصفحة الأخيرة">»»</button>
+
+  <div class="pagination-info" id="pagination-info">الصفحة 1 من 1</div>
+</div>
+<button class="scroll-top" id="scroll-top" aria-label="العودة للأعلى">↑</button>
+<div id="article-overlay">
+  <div class="overlay-container">
+    <div class="overlay-header-extended">
+      <div class="overlay-header-top">
+        <div class="overlay-title" id="overlay-article-title"></div>
+        <button class="close-overlay" id="close-overlay" aria-label="إغلاق">×</button>
       </div>
-    `).join('')}
+      <div class="overlay-details">
+        <div id="sentiment-display-overlay" class="sentiment-display-overlay sentiment-neutral">
+          <span>المشاعر:</span>
+          <span id="sentiment-value">جار التحميل...</span>
+        </div>
+        <div class="keywords-container-overlay" id="keywords-container-overlay">
+          <!-- Les mots-clés seront insérés ici -->
+        </div>
+      </div>
+    </div>
+    <div class="overlay-content">
+      <div class="article-frame-container">
+        <iframe id="article-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" title="محتوى المقال" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Conteneur caché pour le contenu PDF - CORRIGÉ : positionné hors écran mais visible pour html2pdf -->
+<div id="pdf-temp-container"></div>
+<script>
+// ===== VARIABLE GLOBALE POUR LES LOGOS =====
+let mediaLogos = [];
+// ===== APP CONFIGURATION =====
+const CONFIG = {
+  jsonUrl: 'data/datajson.json?t=' + Date.now(),
+  logosUrl: 'data/logo_media.json?t=' + Date.now(),
+  maxArticles: 1000,
+  imagesBasePath: 'images3/',
+  debounceDelay: 300,
+  touchDelay: 100,
+  articlesPerPage: 10
+};
+// ===== TOUCH DETECTION =====
+const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+// ===== APP STATE =====
+let appState = {
+  articles: [],
+  filteredArticles: [],
+  searchQuery: '',
+  startDate: null,
+  endDate: null,
+  isLoading: true,
+  lastTouchTime: 0,
+  currentPage: 1,
+  activePeriod: 'week'
+};
+const elements = {
+  searchInput: document.getElementById('search-input'),
+  clearSearch: document.getElementById('clear-search'),
+  startDate: document.getElementById('start-date'),
+  endDate: document.getElementById('end-date'),
+  clearFilters: document.getElementById('clear-filters'),
+  articlesContainer: document.getElementById('articles-container'),
+  articleOverlay: document.getElementById('article-overlay'),
+  closeOverlay: document.getElementById('close-overlay'),
+  articleFrame: document.getElementById('article-frame'),
+  overlayArticleTitle: document.getElementById('overlay-article-title'),
+  sentimentDisplayOverlay: document.getElementById('sentiment-display-overlay'),
+  sentimentValue: document.getElementById('sentiment-value'),
+  keywordsContainerOverlay: document.getElementById('keywords-container-overlay'),
+  loadingIndicator: document.getElementById('loading-indicator'),
+  scrollTop: document.getElementById('scroll-top'),
+  statsBar: document.getElementById('stats-bar'),
+  resultsCount: document.getElementById('results-count'),
+  activeFilters: document.getElementById('active-filters'),
+  paginationContainer: document.getElementById('pagination-container'),
+  firstBtn: document.getElementById('first-btn'),
+  prevBtn: document.getElementById('prev-btn'),
+  nextBtn: document.getElementById('next-btn'),
+  lastBtn: document.getElementById('last-btn'),
+  paginationNumbers: document.getElementById('pagination-numbers'),
+  paginationInfo: document.getElementById('pagination-info'),
+  periodPresets: document.querySelectorAll('.preset-btn'),
+  downloadPdfBtn: document.getElementById('download-pdf-btn'),
+  pdfTempContainer: document.getElementById('pdf-temp-container')
+};
+async function initApp() {
+  setupEventListeners();
+  await loadMediaLogos();
+  setupPeriodPresets();
+  loadArticles();
+}
+async function loadMediaLogos() {
+  try {
+    const response = await fetch(CONFIG.logosUrl);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    mediaLogos = await response.json();
+    console.log('Logos des médias chargés:', mediaLogos.length, 'logos');
+  } catch (error) {
+    console.error('Erreur de chargement des logos:', error);
+    mediaLogos = [];
+  }
+}
+function setupPeriodPresets() {
+  setPeriod('week');
+
+  elements.periodPresets.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const period = this.getAttribute('data-period');
+      setPeriod(period);
+    });
+  });
+}
+function setPeriod(period) {
+  const today = new Date();
+  const startDate = new Date();
+
+  elements.endDate.value = today.toISOString().split('T')[0];
+
+  switch(period) {
+    case 'week':
+      startDate.setDate(today.getDate() - 7);
+      elements.startDate.value = startDate.toISOString().split('T')[0];
+      break;
+    
+    case 'biweekly':
+      startDate.setDate(today.getDate() - 15);
+      elements.startDate.value = startDate.toISOString().split('T')[0];
+      break;
+    
+    case 'month':
+      startDate.setDate(today.getDate() - 30);
+      elements.startDate.value = startDate.toISOString().split('T')[0];
+      break;
+  }
+
+  appState.startDate = elements.startDate.value;
+  appState.endDate = elements.endDate.value;
+  appState.activePeriod = period;
+  appState.currentPage = 1;
+
+  elements.periodPresets.forEach(btn => {
+    if (btn.getAttribute('data-period') === period) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  filterArticles();
+}
+function setupEventListeners() {
+  elements.searchInput.addEventListener('input', function(e) {
+    appState.searchQuery = e.target.value;
+    elements.clearSearch.style.display = appState.searchQuery ? 'flex' : 'none';
+    debounce(filterArticles, CONFIG.debounceDelay)();
+  });
+
+  elements.clearSearch.addEventListener('click', () => {
+    elements.searchInput.value = '';
+    appState.searchQuery = '';
+    elements.clearSearch.style.display = 'none';
+    filterArticles();
+    elements.searchInput.focus();
+  });
+
+  elements.startDate.addEventListener('change', function() {
+    appState.startDate = this.value;
+    appState.activePeriod = 'custom';
+    updatePeriodButtons();
+    filterArticles();
+  });
+
+  elements.endDate.addEventListener('change', function() {
+    appState.endDate = this.value;
+    appState.activePeriod = 'custom';
+    updatePeriodButtons();
+    filterArticles();
+  });
+
+  elements.clearFilters.addEventListener('click', () => {
+    elements.searchInput.value = '';
+    appState.searchQuery = '';
+    elements.clearSearch.style.display = 'none';
+    setPeriod('week');
+    filterArticles();
+    elements.searchInput.focus();
+  });
+
+  elements.closeOverlay.addEventListener('click', closeArticleOverlay);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeArticleOverlay();
+  });
+
+  let touchStartY = 0;
+  elements.articleOverlay.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+  });
+
+  elements.articleOverlay.addEventListener('touchmove', (e) => {
+    if (!touchStartY) return;
+   
+    const touchY = e.touches[0].clientY;
+    const diffY = touchStartY - touchY;
+   
+    if (diffY < -100) {
+      closeArticleOverlay();
+    }
+  });
+
+  elements.scrollTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  window.addEventListener('scroll', () => {
+    elements.scrollTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+  });
+
+  elements.firstBtn.addEventListener('click', () => goToPage(1));
+  elements.prevBtn.addEventListener('click', () => goToPage(appState.currentPage - 1));
+  elements.nextBtn.addEventListener('click', () => goToPage(appState.currentPage + 1));
+  elements.lastBtn.addEventListener('click', () => goToPage(getTotalPages()));
+
+  elements.downloadPdfBtn.addEventListener('click', generatePDF);
+
+  let lastTouch = 0;
+  document.addEventListener('touchstart', (event) => {
+    const now = Date.now();
+    if (now - lastTouch <= 300) {
+      event.preventDefault();
+    }
+    lastTouch = now;
+  }, { passive: false });
+}
+function updatePeriodButtons() {
+  elements.periodPresets.forEach(btn => {
+    btn.classList.remove('active');
+  });
+}
+// ===== DATE HELPER FUNCTIONS =====
+function parseArticleDate(dateString) {
+  if (!dateString) return null;
+
+  try {
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('/');
+   
+    if (!day || !month || !year) return null;
+   
+    return new Date(year, month - 1, day);
+  } catch (e) {
+    console.warn('Error parsing date:', dateString, e);
+    return null;
+  }
+}
+function formatDateToDDMMYYYY(dateString) {
+  if (!dateString) return '';
+
+  try {
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('/');
+   
+    const paddedDay = day.padStart(2, '0');
+    const paddedMonth = month.padStart(2, '0');
+   
+    return `${paddedDay}/${paddedMonth}/${year}`;
+  } catch (e) {
+    console.warn('Error formatting date:', dateString, e);
+    return dateString || '';
+  }
+}
+function getTimeAgo(dateString) {
+  if (!dateString) return '';
+
+  try {
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('/');
+    const [hours, minutes] = timePart ? timePart.split(':') : [0, 0];
+   
+    const articleDate = new Date(year, month - 1, day, hours, minutes);
+    const now = new Date();
+    const diffMs = now - articleDate;
+   
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+   
+    if (diffMins < 1) {
+      return `الآن`;
+    } else if (diffMins < 60) {
+      return `منذ ${diffMins} دقيقة`;
+    } else if (diffHours < 24) {
+      return `منذ ${diffHours} ساعة`;
+    } else if (diffDays === 1) {
+      return `منذ يوم`;
+    } else if (diffDays < 7) {
+      return `منذ ${diffDays} أيام`;
+    } else if (diffDays < 30) {
+      const weeks = Math.floor(diffDays / 7);
+      return `منذ ${weeks} أسبوع`;
+    } else {
+      const formattedDate = formatDateToDDMMYYYY(dateString);
+      return formattedDate;
+    }
+  } catch (e) {
+    return '';
+  }
+}
+function isDateInRange(articleDate, startDate, endDate) {
+  if (!articleDate) return false;
+
+  const articleDateObj = parseArticleDate(articleDate);
+  if (!articleDateObj) return false;
+
+  if (!startDate && !endDate) return true;
+
+  const start = startDate ? new Date(startDate) : null;
+  const end = endDate ? new Date(endDate) : null;
+
+  if (start) start.setHours(0, 0, 0, 0);
+  if (end) end.setHours(23, 59, 59, 999);
+
+  if (start && articleDateObj < start) return false;
+  if (end && articleDateObj > end) return false;
+
+  return true;
+}
+// ===== PAGINATION FUNCTIONS =====
+function getTotalPages() {
+  return Math.ceil(appState.filteredArticles.length / CONFIG.articlesPerPage);
+}
+function getCurrentPageArticles() {
+  const startIndex = (appState.currentPage - 1) * CONFIG.articlesPerPage;
+  const endIndex = startIndex + CONFIG.articlesPerPage;
+  return appState.filteredArticles.slice(startIndex, endIndex);
+}
+function goToPage(page) {
+  const totalPages = getTotalPages();
+
+  if (page < 1 || page > totalPages) return;
+
+  appState.currentPage = page;
+  displayArticles();
+  updatePagination();
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function updatePagination() {
+  const totalPages = getTotalPages();
+  const currentPage = appState.currentPage;
+
+  if (totalPages <= 1) {
+    elements.paginationContainer.style.display = 'none';
+    return;
+  }
+
+  elements.paginationContainer.style.display = 'flex';
+
+  elements.firstBtn.disabled = currentPage === 1;
+  elements.prevBtn.disabled = currentPage === 1;
+  elements.nextBtn.disabled = currentPage === totalPages;
+  elements.lastBtn.disabled = currentPage === totalPages;
+
+  elements.paginationInfo.textContent = `الصفحة ${currentPage} من ${totalPages}`;
+
+  elements.paginationNumbers.innerHTML = '';
+
+  let startPage = Math.max(1, currentPage - 2);
+  let endPage = Math.min(totalPages, startPage + 4);
+
+  if (endPage - startPage < 4) {
+    startPage = Math.max(1, endPage - 4);
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
+    const pageBtn = document.createElement('div');
+    pageBtn.className = `pagination-number ${i === currentPage ? 'active' : ''}`;
+    pageBtn.textContent = i;
+    pageBtn.addEventListener('click', () => goToPage(i));
+    elements.paginationNumbers.appendChild(pageBtn);
+  }
+}
+// ===== IMAGE MANAGEMENT =====
+function getArticleImageUrl(article) {
+  if (article.image_brute) {
+    if (!article.image_brute.startsWith('http') &&
+        !article.image_brute.startsWith('/') &&
+        !article.image_brute.startsWith('images')) {
+      return CONFIG.imagesBasePath + article.image_brute;
+    }
+    return article.image_brute;
+  }
+
+  return null;
+}
+// ===== LOGO MEDIA MANAGEMENT =====
+function getMediaLogoUrl(source) {
+  if (!source || mediaLogos.length === 0) return null;
+
+  const media = mediaLogos.find(item =>
+    item.domaine && source && (
+      item.domaine.toLowerCase() === source.toLowerCase() ||
+      source.toLowerCase().includes(item.domaine.toLowerCase())
+    )
+  );
+
+  return media ? media.url : null;
+}
+function createImageElement(imageUrl, title) {
+  if (!imageUrl) {
+    return '<div class="image-error">صورة غير متوفرة</div>';
+  }
+
+  return `<img src="${imageUrl}"
+                alt="${title || 'صورة المقال'}"
+                class="article-image"
+                loading="lazy"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'image-error\\'>صورة غير متوفرة</div>';"
+                onload="this.style.opacity='1'"
+                style="opacity:0; transition: opacity 0.3s ease;">`;
+}
+function createMediaLogoElement(source) {
+  const logoUrl = getMediaLogoUrl(source);
+
+  if (!logoUrl) {
+    return '';
+  }
+
+  return `
+    <div class="media-logo-container">
+      <img src="${logoUrl}"
+           alt="شعار ${source}"
+           class="media-logo"
+           loading="lazy"
+           onerror="this.style.display='none';"
+           onload="this.style.opacity='1'"
+           style="opacity:0; transition: opacity 0.3s ease;">
+    </div>
+  `;
+}
+// ===== LOAD & PROCESS =====
+async function loadArticles() {
+  try {
+    showLoading(true);
+    const response = await fetch(CONFIG.jsonUrl);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
+    appState.articles = processArticleData(data);
+    filterArticles();
+  } catch (error) {
+    console.error('Error loading articles:', error);
+    showError('تعذر تحميل المقالات. يرجى المحاولة مرة أخرى.');
+  } finally {
+    showLoading(false);
+  }
+}
+function processArticleData(articles) {
+  return articles
+    .filter(a => a.visible === true || a.visible === "true")
+    .sort((a, b) => {
+      try {
+        const parseDate = (str) => {
+          const [date, time] = str.split(' ');
+          const [d, m, y] = date.split('/');
+          const [h, min] = time ? time.split(':') : [0, 0];
+          return new Date(y, m - 1, d, h, min);
+        };
+        return parseDate(b.date_heure) - parseDate(a.date_heure);
+      } catch (e) {
+        return 0;
+      }
+    })
+    .slice(0, CONFIG.maxArticles);
+}
+function filterArticles() {
+  const query = appState.searchQuery.toLowerCase().trim();
+  const startDate = appState.startDate;
+  const endDate = appState.endDate;
+
+  appState.filteredArticles = appState.articles.filter(article => {
+    let matchesText = true;
+    if (query) {
+      const searchableText = `
+        ${article.titre || ''}
+        ${article.source || ''}
+        ${article.theme || ''}
+        ${article.mots_cles || ''}
+        ${article.langue || ''}
+        ${article.sentiment || ''}
+      `.toLowerCase();
+     
+      matchesText = searchableText.includes(query);
+    }
+   
+    const matchesDate = isDateInRange(article.date_heure, startDate, endDate);
+   
+    return matchesText && matchesDate;
+  });
+
+  appState.currentPage = 1;
+
+  displayArticles();
+  updateStatsBar();
+  updatePagination();
+
+  elements.downloadPdfBtn.disabled = appState.filteredArticles.length === 0;
+}
+function updateStatsBar() {
+  const count = appState.filteredArticles.length;
+  const total = appState.articles.length;
+
+  elements.resultsCount.textContent = `${count} مقال${count !== 1 ? 'ات' : ''} (${total} المجموع)`;
+  elements.statsBar.style.display = 'flex';
+
+  updateActiveFilters();
+}
+function updateActiveFilters() {
+  elements.activeFilters.innerHTML = '';
+
+  if (appState.searchQuery) {
+    const filterTag = document.createElement('div');
+    filterTag.className = 'filter-tag';
+    filterTag.innerHTML = `
+      <span>🔍 "${appState.searchQuery}"</span>
+      <button class="remove-filter" onclick="clearSearchFilter()" aria-label="إزالة هذا الفلتر">×</button>
+    `;
+    elements.activeFilters.appendChild(filterTag);
+  }
+
+  if (appState.startDate || appState.endDate) {
+    const formatFilterDate = (dateStr) => {
+      if (!dateStr) return '';
+      const [year, month, day] = dateStr.split('-');
+      return `${day}/${month}/${year}`;
+    };
+   
+    const start = appState.startDate ? formatFilterDate(appState.startDate) : 'البداية';
+    const end = appState.endDate ? formatFilterDate(appState.endDate) : 'النهاية';
+   
+    const filterTag = document.createElement('div');
+    filterTag.className = 'filter-tag';
+    filterTag.innerHTML = `
+      <span>📅 ${start} → ${end}</span>
+      <button class="remove-filter" onclick="clearDateFilters()" aria-label="إزالة هذا الفلتر">×</button>
+    `;
+    elements.activeFilters.appendChild(filterTag);
+  }
+
+  let periodText = '';
+  switch(appState.activePeriod) {
+    case 'week': periodText = 'أسبوعي'; break;
+    case 'biweekly': periodText = 'نصف شهري'; break;
+    case 'month': periodText = 'شهري'; break;
+    case 'custom': periodText = 'مخصص'; break;
+  }
+
+  const periodTag = document.createElement('div');
+  periodTag.className = 'filter-tag';
+  periodTag.innerHTML = `
+    <span>⏰ ${periodText}</span>
+  `;
+  elements.activeFilters.appendChild(periodTag);
+}
+function clearSearchFilter() {
+  elements.searchInput.value = '';
+  appState.searchQuery = '';
+  elements.clearSearch.style.display = 'none';
+  filterArticles();
+}
+function clearDateFilters() {
+  setPeriod('week');
+}
+function displayArticles() {
+  elements.articlesContainer.innerHTML = '';
+
+  if (appState.filteredArticles.length === 0) {
+    showNoResults();
+    return;
+  }
+
+  const currentArticles = getCurrentPageArticles();
+  const fragment = document.createDocumentFragment();
+
+  currentArticles.forEach((article, index) => {
+    const card = createArticleCard(article, index);
+    fragment.appendChild(card);
+  });
+
+  elements.articlesContainer.appendChild(fragment);
+
+  const cards = elements.articlesContainer.querySelectorAll('.article-card');
+  cards.forEach((card, i) => {
+    card.style.animationDelay = `${i * 0.03}s`;
+  });
+}
+function createArticleCard(article, index) {
+  const card = document.createElement('div');
+  card.className = 'article-card';
+
+  const imageUrl = getArticleImageUrl(article);
+  const formattedDate = formatDateToDDMMYYYY(article.date_heure);
+  const timeAgo = getTimeAgo(article.date_heure);
+  const isCategoryArabic = /[\u0600-\u06FF]/.test(article.theme || '');
+  const imageElement = createImageElement(imageUrl, article.titre);
+  const mediaLogoElement = createMediaLogoElement(article.source);
+  card.innerHTML = `
+    <div class="article-image-container">
+      ${imageElement}
+      ${mediaLogoElement}
+      <div class="metadata-badges">
+        <div class="metadata-badge date-badge" title="${formattedDate || ''}">
+          <span>📅</span>
+          <span>${formattedDate || 'تاريخ غير معروف'}</span>
+        </div>
+        <div class="metadata-badge category-badge ${isCategoryArabic ? 'rtl' : 'ltr'}" title="${article.theme || ''}">
+          <span>🏷️</span>
+          <span>${truncateTitle(article.theme || 'غير مصنف', 20)}</span>
+        </div>
+      </div>
+      ${timeAgo ? `<div class="time-ago">${timeAgo}</div>` : ''}
+      <div class="title-overlay">
+        <h2 class="article-main-title">${truncateTitle(article.titre || 'بدون عنوان', 100)}</h2>
+        <div class="article-source">
+          <span>📰</span>
+          <span>${article.source || 'مصدر غير معروف'}</span>
+        </div>
+      </div>
+    </div>
   `;
 
-  const opt = {
-    margin: 10,
-    filename: 'report.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-  };
+  if (isTouchDevice) {
+    card.addEventListener('touchstart', (e) => {
+      e.currentTarget.classList.add('active');
+    }, { passive: true });
+   
+    card.addEventListener('touchend', (e) => {
+      e.currentTarget.classList.remove('active');
+      const now = Date.now();
+      if (now - appState.lastTouchTime < CONFIG.touchDelay) return;
+      appState.lastTouchTime = now;
+      openArticleOverlay(article);
+    }, { passive: true });
+  } else {
+    card.addEventListener('click', () => {
+      openArticleOverlay(article);
+    });
+  }
 
-  html2pdf().set(opt).from(element).save().then(() => {
-    btn.innerText = "تحميل التقرير PDF";
+  return card;
+}
+function truncateTitle(title, maxLength = 100) {
+  if (!title || title.length <= maxLength) return title;
+  return title.substring(0, maxLength) + '...';
+}
+function openArticleOverlay(article) {
+  elements.overlayArticleTitle.textContent = article.titre || 'المقال';
+  
+  // Gestion intelligente de l'iframe pour mobile
+  const isMobile = window.innerWidth <= 768;
+  const url = article.url || '#';
+  
+  if (isMobile) {
+    // Sur mobile, ouvrir directement ou afficher une alternative
+    const iframe = elements.articleFrame;
+    iframe.src = '';
+    
+    // Vérifier si l'URL peut être intégrée
+    if (url && url.startsWith('http')) {
+      // Essayer de charger dans l'iframe
+      iframe.src = url;
+      
+      // Fallback au bout de 3 secondes
+      setTimeout(() => {
+        if (iframe.contentDocument && iframe.contentDocument.body.innerHTML === '') {
+          showMobileFallback(url, article.titre);
+        }
+      }, 3000);
+      
+      iframe.onerror = () => {
+        showMobileFallback(url, article.titre);
+      };
+    }
+  } else {
+    // Sur desktop, fonctionnement normal
+    elements.articleFrame.src = url;
+  }
+  
+  // ... reste du code existant ...
+}
+
+function showMobileFallback(url, title) {
+  const container = elements.articleFrame.parentElement;
+  container.innerHTML = `
+    <div style="
+      padding: 40px 20px;
+      text-align: center;
+      color: #333;
+      font-family: 'Tajawal', sans-serif;
+      background: white;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    ">
+      <div style="font-size: 3rem; margin-bottom: 20px;">🔗</div>
+      <h3 style="margin-bottom: 15px; color: #1a73e8;">${title || 'المقال'}</h3>
+      <p style="margin-bottom: 25px; color: #666;">
+        لا يمكن عرض المقال مباشرة داخل الهاتف
+      </p>
+      <a href="${url}" 
+         target="_blank" 
+         rel="noopener noreferrer"
+         style="
+           background: #1a73e8;
+           color: white;
+           padding: 12px 24px;
+           border-radius: 24px;
+           text-decoration: none;
+           font-weight: bold;
+           display: inline-block;
+         ">
+        فتح المقال في متصفح جديد
+      </a>
+      <button onclick="closeArticleOverlay()" 
+              style="
+                background: transparent;
+                border: 2px solid #ddd;
+                color: #666;
+                padding: 12px 24px;
+                border-radius: 24px;
+                margin-top: 15px;
+                cursor: pointer;
+                font-family: inherit;
+              ">
+        إغلاق
+      </button>
+    </div>
+  `;
+}
+function closeArticleOverlay() {
+  elements.articleOverlay.style.display = 'none';
+  elements.articleFrame.src = '';
+  document.body.style.overflow = '';
+  elements.searchInput.focus();
+}
+function showLoading(show) {
+  appState.isLoading = show;
+  if (elements.loadingIndicator) {
+    elements.loadingIndicator.style.display = show ? 'block' : 'none';
+  }
+}
+function showNoResults() {
+  elements.articlesContainer.innerHTML = `
+    <div class="no-results">
+      <div class="no-results-icon">🔍</div>
+      <h3>لا توجد نتائج</h3>
+      <p>لا توجد مقالات تطابق معايير البحث الخاصة بك</p>
+      <button class="clear-search-btn" onclick="elements.clearFilters.click()">
+        مسح جميع الفلاتر
+      </button>
+    </div>
+  `;
+  elements.statsBar.style.display = 'none';
+  elements.paginationContainer.style.display = 'none';
+}
+function showError(message) {
+  elements.articlesContainer.innerHTML = `
+    <div class="error-state">
+      <div class="error-icon">⚠️</div>
+      <h3>خطأ</h3>
+      <p>${message}</p>
+      <button class="retry-button" onclick="loadArticles()">
+        إعادة المحاولة
+      </button>
+    </div>
+  `;
+  elements.statsBar.style.display = 'none';
+  elements.paginationContainer.style.display = 'none';
+}
+
+// ===== PDF GENERATION - CORRIGÉ ET OPTIMISÉ =====
+async function generatePDF() {
+  try {
+    if (appState.filteredArticles.length === 0) {
+      alert('لا توجد مقالات لتحميلها. يرجى تصفية المقالات أولاً.');
+      return;
+    }
+    
+    // Désactiver le bouton pendant la génération
+    elements.downloadPdfBtn.disabled = true;
+    const originalText = elements.downloadPdfBtn.innerHTML;
+    elements.downloadPdfBtn.innerHTML = '<span>⏳</span><span>جار التوليد...</span>';
+    
+    // Créer le contenu HTML pour le PDF
+    const pdfContent = createPdfContent();
+    
+    // Ajouter temporairement au DOM mais hors écran pour rendu
+    elements.pdfTempContainer.innerHTML = '';
+    elements.pdfTempContainer.appendChild(pdfContent);
+    
+    // Attendre que les images se chargent
+    await waitForImages(pdfContent);
+    
+    // Options optimisées pour html2pdf
+    const options = {
+      margin: [10, 10, 10, 10],
+      filename: `مراجعة_الصحافة_${new Date().toISOString().split('T')[0]}.pdf`,
+      image: {
+        type: 'jpeg',
+        quality: 0.95
+      },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+        letterRendering: true,
+        foreignObjectRendering: false
+      },
+      jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait',
+        hotfixes: ["px_scaling"],
+        compress: true,
+        putOnlyUsedFonts: true
+      }
+    };
+    
+    // Générer le PDF à partir du conteneur temporaire
+    await html2pdf().set(options).from(pdfContent).save();
+    
+    // Nettoyer
+    elements.pdfTempContainer.innerHTML = '';
+    
+    // Réactiver le bouton
+    elements.downloadPdfBtn.disabled = false;
+    elements.downloadPdfBtn.innerHTML = originalText;
+    
+  } catch (error) {
+    console.error('Erreur lors de la génération du PDF:', error);
+    alert('حدث خطأ أثناء إنشاء ملف PDF. يرجى المحاولة مرة أخرى.');
+    
+    // Réactiver le bouton en cas d'erreur
+    elements.downloadPdfBtn.disabled = false;
+    elements.downloadPdfBtn.innerHTML = '<span>📄</span><span>تحميل PDF</span>';
+    
+    // Nettoyer en cas d'erreur
+    if (elements.pdfTempContainer) {
+      elements.pdfTempContainer.innerHTML = '';
+    }
+  }
+}
+
+// Attendre le chargement des images avant génération PDF
+function waitForImages(container) {
+  return new Promise((resolve) => {
+    const images = container.querySelectorAll('img');
+    let loaded = 0;
+    const total = images.length;
+    
+    if (total === 0) {
+      resolve();
+      return;
+    }
+    
+    const checkComplete = () => {
+      loaded++;
+      if (loaded >= total) {
+        // Attendre un peu plus pour le rendu complet
+        setTimeout(resolve, 500);
+      }
+    };
+    
+    images.forEach(img => {
+      if (img.complete) {
+        checkComplete();
+      } else {
+        img.onload = checkComplete;
+        img.onerror = checkComplete;
+      }
+    });
+    
+    // Timeout de sécurité (5 secondes)
+    setTimeout(resolve, 5000);
   });
 }
 
-document.getElementById('download-pdf-btn').addEventListener('click', generatePDF);
-document.getElementById('search-input').addEventListener('input', (e) => {
-  const val = e.target.value.toLowerCase();
-  const filtered = articles.filter(a => a.title.toLowerCase().includes(val));
-  renderArticles(filtered);
+function createPdfContent() {
+  const container = document.createElement('div');
+  container.className = 'pdf-container';
+  container.style.display = 'block';
+  container.style.position = 'relative';
+  container.style.width = '210mm';
+  container.style.minHeight = '297mm';
+  container.style.padding = '20mm';
+  container.style.backgroundColor = 'white';
+  container.style.color = 'black';
+  container.style.fontFamily = "'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif";
+  container.style.direction = 'rtl';
+  container.style.textAlign = 'right';
+
+  // Header du PDF
+  const header = document.createElement('div');
+  header.className = 'pdf-header';
+  header.style.textAlign = 'center';
+  header.style.marginBottom = '20px';
+  header.style.borderBottom = '2px solid #1a73e8';
+  header.style.paddingBottom = '15px';
+
+  const title = document.createElement('h1');
+  title.className = 'pdf-title';
+  title.textContent = 'مراجعة الصحافة الأسبوعية';
+  title.style.fontSize = '24px';
+  title.style.color = '#1a73e8';
+  title.style.marginBottom = '8px';
+  title.style.fontWeight = 'bold';
+
+  const subtitle = document.createElement('div');
+  subtitle.className = 'pdf-subtitle';
+  subtitle.textContent = 'Revue de Presse Hebdomadaire';
+  subtitle.style.fontSize = '14px';
+  subtitle.style.color = '#666';
+  subtitle.style.marginBottom = '10px';
+
+  header.appendChild(title);
+  header.appendChild(subtitle);
+
+  // Informations sur la période
+  if (appState.startDate && appState.endDate) {
+    const formatDate = (dateStr) => {
+      if (!dateStr) return '';
+      const [year, month, day] = dateStr.split('-');
+      return `${day}/${month}/${year}`;
+    };
+    
+    const start = formatDate(appState.startDate);
+    const end = formatDate(appState.endDate);
+    
+    const dateRange = document.createElement('div');
+    dateRange.className = 'pdf-date-range';
+    dateRange.style.fontSize = '12px';
+    dateRange.style.color = '#888';
+    dateRange.innerHTML = `<strong>الفترة:</strong> ${start} - ${end}`;
+    header.appendChild(dateRange);
+  }
+
+  // Statistiques
+  const count = appState.filteredArticles.length;
+  const total = appState.articles.length;
+  const stats = document.createElement('div');
+  stats.className = 'pdf-date-range';
+  stats.style.fontSize = '12px';
+  stats.style.color = '#888';
+  stats.innerHTML = `<strong>عدد المقالات:</strong> ${count} مقال${count !== 1 ? 'ات' : ''} (${total} المجموع)`;
+  header.appendChild(stats);
+
+  container.appendChild(header);
+
+  // Articles
+  appState.filteredArticles.forEach((article, index) => {
+    const articleDiv = document.createElement('div');
+    articleDiv.className = 'pdf-article';
+    articleDiv.style.marginBottom = '20px';
+    articleDiv.style.pageBreakInside = 'avoid';
+    articleDiv.style.border = '1px solid #ddd';
+    articleDiv.style.borderRadius = '8px';
+    articleDiv.style.padding = '15px';
+    articleDiv.style.background = '#f9f9f9';
+    articleDiv.style.overflow = 'hidden';
+    
+    // Titre
+    const title = document.createElement('h2');
+    title.className = 'pdf-article-title';
+    title.textContent = `${index + 1}. ${article.titre || 'بدون عنوان'}`;
+    title.style.fontSize = '16px';
+    title.style.fontWeight = 'bold';
+    title.style.color = '#333';
+    title.style.marginBottom = '8px';
+    title.style.lineHeight = '1.4';
+    articleDiv.appendChild(title);
+    
+    // Image
+    const imageUrl = getArticleImageUrl(article);
+    if (imageUrl) {
+      const imgContainer = document.createElement('div');
+      imgContainer.style.textAlign = 'center';
+      imgContainer.style.margin = '10px 0';
+      
+      const img = document.createElement('img');
+      img.className = 'pdf-article-image';
+      img.src = imageUrl;
+      img.style.maxWidth = '100%';
+      img.style.maxHeight = '150px';
+      img.style.objectFit = 'contain';
+      img.style.borderRadius = '4px';
+      img.style.display = 'block';
+      img.style.margin = '0 auto';
+      
+      img.onerror = function() {
+        this.style.display = 'none';
+      };
+      
+      imgContainer.appendChild(img);
+      articleDiv.appendChild(imgContainer);
+    }
+    
+    // Métadonnées
+    const meta = document.createElement('div');
+    meta.className = 'pdf-article-meta';
+    meta.style.fontSize = '12px';
+    meta.style.color = '#666';
+    meta.style.marginBottom = '8px';
+    meta.style.display = 'flex';
+    meta.style.flexWrap = 'wrap';
+    meta.style.gap = '10px';
+    
+    const formattedDate = formatDateToDDMMYYYY(article.date_heure) || 'تاريخ غير معروف';
+    
+    meta.innerHTML = `
+      <div><strong>المصدر:</strong> ${article.source || 'غير معروف'}</div>
+      <div><strong>التاريخ:</strong> ${formattedDate}</div>
+      ${article.theme ? `<div><strong>الفئة:</strong> ${article.theme}</div>` : ''}
+      ${article.sentiment ? `<div><strong>المشاعر:</strong> ${article.sentiment}</div>` : ''}
+    `;
+    
+    articleDiv.appendChild(meta);
+    
+    // Mots-clés
+    if (article.mots_cles) {
+      const keywords = article.mots_cles.split(',').map(k => k.trim()).filter(k => k);
+      if (keywords.length > 0) {
+        const keywordsDiv = document.createElement('div');
+        keywordsDiv.className = 'pdf-keywords';
+        keywordsDiv.style.display = 'flex';
+        keywordsDiv.style.flexWrap = 'wrap';
+        keywordsDiv.style.gap = '5px';
+        keywordsDiv.style.marginTop = '8px';
+        
+        keywords.forEach(keyword => {
+          const keywordSpan = document.createElement('span');
+          keywordSpan.className = 'pdf-keyword';
+          keywordSpan.textContent = keyword;
+          keywordSpan.style.background = '#1a73e8';
+          keywordSpan.style.color = 'white';
+          keywordSpan.style.padding = '3px 10px';
+          keywordSpan.style.borderRadius = '10px';
+          keywordSpan.style.fontSize = '11px';
+          keywordsDiv.appendChild(keywordSpan);
+        });
+        
+        articleDiv.appendChild(keywordsDiv);
+      }
+    }
+    
+    // URL
+    if (article.url) {
+      const urlDiv = document.createElement('div');
+      urlDiv.style.marginTop = '8px';
+      urlDiv.style.fontSize = '10px';
+      urlDiv.style.color = '#888';
+      urlDiv.innerHTML = `<strong>URL:</strong> ${article.url}`;
+      articleDiv.appendChild(urlDiv);
+    }
+    
+    container.appendChild(articleDiv);
+  });
+
+  // Footer
+  const footer = document.createElement('div');
+  footer.className = 'pdf-footer';
+  footer.style.textAlign = 'center';
+  footer.style.marginTop = '20px';
+  footer.style.paddingTop = '15px';
+  footer.style.borderTop = '1px solid #ddd';
+  footer.style.fontSize = '11px';
+  footer.style.color = '#888';
+
+  const today = new Date();
+  const dateAr = today.toLocaleDateString('ar-EG');
+
+  footer.innerHTML = `
+    تم إنشاء هذا التقرير بتاريخ ${dateAr}<br>
+    <em>مراجعة الصحافة الأسبوعية</em>
+  `;
+
+  container.appendChild(footer);
+  
+  return container;
+}
+
+function debounce(func, wait) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
+// Initialiser l'application
+// Initialiser l'application
+document.addEventListener('DOMContentLoaded', () => {
+  // Détection du device
+  const isMobile = window.innerWidth <= 768;
+  
+  if (isMobile) {
+    // Désactiver certaines animations sur mobile
+    document.documentElement.style.setProperty('--transition', 'none');
+    
+    // Charger moins d'articles initialement sur mobile
+    CONFIG.articlesPerPage = 8;
+    CONFIG.maxArticles = 500;
+  }
+  
+  // Démarrer l'app après un court délai pour laisser le DOM se stabiliser
+  setTimeout(() => {
+    requestAnimationFrame(() => {
+      initApp();
+    });
+  }, isMobile ? 100 : 0);
 });
 
-// Initialisation
-renderArticles(articles);
-</script>
-
+// Gestion du redimensionnement
+let resizeTimeout;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    const isNowMobile = window.innerWidth <= 768;
+    if (isNowMobile) {
+      // Ajuster les paramètres si on passe en mobile
+      document.documentElement.style.setProperty('--transition', 'none');
+    }
+  }, 250);
+});</script>
 </body>
 </html>
