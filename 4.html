@@ -2,1223 +2,638 @@
 <html lang="fr" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<meta name="theme-color" content="#001122">
-<meta name="description" content="Revue de Presse Hebdomadaire">
-<title>Revue de Presse Hebdomadaire</title>
-<link rel="icon" type="image/png" href="images1/00011.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revue de Presse - Gestionnaire d'Erreurs</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
 <style>
-/* ===== VARIABLES ===== */
 :root {
   --primary: #1a73e8;
-  --primary-dark: #0d5cb6;
-  --background: #001122;
-  --card-bg: #001a44;
-  --text: #ffffff;
-  --text-secondary: #cccccc;
-  --accent-1: #FF6B6B;
-  --accent-2: #4ECDC4;
-  --accent-3: #FFD166;
-  --shadow: 0 2px 10px rgba(0,0,0,0.3);
+  --danger: #ff4444;
+  --success: #00C851;
+  --bg: #001122;
+  --card: #001a44;
+  --text: #fff;
   --radius: 12px;
-  --safe-top: env(safe-area-inset-top);
-  --safe-bottom: env(safe-area-inset-bottom);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Tajawal',sans-serif}
 
-body {
-  font-family: 'Tajawal', 'Amiri', sans-serif;
-  background: var(--background);
-  color: var(--text);
-  line-height: 1.6;
-  min-height: 100vh;
-  padding-top: var(--safe-top);
-  padding-bottom: var(--safe-bottom);
-  overflow-x: hidden;
+body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+
+/* Header Centré Mobile */
+.app-header{
+  background:linear-gradient(135deg,#001122 0%,#002244 100%);
+  padding:20px 16px;
+  text-align:center;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 4px 20px rgba(0,0,0,0.4)
 }
 
-/* ===== HEADER CENTRALISÉ MOBILE ===== */
-.app-header {
-  background: linear-gradient(135deg, #001122 0%, #002244 100%);
-  padding: 16px;
-  padding-top: calc(16px + var(--safe-top));
-  text-align: center;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: var(--shadow);
+.main-title{font-size:1.8rem;font-weight:900;margin-bottom:20px;text-shadow:0 2px 4px rgba(0,0,0,0.5)}
+
+/* Alertes de statut */
+.status-alert{
+  padding:16px;margin:10px auto;max-width:600px;border-radius:var(--radius);
+  display:flex;align-items:center;gap:12px;font-weight:700
+}
+.status-alert.error{background:rgba(255,68,68,0.2);border:2px solid var(--danger);color:#ff6b6b}
+.status-alert.success{background:rgba(0,200,81,0.2);border:2px solid var(--success);color:#4ade80}
+.status-alert.warning{background:rgba(255,193,7,0.2);border:2px solid #ffc107;color:#ffd54f}
+
+/* Boutons Debug */
+.debug-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:15px 0}
+.debug-btn{
+  background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);
+  color:white;padding:8px 16px;border-radius:20px;cursor:pointer;font-size:0.85rem
+}
+.debug-btn:hover{background:rgba(255,255,255,0.2)}
+
+/* Conteneurs centraux */
+.container{max-width:800px;margin:0 auto;padding:16px}
+
+/* Filtres */
+.filters{background:rgba(255,255,255,0.05);padding:20px;border-radius:var(--radius);margin-bottom:20px;border:1px solid rgba(255,255,255,0.1)}
+.filter-row{display:flex;flex-direction:column;gap:12px;margin-bottom:15px}
+label{font-weight:700;color:#ffd700;font-size:0.9rem}
+
+input[type="text"],input[type="date"]{
+  padding:14px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.1);color:white;font-size:1rem;width:100%
 }
 
-.main-title {
-  font-size: clamp(1.5rem, 5vw, 2rem);
-  font-weight: 900;
-  margin-bottom: 16px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  line-height: 1.2;
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:15px}
+.btn{
+  flex:1;min-width:140px;padding:14px 20px;border:none;border-radius:25px;
+  font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+  font-size:0.95rem;transition:transform 0.2s
 }
+.btn:active{transform:scale(0.95)}
+.btn-primary{background:var(--primary)}
+.btn-danger{background:var(--danger)}
+.btn-success{background:var(--success)}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
 
-/* ===== CONTENEURS CENTRALISÉS ===== */
-.filters-container, .action-buttons, .period-presets {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
+/* Stats */
+.stats{text-align:center;padding:15px;background:rgba(0,0,0,0.3);border-radius:var(--radius);margin-bottom:20px;font-weight:700}
+
+/* Articles */
+.articles{display:flex;flex-direction:column;gap:16px}
+.article{
+  background:var(--card);border-radius:var(--radius);overflow:hidden;
+  border:1px solid rgba(255,255,255,0.1);cursor:pointer;transition:transform 0.2s
 }
-
-.search-container, .date-filters {
-  width: 100%;
+.article:hover{transform:translateY(-2px)}
+.article-img{
+  width:100%;height:200px;object-fit:cover;background:linear-gradient(45deg,#000428,#004e92)
 }
+.article-content{padding:16px}
+.article-title{font-size:1.2rem;font-weight:900;margin-bottom:8px}
+.article-meta{color:#4ECDC4;font-size:0.9rem;font-weight:700}
 
-/* ===== BARRE DE RECHERCHE ===== */
-.search-wrapper {
-  display: flex;
-  align-items: center;
-  background: rgba(255,255,255,0.1);
-  border-radius: 50px;
-  padding: 4px;
-  border: 1px solid rgba(255,255,255,0.2);
-  backdrop-filter: blur(10px);
+/* Empty State */
+.empty{text-align:center;padding:60px 20px;color:#aaa}
+.empty-icon{font-size:4rem;margin-bottom:15px}
+
+/* Overlay */
+#overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:1000;flex-direction:column
 }
-
-.search-icon { padding: 0 16px; font-size: 1.2rem; }
-
-#search-input {
-  flex: 1;
-  padding: 14px 8px;
-  background: transparent;
-  border: none;
-  color: var(--text);
-  font-size: 1rem;
-  outline: none;
-  font-family: inherit;
-  min-width: 0;
+.overlay-header{
+  padding:16px;background:rgba(0,0,0,0.8);display:flex;justify-content:space-between;align-items:center
 }
+.overlay-title{font-weight:900;font-size:1.2rem;flex:1;padding-left:15px}
+.close-btn{width:45px;height:45px;border-radius:50%;background:#ff4444;border:none;color:white;font-size:1.5rem;cursor:pointer}
+iframe{flex:1;width:100%;border:none;background:white}
 
-.clear-search {
-  padding: 8px 16px;
-  background: rgba(255,255,255,0.2);
-  border: none;
-  border-radius: 50%;
-  color: var(--text);
-  cursor: pointer;
-  font-size: 1.1rem;
-  display: none;
-  min-width: 44px;
-  min-height: 44px;
-}
+/* PDF Container (hidden) */
+#pdf-temp{position:absolute;left:-9999px;width:210mm;background:white;color:black;padding:20px}
+.pdf-article{border:2px solid #333;margin-bottom:20px;padding:15px;page-break-inside:avoid}
+.pdf-img{max-width:100%;border:3px solid #000;padding:5px;background:#f5f5f5;display:block;margin:10px auto}
 
-/* ===== FILTRES DATE ===== */
-.date-filters {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  background: rgba(255,255,255,0.05);
-  padding: 16px;
-  border-radius: var(--radius);
-  border: 1px solid rgba(255,255,255,0.1);
-}
-
-.date-group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-}
-
-.date-label {
-  font-weight: 700;
-  color: var(--accent-3);
-  min-width: 60px;
-  font-size: 0.95rem;
-}
-
-.date-input {
-  flex: 1;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.1);
-  color: var(--text);
-  font-family: inherit;
-  font-size: 1rem;
-  min-height: 48px;
-}
-
-/* ===== BOUTONS PÉRIODE ===== */
-.period-presets {
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-}
-
-.preset-btn {
-  flex: 1;
-  min-width: 100px;
-  max-width: 150px;
-  padding: 12px 16px;
-  border: 2px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.1);
-  color: var(--text);
-  border-radius: 25px;
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 0.9rem;
-  transition: all 0.3s;
-  font-family: inherit;
-  min-height: 48px;
-}
-
-.preset-btn.active {
-  background: var(--primary);
-  border-color: var(--primary);
-  box-shadow: 0 4px 15px rgba(26,115,232,0.4);
-}
-
-/* ===== BOUTONS ACTION ===== */
-.action-buttons {
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.clear-filters-btn, .download-pdf-btn {
-  flex: 1;
-  min-width: 140px;
-  padding: 14px 24px;
-  border: none;
-  border-radius: 50px;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 1rem;
-  font-family: inherit;
-  min-height: 48px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-  transition: transform 0.2s;
-}
-
-.clear-filters-btn { background: linear-gradient(135deg, var(--accent-1), #ff5252); }
-.download-pdf-btn { background: linear-gradient(135deg, #4CAF50, #2E7D32); }
-.download-pdf-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
-
-/* ===== STATS ===== */
-.stats-bar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding: 12px;
-  background: rgba(0,26,68,0.6);
-  margin: 0 auto;
-  max-width: 800px;
-  border-radius: 0 0 var(--radius) var(--radius);
-  font-size: 0.9rem;
-}
-
-.results-count {
-  font-weight: 700;
-  color: var(--accent-2);
-  font-size: 1.1rem;
-}
-
-/* ===== ARTICLES ===== */
-#articles-container {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.article-card {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  transition: transform 0.3s, box-shadow 0.3s;
-  cursor: pointer;
-  border: 1px solid rgba(255,255,255,0.1);
-  animation: fadeInUp 0.5s ease forwards;
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.article-image-container {
-  position: relative;
-  width: 100%;
-  height: 220px;
-  background: linear-gradient(45deg, #000428, #004e92);
-  overflow: hidden;
-}
-
-.article-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s;
-}
-
-.article-card:hover .article-image { transform: scale(1.05); }
-
-/* Logo média */
-.media-logo-overlay {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: rgba(255,255,255,0.95);
-  padding: 6px 12px;
-  border-radius: 20px;
-  max-width: 100px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  z-index: 5;
-}
-
-.media-logo-img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-/* Badges */
-.metadata-badges {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  z-index: 4;
-}
-
-.metadata-badge {
-  background: rgba(0,0,0,0.7);
-  backdrop-filter: blur(10px);
-  padding: 8px 14px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  border: 1px solid rgba(255,255,255,0.2);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.date-badge { background: rgba(255,107,107,0.9); }
-.category-badge { background: rgba(78,205,196,0.9); }
-
-/* Titre overlay */
-.title-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 20px;
-  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
-}
-
-.article-main-title {
-  font-size: 1.3rem;
-  font-weight: 900;
-  line-height: 1.3;
-  margin-bottom: 8px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.article-source {
-  font-size: 0.9rem;
-  color: var(--accent-2);
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-/* ===== PAGINATION ===== */
-.pagination-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 20px;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.pagination-btn {
-  min-width: 48px;
-  min-height: 48px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255,255,255,0.1);
-  color: var(--text);
-  cursor: pointer;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-}
-
-.pagination-btn:disabled { opacity: 0.3; }
-.pagination-number {
-  min-width: 44px;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.1);
-  cursor: pointer;
-  font-weight: 700;
-  border: 2px solid transparent;
-}
-.pagination-number.active {
-  background: var(--primary);
-  border-color: white;
-}
-
-/* ===== OVERLAY ===== */
-#article-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.98);
-  z-index: 1000;
-  flex-direction: column;
-}
-
-.overlay-header {
-  padding: 16px;
-  background: rgba(0,26,68,0.95);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
-
-.overlay-title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  flex: 1;
-  line-height: 1.3;
-}
-
-.close-overlay {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--accent-1);
-  border: none;
-  color: white;
-  font-size: 1.8rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.overlay-content { flex: 1; position: relative; }
-#article-frame { width: 100%; height: 100%; border: none; background: white; }
-
-/* ===== PDF STYLES ===== */
-.pdf-container {
-  font-family: 'Tajawal', 'Amiri', sans-serif;
-  direction: rtl;
-  text-align: right;
-  padding: 20px;
-  background: white;
-  color: black;
-  width: 210mm;
-  min-height: 297mm;
-}
-
-.pdf-header {
-  text-align: center;
-  border-bottom: 3px solid var(--primary);
-  padding-bottom: 20px;
-  margin-bottom: 20px;
-}
-
-.pdf-title { font-size: 28px; color: var(--primary); margin-bottom: 10px; }
-.pdf-date { color: #666; font-size: 14px; margin: 5px 0; }
-
-.pdf-article {
-  margin-bottom: 25px;
-  page-break-inside: avoid;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 20px;
-  background: #fafafa;
-  position: relative;
-}
-
-.pdf-article-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 15px;
-  gap: 15px;
-}
-
-.pdf-article-title {
-  font-size: 18px;
-  font-weight: 900;
-  color: #222;
-  flex: 1;
-  line-height: 1.4;
-}
-
-.pdf-media-logo {
-  width: 80px;
-  height: 40px;
-  object-fit: contain;
-  background: white;
-  padding: 5px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-}
-
-.pdf-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  font-size: 13px;
-  color: #555;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px dashed #ccc;
-}
-
-/* Images encadrées dans PDF */
-.pdf-image-container {
-  text-align: center;
-  margin: 15px 0;
-  padding: 10px;
-  background: white;
-  border: 3px solid #333;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  display: inline-block;
-  max-width: 100%;
-}
-
-.pdf-article-image {
-  max-width: 100%;
-  max-height: 200px;
-  height: auto;
-  display: block;
-  border-radius: 4px;
-}
-
-.pdf-keywords {
-  margin-top: 12px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.pdf-keyword {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.pdf-url {
-  margin-top: 12px;
-  font-size: 11px;
-  color: #666;
-  word-break: break-all;
-  background: #f0f0f0;
-  padding: 8px;
-  border-radius: 6px;
-  border-right: 3px solid var(--primary);
-}
-
-#pdf-temp-container {
-  position: absolute;
-  left: -9999px;
-  top: 0;
-  width: 210mm;
-  z-index: -1;
-  opacity: 0;
-}
-
-/* ===== UTILITAIRES ===== */
-.loading, .no-results, .error {
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--text-secondary);
-}
-
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid rgba(255,255,255,0.1);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 20px;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.scroll-top {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--primary);
-  color: white;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  display: none;
-  z-index: 99;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-}
-
-/* Responsive adjustments */
-@media (min-width: 768px) {
-  .date-filters { flex-direction: row; }
-  .article-image-container { height: 300px; }
-  .article-main-title { font-size: 1.6rem; }
+/* Responsive */
+@media(min-width:768px){
+  .filter-row{flex-direction:row;align-items:center}
+  label{min-width:80px}
+  input{flex:1}
 }
 </style>
 </head>
 <body>
 
 <header class="app-header">
-  <h1 class="main-title">Revue de Presse<br>Hebdomadaire</h1>
+  <h1 class="main-title">📰 Revue de Presse</h1>
   
-  <div class="filters-container">
-    <div class="search-container">
-      <div class="search-wrapper">
-        <div class="search-icon">🔍</div>
-        <input type="text" id="search-input" placeholder="Rechercher dans les articles..." autocomplete="off">
-        <button class="clear-search" id="clear-search">✕</button>
-      </div>
-    </div>
-    
-    <div class="date-filters">
-      <div class="date-group">
-        <span class="date-label">Début :</span>
-        <input type="date" id="start-date" class="date-input">
-      </div>
-      <div class="date-group">
-        <span class="date-label">Fin :</span>
-        <input type="date" id="end-date" class="date-input">
-      </div>
-    </div>
-  </div>
+  <!-- Zone de statut debug -->
+  <div id="status-zone"></div>
   
-  <div class="period-presets">
-    <button class="preset-btn active" data-period="week">Hebdo</button>
-    <button class="preset-btn" data-period="biweekly">15 jours</button>
-    <button class="preset-btn" data-period="month">Mois</button>
-  </div>
-  
-  <div class="action-buttons">
-    <button class="clear-filters-btn" id="clear-filters">
-      <span>🗑️</span> Réinitialiser
-    </button>
-    <button class="download-pdf-btn" id="download-pdf">
-      <span>📄</span> PDF
-    </button>
+  <!-- Boutons debug/testing -->
+  <div class="debug-btns" id="debug-controls" style="display:none">
+    <button class="debug-btn" onclick="loadDemoData()">🧪 Charger données démo</button>
+    <button class="debug-btn" onclick="retryLoad()">🔄 Réessayer chargement</button>
+    <button class="debug-btn" onclick="checkData()">🔍 Vérifier données</button>
   </div>
 </header>
 
-<div class="stats-bar" id="stats-bar" style="display: none;">
-  <span class="results-count" id="results-count">0 article</span>
-</div>
+<div class="container">
 
-<main id="articles-container">
-  <div class="loading">
-    <div class="spinner"></div>
-    <p>Chargement des articles...</p>
+  <!-- Filtres -->
+  <div class="filters">
+    <div class="filter-row">
+      <label>Recherche:</label>
+      <input type="text" id="search" placeholder="Titre, source ou thème..." oninput="debouncedFilter()">
+    </div>
+    
+    <div class="filter-row">
+      <label>Du:</label>
+      <input type="date" id="date-start" onchange="applyFilter()">
+      <label>Au:</label>
+      <input type="date" id="date-end" onchange="applyFilter()">
+    </div>
+    
+    <div class="btns">
+      <button class="btn btn-danger" onclick="resetFilters()">🗑️ Réinitialiser</button>
+      <button class="btn btn-primary" onclick="generatePDF()" id="pdf-btn" disabled>📄 PDF</button>
+    </div>
   </div>
-</main>
 
-<div class="pagination-container" id="pagination" style="display: none;">
-  <button class="pagination-btn" id="first-page">«</button>
-  <button class="pagination-btn" id="prev-page">‹</button>
-  <div id="page-numbers"></div>
-  <button class="pagination-btn" id="next-page">›</button>
-  <button class="pagination-btn" id="last-page">»</button>
+  <!-- Stats -->
+  <div class="stats" id="stats" style="display:none">
+    <span id="count">0</span> article(s) trouvé(s)
+  </div>
+
+  <!-- Liste articles -->
+  <div id="articles-container">
+    <div class="empty">
+      <div class="empty-icon">⏳</div>
+      <h3>Chargement des données...</h3>
+      <p>Veuillez patienter</p>
+    </div>
+  </div>
 </div>
 
-<button class="scroll-top" id="scroll-top">↑</button>
-
-<div id="article-overlay">
+<!-- Overlay -->
+<div id="overlay">
   <div class="overlay-header">
     <div class="overlay-title" id="overlay-title"></div>
-    <button class="close-overlay" id="close-overlay">×</button>
+    <button class="close-btn" onclick="closeOverlay()">×</button>
   </div>
-  <div class="overlay-content">
-    <iframe id="article-frame" sandbox="allow-same-origin allow-scripts allow-popups"></iframe>
-  </div>
+  <iframe id="frame"></iframe>
 </div>
 
-<div id="pdf-temp-container"></div>
+<!-- PDF Hidden Container -->
+<div id="pdf-temp"></div>
 
 <script>
-// ===== CONFIGURATION =====
+// ==========================================
+// CONFIGURATION ET ÉTAT
+// ==========================================
 const Config = {
-  dataUrl: 'data/datajson.json',
-  logosUrl: 'data/logo_media.json',
-  imagesPath: 'images3/',
-  itemsPerPage: 10,
-  debounceMs: 300
+  jsonUrl: './data/datajson.json',  // Chemin relatif sécurisé
+  logosUrl: './data/logo_media.json',
+  imagesPath: './images3/',
+  itemsPerPage: 50  // Plus restrictif pour mobile
 };
 
-// ===== ÉTAT =====
-const State = {
-  articles: [],
-  filtered: [],
-  logos: [],
-  page: 1,
-  search: '',
-  startDate: null,
-  endDate: null,
-  period: 'week',
-  isLoading: false
+let State = {
+  allArticles: [],      // Toutes les données brutes
+  filtered: [],         // Données filtrées
+  logos: [],           // Logos médias
+  isError: false,      // Flag erreur
+  errorMsg: '',        // Message d'erreur
+  usingDemo: false     // Mode démo activé?
 };
 
-// ===== DOM ÉLÉMENTS =====
-const DOM = {
-  search: document.getElementById('search-input'),
-  clearSearch: document.getElementById('clear-search'),
-  startDate: document.getElementById('start-date'),
-  endDate: document.getElementById('end-date'),
-  clearFilters: document.getElementById('clear-filters'),
-  downloadPdf: document.getElementById('download-pdf'),
-  container: document.getElementById('articles-container'),
-  stats: document.getElementById('stats-bar'),
-  count: document.getElementById('results-count'),
-  pagination: document.getElementById('pagination'),
-  overlay: document.getElementById('article-overlay'),
-  overlayTitle: document.getElementById('overlay-title'),
-  overlayFrame: document.getElementById('article-frame'),
-  closeOverlay: document.getElementById('close-overlay'),
-  scrollTop: document.getElementById('scroll-top'),
-  pdfContainer: document.getElementById('pdf-temp-container')
-};
-
-// ===== UTILITAIRES =====
-const Utils = {
-  debounce: (fn, ms) => {
-    let timeout;
-    return (...args) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => fn(...args), ms);
-    };
+// ==========================================
+// DONNÉES DÉMO (Fallback)
+// ==========================================
+const DemoData = [
+  {
+    id: 1,
+    titre: "Actualités économiques du jour",
+    source: "Le360",
+    date_heure: "28/01/2026 10:30",
+    theme: "Économie",
+    url: "https://example.com/1",
+    image_brute: "",
+    visible: true,
+    sentiment: "Positif",
+    mots_cles: "économie, finance, marché"
   },
-
-  formatDate: (dateStr) => {
-    if (!dateStr) return 'Date inconnue';
-    try {
-      const [date] = dateStr.split(' ');
-      const [d, m, y] = date.split('/');
-      return `${d.padStart(2,'0')}/${m.padStart(2,'0')}/${y}`;
-    } catch { return dateStr; }
+  {
+    id: 2,
+    titre: "Nouvelles technologies innovantes",
+    source: "Medi1",
+    date_heure: "27/01/2026 14:15",
+    theme: "Technologie",
+    url: "https://example.com/2",
+    image_brute: "",
+    visible: true,
+    sentiment: "Neutre",
+    mots_cles: "tech, innovation, digital"
   },
-
-  parseDate: (dateStr) => {
-    if (!dateStr) return null;
-    try {
-      const [date] = dateStr.split(' ');
-      const [d, m, y] = date.split('/');
-      return new Date(y, m-1, d);
-    } catch { return null; }
-  },
-
-  getImageUrl: (article) => {
-    if (!article.image_brute) return null;
-    if (article.image_brute.startsWith('http')) return article.image_brute;
-    return Config.imagesPath + article.image_brute;
-  },
-
-  getLogoUrl: (source) => {
-    if (!source || !State.logos.length) return null;
-    const logo = State.logos.find(l => 
-      l.domaine && source.toLowerCase().includes(l.domaine.toLowerCase())
-    );
-    return logo ? logo.url : null;
-  },
-
-  escapeHtml: (str) => {
-    if (!str) return '';
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
+  {
+    id: 3,
+    titre: "Sport: Résultats du weekend",
+    source: "Hespress",
+    date_heure: "26/01/2026 09:00",
+    theme: "Sport",
+    url: "https://example.com/3",
+    image_brute: "",
+    visible: true,
+    sentiment: "Positif",
+    mots_cles: "football, match, championnat"
   }
-};
+];
 
-// ===== INITIALISATION =====
+// ==========================================
+// INITIALISATION
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('🚀 Démarrage application...');
+  init();
+});
+
 async function init() {
-  setupEventListeners();
-  setPeriod('week');
+  showStatus('⏳ Chargement des données...', 'warning');
   
   try {
-    await Promise.all([loadArticles(), loadLogos()]);
-    render();
-  } catch (e) {
-    showError('Erreur de chargement des données');
+    // Tentative de chargement avec timeout
+    await Promise.race([
+      loadData(),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout')), 10000)
+      )
+    ]);
+  } catch (error) {
+    console.error('❌ Erreur initiale:', error);
+    handleLoadError(error);
   }
 }
 
-function setupEventListeners() {
-  // Recherche avec debounce
-  DOM.search.addEventListener('input', Utils.debounce((e) => {
-    State.search = e.target.value.trim();
-    DOM.clearSearch.style.display = State.search ? 'flex' : 'none';
-    State.page = 1;
-    filterAndRender();
-  }, Config.debounceMs));
-
-  DOM.clearSearch.addEventListener('click', () => {
-    DOM.search.value = '';
-    State.search = '';
-    DOM.clearSearch.style.display = 'none';
-    State.page = 1;
-    filterAndRender();
-  });
-
-  // Dates
-  DOM.startDate.addEventListener('change', (e) => {
-    State.startDate = e.target.value;
-    State.period = 'custom';
-    updatePeriodButtons();
-    State.page = 1;
-    filterAndRender();
-  });
-
-  DOM.endDate.addEventListener('change', (e) => {
-    State.endDate = e.target.value;
-    State.period = 'custom';
-    updatePeriodButtons();
-    State.page = 1;
-    filterAndRender();
-  });
-
-  // Périodes prédéfinies
-  document.querySelectorAll('.preset-btn').forEach(btn => {
-    btn.addEventListener('click', () => setPeriod(btn.dataset.period));
-  });
-
-  // Actions
-  DOM.clearFilters.addEventListener('click', () => {
-    DOM.search.value = '';
-    State.search = '';
-    DOM.clearSearch.style.display = 'none';
-    setPeriod('week');
-  });
-
-  DOM.downloadPdf.addEventListener('click', generatePDF);
-
-  // Overlay
-  DOM.closeOverlay.addEventListener('click', closeOverlay);
-  DOM.overlay.addEventListener('click', (e) => {
-    if (e.target === DOM.overlay) closeOverlay();
-  });
-
-  // Scroll
-  window.addEventListener('scroll', () => {
-    DOM.scrollTop.style.display = window.scrollY > 300 ? 'block' : 'none';
-  });
-  DOM.scrollTop.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  // Pagination
-  document.getElementById('first-page').addEventListener('click', () => changePage(1));
-  document.getElementById('prev-page').addEventListener('click', () => changePage(State.page - 1));
-  document.getElementById('next-page').addEventListener('click', () => changePage(State.page + 1));
-  document.getElementById('last-page').addEventListener('click', () => changePage(Math.ceil(State.filtered.length / Config.itemsPerPage)));
-}
-
-// ===== CHARGEMENT DONNÉES =====
-async function loadArticles() {
-  const res = await fetch(`${Config.dataUrl}?t=${Date.now()}`);
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  const data = await res.json();
+// ==========================================
+// CHARGEMENT DONNÉES (avec retry)
+// ==========================================
+async function loadData(attempt = 1) {
+  console.log(`📡 Tentative de chargement #${attempt}...`);
   
-  State.articles = data
-    .filter(a => a.visible === true || a.visible === 'true')
-    .sort((a, b) => Utils.parseDate(b.date_heure) - Utils.parseDate(a.date_heure))
-    .map(article => ({
-      ...article,
-      imageUrl: Utils.getImageUrl(article),
-      logoUrl: null // Sera rempli après chargement des logos
-    }));
-}
-
-async function loadLogos() {
   try {
-    const res = await fetch(Config.logosUrl);
-    if (!res.ok) return;
-    State.logos = await res.json();
-    // Mettre à jour les URLs de logos pour les articles
-    State.articles.forEach(a => {
-      a.logoUrl = Utils.getLogoUrl(a.source);
-    });
-  } catch (e) {
-    console.warn('Logos non chargés');
-  }
-}
-
-// ===== FILTRAGE =====
-function filterAndRender() {
-  const query = State.search.toLowerCase();
-  
-  State.filtered = State.articles.filter(article => {
-    // Filtre texte
-    if (query) {
-      const text = `${article.titre} ${article.source} ${article.theme}`.toLowerCase();
-      if (!text.includes(query)) return false;
+    // Vérifier si fichier existe avec HEAD
+    const checkRes = await fetch(Config.jsonUrl, { method: 'HEAD' });
+    if (!checkRes.ok) throw new Error(`Fichier non trouvé (HTTP ${checkRes.status})`);
+    
+    // Chargement données
+    const [articlesRes, logosRes] = await Promise.all([
+      fetch(Config.jsonUrl),
+      fetch(Config.logosUrl).catch(() => ({ok: false, json: async () => []}))
+    ]);
+    
+    if (!articlesRes.ok) throw new Error(`Erreur HTTP ${articlesRes.status}`);
+    
+    const rawData = await articlesRes.json();
+    const logosData = logosRes.ok ? await logosRes.json() : [];
+    
+    // Validation basique
+    if (!Array.isArray(rawData)) throw new Error('Format JSON invalide (attendu: tableau)');
+    if (rawData.length === 0) throw new Error('Fichier JSON vide');
+    
+    // Traitement
+    State.allArticles = processArticles(rawData);
+    State.logos = logosData;
+    State.isError = false;
+    State.usingDemo = false;
+    
+    showStatus(`✅ ${State.allArticles.length} articles chargés`, 'success');
+    document.getElementById('debug-controls').style.display = 'none';
+    
+    applyFilter();
+    
+  } catch (error) {
+    if (attempt < 3) {
+      console.warn(`⚠️ Tentative ${attempt} échouée, retry...`);
+      setTimeout(() => loadData(attempt + 1), 1000 * attempt);
+    } else {
+      throw error;
     }
+  }
+}
+
+function processArticles(data) {
+  return data
+    .filter(item => {
+      // Garder visible=true ou undefined (pour compatibilité)
+      const visible = item.visible;
+      return visible === true || visible === "true" || visible === undefined || visible === null;
+    })
+    .map(item => ({
+      ...item,
+      _searchable: `${item.titre || ''} ${item.source || ''} ${item.theme || ''}`.toLowerCase(),
+      _date: parseDate(item.date_heure)
+    }))
+    .sort((a, b) => (b._date || 0) - (a._date || 0));
+}
+
+// ==========================================
+// GESTION ERREURS
+// ==========================================
+function handleLoadError(error) {
+  console.error('💥 Erreur critique:', error);
+  State.isError = true;
+  State.errorMsg = error.message;
+  
+  showStatus(`❌ Erreur: ${error.message}`, 'error');
+  document.getElementById('debug-controls').style.display = 'flex';
+  
+  // Afficher message utilisateur avec option démo
+  document.getElementById('articles-container').innerHTML = `
+    <div class="empty">
+      <div class="empty-icon">⚠️</div>
+      <h3>Impossible de charger les données</h3>
+      <p>${error.message}</p>
+      <div style="margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button onclick="loadDemoData()" class="btn btn-success">Utiliser données démo</button>
+        <button onclick="retryLoad()" class="btn btn-primary">Réessayer</button>
+      </div>
+    </div>
+  `;
+}
+
+// Actions debug
+function retryLoad() {
+  document.getElementById('articles-container').innerHTML = `
+    <div class="empty">
+      <div class="empty-icon">⏳</div>
+      <h3>Nouvelle tentative...</h3>
+    </div>
+  `;
+  loadData();
+}
+
+function loadDemoData() {
+  console.log('🧪 Chargement mode démo...');
+  State.allArticles = processArticles(DemoData);
+  State.logos = [];
+  State.usingDemo = true;
+  State.isError = false;
+  
+  showStatus(`✅ Mode démo: ${State.allArticles.length} articles`, 'warning');
+  document.getElementById('debug-controls').style.display = 'none';
+  applyFilter();
+}
+
+function checkData() {
+  console.log('📊 État actuel:', State);
+  alert(`Articles: ${State.allArticles.length}\nUtilise démo: ${State.usingDemo}\nErreur: ${State.isError}`);
+}
+
+// ==========================================
+// FILTRAGE
+// ==========================================
+function applyFilter() {
+  const search = document.getElementById('search').value.toLowerCase();
+  const start = document.getElementById('date-start').value;
+  const end = document.getElementById('date-end').value;
+  
+  console.log(`🔍 Filtrage: "${search}", Dates: ${start} → ${end}`);
+  
+  State.filtered = State.allArticles.filter(article => {
+    // Filtre texte
+    if (search && !article._searchable.includes(search)) return false;
     
     // Filtre date
-    if (State.startDate || State.endDate) {
-      const artDate = Utils.parseDate(article.date_heure);
+    if (start || end) {
+      const artDate = article._date;
       if (!artDate) return false;
       
-      if (State.startDate) {
-        const start = new Date(State.startDate);
-        start.setHours(0,0,0,0);
-        if (artDate < start) return false;
+      if (start) {
+        const s = new Date(start);
+        if (artDate < s) return false;
       }
-      if (State.endDate) {
-        const end = new Date(State.endDate);
-        end.setHours(23,59,59,999);
-        if (artDate > end) return false;
+      if (end) {
+        const e = new Date(end);
+        e.setHours(23,59,59);
+        if (artDate > e) return false;
       }
     }
+    
     return true;
   });
   
   render();
 }
 
-// ===== RENDU =====
+const debouncedFilter = debounce(applyFilter, 300);
+
+function debounce(fn, ms) {
+  let timeout;
+  return () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(fn, ms);
+  };
+}
+
+function resetFilters() {
+  document.getElementById('search').value = '';
+  document.getElementById('date-start').value = '';
+  document.getElementById('date-end').value = '';
+  applyFilter();
+}
+
+// ==========================================
+// RENDU
+// ==========================================
 function render() {
-  // Stats
+  const container = document.getElementById('articles-container');
   const count = State.filtered.length;
-  DOM.count.textContent = `${count} article${count > 1 ? 's' : ''}`;
-  DOM.stats.style.display = count ? 'flex' : 'none';
   
-  // Pagination
-  const totalPages = Math.ceil(count / Config.itemsPerPage);
-  if (State.page > totalPages) State.page = Math.max(1, totalPages);
+  // Stats
+  document.getElementById('count').textContent = count;
+  document.getElementById('stats').style.display = count ? 'block' : 'none';
+  document.getElementById('pdf-btn').disabled = count === 0;
   
-  // Contenu
   if (count === 0) {
-    DOM.container.innerHTML = `
-      <div class="no-results">
-        <div style="font-size: 3rem; margin-bottom: 10px;">🔍</div>
+    container.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">🔍</div>
         <h3>Aucun résultat</h3>
-        <p>Essayez d'autres critères de recherche</p>
+        <p>Essayez de modifier vos critères de recherche</p>
+        ${State.isError ? `<button onclick="loadDemoData()" class="btn btn-success" style="margin-top:15px">Charger données démo</button>` : ''}
       </div>
     `;
-    DOM.pagination.style.display = 'none';
-    DOM.downloadPdf.disabled = true;
     return;
   }
   
-  DOM.downloadPdf.disabled = false;
+  // Afficher articles (limité à 50 pour perf mobile)
+  const toShow = State.filtered.slice(0, Config.itemsPerPage);
   
-  // Afficher articles de la page courante
-  const start = (State.page - 1) * Config.itemsPerPage;
-  const pageItems = State.filtered.slice(start, start + Config.itemsPerPage);
-  
-  DOM.container.innerHTML = pageItems.map((article, idx) => createArticleCard(article, idx)).join('');
-  
-  // Pagination
-  if (totalPages > 1) {
-    DOM.pagination.style.display = 'flex';
-    document.getElementById('first-page').disabled = State.page === 1;
-    document.getElementById('prev-page').disabled = State.page === 1;
-    document.getElementById('next-page').disabled = State.page === totalPages;
-    document.getElementById('last-page').disabled = State.page === totalPages;
-    
-    // Numéros de page
-    const numbers = document.getElementById('page-numbers');
-    numbers.innerHTML = '';
-    const maxButtons = 5;
-    let startPage = Math.max(1, State.page - 2);
-    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
-    if (endPage - startPage < maxButtons - 1) startPage = Math.max(1, endPage - maxButtons + 1);
-    
-    for (let i = startPage; i <= endPage; i++) {
-      const btn = document.createElement('div');
-      btn.className = `pagination-number ${i === State.page ? 'active' : ''}`;
-      btn.textContent = i;
-      btn.addEventListener('click', () => changePage(i));
-      numbers.appendChild(btn);
-    }
-  } else {
-    DOM.pagination.style.display = 'none';
-  }
-}
-
-function createArticleCard(article, index) {
-  const delay = index * 0.05;
-  const date = Utils.formatDate(article.date_heure);
-  const hasImage = !!article.imageUrl;
-  const hasLogo = !!article.logoUrl;
-  
-  return `
-    <article class="article-card" style="animation-delay: ${delay}s" onclick='openArticle(${JSON.stringify(article).replace(/'/g, "&#39;")})'>
-      <div class="article-image-container">
-        ${hasImage ? `<img src="${article.imageUrl}" class="article-image" loading="lazy" onerror="this.style.display='none'" alt="">` : ''}
-        
-        ${hasLogo ? `
-        <div class="media-logo-overlay">
-          <img src="${article.logoUrl}" class="media-logo-img" alt="logo">
-        </div>` : ''}
-        
-        <div class="metadata-badges">
-          <div class="metadata-badge date-badge">📅 ${date}</div>
-          ${article.theme ? `<div class="metadata-badge category-badge">🏷️ ${Utils.escapeHtml(article.theme)}</div>` : ''}
-        </div>
-        
-        <div class="title-overlay">
-          <h2 class="article-main-title">${Utils.escapeHtml(article.titre)}</h2>
-          <div class="article-source">📰 ${Utils.escapeHtml(article.source || 'Source inconnue')}</div>
+  container.innerHTML = toShow.map((art, i) => `
+    <article class="article" onclick='openArticle(${JSON.stringify(art).replace(/'/g,"&#39;")})' 
+             style="animation:fadeIn 0.3s ease ${i*0.05}s both">
+      <img class="article-img" 
+           src="${art.image_brute ? (art.image_brute.startsWith('http') ? art.image_brute : Config.imagesPath + art.image_brute) : 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'}" 
+           onerror="this.style.display='none'" 
+           alt="">
+      <div class="article-content">
+        <div class="article-title">${escapeHtml(art.titre)}</div>
+        <div class="article-meta">
+          📰 ${escapeHtml(art.source)} | 📅 ${art.date_heure || 'Date inconnue'}
+          ${art.theme ? `| 🏷️ ${escapeHtml(art.theme)}` : ''}
         </div>
       </div>
     </article>
-  `;
+  `).join('');
+  
+  if (count > Config.itemsPerPage) {
+    container.innerHTML += `
+      <div style="text-align:center;padding:20px;color:#aaa;font-size:0.9rem">
+        ... et ${count - Config.itemsPerPage} autres articles (utilisez les filtres)
+      </div>
+    `;
+  }
 }
 
-function changePage(newPage) {
-  const max = Math.ceil(State.filtered.length / Config.itemsPerPage);
-  if (newPage < 1 || newPage > max) return;
-  State.page = newPage;
-  render();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+// ==========================================
+// UTILITAIRES
+// ==========================================
+function parseDate(str) {
+  if (!str) return null;
+  try {
+    const [date] = str.split(' ');
+    const [d, m, y] = date.split('/');
+    return new Date(y, m-1, d);
+  } catch { return null; }
 }
 
-// ===== OVERLAY =====
+function escapeHtml(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function showStatus(msg, type) {
+  const zone = document.getElementById('status-zone');
+  zone.innerHTML = `<div class="status-alert ${type}">${msg}</div>`;
+  if (type === 'success') setTimeout(() => { if(zone.querySelector('.success')) zone.innerHTML=''; }, 3000);
+}
+
+// ==========================================
+// OVERLAY
+// ==========================================
 function openArticle(article) {
-  DOM.overlayTitle.textContent = article.titre || 'Article';
-  DOM.overlayFrame.src = article.url || '#';
-  DOM.overlay.style.display = 'flex';
+  document.getElementById('overlay-title').textContent = article.titre || 'Article';
+  document.getElementById('frame').src = article.url || '#';
+  document.getElementById('overlay').style.display = 'flex';
   document.body.style.overflow = 'hidden';
 }
 
 function closeOverlay() {
-  DOM.overlay.style.display = 'none';
-  DOM.overlayFrame.src = '';
+  document.getElementById('overlay').style.display = 'none';
+  document.getElementById('frame').src = '';
   document.body.style.overflow = '';
 }
 
-// ===== PDF GENERATION OPTIMISÉE =====
+// ==========================================
+// PDF GENERATION
+// ==========================================
 async function generatePDF() {
-  if (State.filtered.length === 0) {
-    alert('Aucun article à exporter');
-    return;
-  }
+  if (State.filtered.length === 0) return;
   
-  if (typeof html2pdf === 'undefined') {
-    alert('Erreur: Bibliothèque PDF non chargée');
-    return;
-  }
-  
-  const btn = DOM.downloadPdf;
-  const originalText = btn.innerHTML;
+  const btn = document.getElementById('pdf-btn');
+  const original = btn.innerHTML;
   btn.disabled = true;
-  btn.innerHTML = '<span>⏳</span> Génération...';
+  btn.innerHTML = '⏳ Génération...';
   
   try {
-    // Créer le conteneur PDF
-    const container = document.createElement('div');
-    container.className = 'pdf-container';
+    const container = document.getElementById('pdf-temp');
     
-    // Header
     let html = `
-      <div class="pdf-header">
-        <h1 class="pdf-title">Revue de Presse Hebdomadaire</h1>
-        <div class="pdf-date">Généré le ${new Date().toLocaleDateString('fr-FR')}</div>
-        ${State.startDate && State.endDate ? `<div class="pdf-date">Période: ${Utils.formatDate(State.startDate)} - ${Utils.formatDate(State.endDate)}</div>` : ''}
-        <div class="pdf-date" style="font-weight: bold; color: #333; margin-top: 10px;">${State.filtered.length} articles</div>
+      <div style="text-align:center;border-bottom:3px solid #1a73e8;padding-bottom:20px;margin-bottom:20px">
+        <h1 style="color:#1a73e8;margin:0">Revue de Presse</h1>
+        <p>Généré le ${new Date().toLocaleDateString('fr-FR')}</p>
+        <p><strong>${State.filtered.length} articles</strong></p>
       </div>
     `;
     
-    // Articles avec images et logos
-    for (let i = 0; i < State.filtered.length; i++) {
-      const art = State.filtered[i];
-      const imgUrl = art.imageUrl;
-      const logoUrl = art.logoUrl;
+    State.filtered.forEach((art, i) => {
+      const imgUrl = art.image_brute ? 
+        (art.image_brute.startsWith('http') ? art.image_brute : Config.imagesPath + art.image_brute) 
+        : '';
       
       html += `
         <div class="pdf-article">
-          <div class="pdf-article-header">
-            <div class="pdf-article-title">${i + 1}. ${Utils.escapeHtml(art.titre)}</div>
-            ${logoUrl ? `<img src="${logoUrl}" class="pdf-media-logo" alt="media" onerror="this.style.display='none'">` : ''}
-          </div>
-          
-          <div class="pdf-meta">
-            <span><strong>Source:</strong> ${Utils.escapeHtml(art.source || 'N/A')}</span>
-            <span><strong>Date:</strong> ${Utils.formatDate(art.date_heure)}</span>
-            ${art.theme ? `<span><strong>Catégorie:</strong> ${Utils.escapeHtml(art.theme)}</span>` : ''}
-            ${art.sentiment ? `<span><strong>Sentiment:</strong> ${Utils.escapeHtml(art.sentiment)}</span>` : ''}
-          </div>
-          
+          <h3 style="margin:0 0 10px 0;color:#333">${i+1}. ${escapeHtml(art.titre)}</h3>
+          <p style="margin:5px 0;color:#666;font-size:0.9rem">
+            <strong>Source:</strong> ${escapeHtml(art.source)} | 
+            <strong>Date:</strong> ${art.date_heure || 'N/A'}
+            ${art.theme ? `| <strong>Thème:</strong> ${escapeHtml(art.theme)}` : ''}
+          </p>
           ${imgUrl ? `
-          <div style="text-align: center;">
-            <div class="pdf-image-container">
-              <img src="${imgUrl}" class="pdf-article-image" onerror="this.parentElement.style.display='none'" alt="article">
+            <div style="text-align:center;margin:15px 0;padding:10px;background:#f5f5f5;border:2px solid #ddd;border-radius:8px">
+              <img src="${imgUrl}" class="pdf-img" style="max-height:150px" onerror="this.style.display='none'" alt="">
             </div>
-          </div>` : ''}
-          
-          ${art.mots_cles ? `
-          <div class="pdf-keywords">
-            ${art.mots_cles.split(',').map(k => `<span class="pdf-keyword">${Utils.escapeHtml(k.trim())}</span>`).join('')}
-          </div>` : ''}
-          
-          ${art.url ? `<div class="pdf-url"><strong>Lien:</strong> ${art.url}</div>` : ''}
+          ` : ''}
+          ${art.mots_cles ? `<p style="font-size:0.85rem;color:#555"><strong>Mots-clés:</strong> ${escapeHtml(art.mots_cles)}</p>` : ''}
+          ${art.url ? `<p style="font-size:0.8rem;color:#999;word-break:break-all">${art.url}</p>` : ''}
         </div>
       `;
-    }
+    });
     
     container.innerHTML = html;
-    DOM.pdfContainer.innerHTML = '';
-    DOM.pdfContainer.appendChild(container);
     
-    // Attendre le rendu et chargement des images
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await waitForImages(container);
+    // Attendre images
+    await waitImages(container);
     
-    // Générer PDF
-    const opt = {
-      margin: [10, 10, 10, 10],
-      filename: `revue_presse_${new Date().toISOString().split('T')[0]}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { 
-        scale: 2, 
-        useCORS: true, 
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        logging: false,
-        letterRendering: true
-      },
-      jsPDF: { 
-        unit: 'mm', 
-        format: 'a4', 
-        orientation: 'portrait',
-        compress: true
-      }
-    };
+    await html2pdf()
+      .from(container)
+      .set({
+        margin: [10,10,10,10],
+        filename: `revue_presse_${new Date().toISOString().split('T')[0]}.pdf`,
+        image: { type: 'jpeg', quality: 0.95 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4' }
+      })
+      .save();
+      
+    showStatus('✅ PDF généré avec succès', 'success');
     
-    await html2pdf().from(container).set(opt).save();
-    
-    // Cleanup
-    DOM.pdfContainer.innerHTML = '';
+  } catch (e) {
+    console.error(e);
+    alert('Erreur PDF: ' + e.message);
+  } finally {
     btn.disabled = false;
-    btn.innerHTML = originalText;
-    
-  } catch (err) {
-    console.error('Erreur PDF:', err);
-    alert('Erreur lors de la génération du PDF: ' + err.message);
-    btn.disabled = false;
-    btn.innerHTML = originalText;
-    DOM.pdfContainer.innerHTML = '';
+    btn.innerHTML = original;
   }
 }
 
-function waitForImages(container) {
+function waitImages(container) {
   return new Promise(resolve => {
     const imgs = container.querySelectorAll('img');
-    if (imgs.length === 0) return resolve();
-    
     let loaded = 0;
     const check = () => {
       loaded++;
-      if (loaded >= imgs.length) setTimeout(resolve, 200);
+      if (loaded >= imgs.length) setTimeout(resolve, 300);
     };
-    
+    if (imgs.length === 0) return resolve();
     imgs.forEach(img => {
       if (img.complete) check();
-      else {
-        img.onload = check;
-        img.onerror = check;
-      }
+      else { img.onload = check; img.onerror = check; }
     });
-    
-    setTimeout(resolve, 5000); // Timeout de sécurité
+    setTimeout(resolve, 3000);
   });
 }
 
-// ===== PÉRIODES =====
-function setPeriod(period) {
-  const today = new Date();
-  const start = new Date();
-  
-  DOM.endDate.value = today.toISOString().split('T')[0];
-  
-  switch(period) {
-    case 'week': start.setDate(today.getDate() - 7); break;
-    case 'biweekly': start.setDate(today.getDate() - 15); break;
-    case 'month': start.setDate(today.getDate() - 30); break;
+// ==========================================
+// CSS ANIMATIONS
+// ==========================================
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-  
-  DOM.startDate.value = start.toISOString().split('T')[0];
-  State.startDate = DOM.startDate.value;
-  State.endDate = DOM.endDate.value;
-  State.period = period;
-  
-  updatePeriodButtons();
-  State.page = 1;
-  filterAndRender();
-}
-
-function updatePeriodButtons() {
-  document.querySelectorAll('.preset-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.period === State.period);
-  });
-}
-
-function showError(msg) {
-  DOM.container.innerHTML = `
-    <div class="error">
-      <div style="font-size: 3rem; margin-bottom: 10px;">⚠️</div>
-      <h3>Erreur</h3>
-      <p>${msg}</p>
-      <button onclick="location.reload()" style="margin-top: 15px; padding: 12px 24px; background: var(--primary); color: white; border: none; border-radius: 25px; font-weight: bold;">Recharger</button>
-    </div>
-  `;
-}
-
-// Démarrage
-document.addEventListener('DOMContentLoaded', init);
+`;
+document.head.appendChild(style);
 </script>
 </body>
 </html>
