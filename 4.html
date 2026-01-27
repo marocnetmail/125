@@ -2,545 +2,415 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<!-- OPTIMISATION ULTRA MOBILE -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#001122">
 <meta name="description" content="مراجعة الصحافة الأسبوعية">
-<title>مراجعة الصحافة الأسبوعية</title>
+<title>مراجعة الصحافة</title>
 <link rel="icon" type="image/png" href="images1/00011.png">
-<!-- Bibliothèque html2pdf pour générer des PDFs avec support arabe -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<!-- Police arabe -->
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
+<!-- Police simplifiée -->
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
 <style>
-/* ===== CSS RESET & VARIABLES ===== */
+/* ===== RESET COMPLET POUR MOBILE ===== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
 }
+
 :root {
   --primary: #1a73e8;
-  --primary-dark: #0d5cb6;
   --background: #001122;
   --card-bg: #001a44;
   --text: #ffffff;
-  --text-secondary: #cccccc;
   --accent-1: #FF6B6B;
   --accent-2: #4ECDC4;
-  --accent-3: #FFD166;
-  --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  --radius: 8px;
-  --radius-sm: 6px;
-  --radius-lg: 12px;
-  --transition: all 0.3s ease;
-  --safe-top: env(safe-area-inset-top);
-  --safe-bottom: env(safe-area-inset-bottom);
+  --radius: 12px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
-/* ===== BASE STYLES ===== */
+
+/* ===== BASE ULTRA SIMPLE ===== */
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: fixed;
+}
+
 body {
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Tajawal', -apple-system, sans-serif;
   background: var(--background);
   color: var(--text);
-  line-height: 1.5;
-  overflow-x: hidden;
-  min-height: 100vh;
-  padding-top: var(--safe-top);
-  padding-bottom: var(--safe-bottom);
+  line-height: 1.4;
+  font-size: 16px;
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  touch-action: pan-y;
 }
-/* ===== COMPACT HEADER ===== */
+
+/* ===== HEADER FIXE ===== */
 .app-header {
-  background: linear-gradient(135deg, #001122 0%, #002244 100%);
-  padding: 12px 15px;
-  padding-top: calc(12px + var(--safe-top));
-  box-shadow: var(--shadow);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  position: sticky;
+  background: #001122;
+  padding: 8px 10px;
+  padding-top: calc(8px + var(--safe-top));
+  position: fixed;
   top: 0;
-  z-index: 100;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  max-height: 50vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
-.title-search-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 10px;
-}
+
 .main-title {
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   font-weight: 900;
   color: white;
-  line-height: 1.1;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
   text-align: center;
-  letter-spacing: -0.5px;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  margin-bottom: 8px;
+  padding: 0 4px;
 }
-/* ===== FILTERS CONTAINER ===== */
-.filters-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 15px;
-}
-/* ===== SEARCH BAR ===== */
-.search-container {
-  width: 100%;
-}
+
+/* ===== RECHERCHE ===== */
 .search-wrapper {
-  position: relative;
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.1);
   border-radius: var(--radius);
   padding: 4px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: var(--transition);
+  margin-bottom: 8px;
+  min-height: 44px;
 }
-.search-wrapper:focus-within {
-  border-color: var(--primary);
-  background: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
-}
+
 .search-icon {
-  padding: 0 12px;
-  color: var(--text-secondary);
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
+  padding: 0 10px;
+  color: var(--text);
+  font-size: 1rem;
 }
+
 #search-input {
   flex: 1;
-  padding: 12px 12px 12px 0;
+  padding: 12px 8px;
   background: transparent;
   border: none;
   color: var(--text);
-  font-size: 0.95rem;
+  font-size: 16px;
   outline: none;
-  font-family: inherit;
-  min-width: 0;
   text-align: right;
-  direction: rtl;
-  font-size: 16px; /* Empêche le zoom sur iOS */
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 40px;
 }
-#search-input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-  text-align: right;
-}
+
 .clear-search {
   padding: 0 12px;
-  color: var(--text-secondary);
-  font-size: 1.1rem;
-  cursor: pointer;
-  display: none;
-  transition: var(--transition);
+  color: var(--text);
   background: none;
   border: none;
-  flex-shrink: 0;
+  font-size: 1.2rem;
   min-height: 44px;
   min-width: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: none;
 }
-.clear-search:hover {
-  color: var(--text);
-}
-/* ===== DATE FILTERS ET PRÉDÉFINIS ===== */
+
+/* ===== FILTRES DATE ===== */
 .date-filters {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+  flex-direction: column;
 }
+
 .date-group {
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex: 1;
-  min-width: 0;
+  gap: 6px;
 }
+
 .date-label {
   font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--accent-3);
+  color: var(--accent-2);
+  min-width: 35px;
   white-space: nowrap;
-  min-width: 45px;
-  flex-shrink: 0;
 }
+
 .date-input-wrapper {
   flex: 1;
-  position: relative;
   background: rgba(255, 255, 255, 0.1);
   border-radius: var(--radius);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  overflow: hidden;
-  min-width: 0;
+  min-height: 44px;
 }
+
 .date-input {
   width: 100%;
-  padding: 10px 12px;
+  padding: 12px 10px;
   background: transparent;
   border: none;
   color: var(--text);
-  font-size: 0.9rem;
+  font-size: 16px;
   outline: none;
-  font-family: inherit;
-  min-width: 0;
   text-align: right;
-  direction: rtl;
-  font-size: 16px; /* Empêche le zoom sur iOS */
   min-height: 44px;
+  -webkit-appearance: none;
+  appearance: none;
 }
-.date-input::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-  opacity: 0.7;
-  cursor: pointer;
+
+/* Style spécifique pour iOS */
+.date-input::-webkit-date-and-time-value {
+  text-align: right;
 }
-.date-separator {
-  color: var(--accent-2);
-  font-weight: bold;
-  font-size: 1.2rem;
-  margin: 0 5px;
-  flex-shrink: 0;
-}
-/* ===== PRÉDÉFINIS DE PÉRIODE ===== */
+
+/* ===== BOUTONS PÉRIODE ===== */
 .period-presets {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: 6px;
+  margin: 8px 0;
   justify-content: center;
-  width: 100%;
 }
+
 .preset-btn {
   background: rgba(255, 255, 255, 0.1);
   color: var(--text);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 10px 20px;
+  padding: 12px 6px;
   border-radius: var(--radius);
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.85rem;
   cursor: pointer;
-  transition: var(--transition);
-  min-width: 120px;
-  text-align: center;
-  flex: 1;
-  max-width: 150px;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
   min-height: 44px;
-  min-width: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex: 1;
+  text-align: center;
+  touch-action: manipulation;
 }
+
 .preset-btn.active {
   background: var(--primary);
   border-color: var(--primary);
-  color: white;
-  box-shadow: 0 0 10px rgba(26, 115, 232, 0.4);
 }
-/* ===== BOUTONS D'ACTION ===== */
+
+/* ===== BOUTONS ACTION ===== */
 .action-buttons {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
-  justify-content: center;
-  width: 100%;
+  gap: 8px;
+  margin: 8px 0;
 }
-.clear-filters-btn {
-  background: linear-gradient(135deg, var(--accent-1), #ff5252);
+
+.action-btn {
+  background: var(--primary);
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 14px 10px;
   border-radius: var(--radius);
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: var(--transition);
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-  min-width: 120px;
-  justify-content: center;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-  min-height: 44px;
-  min-width: 44px;
-}
-.download-pdf-btn {
-  background: linear-gradient(135deg, #4CAF50, #2E7D32);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: var(--radius);
-  font-size: 0.9rem;
+  min-height: 48px;
+  flex: 1;
+  text-align: center;
+  touch-action: manipulation;
   font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-  min-width: 120px;
-  justify-content: center;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-  min-height: 44px;
-  min-width: 44px;
 }
-.download-pdf-btn:disabled {
+
+.action-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
-/* ===== LOADING STATE ===== */
-#loading-indicator {
+
+/* ===== STATS BAR ===== */
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 12px;
+  background: rgba(0, 26, 68, 0.95);
+  font-size: 0.85rem;
+  color: var(--text);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  height: 44px;
+  margin-top: 0;
+  backdrop-filter: blur(10px);
+}
+
+.results-count {
+  font-weight: 700;
+  color: var(--accent-2);
   text-align: center;
-  padding: 30px 15px;
-  color: var(--text-secondary);
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
 }
-.loading-spinner {
-  width: 35px;
-  height: 35px;
-  border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  margin: 0 auto 15px;
-  animation: spin 1s linear infinite;
+
+/* ===== CONTENU PRINCIPAL ===== */
+.main-content {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-top: calc(var(--header-height, 240px));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--background);
+  overscroll-behavior: contain;
 }
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-/* ===== ARTICLES CONTAINER ===== */
+
 #articles-container {
-  padding: 10px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  min-height: 200px;
-  max-width: 800px;
-  margin: 0 auto;
-  padding-bottom: 80px; /* Espace pour la pagination */
+  gap: 12px;
+  min-height: calc(100vh - var(--header-height, 240px));
 }
-/* ===== ARTICLE CARD ===== */
+
+/* ===== CARTE ARTICLE ===== */
 .article-card {
   background: var(--card-bg);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: var(--shadow);
-  transition: var(--transition);
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  display: flex;
-  flex-direction: column;
-  opacity: 1;
-  transform: translateY(0);
-  height: 100%;
   position: relative;
-  margin-bottom: 5px;
   width: 100%;
-  -webkit-user-select: none;
-  user-select: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-/* Article Image Section */
+
+.article-card:active {
+  transform: scale(0.98);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
 .article-image-container {
   position: relative;
   width: 100%;
-  height: 250px;
-  background: linear-gradient(45deg, #000428, #004e92);
+  aspect-ratio: 16/9;
+  background: #000428;
   overflow: hidden;
-  flex-shrink: 0;
 }
+
 .article-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s ease;
-  background: linear-gradient(45deg, #000428, #004e92);
+  background: linear-gradient(to bottom, #000428, #001122);
 }
-/* ===== TITLE OVERLAY ===== */
+
+/* Badges */
+.metadata-badges {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 2;
+  gap: 4px;
+}
+
+.metadata-badge {
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 48%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  backdrop-filter: blur(4px);
+}
+
+/* Overlay titre */
 .title-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 100%;
-  padding: 20px 15px;
-  background: linear-gradient(to top,
-    rgba(0, 0, 0, 0.95) 0%,
-    rgba(0, 0, 0, 0.85) 30%,
-    rgba(0, 0, 0, 0.7) 60%,
-    transparent 100%);
-  z-index: 2;
+  right: 0;
+  padding: 14px 10px;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 50%, transparent 100%);
+  z-index: 1;
 }
-/* TITRE PRINCIPAL */
+
 .article-main-title {
-  font-size: 1.8rem;
-  font-weight: 900;
-  line-height: 1.15;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
   color: #FFFFFF;
-  margin-bottom: 8px;
-  text-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.8),
-    0 4px 8px rgba(0, 0, 0, 0.6),
-    0 0 20px rgba(0, 0, 0, 0.4);
+  margin-bottom: 4px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  letter-spacing: -0.3px;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
   text-align: right;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
 }
-/* Source */
+
 .article-source {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.8rem;
   color: var(--accent-2);
   display: flex;
   align-items: center;
-  gap: 6px;
-  opacity: 0.95;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  gap: 4px;
   text-align: right;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
 }
-/* ===== METADATA BADGES ===== */
-.metadata-badges {
-  position: absolute;
-  top: 15px;
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 15px;
-  z-index: 3;
-  gap: 8px;
-}
-.metadata-badge {
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  font-weight: 800;
-  border-radius: 20px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: var(--transition);
-  flex-shrink: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-  min-height: 44px;
-  min-width: 44px;
-}
-.date-badge {
-  background: rgba(255, 107, 107, 0.92);
-  color: white;
-}
-.category-badge {
-  background: rgba(78, 205, 196, 0.92);
-  color: white;
-}
-.category-badge.ltr {
-  text-align: left;
-  justify-content: flex-start;
-  padding-right: 12px;
-}
-.category-badge.rtl {
-  text-align: right;
-  justify-content: flex-end;
-  padding-left: 12px;
-}
-/* ===== LOGO DES MÉDIAS ===== */
-.media-logo-container {
-  position: absolute;
-  bottom: 15px;
-  left: 15px;
-  z-index: 4;
-  width: 60px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition);
-  overflow: hidden;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-.media-logo {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
-  transition: var(--transition);
-  opacity: 0.9;
-}
-/* ===== TEMPS ÉCOULÉ ===== */
-.time-ago {
-  position: absolute;
-  top: 70px;
-  right: 15px;
-  padding: 5px 10px;
-  background: rgba(0, 0, 0, 0.7);
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.8rem;
-  font-weight: 600;
-  border-radius: 12px;
-  z-index: 2;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-}
+
 /* ===== PAGINATION ===== */
 .pagination-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 15px;
-  gap: 10px;
-  margin-top: 10px;
-  position: fixed;
+  position: sticky;
   bottom: 0;
   left: 0;
   right: 0;
-  background: var(--background);
+  background: #001122;
+  padding: 10px 12px;
+  padding-bottom: calc(10px + var(--safe-bottom));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  z-index: 99;
+  z-index: 100;
+  min-height: 60px;
+  backdrop-filter: blur(10px);
 }
+
 .pagination-btn {
   background: rgba(255, 255, 255, 0.1);
   color: var(--text);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 10px 16px;
+  padding: 8px 10px;
   border-radius: var(--radius);
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.85rem;
   cursor: pointer;
-  transition: var(--transition);
   min-width: 40px;
   min-height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  touch-action: manipulation;
 }
+
 .pagination-btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
 }
+
 .pagination-numbers {
   display: flex;
-  gap: 5px;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
+
 .pagination-number {
   background: rgba(255, 255, 255, 0.1);
   color: var(--text);
@@ -551,80 +421,70 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.85rem;
   cursor: pointer;
-  transition: var(--transition);
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  touch-action: manipulation;
 }
+
 .pagination-number.active {
   background: var(--primary);
   border-color: var(--primary);
-  color: white;
-  box-shadow: 0 0 10px rgba(26, 115, 232, 0.4);
 }
+
 .pagination-info {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  margin: 0 10px;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  font-size: 0.8rem;
+  color: var(--text);
+  margin: 0 8px;
+  text-align: center;
+  min-width: 70px;
 }
-/* ===== ARTICLE OVERLAY ===== */
+
+/* ===== OVERLAY ARTICLE ===== */
 #article-overlay {
   display: none;
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.98);
-  z-index: 1000;
-  animation: fadeIn 0.3s ease;
+  right: 0;
+  bottom: 0;
+  background: #000;
+  z-index: 2000;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
+
 .overlay-container {
   width: 100%;
   min-height: 100vh;
+  background: white;
   display: flex;
   flex-direction: column;
-  position: relative;
 }
-/* ===== OVERLAY HEADER ===== */
-.overlay-header-extended {
-  padding: 15px;
-  padding-top: calc(15px + var(--safe-top));
-  background: rgba(0, 26, 68, 0.95);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  position: relative;
-  z-index: 2;
-  flex-shrink: 0;
-}
-.overlay-header-top {
+
+.overlay-header {
+  padding: 16px;
+  padding-top: calc(16px + var(--safe-top));
+  background: var(--primary);
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  width: 100%;
-  gap: 15px;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  min-height: 80px;
 }
+
 .overlay-title {
-  font-size: 1.6rem;
-  font-weight: 900;
-  color: #FFFFFF;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: white;
   flex: 1;
   line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-width: 0;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
   text-align: right;
 }
+
 .close-overlay {
   width: 44px;
   height: 44px;
@@ -637,142 +497,153 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: var(--transition);
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  position: relative;
-  z-index: 10;
-  min-height: 44px;
-  min-width: 44px;
+  touch-action: manipulation;
 }
-/* ===== SENTIMENT ET MOTS-CLÉS ===== */
-.overlay-details {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.sentiment-display-overlay {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border-radius: 20px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  width: fit-content;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-}
-.sentiment-positive {
-  color: #4CAF50;
-  border-color: rgba(76, 175, 80, 0.4);
-}
-.sentiment-negative {
-  color: #FF6B6B;
-  border-color: rgba(255, 107, 107, 0.4);
-}
-.sentiment-neutral {
-  color: #FFD166;
-  border-color: rgba(255, 209, 102, 0.4);
-}
-.keywords-container-overlay {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.keyword-overlay {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
-  font-size: 0.8rem;
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  white-space: nowrap;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-}
-/* ===== CONTENU ARTICLE ===== */
+
+/* Contenu overlay */
 .overlay-content {
+  padding: 20px 16px;
+  padding-bottom: calc(20px + var(--safe-bottom));
+  background: white;
+  color: #333;
   flex: 1;
+}
+
+.article-meta {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #eee;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 1rem;
+  color: #555;
+  padding: 8px 0;
+}
+
+.article-url {
+  display: block;
+  margin: 30px 0;
+  text-align: center;
+}
+
+.open-article-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  min-height: 54px;
+  min-width: 200px;
+  text-align: center;
+  touch-action: manipulation;
+  box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3);
+}
+
+.overlay-actions {
+  margin-top: 30px;
   display: flex;
   flex-direction: column;
-  position: relative;
-  min-height: 0;
+  gap: 15px;
 }
-.article-frame-container {
-  flex: 1;
-  position: relative;
-  background: white;
-  min-height: 0;
-}
-#article-frame {
-  width: 100%;
-  height: 100%;
+
+.back-btn {
+  background: #666;
+  color: white;
   border: none;
-  display: block;
+  padding: 16px 24px;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  min-height: 50px;
+  touch-action: manipulation;
 }
-/* ===== NO RESULTS & ERROR ===== */
+
+/* ===== LOADING & ERROR ===== */
+#loading-indicator {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 .no-results, .error-state {
   text-align: center;
-  padding: 40px 15px;
-  color: var(--text-secondary);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 250px;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  padding: 60px 20px;
+  color: var(--text);
 }
+
 .no-results-icon, .error-icon {
   font-size: 3rem;
   margin-bottom: 20px;
   opacity: 0.5;
 }
+
 .clear-search-btn, .retry-button {
   background: var(--primary);
   color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: 24px;
+  padding: 16px 28px;
+  border-radius: 25px;
+  font-size: 1rem;
   cursor: pointer;
   margin-top: 20px;
-  font-family: inherit;
-  transition: var(--transition);
-  font-size: 1rem;
-  font-weight: 600;
-  min-height: 48px;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-  min-height: 44px;
-  min-width: 44px;
+  min-height: 50px;
+  touch-action: manipulation;
 }
-/* ===== ANIMATIONS ===== */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-/* ===== SCROLL TO TOP ===== */
-.scroll-top {
+
+/* ===== PDF LOADING ===== */
+.pdf-loading {
   position: fixed;
-  bottom: 70px;
-  right: 20px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 3000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.pdf-loading-spinner {
   width: 50px;
   height: 50px;
+  border: 5px solid rgba(255, 255, 255, 0.2);
+  border-top-color: white;
   border-radius: 50%;
-  background: var(--primary);
-  color: white;
-  border: none;
-  font-size: 1.3rem;
-  cursor: pointer;
-  display: none;
-  z-index: 99;
-  transition: var(--transition);
-  box-shadow: var(--shadow);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  min-height: 44px;
-  min-width: 44px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
 }
-/* ===== IMAGE ERROR STATE ===== */
+
+/* ===== IMAGE ERROR ===== */
 .image-error {
   display: flex;
   align-items: center;
@@ -781,804 +652,303 @@ body {
   font-size: 0.85rem;
   height: 100%;
   text-align: center;
-  padding: 15px;
-  background: linear-gradient(45deg, #000428, #004e92);
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-}
-/* ===== STATS BAR ===== */
-.stats-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 15px;
-  background: rgba(0, 26, 68, 0.5);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  flex-wrap: wrap;
-  gap: 10px;
-  max-width: 800px;
-  margin: 0 auto;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-}
-.results-count {
-  font-weight: 600;
-  color: var(--accent-2);
-}
-.active-filters {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.filter-tag {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-}
-.filter-tag .remove-filter {
-  background: none;
-  border: none;
-  color: var(--accent-1);
-  cursor: pointer;
-  font-size: 0.9rem;
-  padding: 0;
-  display: flex;
-  align-items: center;
-}
-/* ===== STYLES SPÉCIFIQUES POUR PDF ===== */
-.pdf-container {
-  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
-  direction: rtl;
-  text-align: right;
   padding: 20px;
-  background: white;
-  color: black;
-  max-width: 800px;
-  margin: 0 auto;
-  display: block !important;
-  position: relative !important;
-  overflow: visible !important;
+  background: linear-gradient(to bottom, #000428, #001122);
 }
-.pdf-header {
-  text-align: center;
-  margin-bottom: 30px;
-  border-bottom: 2px solid #1a73e8;
-  padding-bottom: 20px;
-}
-.pdf-title {
-  font-size: 28px;
-  font-weight: bold;
-  color: #1a73e8;
-  margin-bottom: 10px;
-}
-.pdf-subtitle {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 10px;
-}
-.pdf-date-range {
-  font-size: 14px;
-  color: #888;
-}
-.pdf-article {
-  margin-bottom: 25px;
-  page-break-inside: avoid;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  background: #f9f9f9;
-  overflow: hidden;
-}
-.pdf-article-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
-  line-height: 1.4;
-}
-.pdf-article-meta {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 8px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-.pdf-article-image {
-  max-width: 100%;
-  height: auto;
-  margin: 10px 0;
-  border-radius: 4px;
-  display: block;
-  max-height: 150px;
-  object-fit: cover;
-}
-.pdf-article-content {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #444;
-  margin-top: 10px;
-}
-.pdf-keywords {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-.pdf-keyword {
-  background: #1a73e8;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-}
-.pdf-footer {
-  text-align: center;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #ddd;
-  font-size: 12px;
-  color: #888;
-}
-/* Conteneur PDF temporaire */
+
+/* ===== CONTENEUR PDF CACHÉ ===== */
 #pdf-temp-container {
   position: absolute;
   left: -9999px;
   top: 0;
-  width: 210mm;
-  min-height: 297mm;
-  background: white;
-  z-index: -1;
+  width: 100%;
   opacity: 0;
   pointer-events: none;
 }
 
-/* ===== CORRECTIONS POUR SMARTPHONE ===== */
-
-/* Désactiver les effets lourds sur mobile */
-@media (max-width: 768px) {
-  * {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-  
-  body {
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  .article-card {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-    touch-action: pan-y;
-  }
-  
-  .search-wrapper,
-  .date-input-wrapper,
-  .metadata-badge,
-  .preset-btn,
-  .filter-tag {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-  
-  /* Correction du scroll et clics involontaires */
-  .article-card {
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-  }
-  
-  /* Optimiser les images pour mobile */
-  .article-image-container {
-    height: 200px !important;
-  }
-  
-  .article-main-title {
-    font-size: 1.4rem !important;
-    line-height: 1.3 !important;
-    -webkit-line-clamp: 3 !important;
-  }
-  
-  .metadata-badges {
-    padding: 0 10px;
-    top: 10px;
-  }
-  
-  .metadata-badge {
-    padding: 5px 10px;
-    font-size: 0.75rem;
-    min-height: 36px;
-  }
-  
-  /* Logo media mobile */
-  .media-logo-container {
-    width: 50px;
-    height: 25px;
-    bottom: 10px;
-    left: 10px;
-  }
-  
-  .time-ago {
-    top: 60px;
-    right: 10px;
-    font-size: 0.7rem;
-    padding: 4px 8px;
-  }
-  
-  .title-overlay {
-    padding: 15px 10px;
-  }
-  
-  /* Header mobile */
+/* ===== MEDIA QUERIES POUR PETITS ÉCRANS ===== */
+@media (max-height: 700px) {
   .app-header {
-    padding: 10px 12px;
-    padding-top: calc(10px + var(--safe-top));
+    max-height: 40vh;
   }
   
-  .main-title {
-    font-size: 1.5rem;
-  }
-  
-  .date-group {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-  }
-  
-  .date-label {
-    min-width: auto;
-  }
-  
-  .date-input-wrapper {
-    width: 100%;
-  }
-  
-  .date-separator {
-    display: none;
-  }
-  
-  /* Pagination mobile */
-  .pagination-container {
-    padding: 10px;
-    gap: 5px;
-  }
-  
-  .pagination-number {
-    width: 32px;
-    height: 32px;
-    font-size: 0.8rem;
-  }
-  
-  .pagination-btn {
-    min-width: 36px;
-    min-height: 36px;
-    padding: 8px 12px;
-  }
-  
-  /* Boutons */
-  .period-presets {
-    gap: 6px;
-  }
-  
-  .preset-btn {
-    padding: 8px 12px;
-    font-size: 0.8rem;
-    min-width: 100px;
-    flex: 0 1 calc(33.333% - 8px);
-  }
-  
-  .action-buttons {
-    gap: 8px;
-  }
-  
-  .clear-filters-btn,
-  .download-pdf-btn {
-    padding: 8px 12px;
-    min-width: 100px;
-    font-size: 0.85rem;
-    flex: 1;
-  }
-  
-  /* Correction overlay mobile */
-  #article-overlay {
-    position: fixed;
-    height: 100vh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  .overlay-title {
-    font-size: 1.3rem;
-    line-height: 1.3;
-  }
-  
-  .close-overlay {
-    width: 40px;
-    height: 40px;
-    font-size: 1.3rem;
-  }
-  
-  .overlay-header-extended {
-    padding: 12px;
-    padding-top: calc(12px + var(--safe-top));
-  }
-  
-  /* Scroll to top mobile */
-  .scroll-top {
-    width: 44px;
-    height: 44px;
-    font-size: 1.2rem;
-    bottom: 60px;
-    right: 15px;
-  }
-  
-  /* Prévention du scroll horizontal */
-  #articles-container {
-    padding: 8px;
-    gap: 12px;
-  }
-}
-
-/* iOS spécifique */
-@supports (-webkit-touch-callout: none) {
-  .app-header {
-    padding-top: calc(15px + env(safe-area-inset-top)) !important;
-  }
-  
-  #article-overlay {
-    height: -webkit-fill-available !important;
-  }
-  
-  .overlay-header-extended {
-    padding-top: calc(15px + env(safe-area-inset-top)) !important;
-  }
-}
-
-/* Correction pour Chrome Android */
-@media (max-width: 768px) and (hover: none) and (pointer: coarse) {
-  body {
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1) !important;
-  }
-  
-  .article-card:active {
-    transform: scale(0.98) !important;
-    transition: transform 0.1s ease !important;
-  }
-  
-  /* Éviter le zoom sur les inputs */
-  input,
-  select,
-  textarea {
-    font-size: 16px !important;
-  }
-  
-  .date-input {
-    font-size: 16px !important;
-    min-height: 44px !important;
-  }
-  
-  /* Augmenter la taille des zones cliquables */
-  .clear-search,
-  .close-overlay,
-  .metadata-badge,
-  .keyword-overlay,
-  .filter-tag,
-  .pagination-btn,
-  .preset-btn,
-  .clear-search-btn,
-  .retry-button {
-    min-height: 44px !important;
-    min-width: 44px !important;
-  }
-}
-
-/* Mobile très petit */
-@media (max-width: 320px) {
   .article-image-container {
-    height: 180px !important;
+    aspect-ratio: 4/3;
   }
-  
-  .article-main-title {
-    font-size: 1.2rem !important;
-  }
-  
-  .preset-btn {
-    min-width: 90px;
-    font-size: 0.75rem;
+}
+
+@media (max-width: 480px) {
+  .app-header {
     padding: 6px 8px;
-  }
-  
-  .clear-filters-btn,
-  .download-pdf-btn {
-    min-width: 90px;
-    font-size: 0.8rem;
-    padding: 6px 8px;
-  }
-  
-  .metadata-badge {
-    font-size: 0.7rem;
-    padding: 4px 8px;
-  }
-  
-  .media-logo-container {
-    width: 40px;
-    height: 20px;
-    bottom: 8px;
-    left: 8px;
-  }
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-/* MOBILE MEDIUM (376px - 480px) */
-@media (min-width: 376px) and (max-width: 480px) {
-  .main-title {
-    font-size: 1.7rem;
-  }
-  
-  .article-main-title {
-    font-size: 1.6rem;
-  }
-  
-  .article-image-container {
-    height: 220px !important;
-  }
-  
-  .media-logo-container {
-    width: 55px;
-    height: 28px;
-  }
-}
-
-/* TABLET (481px - 768px) */
-@media (min-width: 481px) and (max-width: 768px) {
-  .filters-container {
-    flex-direction: row;
-    align-items: center;
-    gap: 15px;
-  }
-  
-  .search-container {
-    flex: 1;
-  }
-  
-  .date-filters {
-    flex: 2;
-  }
-  
-  .article-main-title {
-    font-size: 1.9rem;
-  }
-  
-  .article-image-container {
-    height: 240px !important;
-  }
-  
-  .media-logo-container {
-    width: 70px;
-    height: 35px;
-    bottom: 20px;
-    left: 20px;
-  }
-  
-  .title-overlay {
-    padding: 25px 20px;
-  }
-  
-  .period-presets {
-    justify-content: center;
-  }
-  
-  .date-separator {
-    display: block;
-  }
-}
-
-/* DESKTOP (≥ 769px) */
-@media (min-width: 769px) {
-  .app-header {
-    padding: 15px 20px;
-    padding-top: calc(15px + var(--safe-top));
+    padding-top: calc(6px + var(--safe-top));
   }
   
   .main-title {
-    font-size: 2rem;
+    font-size: 1.1rem;
+    margin-bottom: 6px;
   }
   
-  .article-image-container {
-    height: 280px !important;
+  .search-wrapper {
+    min-height: 42px;
   }
   
-  .media-logo-container {
-    width: 80px;
-    height: 40px;
-    bottom: 25px;
-    left: 25px;
+  #search-input {
+    padding: 10px 6px;
+    font-size: 15px;
+  }
+  
+  .date-input-wrapper, .preset-btn, .action-btn {
+    min-height: 42px;
+  }
+  
+  .date-input, .preset-btn, .action-btn {
+    padding: 10px 8px;
+    font-size: 14px;
   }
   
   .article-main-title {
-    font-size: 2.1rem;
-    line-height: 1.1;
+    font-size: 0.95rem;
     -webkit-line-clamp: 2;
   }
   
-  .filters-container {
-    max-width: 800px;
-    margin: 0 auto 20px;
+  .metadata-badge {
+    font-size: 0.7rem;
+    padding: 5px 8px;
   }
   
-  .overlay-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    height: 95vh;
-    margin-top: 2.5vh;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
+  .pagination-btn, .pagination-number {
+    min-width: 36px;
+    min-height: 36px;
+    font-size: 0.8rem;
   }
   
-  .scroll-top {
-    width: 55px;
-    height: 55px;
-    font-size: 1.5rem;
-    bottom: 20px;
+  .overlay-title {
+    font-size: 1.1rem;
   }
   
-  #articles-container {
-    gap: 20px;
-    padding: 20px;
-    padding-bottom: 20px;
+  .open-article-btn {
+    padding: 14px 24px;
+    font-size: 1rem;
+    min-height: 48px;
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --radius: 10px;
   }
   
-  .title-overlay {
-    padding: 30px 25px;
+  .main-title {
+    font-size: 1rem;
   }
   
-  .period-presets {
-    justify-content: center;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+  .search-wrapper, .date-input-wrapper, .preset-btn, .action-btn {
+    min-height: 40px;
   }
   
-  .action-buttons {
-    justify-content: center;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
+  #search-input, .date-input {
+    font-size: 14px;
+    padding: 8px 6px;
   }
   
-  /* Réactiver les effets sur desktop */
-  .article-card {
-    animation: fadeInUp 0.5s ease forwards;
-    opacity: 0;
-    transform: translateY(20px);
+  .date-label {
+    font-size: 0.75rem;
   }
   
-  .article-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-    border-color: rgba(26, 115, 232, 0.3);
+  .period-presets, .action-buttons {
+    gap: 4px;
   }
   
-  .article-card:hover .article-image {
-    transform: scale(1.05);
+  .preset-btn, .action-btn {
+    font-size: 13px;
+    padding: 8px 4px;
   }
   
-  .article-card:hover .media-logo {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-  
-  .article-card:hover .metadata-badge {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.5);
+  .article-main-title {
+    font-size: 0.9rem;
   }
   
   .pagination-container {
-    position: static;
-    background: transparent;
-    border-top: none;
+    gap: 3px;
+    padding: 8px;
+  }
+  
+  .pagination-btn, .pagination-number {
+    min-width: 32px;
+    min-height: 32px;
+    font-size: 0.75rem;
+  }
+  
+  .pagination-info {
+    font-size: 0.75rem;
+    min-width: 60px;
   }
 }
 
-/* LARGE DESKTOP (≥ 1025px) */
-@media (min-width: 1025px) {
-  .article-main-title {
-    font-size: 2.2rem;
+/* ===== OPTIMISATIONS iOS ===== */
+@supports (-webkit-touch-callout: none) {
+  .main-content {
+    height: -webkit-fill-available;
   }
   
-  .media-logo-container {
-    width: 90px;
-    height: 45px;
-  }
-  
-  .stats-bar {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 12px 20px;
-  }
-  
-  .app-header {
-    padding: 18px 25px;
-    padding-top: calc(18px + var(--safe-top));
-  }
-  
-  #articles-container {
-    gap: 22px;
+  .search-wrapper, .date-input-wrapper {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.08);
   }
 }
 
-/* HIGH CONTRAST MODE */
-@media (prefers-contrast: high) {
-  :root {
-    --primary: #0057d9;
-    --accent-1: #ff3333;
-    --accent-2: #00a3a3;
+/* ===== GESTION DU TOUCHER ===== */
+@media (hover: none) and (pointer: coarse) {
+  button, .article-card, .pagination-number {
+    cursor: default;
   }
   
-  .search-wrapper,
-  .date-input-wrapper {
-    border-width: 2px;
+  .article-card:active {
+    opacity: 0.7;
   }
   
-  .article-main-title {
-    color: #FFFFFF;
-    text-shadow: 0 2px 4px #000000;
+  input, textarea, select {
+    font-size: 16px !important; /* Empêche le zoom sur iOS */
   }
 }
 
-/* REDUCED MOTION */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-  
-  .article-card {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-  
-  .loading-spinner {
-    animation-duration: 2s !important;
-  }
+/* ===== UTILITAIRE POUR MASQUER LES ÉLÉMENTS ===== */
+.hidden {
+  display: none !important;
+}
+
+/* ===== GESTION DE L'HAUTEUR DYNAMIQUE DU HEADER ===== */
+.header-height-observer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  opacity: 0;
 }
 </style>
 </head>
 <body>
-<header class="app-header">
-  <div class="title-search-container">
-    <h1 class="main-title">مراجعة الصحافة<br>الأسبوعية</h1>
-   
-    <div class="filters-container">
-      <div class="search-container">
-        <div class="search-wrapper">
-          <div class="search-icon">🔍</div>
-          <input type="text" id="search-input" placeholder="بحث في المقالات..." autocomplete="off" spellcheck="false" enterkeyhint="search">
-          <button class="clear-search" id="clear-search" aria-label="مسح البحث">✕</button>
-        </div>
-      </div>
-     
-      <div class="date-filters">
-        <div class="date-group">
-          <span class="date-label">بداية:</span>
-          <div class="date-input-wrapper">
-            <input type="date" id="start-date" class="date-input" aria-label="تاريخ البداية">
-          </div>
-        </div>
-      
-        <div class="date-separator">→</div>
-     
-        <div class="date-group">
-          <span class="date-label">نهاية:</span>
-          <div class="date-input-wrapper">
-            <input type="date" id="end-date" class="date-input" aria-label="تاريخ النهاية">
-          </div>
-        </div>
+
+<!-- Header fixe -->
+<header class="app-header" id="app-header">
+  <div class="header-height-observer" id="header-observer"></div>
+  
+  <h1 class="main-title">مراجعة الصحافة الأسبوعية</h1>
+  
+  <div class="search-wrapper">
+    <div class="search-icon">🔍</div>
+    <input type="text" id="search-input" placeholder="بحث في المقالات..." autocomplete="off" inputmode="search">
+    <button class="clear-search" id="clear-search">✕</button>
+  </div>
+  
+  <div class="date-filters">
+    <div class="date-group">
+      <span class="date-label">من:</span>
+      <div class="date-input-wrapper">
+        <input type="date" id="start-date" class="date-input">
       </div>
     </div>
-  
-    <!-- Boutons de période prédéfinis -->
-    <div class="period-presets">
-      <button class="preset-btn active" data-period="week">أسبوعي</button>
-      <button class="preset-btn" data-period="biweekly">نصف شهري</button>
-      <button class="preset-btn" data-period="month">شهري</button>
+    
+    <div class="date-group">
+      <span class="date-label">إلى:</span>
+      <div class="date-input-wrapper">
+        <input type="date" id="end-date" class="date-input">
+      </div>
     </div>
+  </div>
   
-    <!-- Boutons d'action -->
-    <div class="action-buttons">
-      <button class="clear-filters-btn" id="clear-filters">
-        <span>🗑️</span>
-        <span>مسح الكل</span>
-      </button>
-      <button class="download-pdf-btn" id="download-pdf-btn">
-        <span>📄</span>
-        <span>تحميل PDF</span>
-      </button>
-    </div>
+  <div class="period-presets">
+    <button class="preset-btn active" data-period="week">أسبوع</button>
+    <button class="preset-btn" data-period="biweekly">أسبوعين</button>
+    <button class="preset-btn" data-period="month">شهر</button>
+  </div>
+  
+  <div class="action-buttons">
+    <button class="action-btn" id="clear-filters">مسح الكل</button>
+    <button class="action-btn" id="download-pdf-btn">تحميل PDF</button>
   </div>
 </header>
+
+<!-- Stats bar -->
 <div class="stats-bar" id="stats-bar" style="display: none;">
   <div class="results-count" id="results-count">0 مقال</div>
-  <div class="active-filters" id="active-filters">
-    <!-- Filtres actifs apparaîtront ici -->
-  </div>
 </div>
-<main id="articles-container">
-  <div id="loading-indicator">
-    <div class="loading-spinner"></div>
-    <p>جاري تحميل المقالات...</p>
-  </div>
-</main>
+
+<!-- Contenu principal -->
+<div class="main-content" id="main-content">
+  <main id="articles-container">
+    <div id="loading-indicator">
+      <div class="loading-spinner"></div>
+      <p>جاري تحميل المقالات...</p>
+    </div>
+  </main>
+</div>
+
 <!-- Pagination -->
 <div class="pagination-container" id="pagination-container" style="display: none;">
-  <button class="pagination-btn" id="first-btn" title="الصفحة الأولى">««</button>
-  <button class="pagination-btn" id="prev-btn" title="الصفحة السابقة">‹</button>
-
-  <div class="pagination-numbers" id="pagination-numbers">
-    <!-- Les numéros de page seront générés ici -->
-  </div>
-
-  <button class="pagination-btn" id="next-btn" title="الصفحة التالية">›</button>
-  <button class="pagination-btn" id="last-btn" title="الصفحة الأخيرة">»»</button>
-
-  <div class="pagination-info" id="pagination-info">الصفحة 1 من 1</div>
+  <button class="pagination-btn" id="first-btn">««</button>
+  <button class="pagination-btn" id="prev-btn">‹</button>
+  <div class="pagination-numbers" id="pagination-numbers"></div>
+  <button class="pagination-btn" id="next-btn">›</button>
+  <button class="pagination-btn" id="last-btn">»»</button>
+  <div class="pagination-info" id="pagination-info">ص 1/1</div>
 </div>
-<button class="scroll-top" id="scroll-top" aria-label="العودة للأعلى">↑</button>
+
+<!-- Overlay article -->
 <div id="article-overlay">
   <div class="overlay-container">
-    <div class="overlay-header-extended">
-      <div class="overlay-header-top">
-        <div class="overlay-title" id="overlay-article-title"></div>
-        <button class="close-overlay" id="close-overlay" aria-label="إغلاق">×</button>
-      </div>
-      <div class="overlay-details">
-        <div id="sentiment-display-overlay" class="sentiment-display-overlay sentiment-neutral">
-          <span>المشاعر:</span>
-          <span id="sentiment-value">جار التحميل...</span>
-        </div>
-        <div class="keywords-container-overlay" id="keywords-container-overlay">
-          <!-- Les mots-clés seront insérés ici -->
-        </div>
-      </div>
+    <div class="overlay-header">
+      <div class="overlay-title" id="overlay-article-title"></div>
+      <button class="close-overlay" id="close-overlay">×</button>
     </div>
+    
     <div class="overlay-content">
-      <div class="article-frame-container">
-        <iframe id="article-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" title="محتوى المقال" loading="lazy"></iframe>
+      <div class="article-meta">
+        <div class="meta-item" id="article-source">
+          <span>📰</span>
+          <span id="source-text"></span>
+        </div>
+        <div class="meta-item" id="article-date">
+          <span>📅</span>
+          <span id="date-text"></span>
+        </div>
+        <div class="meta-item" id="article-sentiment">
+          <span>🎭</span>
+          <span id="sentiment-text"></span>
+        </div>
+      </div>
+      
+      <div class="article-url">
+        <a href="#" target="_blank" rel="noopener" class="open-article-btn" id="article-link">فتح المقال</a>
+      </div>
+      
+      <div class="overlay-actions">
+        <button class="back-btn" onclick="closeArticleOverlay()">العودة للقائمة</button>
       </div>
     </div>
   </div>
 </div>
-<!-- Conteneur caché pour le contenu PDF -->
+
+<!-- PDF Loading -->
+<div class="pdf-loading" id="pdf-loading">
+  <div class="pdf-loading-spinner"></div>
+  <p>جارٍ إنشاء ملف PDF...</p>
+</div>
+
+<!-- Conteneur PDF caché -->
 <div id="pdf-temp-container"></div>
+
 <script>
-// ===== VARIABLE GLOBALE POUR LES LOGOS =====
-let mediaLogos = [];
-// ===== APP CONFIGURATION =====
+// ===== CONFIGURATION SIMPLE =====
 const CONFIG = {
   jsonUrl: 'data/datajson.json?t=' + Date.now(),
-  logosUrl: 'data/logo_media.json?t=' + Date.now(),
-  maxArticles: 1000,
-  imagesBasePath: 'images3/',
-  debounceDelay: 300,
-  touchDelay: 100,
-  articlesPerPage: 10
+  articlesPerPage: 8,
+  maxArticles: 200
 };
-// ===== DÉTECTION MOBILE =====
-const isMobile = window.innerWidth <= 768;
-const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-// ===== APP STATE =====
+
+// ===== ÉTAT DE L'APPLICATION =====
 let appState = {
   articles: [],
   filteredArticles: [],
@@ -1586,32 +956,35 @@ let appState = {
   startDate: null,
   endDate: null,
   isLoading: true,
-  lastTouchTime: 0,
   currentPage: 1,
   activePeriod: 'week',
   isScrolling: false,
-  touchStartY: 0,
-  touchStartTime: 0
+  headerHeight: 240
 };
+
+// ===== ÉLÉMENTS DOM =====
 const elements = {
+  // Recherche
   searchInput: document.getElementById('search-input'),
   clearSearch: document.getElementById('clear-search'),
+  
+  // Dates
   startDate: document.getElementById('start-date'),
   endDate: document.getElementById('end-date'),
+  
+  // Boutons
   clearFilters: document.getElementById('clear-filters'),
+  downloadPdfBtn: document.getElementById('download-pdf-btn'),
+  periodPresets: document.querySelectorAll('.preset-btn'),
+  
+  // Conteneurs
   articlesContainer: document.getElementById('articles-container'),
-  articleOverlay: document.getElementById('article-overlay'),
-  closeOverlay: document.getElementById('close-overlay'),
-  articleFrame: document.getElementById('article-frame'),
-  overlayArticleTitle: document.getElementById('overlay-article-title'),
-  sentimentDisplayOverlay: document.getElementById('sentiment-display-overlay'),
-  sentimentValue: document.getElementById('sentiment-value'),
-  keywordsContainerOverlay: document.getElementById('keywords-container-overlay'),
-  loadingIndicator: document.getElementById('loading-indicator'),
-  scrollTop: document.getElementById('scroll-top'),
   statsBar: document.getElementById('stats-bar'),
   resultsCount: document.getElementById('results-count'),
-  activeFilters: document.getElementById('active-filters'),
+  mainContent: document.getElementById('main-content'),
+  appHeader: document.getElementById('app-header'),
+  
+  // Pagination
   paginationContainer: document.getElementById('pagination-container'),
   firstBtn: document.getElementById('first-btn'),
   prevBtn: document.getElementById('prev-btn'),
@@ -1619,91 +992,40 @@ const elements = {
   lastBtn: document.getElementById('last-btn'),
   paginationNumbers: document.getElementById('pagination-numbers'),
   paginationInfo: document.getElementById('pagination-info'),
-  periodPresets: document.querySelectorAll('.preset-btn'),
-  downloadPdfBtn: document.getElementById('download-pdf-btn'),
+  
+  // Overlay
+  articleOverlay: document.getElementById('article-overlay'),
+  closeOverlay: document.getElementById('close-overlay'),
+  overlayArticleTitle: document.getElementById('overlay-article-title'),
+  sourceText: document.getElementById('source-text'),
+  dateText: document.getElementById('date-text'),
+  sentimentText: document.getElementById('sentiment-text'),
+  articleLink: document.getElementById('article-link'),
+  
+  // Loading
+  loadingIndicator: document.getElementById('loading-indicator'),
+  pdfLoading: document.getElementById('pdf-loading'),
+  
+  // PDF
   pdfTempContainer: document.getElementById('pdf-temp-container')
 };
 
-// ===== GESTION DES CLICS PENDANT LE SCROLL =====
-let scrollTimeout;
-window.addEventListener('scroll', () => {
-  appState.isScrolling = true;
-  clearTimeout(scrollTimeout);
-  scrollTimeout = setTimeout(() => {
-    appState.isScrolling = false;
-  }, 150);
-});
-
-async function initApp() {
+// ===== INITIALISATION =====
+function initApp() {
+  updateHeaderHeight();
   setupEventListeners();
-  await loadMediaLogos();
   setupPeriodPresets();
+  setupResizeObserver();
   loadArticles();
 }
-async function loadMediaLogos() {
-  try {
-    const response = await fetch(CONFIG.logosUrl);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    mediaLogos = await response.json();
-    console.log('Logos des médias chargés:', mediaLogos.length, 'logos');
-  } catch (error) {
-    console.error('Erreur de chargement des logos:', error);
-    mediaLogos = [];
-  }
-}
-function setupPeriodPresets() {
-  setPeriod('week');
 
-  elements.periodPresets.forEach(btn => {
-    btn.addEventListener('click', function() {
-      const period = this.getAttribute('data-period');
-      setPeriod(period);
-    });
-  });
-}
-function setPeriod(period) {
-  const today = new Date();
-  const startDate = new Date();
-
-  elements.endDate.value = today.toISOString().split('T')[0];
-
-  switch(period) {
-    case 'week':
-      startDate.setDate(today.getDate() - 7);
-      elements.startDate.value = startDate.toISOString().split('T')[0];
-      break;
-    
-    case 'biweekly':
-      startDate.setDate(today.getDate() - 15);
-      elements.startDate.value = startDate.toISOString().split('T')[0];
-      break;
-    
-    case 'month':
-      startDate.setDate(today.getDate() - 30);
-      elements.startDate.value = startDate.toISOString().split('T')[0];
-      break;
-  }
-
-  appState.startDate = elements.startDate.value;
-  appState.endDate = elements.endDate.value;
-  appState.activePeriod = period;
-  appState.currentPage = 1;
-
-  elements.periodPresets.forEach(btn => {
-    if (btn.getAttribute('data-period') === period) {
-      btn.classList.add('active');
-    } else {
-      btn.classList.remove('active');
-    }
-  });
-
-  filterArticles();
-}
+// ===== GESTION DES ÉVÉNEMENTS =====
 function setupEventListeners() {
+  // Recherche
   elements.searchInput.addEventListener('input', function(e) {
     appState.searchQuery = e.target.value;
     elements.clearSearch.style.display = appState.searchQuery ? 'flex' : 'none';
-    debounce(filterArticles, CONFIG.debounceDelay)();
+    filterArticles();
   });
 
   elements.clearSearch.addEventListener('click', () => {
@@ -1714,6 +1036,7 @@ function setupEventListeners() {
     elements.searchInput.focus();
   });
 
+  // Dates
   elements.startDate.addEventListener('change', function() {
     appState.startDate = this.value;
     appState.activePeriod = 'custom';
@@ -1728,6 +1051,7 @@ function setupEventListeners() {
     filterArticles();
   });
 
+  // Bouton effacer tout
   elements.clearFilters.addEventListener('click', () => {
     elements.searchInput.value = '';
     appState.searchQuery = '';
@@ -1737,283 +1061,308 @@ function setupEventListeners() {
     elements.searchInput.focus();
   });
 
+  // Overlay
   elements.closeOverlay.addEventListener('click', closeArticleOverlay);
-
+  
+  // Fermeture avec Escape
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeArticleOverlay();
   });
 
-  // Gestion tactile améliorée pour fermer l'overlay
-  let touchStartY = 0;
-  elements.articleOverlay.addEventListener('touchstart', (e) => {
-    touchStartY = e.touches[0].clientY;
-  });
-
-  elements.articleOverlay.addEventListener('touchmove', (e) => {
-    if (!touchStartY) return;
-   
-    const touchY = e.touches[0].clientY;
-    const diffY = touchStartY - touchY;
-   
-    if (diffY < -100) {
-      closeArticleOverlay();
-    }
-  });
-
-  elements.scrollTop.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  window.addEventListener('scroll', () => {
-    elements.scrollTop.style.display = window.scrollY > 300 ? 'block' : 'none';
-  });
-
+  // Pagination
   elements.firstBtn.addEventListener('click', () => goToPage(1));
   elements.prevBtn.addEventListener('click', () => goToPage(appState.currentPage - 1));
   elements.nextBtn.addEventListener('click', () => goToPage(appState.currentPage + 1));
   elements.lastBtn.addEventListener('click', () => goToPage(getTotalPages()));
 
+  // PDF
   elements.downloadPdfBtn.addEventListener('click', generatePDF);
 
-  // Prévention double-tap sur mobile
-  let lastTouch = 0;
-  document.addEventListener('touchstart', (event) => {
-    const now = Date.now();
-    if (now - lastTouch <= 300) {
-      event.preventDefault();
-    }
-    lastTouch = now;
-  }, { passive: false });
+  // Gestion du scroll
+  let scrollTimeout;
+  elements.mainContent.addEventListener('scroll', function() {
+    appState.isScrolling = true;
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      appState.isScrolling = false;
+    }, 150);
+  }, { passive: true });
 
-  // Prévention zoom sur iOS
+  // Empêcher le pull-to-refresh
+  let touchStartY = 0;
+  document.addEventListener('touchstart', function(e) {
+    if (e.target.closest('.article-card') || e.target.closest('#articles-container')) {
+      touchStartY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+
   document.addEventListener('touchmove', function(e) {
-    if (e.scale !== 1) {
+    // Si on est en haut et qu'on scroll vers le bas, empêcher le refresh
+    if (elements.mainContent.scrollTop === 0 && e.touches[0].clientY > touchStartY + 10) {
       e.preventDefault();
     }
   }, { passive: false });
-}
-function updatePeriodButtons() {
-  elements.periodPresets.forEach(btn => {
-    btn.classList.remove('active');
+
+  // Clic externe pour fermer l'overlay
+  elements.articleOverlay.addEventListener('click', function(e) {
+    if (e.target === this) closeArticleOverlay();
+  });
+
+  // Focus trap dans l'overlay
+  elements.articleOverlay.addEventListener('keydown', function(e) {
+    if (e.key === 'Tab') {
+      const focusable = this.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      
+      if (e.shiftKey && document.activeElement === first) {
+        last.focus();
+        e.preventDefault();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        first.focus();
+        e.preventDefault();
+      }
+    }
   });
 }
-// ===== DATE HELPER FUNCTIONS =====
+
+function setupResizeObserver() {
+  // Mettre à jour la hauteur du header quand il change
+  const resizeObserver = new ResizeObserver(entries => {
+    for (let entry of entries) {
+      if (entry.target === elements.appHeader) {
+        updateHeaderHeight();
+      }
+    }
+  });
+  
+  resizeObserver.observe(elements.appHeader);
+}
+
+function updateHeaderHeight() {
+  const height = elements.appHeader.offsetHeight;
+  appState.headerHeight = height;
+  document.documentElement.style.setProperty('--header-height', height + 'px');
+  elements.mainContent.style.paddingTop = height + 'px';
+}
+
+// ===== PÉRIODES PRÉDÉFINIES =====
+function setupPeriodPresets() {
+  setPeriod('week');
+
+  elements.periodPresets.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const period = this.getAttribute('data-period');
+      setPeriod(period);
+    });
+  });
+}
+
+function setPeriod(period) {
+  const today = new Date();
+  const startDate = new Date();
+
+  // Formater la date pour l'input (YYYY-MM-DD)
+  const formatDate = (date) => date.toISOString().split('T')[0];
+  
+  elements.endDate.value = formatDate(today);
+
+  switch(period) {
+    case 'week':
+      startDate.setDate(today.getDate() - 7);
+      break;
+    case 'biweekly':
+      startDate.setDate(today.getDate() - 14);
+      break;
+    case 'month':
+      startDate.setDate(today.getDate() - 30);
+      break;
+  }
+
+  elements.startDate.value = formatDate(startDate);
+
+  appState.startDate = elements.startDate.value;
+  appState.endDate = elements.endDate.value;
+  appState.activePeriod = period;
+  appState.currentPage = 1;
+
+  elements.periodPresets.forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-period') === period);
+  });
+
+  filterArticles();
+}
+
+function updatePeriodButtons() {
+  elements.periodPresets.forEach(btn => btn.classList.remove('active'));
+}
+
+// ===== GESTION DES DATES =====
 function parseArticleDate(dateString) {
   if (!dateString) return null;
-
   try {
-    const [datePart, timePart] = dateString.split(' ');
+    const [datePart] = dateString.split(' ');
     const [day, month, year] = datePart.split('/');
-   
-    if (!day || !month || !year) return null;
-   
     return new Date(year, month - 1, day);
-  } catch (e) {
-    console.warn('Error parsing date:', dateString, e);
+  } catch {
     return null;
   }
 }
+
 function formatDateToDDMMYYYY(dateString) {
   if (!dateString) return '';
-
   try {
-    const [datePart, timePart] = dateString.split(' ');
+    const [datePart] = dateString.split(' ');
     const [day, month, year] = datePart.split('/');
-   
-    const paddedDay = day.padStart(2, '0');
-    const paddedMonth = month.padStart(2, '0');
-   
-    return `${paddedDay}/${paddedMonth}/${year}`;
-  } catch (e) {
-    console.warn('Error formatting date:', dateString, e);
-    return dateString || '';
-  }
-}
-function getTimeAgo(dateString) {
-  if (!dateString) return '';
-
-  try {
-    const [datePart, timePart] = dateString.split(' ');
-    const [day, month, year] = datePart.split('/');
-    const [hours, minutes] = timePart ? timePart.split(':') : [0, 0];
-   
-    const articleDate = new Date(year, month - 1, day, hours, minutes);
-    const now = new Date();
-    const diffMs = now - articleDate;
-   
-    const diffMins = Math.floor(diffMs / (1000 * 60));
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-   
-    if (diffMins < 1) {
-      return `الآن`;
-    } else if (diffMins < 60) {
-      return `منذ ${diffMins} دقيقة`;
-    } else if (diffHours < 24) {
-      return `منذ ${diffHours} ساعة`;
-    } else if (diffDays === 1) {
-      return `منذ يوم`;
-    } else if (diffDays < 7) {
-      return `منذ ${diffDays} أيام`;
-    } else if (diffDays < 30) {
-      const weeks = Math.floor(diffDays / 7);
-      return `منذ ${weeks} أسبوع`;
-    } else {
-      const formattedDate = formatDateToDDMMYYYY(dateString);
-      return formattedDate;
-    }
-  } catch (e) {
+    return `${day}/${month}/${year}`;
+  } catch {
     return '';
   }
 }
+
+function getTimeAgo(dateString) {
+  if (!dateString) return '';
+  try {
+    const [datePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('/');
+    const articleDate = new Date(year, month - 1, day);
+    const now = new Date();
+    const diffDays = Math.floor((now - articleDate) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return 'اليوم';
+    if (diffDays === 1) return 'أمس';
+    if (diffDays < 7) return `منذ ${diffDays} أيام`;
+    if (diffDays < 30) return `منذ ${Math.floor(diffDays / 7)} أسابيع`;
+    return formatDateToDDMMYYYY(dateString);
+  } catch {
+    return '';
+  }
+}
+
 function isDateInRange(articleDate, startDate, endDate) {
   if (!articleDate) return false;
-
+  
   const articleDateObj = parseArticleDate(articleDate);
   if (!articleDateObj) return false;
-
+  
   if (!startDate && !endDate) return true;
-
+  
   const start = startDate ? new Date(startDate) : null;
   const end = endDate ? new Date(endDate) : null;
-
-  if (start) start.setHours(0, 0, 0, 0);
-  if (end) end.setHours(23, 59, 59, 999);
-
+  
   if (start && articleDateObj < start) return false;
   if (end && articleDateObj > end) return false;
-
+  
   return true;
 }
-// ===== PAGINATION FUNCTIONS =====
+
+// ===== PAGINATION =====
 function getTotalPages() {
   return Math.ceil(appState.filteredArticles.length / CONFIG.articlesPerPage);
 }
+
 function getCurrentPageArticles() {
   const startIndex = (appState.currentPage - 1) * CONFIG.articlesPerPage;
   const endIndex = startIndex + CONFIG.articlesPerPage;
   return appState.filteredArticles.slice(startIndex, endIndex);
 }
+
 function goToPage(page) {
   const totalPages = getTotalPages();
-
   if (page < 1 || page > totalPages) return;
-
+  
   appState.currentPage = page;
   displayArticles();
   updatePagination();
-
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  // Scroll vers le haut
+  elements.mainContent.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
 function updatePagination() {
   const totalPages = getTotalPages();
   const currentPage = appState.currentPage;
-
+  
   if (totalPages <= 1) {
     elements.paginationContainer.style.display = 'none';
     return;
   }
-
+  
   elements.paginationContainer.style.display = 'flex';
-
+  
   elements.firstBtn.disabled = currentPage === 1;
   elements.prevBtn.disabled = currentPage === 1;
   elements.nextBtn.disabled = currentPage === totalPages;
   elements.lastBtn.disabled = currentPage === totalPages;
-
-  elements.paginationInfo.textContent = `الصفحة ${currentPage} من ${totalPages}`;
-
+  
+  elements.paginationInfo.textContent = `ص ${currentPage}/${totalPages}`;
+  
   elements.paginationNumbers.innerHTML = '';
-
+  
   let startPage = Math.max(1, currentPage - 2);
   let endPage = Math.min(totalPages, startPage + 4);
-
+  
   if (endPage - startPage < 4) {
     startPage = Math.max(1, endPage - 4);
   }
-
+  
   for (let i = startPage; i <= endPage; i++) {
     const pageBtn = document.createElement('div');
     pageBtn.className = `pagination-number ${i === currentPage ? 'active' : ''}`;
     pageBtn.textContent = i;
+    pageBtn.setAttribute('role', 'button');
+    pageBtn.setAttribute('aria-label', `الصفحة ${i}`);
     pageBtn.addEventListener('click', () => goToPage(i));
     elements.paginationNumbers.appendChild(pageBtn);
   }
 }
-// ===== IMAGE MANAGEMENT =====
+
+// ===== GESTION DES IMAGES =====
 function getArticleImageUrl(article) {
-  if (article.image_brute) {
-    if (!article.image_brute.startsWith('http') &&
-        !article.image_brute.startsWith('/') &&
-        !article.image_brute.startsWith('images')) {
-      return CONFIG.imagesBasePath + article.image_brute;
-    }
-    return article.image_brute;
+  if (!article.image_brute) return null;
+  
+  if (!article.image_brute.startsWith('http') &&
+      !article.image_brute.startsWith('/') &&
+      !article.image_brute.startsWith('images')) {
+    return 'images3/' + article.image_brute;
   }
-
-  return null;
+  
+  return article.image_brute;
 }
-// ===== LOGO MEDIA MANAGEMENT =====
-function getMediaLogoUrl(source) {
-  if (!source || mediaLogos.length === 0) return null;
 
-  const media = mediaLogos.find(item =>
-    item.domaine && source && (
-      item.domaine.toLowerCase() === source.toLowerCase() ||
-      source.toLowerCase().includes(item.domaine.toLowerCase())
-    )
-  );
-
-  return media ? media.url : null;
-}
 function createImageElement(imageUrl, title) {
   if (!imageUrl) {
-    return '<div class="image-error">صورة غير متوفرة</div>';
+    return '<div class="image-error">لا توجد صورة</div>';
   }
 
   return `<img src="${imageUrl}"
                 alt="${title || 'صورة المقال'}"
                 class="article-image"
                 loading="lazy"
-                onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'image-error\\'>صورة غير متوفرة</div>';"
-                onload="this.style.opacity='1'"
-                style="opacity:0; transition: opacity 0.3s ease;">`;
+                decoding="async"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'image-error\\'>لا توجد صورة</div>';"
+                style="width:100%; height:100%;">`;
 }
-function createMediaLogoElement(source) {
-  const logoUrl = getMediaLogoUrl(source);
 
-  if (!logoUrl) {
-    return '';
-  }
-
-  return `
-    <div class="media-logo-container">
-      <img src="${logoUrl}"
-           alt="شعار ${source}"
-           class="media-logo"
-           loading="lazy"
-           onerror="this.style.display='none';"
-           onload="this.style.opacity='1'"
-           style="opacity:0; transition: opacity 0.3s ease;">
-    </div>
-  `;
-}
-// ===== LOAD & PROCESS =====
+// ===== CHARGEMENT DES ARTICLES =====
 async function loadArticles() {
   try {
     showLoading(true);
     const response = await fetch(CONFIG.jsonUrl);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    if (!response.ok) throw new Error('خطأ في الاتصال');
+    
     const data = await response.json();
     appState.articles = processArticleData(data);
     filterArticles();
+    
   } catch (error) {
-    console.error('Error loading articles:', error);
-    showError('تعذر تحميل المقالات. يرجى المحاولة مرة أخرى.');
+    console.error('Error:', error);
+    showError('تعذر تحميل المقالات. تحقق من اتصال الإنترنت.');
   } finally {
     showLoading(false);
   }
 }
+
 function processArticleData(articles) {
   return articles
     .filter(a => a.visible === true || a.visible === "true")
@@ -2026,278 +1375,225 @@ function processArticleData(articles) {
           return new Date(y, m - 1, d, h, min);
         };
         return parseDate(b.date_heure) - parseDate(a.date_heure);
-      } catch (e) {
+      } catch {
         return 0;
       }
     })
     .slice(0, CONFIG.maxArticles);
 }
+
+// ===== FILTRAGE =====
 function filterArticles() {
   const query = appState.searchQuery.toLowerCase().trim();
-  const startDate = appState.startDate;
-  const endDate = appState.endDate;
-
+  
   appState.filteredArticles = appState.articles.filter(article => {
-    let matchesText = true;
+    // Filtre texte
     if (query) {
-      const searchableText = `
+      const searchText = `
         ${article.titre || ''}
         ${article.source || ''}
         ${article.theme || ''}
-        ${article.mots_cles || ''}
-        ${article.langue || ''}
-        ${article.sentiment || ''}
       `.toLowerCase();
-     
-      matchesText = searchableText.includes(query);
+      
+      if (!searchText.includes(query)) return false;
     }
-   
-    const matchesDate = isDateInRange(article.date_heure, startDate, endDate);
-   
-    return matchesText && matchesDate;
+    
+    // Filtre date
+    return isDateInRange(article.date_heure, appState.startDate, appState.endDate);
   });
-
+  
   appState.currentPage = 1;
-
   displayArticles();
   updateStatsBar();
   updatePagination();
-
+  
   elements.downloadPdfBtn.disabled = appState.filteredArticles.length === 0;
 }
-function updateStatsBar() {
-  const count = appState.filteredArticles.length;
-  const total = appState.articles.length;
 
-  elements.resultsCount.textContent = `${count} مقال${count !== 1 ? 'ات' : ''} (${total} المجموع)`;
-  elements.statsBar.style.display = 'flex';
-
-  updateActiveFilters();
-}
-function updateActiveFilters() {
-  elements.activeFilters.innerHTML = '';
-
-  if (appState.searchQuery) {
-    const filterTag = document.createElement('div');
-    filterTag.className = 'filter-tag';
-    filterTag.innerHTML = `
-      <span>🔍 "${appState.searchQuery}"</span>
-      <button class="remove-filter" onclick="clearSearchFilter()" aria-label="إزالة هذا الفلتر">×</button>
-    `;
-    elements.activeFilters.appendChild(filterTag);
-  }
-
-  if (appState.startDate || appState.endDate) {
-    const formatFilterDate = (dateStr) => {
-      if (!dateStr) return '';
-      const [year, month, day] = dateStr.split('-');
-      return `${day}/${month}/${year}`;
-    };
-   
-    const start = appState.startDate ? formatFilterDate(appState.startDate) : 'البداية';
-    const end = appState.endDate ? formatFilterDate(appState.endDate) : 'النهاية';
-   
-    const filterTag = document.createElement('div');
-    filterTag.className = 'filter-tag';
-    filterTag.innerHTML = `
-      <span>📅 ${start} → ${end}</span>
-      <button class="remove-filter" onclick="clearDateFilters()" aria-label="إزالة هذا الفلتر">×</button>
-    `;
-    elements.activeFilters.appendChild(filterTag);
-  }
-
-  let periodText = '';
-  switch(appState.activePeriod) {
-    case 'week': periodText = 'أسبوعي'; break;
-    case 'biweekly': periodText = 'نصف شهري'; break;
-    case 'month': periodText = 'شهري'; break;
-    case 'custom': periodText = 'مخصص'; break;
-  }
-
-  const periodTag = document.createElement('div');
-  periodTag.className = 'filter-tag';
-  periodTag.innerHTML = `
-    <span>⏰ ${periodText}</span>
-  `;
-  elements.activeFilters.appendChild(periodTag);
-}
-function clearSearchFilter() {
-  elements.searchInput.value = '';
-  appState.searchQuery = '';
-  elements.clearSearch.style.display = 'none';
-  filterArticles();
-}
-function clearDateFilters() {
-  setPeriod('week');
-}
+// ===== AFFICHAGE DES ARTICLES =====
 function displayArticles() {
   elements.articlesContainer.innerHTML = '';
-
+  
   if (appState.filteredArticles.length === 0) {
     showNoResults();
     return;
   }
-
+  
   const currentArticles = getCurrentPageArticles();
-  const fragment = document.createDocumentFragment();
-
+  
   currentArticles.forEach((article, index) => {
     const card = createArticleCard(article, index);
-    fragment.appendChild(card);
-  });
-
-  elements.articlesContainer.appendChild(fragment);
-
-  const cards = elements.articlesContainer.querySelectorAll('.article-card');
-  cards.forEach((card, i) => {
-    card.style.animationDelay = `${i * 0.03}s`;
+    elements.articlesContainer.appendChild(card);
   });
 }
 
-// ===== GESTION TACTILE AMÉLIORÉE POUR MOBILE =====
 function createArticleCard(article, index) {
   const card = document.createElement('div');
   card.className = 'article-card';
-
+  card.setAttribute('role', 'button');
+  card.setAttribute('tabindex', '0');
+  card.setAttribute('aria-label', `مقال: ${article.titre || 'بدون عنوان'}`);
+  
   const imageUrl = getArticleImageUrl(article);
   const formattedDate = formatDateToDDMMYYYY(article.date_heure);
   const timeAgo = getTimeAgo(article.date_heure);
-  const isCategoryArabic = /[\u0600-\u06FF]/.test(article.theme || '');
   const imageElement = createImageElement(imageUrl, article.titre);
-  const mediaLogoElement = createMediaLogoElement(article.source);
+  
   card.innerHTML = `
     <div class="article-image-container">
       ${imageElement}
-      ${mediaLogoElement}
       <div class="metadata-badges">
-        <div class="metadata-badge date-badge" title="${formattedDate || ''}">
+        <div class="metadata-badge" aria-label="التاريخ">
           <span>📅</span>
-          <span>${formattedDate || 'تاريخ غير معروف'}</span>
+          <span>${timeAgo || formattedDate || 'بدون تاريخ'}</span>
         </div>
-        <div class="metadata-badge category-badge ${isCategoryArabic ? 'rtl' : 'ltr'}" title="${article.theme || ''}">
+        <div class="metadata-badge" aria-label="التصنيف">
           <span>🏷️</span>
-          <span>${truncateTitle(article.theme || 'غير مصنف', 20)}</span>
+          <span>${(article.theme || 'عام').substring(0, 12)}</span>
         </div>
       </div>
-      ${timeAgo ? `<div class="time-ago">${timeAgo}</div>` : ''}
       <div class="title-overlay">
-        <h2 class="article-main-title">${truncateTitle(article.titre || 'بدون عنوان', 100)}</h2>
+        <h2 class="article-main-title">${truncateTitle(article.titre || 'بدون عنوان', 70)}</h2>
         <div class="article-source">
           <span>📰</span>
-          <span>${article.source || 'مصدر غير معروف'}</span>
+          <span>${article.source || 'غير معروف'}</span>
         </div>
       </div>
     </div>
   `;
-
-  // Gestion tactile améliorée pour éviter les clics pendant le scroll
-  if (isTouchDevice) {
-    let touchStartY = 0;
-    let touchStartTime = 0;
-    let isTap = true;
-    
-    card.addEventListener('touchstart', (e) => {
-      touchStartY = e.touches[0].clientY;
-      touchStartTime = Date.now();
-      isTap = true;
-      card.classList.add('active');
-    }, { passive: true });
-   
-    card.addEventListener('touchmove', (e) => {
-      const touchY = e.touches[0].clientY;
-      const diffY = Math.abs(touchY - touchStartY);
-      
-      // Si le déplacement vertical est > 10px, ce n'est pas un tap
-      if (diffY > 10) {
-        isTap = false;
-        card.classList.remove('active');
-      }
-    }, { passive: true });
-   
-    card.addEventListener('touchend', (e) => {
-      card.classList.remove('active');
-      const touchTime = Date.now() - touchStartTime;
-      
-      // Vérifier que c'est un tap (pas un scroll) et pas pendant le scroll global
-      if (isTap && touchTime < 500 && !appState.isScrolling) {
-        const now = Date.now();
-        if (now - appState.lastTouchTime < CONFIG.touchDelay) return;
-        appState.lastTouchTime = now;
-        openArticleOverlay(article);
-      }
-    }, { passive: true });
-  } else {
-    card.addEventListener('click', () => {
-      openArticleOverlay(article);
-    });
+  
+  // Gestion des interactions
+  let touchStartTime = 0;
+  let isTouchMove = false;
+  
+  function handleTouchStart(e) {
+    if (appState.isScrolling) return;
+    touchStartTime = Date.now();
+    isTouchMove = false;
+    e.preventDefault();
   }
-
+  
+  function handleTouchMove() {
+    if (appState.isScrolling) return;
+    isTouchMove = true;
+  }
+  
+  function handleTouchEnd(e) {
+    if (appState.isScrolling || isTouchMove) return;
+    
+    const touchTime = Date.now() - touchStartTime;
+    if (touchTime < 500) {
+      openArticleOverlay(article);
+    }
+    
+    e.preventDefault();
+  }
+  
+  function handleClick(e) {
+    if (!appState.isScrolling) {
+      openArticleOverlay(article);
+    }
+  }
+  
+  function handleKeyDown(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openArticleOverlay(article);
+    }
+  }
+  
+  // Événements tactiles
+  card.addEventListener('touchstart', handleTouchStart, { passive: false });
+  card.addEventListener('touchmove', handleTouchMove, { passive: true });
+  card.addEventListener('touchend', handleTouchEnd, { passive: false });
+  card.addEventListener('touchcancel', () => { isTouchMove = false; });
+  
+  // Événements souris/clavier
+  card.addEventListener('click', handleClick);
+  card.addEventListener('keydown', handleKeyDown);
+  
   return card;
 }
 
-function truncateTitle(title, maxLength = 100) {
+function truncateTitle(title, maxLength) {
   if (!title || title.length <= maxLength) return title;
   return title.substring(0, maxLength) + '...';
 }
+
+// ===== OVERLAY ARTICLE =====
 function openArticleOverlay(article) {
+  // Mettre à jour les informations
   elements.overlayArticleTitle.textContent = article.titre || 'المقال';
-  elements.articleFrame.src = article.url || '#';
-
-  const sentiment = article.sentiment || 'غير محدد';
-  elements.sentimentValue.textContent = sentiment;
-
-  elements.sentimentDisplayOverlay.className = 'sentiment-display-overlay';
-  if (sentiment.toLowerCase().includes('positif') || sentiment.toLowerCase().includes('positive') || sentiment.toLowerCase().includes('إيجابي')) {
-    elements.sentimentDisplayOverlay.classList.add('sentiment-positive');
-  } else if (sentiment.toLowerCase().includes('négatif') || sentiment.toLowerCase().includes('negative') || sentiment.toLowerCase().includes('سلبي')) {
-    elements.sentimentDisplayOverlay.classList.add('sentiment-negative');
+  elements.sourceText.textContent = article.source || 'غير معروف';
+  elements.dateText.textContent = formatDateToDDMMYYYY(article.date_heure) || 'غير معروف';
+  elements.sentimentText.textContent = article.sentiment || 'غير محدد';
+  
+  // Mettre à jour le lien
+  if (article.url) {
+    elements.articleLink.href = article.url;
+    elements.articleLink.setAttribute('aria-label', `فتح مقال من ${article.source}`);
   } else {
-    elements.sentimentDisplayOverlay.classList.add('sentiment-neutral');
+    elements.articleLink.href = '#';
+    elements.articleLink.onclick = (e) => {
+      e.preventDefault();
+      alert('لا يوجد رابط للمقال');
+    };
   }
-
-  const keywords = article.mots_cles ?
-    article.mots_cles.split(',').map(k => k.trim()).filter(k => k) :
-    [];
-
-  elements.keywordsContainerOverlay.innerHTML = '';
-  keywords.forEach(keyword => {
-    const keywordElement = document.createElement('div');
-    keywordElement.className = 'keyword-overlay';
-    keywordElement.textContent = keyword;
-    elements.keywordsContainerOverlay.appendChild(keywordElement);
-  });
-
+  
+  // Afficher l'overlay
   elements.articleOverlay.style.display = 'block';
   document.body.style.overflow = 'hidden';
-
+  
+  // Focus sur le bouton de fermeture
   setTimeout(() => elements.closeOverlay.focus(), 100);
 }
+
 function closeArticleOverlay() {
   elements.articleOverlay.style.display = 'none';
-  elements.articleFrame.src = '';
   document.body.style.overflow = '';
-  elements.searchInput.focus();
-}
-function showLoading(show) {
-  appState.isLoading = show;
-  if (elements.loadingIndicator) {
-    elements.loadingIndicator.style.display = show ? 'block' : 'none';
+  
+  // Retourner le focus à l'article courant
+  const currentCards = document.querySelectorAll('.article-card');
+  if (currentCards.length > 0) {
+    const pageStart = (appState.currentPage - 1) * CONFIG.articlesPerPage;
+    const index = Math.min(pageStart, currentCards.length - 1);
+    currentCards[index].focus();
   }
 }
+
+// ===== STATS BAR =====
+function updateStatsBar() {
+  const count = appState.filteredArticles.length;
+  
+  if (count === 0) {
+    elements.statsBar.style.display = 'none';
+    return;
+  }
+  
+  elements.resultsCount.textContent = `${count} مقال${count > 1 ? 'ات' : ''}`;
+  elements.statsBar.style.display = 'flex';
+}
+
+// ===== STATES =====
+function showLoading(show) {
+  elements.loadingIndicator.style.display = show ? 'block' : 'none';
+}
+
 function showNoResults() {
   elements.articlesContainer.innerHTML = `
     <div class="no-results">
       <div class="no-results-icon">🔍</div>
       <h3>لا توجد نتائج</h3>
-      <p>لا توجد مقالات تطابق معايير البحث الخاصة بك</p>
+      <p>لم يتم العثور على مقالات تطابق بحثك</p>
       <button class="clear-search-btn" onclick="elements.clearFilters.click()">
-        مسح جميع الفلاتر
+        مسح البحث
       </button>
     </div>
   `;
   elements.statsBar.style.display = 'none';
   elements.paginationContainer.style.display = 'none';
 }
+
 function showError(message) {
   elements.articlesContainer.innerHTML = `
     <div class="error-state">
@@ -2313,348 +1609,196 @@ function showError(message) {
   elements.paginationContainer.style.display = 'none';
 }
 
-// ===== PDF GENERATION AVEC IMAGES =====
+// ===== PDF GENERATION =====
 async function generatePDF() {
+  if (appState.filteredArticles.length === 0) {
+    alert('لا توجد مقالات لتحميلها');
+    return;
+  }
+  
   try {
-    if (appState.filteredArticles.length === 0) {
-      alert('لا توجد مقالات لتحميلها. يرجى تصفية المقالات أولاً.');
-      return;
+    // Afficher l'indicateur de chargement
+    elements.pdfLoading.style.display = 'flex';
+    elements.downloadPdfBtn.disabled = true;
+    
+    // Attendre que l'utilisateur voie l'indicateur
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Vérifier si html2pdf est disponible
+    if (typeof html2pdf === 'undefined') {
+      throw new Error('مكتبة PDF غير متاحة');
     }
     
-    // Désactiver le bouton pendant la génération
-    elements.downloadPdfBtn.disabled = true;
-    const originalText = elements.downloadPdfBtn.innerHTML;
-    elements.downloadPdfBtn.innerHTML = '<span>⏳</span><span>جار التوليد...</span>';
-    
-    // Afficher un indicateur de chargement
-    const loadingMsg = document.createElement('div');
-    loadingMsg.style.cssText = `
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0,0,0,0.8);
-      color: white;
-      padding: 20px;
-      border-radius: 10px;
-      z-index: 9999;
-    `;
-    loadingMsg.innerHTML = 'جارٍ إنشاء ملف PDF...';
-    document.body.appendChild(loadingMsg);
-    
-    // Créer le contenu HTML pour le PDF
+    // Créer le contenu PDF
     const pdfContent = createPdfContent();
-    
-    // Ajouter temporairement au DOM mais hors écran pour rendu
     elements.pdfTempContainer.innerHTML = '';
     elements.pdfTempContainer.appendChild(pdfContent);
     
-    // Attendre que les images se chargent avec timeout
-    await waitForImages(pdfContent);
+    // Attendre un peu pour le rendu
+    await new Promise(resolve => setTimeout(resolve, 300));
     
-    // Options optimisées pour html2pdf avec images
+    // Options PDF optimisées pour mobile
     const options = {
-      margin: [15, 15, 15, 15],
+      margin: [5, 5, 5, 5],
       filename: `مراجعة_الصحافة_${new Date().toISOString().split('T')[0]}.pdf`,
-      image: {
-        type: 'jpeg',
-        quality: 0.8
-      },
-      html2canvas: {
+      image: { type: 'jpeg', quality: 0.7 },
+      html2canvas: { 
         scale: 1,
         useCORS: true,
-        allowTaint: true,
         logging: false,
-        backgroundColor: '#ffffff',
-        letterRendering: true,
-        foreignObjectRendering: false,
-        onclone: function(clonedDoc) {
-          // S'assurer que les images sont visibles dans le clone
-          const images = clonedDoc.querySelectorAll('img');
-          images.forEach(img => {
-            if (img.complete && img.naturalHeight === 0) {
-              // Si l'image a échoué, la remplacer par un placeholder
-              img.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23f0f0f0"/><text x="150" y="100" font-family="Arial" font-size="14" fill="%23666" text-anchor="middle">صورة غير متوفرة</text></svg>';
-            }
-          });
-        }
+        scrollY: 0,
+        windowWidth: 800
       },
-      jsPDF: {
-        unit: 'mm',
-        format: 'a4',
+      jsPDF: { 
+        unit: 'mm', 
+        format: 'a4', 
         orientation: 'portrait',
-        hotfixes: ["px_scaling"],
         compress: true
-      }
+      },
+      pagebreak: { mode: ['css', 'legacy'] }
     };
     
     // Générer le PDF
     await html2pdf().set(options).from(pdfContent).save();
     
-    // Nettoyer
-    elements.pdfTempContainer.innerHTML = '';
-    document.body.removeChild(loadingMsg);
-    
-    // Réactiver le bouton
-    elements.downloadPdfBtn.disabled = false;
-    elements.downloadPdfBtn.innerHTML = originalText;
-    
   } catch (error) {
-    console.error('Erreur lors de la génération du PDF:', error);
+    console.error('PDF Error:', error);
     alert('حدث خطأ أثناء إنشاء ملف PDF. يرجى المحاولة مرة أخرى.');
     
-    // Nettoyer en cas d'erreur
-    const loadingMsg = document.querySelector('div[style*="position: fixed"]');
-    if (loadingMsg) document.body.removeChild(loadingMsg);
-    
-    // Réactiver le bouton en cas d'erreur
+  } finally {
+    // Nettoyer
+    elements.pdfTempContainer.innerHTML = '';
+    elements.pdfLoading.style.display = 'none';
     elements.downloadPdfBtn.disabled = false;
-    elements.downloadPdfBtn.innerHTML = '<span>📄</span><span>تحميل PDF</span>';
-    
-    // Nettoyer en cas d'erreur
-    if (elements.pdfTempContainer) {
-      elements.pdfTempContainer.innerHTML = '';
-    }
   }
-}
-
-// Attendre le chargement des images avec gestion d'erreur
-function waitForImages(container) {
-  return new Promise((resolve) => {
-    const images = container.querySelectorAll('img');
-    let loaded = 0;
-    const total = images.length;
-    
-    if (total === 0) {
-      resolve();
-      return;
-    }
-    
-    const checkComplete = () => {
-      loaded++;
-      if (loaded >= total) {
-        setTimeout(resolve, 500); // Attendre un peu plus pour le rendu
-      }
-    };
-    
-    images.forEach(img => {
-      if (img.complete && img.naturalHeight !== 0) {
-        checkComplete();
-      } else if (img.complete && img.naturalHeight === 0) {
-        // Image a échoué au chargement
-        img.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23f0f0f0"/><text x="150" y="100" font-family="Arial" font-size="14" fill="%23666" text-anchor="middle">صورة غير متوفرة</text></svg>';
-        checkComplete();
-      } else {
-        img.onload = checkComplete;
-        img.onerror = () => {
-          // Remplacer par un placeholder si l'image échoue
-          img.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23f0f0f0"/><text x="150" y="100" font-family="Arial" font-size="14" fill="%23666" text-anchor="middle">صورة غير متوفرة</text></svg>';
-          checkComplete();
-        };
-      }
-    });
-    
-    // Timeout de sécurité (8 secondes)
-    setTimeout(resolve, 8000);
-  });
 }
 
 function createPdfContent() {
   const container = document.createElement('div');
-  container.className = 'pdf-container';
+  container.style.cssText = `
+    padding: 10px;
+    background: white;
+    color: black;
+    font-family: 'Tajawal', sans-serif;
+    direction: rtl;
+    text-align: right;
+    font-size: 12px;
+    max-width: 100%;
+  `;
   
-  // Header du PDF
-  const header = document.createElement('div');
-  header.className = 'pdf-header';
-  
+  // Titre
   const title = document.createElement('h1');
-  title.className = 'pdf-title';
   title.textContent = 'مراجعة الصحافة الأسبوعية';
+  title.style.cssText = 'color: #1a73e8; text-align: center; margin-bottom: 10px; font-size: 18px;';
+  container.appendChild(title);
   
-  const subtitle = document.createElement('div');
-  subtitle.className = 'pdf-subtitle';
-  subtitle.textContent = 'Revue de Presse Hebdomadaire';
-  
-  header.appendChild(title);
-  header.appendChild(subtitle);
-  
-  // Informations sur la période
-  if (appState.startDate && appState.endDate) {
-    const formatDate = (dateStr) => {
-      if (!dateStr) return '';
-      const [year, month, day] = dateStr.split('-');
-      return `${day}/${month}/${year}`;
-    };
-    
-    const start = formatDate(appState.startDate);
-    const end = formatDate(appState.endDate);
-    
-    const dateRange = document.createElement('div');
-    dateRange.className = 'pdf-date-range';
-    dateRange.innerHTML = `<strong>الفترة:</strong> ${start} - ${end}`;
-    header.appendChild(dateRange);
-  }
-  
-  // Statistiques
-  const count = appState.filteredArticles.length;
-  const total = appState.articles.length;
-  const stats = document.createElement('div');
-  stats.className = 'pdf-date-range';
-  stats.innerHTML = `<strong>عدد المقالات:</strong> ${count} مقال${count !== 1 ? 'ات' : ''} (${total} المجموع)`;
-  header.appendChild(stats);
-  
-  container.appendChild(header);
+  // Informations
+  const info = document.createElement('div');
+  info.innerHTML = `
+    <div style="text-align: center; color: #666; margin-bottom: 15px; font-size: 11px;">
+      عدد المقالات: ${appState.filteredArticles.length}<br>
+      التاريخ: ${new Date().toLocaleDateString('ar-EG')}<br>
+      الفترة: ${appState.startDate} إلى ${appState.endDate}
+    </div>
+  `;
+  container.appendChild(info);
   
   // Articles
   appState.filteredArticles.forEach((article, index) => {
     const articleDiv = document.createElement('div');
-    articleDiv.className = 'pdf-article';
-    
-    // Titre
-    const title = document.createElement('h2');
-    title.className = 'pdf-article-title';
-    title.textContent = `${index + 1}. ${article.titre || 'بدون عنوان'}`;
-    articleDiv.appendChild(title);
-    
-    // Image
-    const imageUrl = getArticleImageUrl(article);
-    if (imageUrl) {
-      const imgContainer = document.createElement('div');
-      imgContainer.style.textAlign = 'center';
-      imgContainer.style.margin = '10px 0';
-      
-      const img = document.createElement('img');
-      img.className = 'pdf-article-image';
-      img.src = imageUrl;
-      img.alt = article.titre || 'صورة المقال';
-      img.style.maxWidth = '100%';
-      img.style.maxHeight = '150px';
-      img.style.objectFit = 'cover';
-      img.style.borderRadius = '4px';
-      img.style.display = 'block';
-      img.style.margin = '0 auto';
-      
-      // Ajouter un fallback pour les images qui échouent
-      img.onerror = function() {
-        this.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23f0f0f0"/><text x="150" y="100" font-family="Arial" font-size="14" fill="%23666" text-anchor="middle">صورة غير متوفرة</text></svg>';
-      };
-      
-      imgContainer.appendChild(img);
-      articleDiv.appendChild(imgContainer);
-    }
-    
-    // Métadonnées
-    const meta = document.createElement('div');
-    meta.className = 'pdf-article-meta';
-    
-    const formattedDate = formatDateToDDMMYYYY(article.date_heure) || 'تاريخ غير معروف';
-    
-    meta.innerHTML = `
-      <div><strong>المصدر:</strong> ${article.source || 'غير معروف'}</div>
-      <div><strong>التاريخ:</strong> ${formattedDate}</div>
-      ${article.theme ? `<div><strong>الفئة:</strong> ${article.theme}</div>` : ''}
-      ${article.sentiment ? `<div><strong>المشاعر:</strong> ${article.sentiment}</div>` : ''}
+    articleDiv.style.cssText = `
+      margin-bottom: 10px;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background: #f9f9f9;
+      page-break-inside: avoid;
     `;
     
-    articleDiv.appendChild(meta);
-    
-    // Mots-clés
-    if (article.mots_cles) {
-      const keywords = article.mots_cles.split(',').map(k => k.trim()).filter(k => k);
-      if (keywords.length > 0) {
-        const keywordsDiv = document.createElement('div');
-        keywordsDiv.className = 'pdf-keywords';
-        
-        keywords.forEach(keyword => {
-          const keywordSpan = document.createElement('span');
-          keywordSpan.className = 'pdf-keyword';
-          keywordSpan.textContent = keyword;
-          keywordsDiv.appendChild(keywordSpan);
-        });
-        
-        articleDiv.appendChild(keywordsDiv);
-      }
-    }
-    
-    // URL
-    if (article.url) {
-      const urlDiv = document.createElement('div');
-      urlDiv.style.marginTop = '8px';
-      urlDiv.style.fontSize = '10px';
-      urlDiv.style.color = '#888';
-      urlDiv.innerHTML = `<strong>URL:</strong> ${article.url}`;
-      articleDiv.appendChild(urlDiv);
-    }
+    articleDiv.innerHTML = `
+      <div style="font-weight: bold; color: #333; margin-bottom: 4px; font-size: 13px;">
+        ${index + 1}. ${article.titre || 'بدون عنوان'}
+      </div>
+      <div style="color: #666; font-size: 11px; margin-bottom: 3px;">
+        <strong>المصدر:</strong> ${article.source || 'غير معروف'}
+      </div>
+      <div style="color: #666; font-size: 11px; margin-bottom: 3px;">
+        <strong>التاريخ:</strong> ${formatDateToDDMMYYYY(article.date_heure) || 'غير معروف'}
+      </div>
+      ${article.theme ? `<div style="color: #888; font-size: 10px;"><strong>التصنيف:</strong> ${article.theme}</div>` : ''}
+    `;
     
     container.appendChild(articleDiv);
   });
   
   // Footer
   const footer = document.createElement('div');
-  footer.className = 'pdf-footer';
-  
-  const today = new Date();
-  const dateAr = today.toLocaleDateString('ar-EG');
-  
-  footer.innerHTML = `
-    تم إنشاء هذا التقرير بتاريخ ${dateAr}<br>
-    <em>مراجعة الصحافة الأسبوعية</em>
-  `;
-  
+  footer.style.cssText = 'text-align: center; margin-top: 15px; color: #888; font-size: 10px; border-top: 1px solid #eee; padding-top: 10px;';
+  footer.textContent = 'تم الإنشاء بواسطة تطبيق مراجعة الصحافة - ' + new Date().toLocaleDateString('ar-EG');
   container.appendChild(footer);
   
   return container;
 }
 
-function debounce(func, wait) {
-  let timeout;
-  return (...args) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
-  };
-}
-
-// ===== OPTIMISATIONS MOBILE =====
-// Prévenir les comportements indésirables sur mobile
-if (isTouchDevice) {
-  // Empêcher le zoom sur iOS
-  document.addEventListener('gesturestart', function(e) {
-    e.preventDefault();
-  });
-  
-  // Empêcher le pull-to-refresh sur iOS
-  document.addEventListener('touchmove', function(e) {
-    if (e.scale !== 1) {
-      e.preventDefault();
+// ===== DÉMARRAGE =====
+// Charger html2pdf dynamiquement
+function loadPdfLibrary() {
+  return new Promise((resolve, reject) => {
+    if (typeof html2pdf !== 'undefined') {
+      resolve();
+      return;
     }
-  }, { passive: false });
+    
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+    script.onload = resolve;
+    script.onerror = () => {
+      console.warn('PDF library failed to load, PDF generation will be disabled');
+      elements.downloadPdfBtn.style.display = 'none';
+      resolve();
+    };
+    document.head.appendChild(script);
+  });
 }
 
 // Initialiser l'application
-document.addEventListener('DOMContentLoaded', () => {
-  // Optimisation mobile: désactiver les animations lourdes
-  if (isMobile) {
-    document.documentElement.style.setProperty('--transition', 'none');
-  }
+document.addEventListener('DOMContentLoaded', async () => {
+  // Précharger la bibliothèque PDF en arrière-plan
+  loadPdfLibrary().catch(() => {
+    elements.downloadPdfBtn.style.display = 'none';
+  });
   
-  // Démarrer l'application après un court délai
+  // Démarrer l'application
   setTimeout(() => {
-    requestAnimationFrame(() => {
-      initApp();
-    });
+    initApp();
   }, 100);
+  
+  // Prévenir le double-tap zoom sur iOS
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', function(event) {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      event.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, false);
 });
 
-// Gestion du redimensionnement
-let resizeTimeout;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTimeout);
-  resizeTimeout = setTimeout(() => {
-    if (window.innerWidth <= 768) {
-      document.documentElement.style.setProperty('--transition', 'none');
-    }
-  }, 250);
+// Gestion de la mémoire
+window.addEventListener('pagehide', function() {
+  // Nettoyer les références
+  appState.articles = [];
+  appState.filteredArticles = [];
 });
+
+// Service Worker pour la mise en cache (optionnel)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').catch(function(error) {
+      console.log('Service Worker registration failed:', error);
+    });
+  });
+}
 </script>
 </body>
 </html>
