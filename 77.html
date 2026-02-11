@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#001122">
+    <title>مراجعة الصحافة الذكية — URL نهائي</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --background: #001122;
+            --card-bg: #001a44;
+            --text: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent: #4ECDC4;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+            direction: rtl;
+        }
+
+        /* الهيدر */
+        .app-header {
+            background: #001122;
+            padding: 20px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            text-align: center;
+        }
+
+        .search-wrapper {
+            max-width: 500px;
+            margin: 15px auto 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 5px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+        }
+
+        #search-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 10px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        /* حاوية البطاقات */
+        #articles-container {
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            gap: 20px;
+        }
+
+        /* تصميم البطاقة */
+        .article-card {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .article-card:active { transform: scale(0.97); }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .domain-tag {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 0.75rem;
+            background: rgba(78, 205, 196, 0.1);
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(78, 205, 196, 0.2);
+        }
+
+        .date-time {
+            text-align: left;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.3;
+        }
+
+        .time-highlight {
+            color: var(--accent);
+            display: block;
+            font-weight: bold;
+        }
+
+        .article-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .excerpt {
+            font-size: 0.9rem;
+            color: #ced4da;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            opacity: 0.8;
+        }
+
+        .final-url {
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            word-break: break-all;
+        }
+
+        .final-url a { color: var(--accent); text-decoration: none; }
+
+        /* نافذة العرض Full-screen iFrame */
+        #article-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            z-index: 1000;
+            flex-direction: column;
+        }
+
+        .overlay-header {
+            padding: 12px 15px;
+            background: #001122;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .close-btn {
+            background: #FF6B6B;
+            color: white;
+            border: none;
+            padding: 7px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #article-frame {
+            width: 100%;
+            flex: 1;
+            border: none;
+        }
+
+        #loader { text-align: center; padding: 50px; color: var(--text-secondary); }
+        .spinner { 
+            width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); 
+            border-top-color: var(--primary); border-radius: 50%; 
+            margin: 0 auto 15px; animation: spin 1s linear infinite; 
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<header class="app-header">
+    <h1 style="font-size: 1.4rem; letter-spacing: -0.5px;"> <img src="images/title.png"> </h1>
+    <div class="search-wrapper">
+        <input type="text" id="search-input" placeholder="بحث في العناوين أو المصادر...">
+        <span style="opacity: 0.5;">🔍</span>
+    </div>
+</header>
+
+<main id="articles-container">
+    <div id="loader">
+        <div class="spinner"></div>
+        <p>جاري مزامنة أحدث المقالات...</p>
+    </div>
+</main>
+
+<div id="article-overlay">
+    <div class="overlay-header">
+        <span id="overlay-title" style="font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%;"></span>
+        <button class="close-btn" onclick="closeOverlay()">إغلاق ✕</button>
+    </div>
+    <iframe id="article-frame" src=""></iframe>
+</div>
+
+<script>
+    const CORS_PROXY_PREFIX = ''; 
+    const GITHUB_URL = "https://raw.githubusercontent.com/marocnetmail/125/main/data/data_fusionnee.json";
+    let allArticles = [];
+
+    function getDomain(url) {
+        try {
+            if (!url) return "المصدر";
+            const host = new URL(url).hostname;
+            return host.replace('www.', '');
+        } catch (e) { return "الصحافة"; }
+    }
+
+    function formatDateTime(isoString) {
+        if (!isoString) return { date: '--/--/----', time: '--:--' };
+        try {
+            const dateObj = new Date(isoString);
+            const date = dateObj.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const time = dateObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+            return { date, time };
+        } catch (e) {
+            return { date: 'تاريخ غير صالح', time: '' };
+        }
+    }
+
+    async function resolveFinalUrl(originalUrl) {
+        if (!originalUrl) return originalUrl;
+        try {
+            if (CORS_PROXY_PREFIX) {
+                const proxied = CORS_PROXY_PREFIX + encodeURIComponent(originalUrl);
+                const r = await fetch(proxied, { method: 'GET' });
+                if (r && r.url) return r.url;
+                return originalUrl;
+            }
+            const res = await fetch(originalUrl, { method: 'HEAD', redirect: 'follow' });
+            if (res && res.url) return res.url;
+        } catch (err) {}
+        return originalUrl;
+    }
+
+    async function fetchData() {
+        try {
+            const response = await fetch(`${GITHUB_URL}?t=${Date.now()}`);
+            const data = await response.json();
+
+            // الفلترة بناءً على حقل visible فقط كما طلبت
+            allArticles = data.filter(article => article.visible === true || article.visible === "true");
+
+            allArticles.sort((a, b) => new Date(b["date/heure"]) - new Date(a["date/heure"]));
+
+            document.getElementById('loader').style.display = 'none';
+            renderArticles(allArticles);
+        } catch (e) {
+            document.getElementById('loader').innerHTML = "⚠️ فشل في جلب البيانات من المستودع.";
+        }
+    }
+
+    function renderArticles(articles) {
+        const container = document.getElementById('articles-container');
+        container.querySelectorAll('.article-card').forEach(c => c.remove());
+
+        articles.forEach(article => {
+            const card = document.createElement('div');
+            card.className = 'article-card';
+
+            const domain = getDomain(article.url);
+            const dt = formatDateTime(article["date/heure"]);
+
+            const finalUrlNode = document.createElement('div');
+            finalUrlNode.className = 'final-url';
+            finalUrlNode.innerHTML = `<span>الرابط: </span><a href="${article.url || '#'}" target="_blank" rel="noopener noreferrer">${shorten(article.url || '')}</a>`;
+
+            card.onclick = (e) => {
+                if (e.target.tagName.toLowerCase() === 'a') return;
+                openArticle(article.url, article.titre || article.title);
+            };
+
+            card.innerHTML = `
+                <div class="card-meta">
+                    <span class="domain-tag">🌐 ${domain}</span>
+                    <div class="date-time">
+                        <span>📅 ${dt.date}</span>
+                        <span class="time-highlight">🕒 ${dt.time}</span>
+                    </div>
+                </div>
+                <h2 class="article-title">${escapeHtml(article.titre || article.title || 'بدون عنوان')}</h2>
+                <p class="excerpt">${escapeHtml(article.texte || article.content || '')}</p>
+            `;
+
+            card.appendChild(finalUrlNode);
+            container.appendChild(card);
+
+            (async () => {
+                const final = await resolveFinalUrl(article.url);
+                if (final && final !== article.url) {
+                    finalUrlNode.innerHTML = `<span>الرابط النهائي: </span><a href="${final}" target="_blank" rel="noopener noreferrer">${shorten(final)}</a>`;
+                }
+            })();
+        });
+    }
+
+    function openArticle(url, title) {
+        if (!url) return;
+        document.getElementById('overlay-title').innerText = title;
+        document.getElementById('article-frame').src = url;
+        document.getElementById('article-overlay').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeOverlay() {
+        document.getElementById('article-overlay').style.display = 'none';
+        document.getElementById('article-frame').src = "";
+        document.body.style.overflow = 'auto';
+    }
+
+    document.getElementById('search-input').addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = allArticles.filter(a => 
+            (a.titre || "").toLowerCase().includes(term) || 
+            (getDomain(a.url)).toLowerCase().includes(term)
+        );
+        renderArticles(filtered);
+    });
+
+    function shorten(url, max = 60) {
+        if (!url) return '';
+        return url.length > max ? url.slice(0, max - 3) + '...' : url;
+    }
+
+    function escapeHtml(unsafe) {
+        if (!unsafe) return '';
+        return unsafe.replace(/[&<>"']/g, function(m) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#039;"})[m]; });
+    }
+
+    window.onload = fetchData;
+</script>
+
+</body>
+</html>
+

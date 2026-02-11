@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Google Sheet → HTML</title>
+</head>
+<body>
+
+<h1>My Data</h1>
+<div id="content"></div>
+
+<script>
+fetch("https://script.google.com/macros/s/AKfycbyhgyRXyp20JMt4weWUx93U3N-Guaw17dtnXOJb5TOXHkrvAEjP6kuD1IR1CjgTldvq/exec")
+  .then(res => res.json())
+  .then(data => {
+    const container = document.getElementById("content");
+
+    data.forEach(item => {
+      const div = document.createElement("div");
+      div.innerHTML = `
+        <h3>${item.Titre}</h3>
+        <p>${item.Source}</p>
+        <img src="${item.image_brute}" width="200">
+      `;
+      container.appendChild(div);
+    });
+  })
+  .catch(err => console.error(err));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#001122">
+<meta name="description" content="Revue de Presse Hebdomadaire">
+<title>Revue de Presse Hebdomadaire</title>
+<link rel="icon" type="image/png" href="images1/00011.png">
+
+<style>
+/* ===== CSS RESET & VARIABLES ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --primary: #1a73e8;
+  --primary-dark: #0d5cb6;
+  --background: #001122;
+  --card-bg: #001a44;
+  --text: #ffffff;
+  --text-secondary: #cccccc;
+  --accent-1: #FF6B6B;
+  --accent-2: #4ECDC4;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  --radius: 8px;
+  --transition: all 0.3s ease;
+}
+
+/* ===== BASE STYLES ===== */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--background);
+  color: var(--text);
+  line-height: 1.5;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ===== COMPACT HEADER ===== */
+.app-header {
+  background: linear-gradient(135deg, #001122 0%, #002244 100%);
+  padding: 12px 15px;
+  box-shadow: var(--shadow);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.title-search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.main-title {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: white;
+  line-height: 1.1;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+
+/* ===== SEARCH BAR ===== */
+.search-container {
+  width: 100%;
+}
+
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  transition: var(--transition);
+}
+
+.search-wrapper:focus-within {
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+}
+
+.search-icon {
+  padding: 0 12px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+}
+
+#search-input {
+  flex: 1;
+  padding: 12px 12px 12px 0;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 0.95rem;
+  outline: none;
+  font-family: inherit;
+}
+
+#search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.clear-search {
+  padding: 0 12px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: none;
+  transition: var(--transition);
+  background: none;
+  border: none;
+}
+
+.clear-search:hover {
+  color: var(--text);
+}
+
+/* ===== LOADING STATE ===== */
+#loading-indicator {
+  text-align: center;
+  padding: 30px 15px;
+  color: var(--text-secondary);
+}
+
+.loading-spinner {
+  width: 35px;
+  height: 35px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== ARTICLES LIST - COMPACT ===== */
+#articles-container {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+}
+
+/* ===== ARTICLE CARD - COMPACT ===== */
+.article-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 8px; /* Espacement minimal entre les cartes */
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.article-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  border-color: rgba(26, 115, 232, 0.3);
+}
+
+/* Article Image Section */
+.article-image-container {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background: linear-gradient(45deg, #000428, #004e92);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.article-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+  background: linear-gradient(45deg, #000428, #004e92);
+}
+
+.article-card:hover .article-image {
+  transform: scale(1.04);
+}
+
+.image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 15px 12px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent 60%);
+}
+
+/* Article Title */
+.article-image-title {
+  font-size: 1.4rem;
+  font-weight: 900;
+  line-height: 1.2;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Source */
+.title-source {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent-2);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.9;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* ===== BADGES ===== */
+.image-badges {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 12px;
+  z-index: 2;
+}
+
+.image-badge {
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: var(--transition);
+}
+
+.date-badge { 
+  background: rgba(255, 107, 107, 0.95);
+  color: white;
+}
+
+.category-badge { 
+  background: rgba(78, 205, 196, 0.95);
+  color: white;
+}
+
+.category-badge.ltr { text-align: left; justify-content: flex-start; padding-right: 8px; }
+.category-badge.rtl { text-align: right; justify-content: flex-end; padding-left: 8px; }
+
+.article-card:hover .image-badge { transform: translateY(-1px); }
+
+/* ===== ARTICLE OVERLAY ===== */
+#article-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.98);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.overlay-container { 
+  width: 100%; 
+  height: 100%; 
+  display: flex; 
+  flex-direction: column; 
+  position: relative; 
+}
+
+/* ===== OVERLAY HEADER ===== */
+.overlay-header-extended {
+  padding: 12px 15px;
+  background: rgba(0, 26, 68, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.overlay-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.overlay-title { 
+  font-size: 1.2rem; 
+  font-weight: 800; 
+  color: var(--text); 
+  flex: 1; 
+  margin-right: 12px; 
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.close-overlay {
+  width: 40px; 
+  height: 40px; 
+  border-radius: 50%;
+  background: var(--accent-1); 
+  border: none; 
+  color: white;
+  font-size: 1.5rem; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  cursor: pointer; 
+  transition: var(--transition); 
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.close-overlay:hover { 
+  background: #ff4444; 
+  transform: rotate(90deg) scale(1.1); 
+}
+
+/* ===== SENTIMENT ET MOTS-CLÉS ===== */
+.overlay-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 3px;
+}
+
+.sentiment-display-overlay {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sentiment-positive {
+  color: #4CAF50;
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+.sentiment-negative {
+  color: #FF6B6B;
+  border-color: rgba(255, 107, 107, 0.4);
+}
+
+.sentiment-neutral {
+  color: #FFD166;
+  border-color: rgba(255, 209, 102, 0.4);
+}
+
+.keywords-container-overlay {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 3px;
+}
+
+.keyword-overlay {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  font-size: 0.8rem;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ===== CONTENU ARTICLE ===== */
+.overlay-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.article-frame-container {
+  flex: 1;
+  position: relative;
+  background: white;
+}
+
+#article-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* ===== NO RESULTS & ERROR ===== */
+.no-results, .error-state { 
+  text-align: center; 
+  padding: 40px 15px; 
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+}
+
+.no-results-icon, .error-icon { 
+  font-size: 2.5rem; 
+  margin-bottom: 15px; 
+  opacity: 0.5; 
+}
+
+.clear-search-btn, .retry-button { 
+  background: var(--primary); 
+  color: white; 
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 20px; 
+  cursor: pointer; 
+  margin-top: 15px;
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.clear-search-btn:hover, .retry-button:hover {
+  background: var(--primary-dark);
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ===== SCROLL TO TOP ===== */
+.scroll-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: none;
+  z-index: 99;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+}
+
+.scroll-top:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* ===== IMAGE ERROR STATE ===== */
+.image-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  height: 100%;
+  text-align: center;
+  padding: 15px;
+  background: linear-gradient(45deg, #000428, #004e92);
+}
+</style>
+</head>
+
+<body>
+<header class="app-header">
+  <div class="title-search-container">
+    <h1 class="main-title">Revue de Presse<br>Hebdomadaire</h1>
+    <div class="search-container">
+      <div class="search-wrapper">
+        <div class="search-icon">🔍</div>
+        <input type="text" id="search-input" placeholder="Rechercher des articles..." autocomplete="off" spellcheck="false">
+        <button class="clear-search" id="clear-search" aria-label="Effacer la recherche">✕</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="articles-container">
+  <div id="loading-indicator">
+    <div class="loading-spinner"></div>
+    <p>Chargement des articles...</p>
+  </div>
+</main>
+
+<button class="scroll-top" id="scroll-top" aria-label="Retour en haut">↑</button>
+
+<div id="article-overlay">
+  <div class="overlay-container">
+    <div class="overlay-header-extended">
+      <div class="overlay-header-top">
+        <div class="overlay-title" id="overlay-article-title"></div>
+        <button class="close-overlay" id="close-overlay" aria-label="Fermer">×</button>
+      </div>
+      <div class="overlay-details">
+        <div id="sentiment-display-overlay" class="sentiment-display-overlay sentiment-neutral">
+          <span>Sentiment:</span>
+          <span id="sentiment-value">Chargement...</span>
+        </div>
+        <div class="keywords-container-overlay" id="keywords-container-overlay">
+          <!-- Les mots-clés seront insérés ici -->
+        </div>
+      </div>
+    </div>
+    <div class="overlay-content">
+      <div class="article-frame-container">
+        <iframe id="article-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" title="Contenu de l'article"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== APP CONFIGURATION =====
+const CONFIG = {
+  jsonUrl: 'data/datajson.json?t=' + Date.now(),
+  maxArticles: 100,
+  imagesBasePath: 'images3/'
+};
+
+// ===== MEDIA LOGOS MAPPING =====
+const MEDIA_LOGOS = {
+  'al jazeera': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Al_Jazeera_Logo_2016.svg',
+  'الجزيرة': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Al_Jazeera_Logo_2016.svg',
+  'france 24': 'https://upload.wikimedia.org/wikipedia/commons/2/2d/France_24_logo.svg',
+  'arabic.pressbee.net': 'https://cdn-icons-png.flaticon.com/512/60/60543.png',
+  'default': 'https://cdn-icons-png.flaticon.com/512/60/60543.png'
+};
+
+// ===== APP STATE =====
+let appState = {
+  articles: [],
+  filteredArticles: [],
+  searchQuery: '',
+  isLoading: true
+};
+
+const elements = {
+  searchInput: document.getElementById('search-input'),
+  clearSearch: document.getElementById('clear-search'),
+  articlesContainer: document.getElementById('articles-container'),
+  articleOverlay: document.getElementById('article-overlay'),
+  closeOverlay: document.getElementById('close-overlay'),
+  articleFrame: document.getElementById('article-frame'),
+  overlayArticleTitle: document.getElementById('overlay-article-title'),
+  sentimentDisplayOverlay: document.getElementById('sentiment-display-overlay'),
+  sentimentValue: document.getElementById('sentiment-value'),
+  keywordsContainerOverlay: document.getElementById('keywords-container-overlay'),
+  loadingIndicator: document.getElementById('loading-indicator'),
+  scrollTop: document.getElementById('scroll-top')
+};
+
+function initApp() {
+  setupEventListeners();
+  loadArticles();
+}
+
+function setupEventListeners() {
+  // Recherche
+  elements.searchInput.addEventListener('input', function(e) {
+    appState.searchQuery = e.target.value;
+    elements.clearSearch.style.display = appState.searchQuery ? 'block' : 'none';
+    debounce(filterArticles, 300)();
+  });
+  
+  // Effacer recherche
+  elements.clearSearch.addEventListener('click', () => {
+    elements.searchInput.value = '';
+    appState.searchQuery = '';
+    elements.clearSearch.style.display = 'none';
+    filterArticles();
+    elements.searchInput.focus();
+  });
+  
+  // Fermer overlay
+  elements.closeOverlay.addEventListener('click', closeArticleOverlay);
+  
+  // Fermer overlay avec ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeArticleOverlay();
+  });
+  
+  // Scroll to top
+  elements.scrollTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  
+  // Afficher/masquer bouton scroll
+  window.addEventListener('scroll', () => {
+    elements.scrollTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+  });
+}
+
+function truncateTitle(title, maxLength = 100) {
+  if (!title || title.length <= maxLength) return title;
+  return title.substring(0, maxLength) + '...';
+}
+
+function isArabic(text) {
+  return /[\u0600-\u06FF]/.test(text);
+}
+
+// ===== IMAGE MANAGEMENT =====
+function getArticleImageUrl(article) {
+  if (article.image_brute) {
+    if (!article.image_brute.startsWith('http') && 
+        !article.image_brute.startsWith('/') &&
+        !article.image_brute.startsWith('images')) {
+      return CONFIG.imagesBasePath + article.image_brute;
+    }
+    return article.image_brute;
+  }
+  
+  if (article.image_brute) {
+    if (!article.image_brute.startsWith('http') && 
+        !article.image_brute.startsWith('/') &&
+        !article.image_brute.startsWith('images')) {
+      return CONFIG.imagesBasePath + article.image_brute;
+    }
+    return article.image_brute;
+  }
+  
+  return null;
+}
+
+function createImageElement(imageUrl, title) {
+  if (!imageUrl) {
+    return '<div class="image-error">Image non disponible</div>';
+  }
+  
+  return `<img src="${imageUrl}" 
+                alt="${title || 'Image de l\'article'}" 
+                class="article-image" 
+                loading="lazy"
+                onerror="this.onerror=null; this.style.display='none'; this.parentElement.innerHTML='<div class=\\'image-error\\'>Image non disponible</div>';"
+                onload="this.style.opacity='1'"
+                style="opacity:0; transition: opacity 0.3s ease;">`;
+}
+
+// ===== LOAD & PROCESS =====
+async function loadArticles() {
+  try {
+    showLoading(true);
+    const response = await fetch(CONFIG.jsonUrl);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
+    appState.articles = processArticleData(data);
+    filterArticles();
+  } catch (error) {
+    console.error('Error loading articles:', error);
+    showError('Impossible de charger les articles. Veuillez réessayer.');
+  } finally {
+    showLoading(false);
+  }
+}
+
+function validateAndFormatDate(dateString) {
+  if (!dateString) return { date: 'N/A', time: '', fullDate: 'N/A' };
+  
+  try {
+    const [datePart, timePart] = dateString.split(' ');
+    return {
+      date: datePart || dateString,
+      time: timePart || '',
+      fullDate: dateString
+    };
+  } catch (e) {
+    return { date: dateString, time: '', fullDate: dateString };
+  }
+}
+
+function processArticleData(articles) {
+  return articles
+    .filter(a => a.visible === true || a.visible === "true")
+    .sort((a, b) => {
+      try {
+        const parseDate = (str) => {
+          const [date, time] = str.split(' ');
+          const [d, m, y] = date.split('/');
+          const [h, min] = time ? time.split(':') : [0, 0];
+          return new Date(y, m - 1, d, h, min);
+        };
+        return parseDate(b.date_heure) - parseDate(a.date_heure);
+      } catch (e) {
+        return 0;
+      }
+    })
+    .slice(0, CONFIG.maxArticles);
+}
+
+function filterArticles() {
+  const query = appState.searchQuery.toLowerCase().trim();
+  
+  if (!query) {
+    appState.filteredArticles = [...appState.articles];
+  } else {
+    appState.filteredArticles = appState.articles.filter(article => {
+      const searchableText = `
+        ${article.titre || ''}
+        ${article.source || ''}
+        ${article.theme || ''}
+        ${article.mots_cles || ''}
+        ${article.langue || ''}
+        ${article.sentiment || ''}
+      `.toLowerCase();
+      
+      return searchableText.includes(query);
+    });
+  }
+  
+  displayArticles();
+}
+
+function displayArticles() {
+  elements.articlesContainer.innerHTML = '';
+  
+  if (appState.filteredArticles.length === 0) {
+    showNoResults();
+    return;
+  }
+  
+  const fragment = document.createDocumentFragment();
+  
+  appState.filteredArticles.forEach((article, index) => {
+    const card = createArticleCard(article, index);
+    fragment.appendChild(card);
+  });
+  
+  elements.articlesContainer.appendChild(fragment);
+}
+
+function createArticleCard(article, index) {
+  const card = document.createElement('div');
+  card.className = 'article-card';
+  card.style.animationDelay = `${index * 0.03}s`;
+  
+  const imageUrl = getArticleImageUrl(article);
+  const dateInfo = validateAndFormatDate(article.date_heure);
+  const isCategoryArabic = isArabic(article.theme);
+  
+  const imageElement = createImageElement(imageUrl, article.titre);
+
+  card.innerHTML = `
+    <div class="article-image-container">
+      ${imageElement}
+      <div class="image-overlay">
+        <h3 class="article-image-title">${truncateTitle(article.titre || 'Sans titre')}</h3>
+        <div class="title-source">
+          <span>📰</span>
+          <span>${article.source || 'Source inconnue'}</span>
+        </div>
+      </div>
+      <div class="image-badges">
+        <div class="image-badge date-badge">
+          <span>📅</span>
+          <span>${dateInfo.date}</span>
+        </div>
+        <div class="image-badge category-badge ${isCategoryArabic ? 'rtl' : 'ltr'}">
+          <span>🏷️</span>
+          <span>${article.theme || 'Non catégorisé'}</span>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  card.addEventListener('click', () => openArticleOverlay(article));
+  return card;
+}
+
+function openArticleOverlay(article) {
+  // Mettre à jour le titre
+  elements.overlayArticleTitle.textContent = article.titre || 'Article';
+  
+  // Charger l'article dans l'iframe
+  elements.articleFrame.src = article.url || '#';
+  
+  // Mettre à jour le sentiment
+  const sentiment = article.sentiment || 'Non spécifié';
+  elements.sentimentValue.textContent = sentiment;
+  
+  // Appliquer la classe CSS appropriée
+  elements.sentimentDisplayOverlay.className = 'sentiment-display-overlay';
+  if (sentiment.toLowerCase().includes('positif') || sentiment.toLowerCase().includes('positive')) {
+    elements.sentimentDisplayOverlay.classList.add('sentiment-positive');
+  } else if (sentiment.toLowerCase().includes('négatif') || sentiment.toLowerCase().includes('negative')) {
+    elements.sentimentDisplayOverlay.classList.add('sentiment-negative');
+  } else {
+    elements.sentimentDisplayOverlay.classList.add('sentiment-neutral');
+  }
+  
+  // Mettre à jour les mots-clés
+  const keywords = article.mots_cles ? 
+    article.mots_cles.split(',').map(k => k.trim()).filter(k => k) : 
+    [];
+  
+  elements.keywordsContainerOverlay.innerHTML = '';
+  keywords.forEach(keyword => {
+    const keywordElement = document.createElement('div');
+    keywordElement.className = 'keyword-overlay';
+    keywordElement.textContent = keyword;
+    elements.keywordsContainerOverlay.appendChild(keywordElement);
+  });
+  
+  // Afficher l'overlay
+  elements.articleOverlay.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  
+  // Focus sur le bouton de fermeture
+  setTimeout(() => elements.closeOverlay.focus(), 100);
+}
+
+function closeArticleOverlay() {
+  elements.articleOverlay.style.display = 'none';
+  elements.articleFrame.src = '';
+  document.body.style.overflow = '';
+  
+  // Focus sur la recherche
+  elements.searchInput.focus();
+}
+
+function showLoading(show) {
+  appState.isLoading = show;
+  if (elements.loadingIndicator) {
+    elements.loadingIndicator.style.display = show ? 'block' : 'none';
+  }
+}
+
+function showNoResults() {
+  elements.articlesContainer.innerHTML = `
+    <div class="no-results">
+      <div class="no-results-icon">🔍</div>
+      <h3>Aucun résultat trouvé</h3>
+      <p>Aucun article ne correspond à "${appState.searchQuery}"</p>
+      <button class="clear-search-btn" onclick="elements.searchInput.value=''; filterArticles();">
+        Effacer la recherche
+      </button>
+    </div>
+  `;
+}
+
+function showError(message) {
+  elements.articlesContainer.innerHTML = `
+    <div class="error-state">
+      <div class="error-icon">⚠️</div>
+      <h3>Erreur</h3>
+      <p>${message}</p>
+      <button class="retry-button" onclick="loadArticles()">
+        Réessayer
+      </button>
+    </div>
+  `;
+}
+
+function debounce(func, wait) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
+
+// Initialiser l'application
+document.addEventListener('DOMContentLoaded', initApp);
+</script>
+</body>
+</html>

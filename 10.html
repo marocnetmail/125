@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Éditeur JSON – Recherche</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body { font-family: Arial; background:#f4f6f8; padding:20px }
+input { width:100%; margin:6px 0; padding:8px }
+.card { background:#fff; padding:15px; margin-bottom:15px; border-radius:8px }
+button { padding:8px 12px; background:#1976d2; color:#fff; border:none; border-radius:5px }
+#search { font-size:16px; padding:10px }
+</style>
+</head>
+
+<body>
+
+<h2>✏️ Modifier les données</h2>
+
+<input id="search" type="text" placeholder="🔍 Rechercher par titre...">
+<div id="list">Chargement...</div>
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbwJCC3Ht9mwY-nDQU2IAZba2n-elE5OE2nbVXwoEBX8o2T55nE1btoFehOVtLdiHy0j/exec";
+
+let ALL_DATA = [];
+
+
+// ✅ 1️⃣ CHARGEMENT DES DONNÉES (GET)
+fetch(API)
+  .then(r => r.json())
+  .then(data => {
+    ALL_DATA = data;
+    render(data);
+  })
+  .catch(err => {
+    document.getElementById("list").innerText = "Erreur chargement";
+    console.error(err);
+  });
+
+
+// ✅ 2️⃣ AFFICHAGE
+function render(data) {
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  if (!data.length) {
+    list.innerHTML = "<p>Aucun résultat</p>";
+    return;
+  }
+
+  data.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <input type="hidden" value="${item.ID || ""}">
+
+      <label>Titre</label>
+      <input value="${item.Titre || ""}">
+
+      <label>Source</label>
+      <input value="${item.Source || ""}">
+
+      <label>Image</label>
+      <input value="${item.image_brute || ""}">
+
+      <button>💾 Enregistrer</button>
+    `;
+
+    // ✅ 3️⃣ SAUVEGARDE
+    div.querySelector("button").onclick = () => {
+      const inputs = div.querySelectorAll("input");
+
+      const payload = {
+        ID: inputs[0].value,
+        Titre: inputs[1].value,
+        Source: inputs[2].value,
+        image_brute: inputs[3].value
+      };
+
+      fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res.success) {
+          alert("✅ Sauvegardé");
+        } else {
+          alert("❌ Erreur : " + res.error);
+        }
+      })
+      .catch(err => alert("❌ Erreur réseau"));
+    };
+
+    list.appendChild(div);
+  });
+}
+
+
+// ✅ 4️⃣ RECHERCHE PAR TITRE
+document.getElementById("search").addEventListener("input", e => {
+  const q = e.target.value.toLowerCase();
+  const filtered = ALL_DATA.filter(item =>
+    (item.Titre || "").toLowerCase().includes(q)
+  );
+  render(filtered);
+});
+</script>
+
+</body>
+</html>

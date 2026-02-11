@@ -1,0 +1,57 @@
+name: Puppeteer Image Scraper
+
+# Déclencheurs du workflow
+on:
+  push:
+    branches:
+      - main       # exécute à chaque push sur main
+  workflow_dispatch: # permet un lancement manuel depuis GitHub
+  schedule:
+    - cron: '0 * * * *' # toutes les heures (optionnel)
+
+jobs:
+  scrape-images:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Récupérer le code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2️⃣ Installer Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      # 3️⃣ Installer les dépendances système pour Puppeteer
+      - name: Install Puppeteer dependencies
+        run: sudo apt-get update && sudo apt-get install -y \
+          gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 \
+          libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 \
+          libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 \
+          libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 \
+          libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation \
+          libappindicator1 libnss3 lsb-release xdg-utils wget
+
+      # 4️⃣ Installer les dépendances Node
+      - name: Install npm dependencies
+        run: npm install
+
+      # 5️⃣ Exécuter le script Puppeteer
+      - name: Run Puppeteer script
+        run: node index.js
+
+      # 6️⃣ Upload JSON enrichi
+      - name: Upload enriched JSON
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-enriched-json
+          path: data_enrichi.json
+
+      # 7️⃣ Upload des images téléchargées
+      - name: Upload images
+        uses: actions/upload-artifact@v4
+        with:
+          name: downloaded-images
+          path: datajson/

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Vidéos MATUHPV – Google Drive</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root{--bg:#f0f7f4;--fg:#333;--card:#fff;--primary:#0b5d3f;--border:#ddd;}
+    body.dark{--bg:#121212;--fg:#eee;--card:#1e1e1e;--border:#444;}
+    *{box-sizing:border-box;font-family:"Segoe UI",Tahoma,sans-serif;}
+    body{margin:0;background:var(--bg);color:var(--fg);transition:.3s;}
+    header{padding:20px;text-align:center;}
+    h1{color:var(primary);}
+    .controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:30px;}
+    input,select,button{padding:8px 12px;font-size:1rem;border:1px solid var(--border);background:var(--card);color:var(--fg);border-radius:4px;}
+    button{cursor:pointer;}
+    #tree{max-width:1100px;margin:auto;padding:0 10px;}
+    .year-btn{width:100%;padding:18px;background:var(--primary);color:#fff;border:none;text-align:left;font-size:1.3em;font-weight:bold;border-radius:8px;margin-bottom:8px;cursor:pointer;transition:.3s;}
+    .year-btn:hover{background:#094c34;}
+    .year-btn::after{content:'▶';float:right;transition:transform .2s;}
+    .year-btn.open::after{transform:rotate(90deg);}
+    .panel{padding:0 20px 20px;background:var(--card);border-radius:0 0 8px;margin-bottom:12px;display:none;}
+    .video-card{padding:15px;border-bottom:1px solid var(--border);}
+    .video-card:last-child{border-bottom:none;}
+    .thumb{width:100%;max-height:200px;object-fit:cover;border-radius:6px;margin-bottom:10px;}
+    .video-title-ar{font-weight:bold;color:var(--primary);margin-bottom:6px;}
+    .video-title-fr{font-style:italic;color:#555;margin-bottom:10px;}
+    .btn-link{display:inline-block;padding:10px 20px;background:var(--primary);color:#fff;text-decoration:none;border-radius:6px;font-weight:bold;margin-right:8px;}
+    .btn-link:hover{opacity:.9;}
+    #noResult{text-align:center;margin-top:40px;opacity:.7;}
+    footer{text-align:center;padding:30px 10px;font-size:.9em;color:#666;}
+    @media (max-width:600px){.controls{flex-direction:column;}.year-btn{font-size:1.1em;}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎥 Vidéos MATUHPV – Google Drive</h1>
+    <div class="controls">
+      <input id="search" type="search" placeholder="Rechercher un titre…">
+      <select id="yearFilter"><option value="">Toutes les années</option></select>
+      <button id="themeToggle" title="Thème">🌓</button>
+    </div>
+  </header>
+
+  <main id="app">
+    <div id="tree"></div>
+    <p id="noResult" class="hidden">Aucune vidéo trouvée.</p>
+  </main>
+
+  <footer>Mise à jour : 31 décembre 2025 – Dossier /videos de Google Drive</footer>
+
+  <script>
+    /* ---------- 1.  DONNÉES (ID Drive + métadonnées) ---------- */
+    const DATA = {
+      "2025": [
+        {fbid:"1896290387616946",date:"2025-01-15",titre:"حصيلة الشطر الأول من البرنامج الوطني لتنمية المراكز القروية الصاعدة",description:"Bilan première phase Programme Centres Ruraux Émergents",drive_video_id:"1A2B3C4D5E6F7G8H9I0J",drive_thumb_id:"1K2L3M4N5O6P7Q8R9S0T"},
+        {fbid:"2278438295987028",date:"2025-02-20",titre:"وثائق التعمير، ركيزة أساسية لأي تخطيط عمراني مندمج",description:"Importance documents urbanisme",drive_video_id:"2A2B3C4D5E6F7G8H9I0J",drive_thumb_id:"2K2L3M4N5O6P7Q8R9S0T"},
+        {fbid:"1521618062380252",date:"2025-03-10",titre:"الإجراءات المتخذة من أجل تسهيل التعمير في العالم القروي",description:"Mesures simplification urbanisme rural",drive_video_id:"3A2B3C4D5E6F7G8H9I0J",drive_thumb_id:"3K2L3M4N5O6P7Q8R9S0T"},
+        {fbid:"1708059376557436",date:"2025-04-05",titre:"التعمير: حصيلة الإنجازات المسجلة خلال الفترة 2021-2025",description:"Bilan 2021-2025",drive_video_id:"4A2B3C4D5E6F7G8H9I0J",drive_thumb_id:"4K2L3M4N5O6P7Q8R9S0T"}
+      ],
+      "2024": [
+        {fbid:"1586201002510824",date:"2024-06-12",titre:"السيدة فاطمة الزهراء المنصوري تشرف على تدشين مشاريع مهيكلة بالجماعة الترابية المحبس",description:"Fatima Zahra Mansouri projets Mohbisse",drive_video_id:"5A2B3C4D5E6F7G8H9I0J",drive_thumb_id:"5K2L3M4N5O6P7Q8R9S0T"},
+        {fbid:"1872000606724301",date:"2024-07-18",titre:"ارتسامات الساكنة بمناسبة الزيارة الميدانية إلى الجماعة الترابية المحبس",description:"Témoignages visite Mohbisse",drive_video_id:"6A2B3C4D5E6F7G8H9I0J",drive_thumb_id:"6K2L3M4N5O6P7Q8R9S0T"}
+      ],
+      "2023": [
+        {fbid:"1423291578245869",date:"2023-07-25",titre:"قافلة القرب لفائدة العالم القروي",description:"Caravane proximité milieu rural",drive_video_id:"7A2B3C4D5E6F7G8H9I0J",drive_thumb_id:"7K2L3M4N5O6P7Q8R9S0T"},
+        {fbid:"1502133470546598",date:"2023-11-09",titre:"#دعم_السكن",description:"Aide logement",drive_video_id:"8A2B3C4D5E6F7G8H9I0J",drive_thumb_id:"8K2L3M4N5O6P7Q8R9S0T"},
+        {fbid:"2363578793833777",date:"2023-05-18",titre:"الحملة الوطنية حول طلبات رخص البناء",description:"Campagne nationale demandes permis construire",drive_video_id:"9A2B3C4D5E6F7G8H9I0J",drive_thumb_id:"9K2L3M4N5O6P7Q8R9S0T"}
+      ],
+      "2022": [
+        {fbid:"1122508735346917",date:"2022-08-08",titre:"قافلة القرب تحت شعار الوكالات الحضرية",description:"Caravane proximité",drive_video_id:"10A2B3C4D5E6F7G8H9I0J",drive_thumb_id:"10K2L3M4N5O6P7Q8R9S0T"},
+        {fbid:"1130427994506081",date:"2022-09-26",titre:"تدابير على الصعيدين الاجتماعي والاقتصادي",description:"Mesures sociales & éco",drive_video_id:"11A2B3C4D5E6F7G8H9I0J",drive_thumb_id:"11K2L3M4N5O6P7Q8R9S0T"},
+        {fbid:"1137073083877749",date:"2022-09-22",titre:"#DNUH #أنا_ساهمت",description:"Campagne DNUH",drive_video_id:"12A2B3C4D5E6F7G8H9I0J",drive_thumb_id:"12K2L3M4N5O6P7Q8R9S0T"}
+      ]
+    };
+
+    /* ---------- 2.  UTILITAIRES DOM ---------- */
+    const ui={
+      tree:document.getElementById('tree'),
+      search:document.getElementById('search'),
+      yearFilter:document.getElementById('yearFilter'),
+      noResult:document.getElementById('noResult'),
+      themeBtn:document.getElementById('themeToggle')
+    };
+
+    function init(){
+      buildFilters();
+      render();
+      attachEvents();
+      restorePrefs();
+    }
+    function buildFilters(){
+      Object.keys(DATA).sort((a,b)=>b-a).forEach(y=>{
+        ui.yearFilter.innerHTML+=`<option value="${y}">${y}</option>`;
+      });
+    }
+    function render(){
+      const q=ui.search.value.trim().toLowerCase();
+      const y=ui.yearFilter.value;
+      ui.tree.innerHTML='';
+      let has=false;
+
+      Object.keys(DATA).sort((a,b)=>b-a).forEach(year=>{
+        if(y&&year!==y)return;
+        const arr=DATA[year].filter(v=>
+          v.titre.toLowerCase().includes(q)||v.description.toLowerCase().includes(q)
+        );
+        if(!arr.length)return;
+        has=true;
+
+        const btn=Object.assign(document.createElement('button'),{
+          className:'year-btn',textContent:`${year} (${arr.length})`
+        });
+        btn.dataset.year=year;
+
+        const panel=document.createElement('div');
+        panel.className='panel';
+        arr.forEach(v=>{
+          const card=document.createElement('div');
+          card.className='video-card';
+          card.innerHTML=`
+            <img class="thumb" src="https://drive.google.com/uc?export=view&id=${v.drive_thumb_id}" alt="Miniature">
+            <div class="video-title-ar">${v.titre}</div>
+            <div class="video-title-fr">${v.description}</div>
+            <a href="https://www.facebook.com/reel/${v.fbid}/" target="_blank" class="btn-link">▶ Voir sur Facebook</a>
+            <a href="https://drive.google.com/uc?export=download&id=${v.drive_video_id}" class="btn-link">📥 Télécharger vidéo</a>`;
+          panel.appendChild(card);
+        });
+        ui.tree.appendChild(btn);
+        ui.tree.appendChild(panel);
+      });
+      ui.noResult.classList.toggle('hidden',has);
+    }
+    function attachEvents(){
+      ui.search.addEventListener('input',render);
+      ui.yearFilter.addEventListener('change',render);
+      ui.themeBtn.addEventListener('click',()=>{
+        document.body.classList.toggle('dark');
+        localStorage.setItem('theme',document.body.classList.contains('dark')?'dark':'light');
+      });
+      ui.tree.addEventListener('click',e=>{
+        if(!e.target.matches('.year-btn'))return;
+        const panel=e.target.nextElementSibling;
+        const open=e.target.classList.contains('open');
+        document.querySelectorAll('.year-btn').forEach(b=>b.classList.remove('open'));
+        document.querySelectorAll('.panel').forEach(p=>p.style.display='none');
+        if(!open){
+          e.target.classList.add('open');
+          panel.style.display='block';
+          localStorage.setItem('lastYear',e.target.dataset.year);
+        }
+      });
+    }
+    function restorePrefs(){
+      const t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+      if(t==='dark')document.body.classList.add('dark');
+      const last=localStorage.getItem('lastYear');
+      if(last){
+        const btn=document.querySelector(`.year-btn[data-year="${last}"]`);
+        if(btn)btn.click();
+      }
+    }
+    init();
+  </script>
+</body>
+</html>

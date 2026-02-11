@@ -1,0 +1,2534 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<meta name="theme-color" content="#001122">
+<meta name="description" content="مراجعة الصحافة الأسبوعية">
+<title>مراجعة الصحافة الأسبوعية</title>
+<link rel="icon" type="image/png" href="images1/00011.png">
+<!-- Bibliothèque html2pdf pour générer des PDFs avec support arabe -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<!-- Police arabe -->
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+/* ===== CSS RESET & VARIABLES - MOBILE FIRST ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --primary: #1a73e8;
+  --primary-dark: #0d5cb6;
+  --background: #001122;
+  --card-bg: #001a44;
+  --text: #ffffff;
+  --text-secondary: #cccccc;
+  --accent-1: #FF6B6B;
+  --accent-2: #4ECDC4;
+  --accent-3: #FFD166;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  --radius: 8px;
+  --radius-sm: 6px;
+  --radius-lg: 12px;
+  --transition: all 0.3s ease;
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
+}
+
+/* ===== BASE STYLES ===== */
+body {
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--background);
+  color: var(--text);
+  line-height: 1.5;
+  overflow-x: hidden;
+  min-height: 100vh;
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== COMPACT HEADER - MOBILE FIRST ===== */
+.app-header {
+  background: linear-gradient(135deg, #001122 0%, #002244 100%);
+  padding: 10px 12px;
+  padding-top: calc(10px + var(--safe-top));
+  box-shadow: var(--shadow);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+.title-search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.main-title {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: white;
+  line-height: 1.1;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  letter-spacing: -0.5px;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+
+/* ===== FILTERS CONTAINER - MOBILE COLUMN ===== */
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+/* ===== SEARCH BAR - OPTIMISÉ MOBILE ===== */
+.search-container {
+  width: 100%;
+}
+
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  padding: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  transition: var(--transition);
+  min-height: 48px;
+}
+
+.search-wrapper:focus-within {
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+}
+
+.search-icon {
+  padding: 0 12px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+#search-input {
+  flex: 1;
+  padding: 12px 12px 12px 0;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 1rem;
+  outline: none;
+  font-family: inherit;
+  min-width: 0;
+  text-align: right;
+  direction: rtl;
+  min-height: 44px;
+}
+
+#search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  text-align: right;
+  font-size: 0.95rem;
+}
+
+.clear-search {
+  padding: 0 12px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: none;
+  transition: var(--transition);
+  background: none;
+  border: none;
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clear-search:hover {
+  color: var(--text);
+}
+
+/* ===== DATE FILTERS - STACKED ON MOBILE ===== */
+.date-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.date-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.date-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-3);
+  white-space: nowrap;
+  min-width: 45px;
+  flex-shrink: 0;
+}
+
+.date-input-wrapper {
+  width: 100%;
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  min-width: 0;
+  min-height: 44px;
+}
+
+.date-input {
+  width: 100%;
+  padding: 12px 12px;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 0.95rem;
+  outline: none;
+  font-family: inherit;
+  min-width: 0;
+  text-align: right;
+  direction: rtl;
+  min-height: 44px;
+}
+
+.date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.7;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
+.date-separator {
+  color: var(--accent-2);
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin: 0 5px;
+  flex-shrink: 0;
+  display: none;
+}
+
+/* ===== PRÉDÉFINIS DE PÉRIODE - HORIZONTAL SCROLL ON MOBILE ===== */
+.period-presets {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  margin-bottom: 10px;
+  justify-content: flex-start;
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 5px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.period-presets::-webkit-scrollbar {
+  display: none;
+}
+
+.preset-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  backdrop-filter: blur(10px);
+  min-width: 100px;
+  text-align: center;
+  flex-shrink: 0;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  min-height: 44px;
+}
+
+.preset-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.preset-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  box-shadow: 0 0 10px rgba(26, 115, 232, 0.4);
+}
+
+/* ===== BOUTONS D'ACTION - FULL WIDTH ON MOBILE ===== */
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  justify-content: center;
+  width: 100%;
+}
+
+.clear-filters-btn {
+  background: linear-gradient(135deg, var(--accent-1), #ff5252);
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  min-width: 48%;
+  justify-content: center;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  min-height: 48px;
+  flex: 1;
+}
+
+.clear-filters-btn:hover {
+  background: linear-gradient(135deg, #ff5252, #ff4444);
+  transform: translateY(-1px);
+}
+
+.download-pdf-btn {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  min-width: 48%;
+  justify-content: center;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  min-height: 48px;
+  flex: 1;
+}
+
+.download-pdf-btn:hover {
+  background: linear-gradient(135deg, #2E7D32, #1B5E20);
+  transform: translateY(-1px);
+}
+
+.download-pdf-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ===== LOADING STATE ===== */
+#loading-indicator {
+  text-align: center;
+  padding: 40px 15px;
+  color: var(--text-secondary);
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== ARTICLES CONTAINER ===== */
+#articles-container {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 200px;
+  width: 100%;
+}
+
+/* ===== ARTICLE CARD - MOBILE OPTIMIZED ===== */
+.article-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease forwards;
+  height: 100%;
+  position: relative;
+  margin-bottom: 4px;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.article-card:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* Article Image Section - Optimized for mobile */
+.article-image-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(45deg, #000428, #004e92);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.article-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+  background: linear-gradient(45deg, #000428, #004e92);
+}
+
+/* ===== TITLE OVERLAY ===== */
+.title-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 15px 12px;
+  background: linear-gradient(to top, 
+    rgba(0, 0, 0, 0.95) 0%, 
+    rgba(0, 0, 0, 0.85) 30%, 
+    rgba(0, 0, 0, 0.7) 60%, 
+    transparent 100%);
+  z-index: 2;
+}
+
+/* TITRE PRINCIPAL - OPTIMIZED FOR MOBILE */
+.article-main-title {
+  font-size: 1.4rem;
+  font-weight: 900;
+  line-height: 1.15;
+  color: #FFFFFF;
+  margin-bottom: 6px;
+  text-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.8),
+    0 4px 8px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(0, 0, 0, 0.4);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  letter-spacing: -0.3px;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  text-align: right;
+}
+
+/* Source */
+.article-source {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent-2);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.95;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  text-align: right;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+
+/* ===== METADATA BADGES - SMALLER ON MOBILE ===== */
+.metadata-badges {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  z-index: 3;
+  gap: 6px;
+}
+
+.metadata-badge {
+  padding: 5px 8px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: var(--transition);
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  max-width: 48%;
+}
+
+.date-badge { 
+  background: rgba(255, 107, 107, 0.92);
+  color: white;
+}
+
+.category-badge { 
+  background: rgba(78, 205, 196, 0.92);
+  color: white;
+}
+
+.category-badge.ltr { 
+  text-align: left; 
+  justify-content: flex-start; 
+  padding-right: 8px;
+}
+
+.category-badge.rtl { 
+  text-align: right; 
+  justify-content: flex-end; 
+  padding-left: 8px;
+}
+
+/* ===== LOGO DES MÉDIAS ===== */
+.media-logo-container {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 4;
+  width: 45px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  overflow: hidden;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.media-logo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  transition: var(--transition);
+  opacity: 0.9;
+}
+
+/* ===== TEMPS ÉCOULÉ ===== */
+.time-ago {
+  position: absolute;
+  top: 60px;
+  right: 10px;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.7);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.7rem;
+  font-weight: 600;
+  border-radius: 10px;
+  z-index: 2;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+
+/* ===== PAGINATION - MOBILE OPTIMIZED ===== */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 10px;
+  gap: 5px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  backdrop-filter: blur(10px);
+  min-width: 36px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.pagination-numbers {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pagination-number {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+
+.pagination-number:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--primary);
+}
+
+.pagination-number.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  box-shadow: 0 0 10px rgba(26, 115, 232, 0.4);
+}
+
+.pagination-info {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0 8px;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  text-align: center;
+  width: 100%;
+  margin-top: 5px;
+}
+
+/* ===== ARTICLE OVERLAY - FULL SCREEN ON MOBILE ===== */
+#article-overlay {
+  display: none;
+  position: fixed;
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%;
+  background: rgba(0, 0, 0, 0.98);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.overlay-container { 
+  width: 100%; 
+  height: 100%; 
+  display: flex; 
+  flex-direction: column; 
+  position: relative; 
+}
+
+/* ===== OVERLAY HEADER - MOBILE OPTIMIZED ===== */
+.overlay-header-extended {
+  padding: 12px;
+  padding-top: calc(12px + var(--safe-top));
+  background: rgba(0, 26, 68, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  backdrop-filter: blur(10px);
+}
+
+.overlay-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+}
+
+.overlay-title { 
+  font-size: 1.4rem; 
+  font-weight: 900; 
+  color: #FFFFFF; 
+  flex: 1; 
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-width: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  text-align: right;
+}
+
+.close-overlay {
+  width: 40px; 
+  height: 40px; 
+  border-radius: 50%;
+  background: var(--accent-1); 
+  border: none; 
+  color: white;
+  font-size: 1.3rem; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  cursor: pointer; 
+  transition: var(--transition); 
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 10;
+}
+
+.close-overlay:active { 
+  background: #ff4444; 
+  transform: rotate(90deg) scale(0.95); 
+}
+
+/* ===== SENTIMENT ET MOTS-CLÉS ===== */
+.overlay-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sentiment-display-overlay {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: fit-content;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+
+.sentiment-positive {
+  color: #4CAF50;
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+.sentiment-negative {
+  color: #FF6B6B;
+  border-color: rgba(255, 107, 107, 0.4);
+}
+
+.sentiment-neutral {
+  color: #FFD166;
+  border-color: rgba(255, 209, 102, 0.4);
+}
+
+.keywords-container-overlay {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.keyword-overlay {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  font-size: 0.75rem;
+  padding: 6px 10px;
+  border-radius: 14px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  white-space: nowrap;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+
+/* ===== CONTENU ARTICLE ===== */
+.overlay-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 0;
+}
+
+.article-frame-container {
+  flex: 1;
+  position: relative;
+  background: white;
+  min-height: 0;
+}
+
+#article-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* ===== NO RESULTS & ERROR ===== */
+.no-results, .error-state { 
+  text-align: center; 
+  padding: 30px 12px; 
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+
+.no-results-icon, .error-icon { 
+  font-size: 2.5rem; 
+  margin-bottom: 15px; 
+  opacity: 0.5; 
+}
+
+.clear-search-btn, .retry-button { 
+  background: var(--primary); 
+  color: white; 
+  border: none; 
+  padding: 12px 20px; 
+  border-radius: 24px; 
+  cursor: pointer; 
+  margin-top: 15px;
+  font-family: inherit;
+  transition: var(--transition);
+  font-size: 1rem;
+  font-weight: 600;
+  min-height: 44px;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+  min-width: 200px;
+}
+
+.clear-search-btn:active, 
+.clear-search-btn:active,
+.retry-button:active,
+.retry-button:active {
+  background: var(--primary-dark);
+  transform: scale(0.95);
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn { 
+  from { opacity: 0; } 
+  to { opacity: 1; } 
+}
+
+/* ===== SCROLL TO TOP ===== */
+.scroll-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: none;
+  z-index: 99;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.scroll-top:active {
+  background: var(--primary-dark);
+  transform: scale(0.95);
+}
+
+/* ===== IMAGE ERROR STATE ===== */
+.image-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  height: 100%;
+  text-align: center;
+  padding: 15px;
+  background: linear-gradient(45deg, #000428, #004e92);
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+
+/* ===== STATS BAR ===== */
+.stats-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(0, 26, 68, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+  width: 100%;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+
+.results-count {
+  font-weight: 600;
+  color: var(--accent-2);
+  font-size: 0.9rem;
+}
+
+.active-filters {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filter-tag {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 8px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif;
+}
+
+.filter-tag .remove-filter {
+  background: none;
+  border: none;
+  color: var(--accent-1);
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  min-width: 20px;
+  min-height: 20px;
+}
+
+/* ===== STYLES SPÉCIFIQUES POUR PDF ===== */
+#pdf-content {
+  display: none;
+}
+
+/* ===== MEDIA QUERIES FOR LARGER SCREENS ===== */
+
+/* Small tablets (481px - 768px) */
+@media (min-width: 481px) {
+  .app-header {
+    padding: 12px 15px;
+    padding-top: calc(12px + var(--safe-top));
+  }
+  
+  .main-title {
+    font-size: 1.8rem;
+  }
+  
+  .article-image-container {
+    height: 220px;
+  }
+  
+  .article-main-title {
+    font-size: 1.5rem;
+  }
+  
+  .metadata-badges {
+    top: 12px;
+    padding: 0 12px;
+  }
+  
+  .metadata-badge {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+  
+  .media-logo-container {
+    width: 55px;
+    height: 28px;
+    bottom: 15px;
+    left: 15px;
+  }
+  
+  .title-overlay {
+    padding: 18px 15px;
+  }
+  
+  .date-group {
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .date-separator {
+    display: inline;
+  }
+  
+  .filters-container {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .search-container {
+    flex: 1;
+  }
+  
+  .date-filters {
+    flex: 2;
+  }
+  
+  .period-presets {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .preset-btn {
+    min-width: 110px;
+  }
+}
+
+/* Tablets and small desktops (769px - 1024px) */
+@media (min-width: 769px) {
+  .app-header {
+    padding: 15px 20px;
+    padding-top: calc(15px + var(--safe-top));
+  }
+  
+  .main-title {
+    font-size: 2rem;
+  }
+  
+  .article-image-container {
+    height: 250px;
+  }
+  
+  .article-main-title {
+    font-size: 1.7rem;
+  }
+  
+  .metadata-badge {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+  
+  .media-logo-container {
+    width: 65px;
+    height: 32px;
+    bottom: 20px;
+    left: 20px;
+  }
+  
+  #articles-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 15px;
+    gap: 15px;
+  }
+  
+  .title-overlay {
+    padding: 22px 20px;
+  }
+  
+  .clear-filters-btn,
+  .download-pdf-btn {
+    min-width: 140px;
+    padding: 12px 20px;
+  }
+  
+  .period-presets {
+    max-width: 500px;
+    margin: 0 auto 15px;
+  }
+}
+
+/* Large desktops (1025px and above) */
+@media (min-width: 1025px) {
+  .article-image-container {
+    height: 280px;
+  }
+  
+  .article-main-title {
+    font-size: 1.9rem;
+  }
+  
+  .media-logo-container {
+    width: 75px;
+    height: 38px;
+    bottom: 25px;
+    left: 25px;
+  }
+  
+  .app-header {
+    padding: 18px 25px;
+    padding-top: calc(18px + var(--safe-top));
+  }
+  
+  .stats-bar {
+    max-width: 800px;
+    margin: 0 auto;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* ===== TOUCH DEVICE OPTIMIZATIONS ===== */
+@media (hover: none) and (pointer: coarse) {
+  .article-card:hover {
+    transform: none;
+  }
+  
+  .clear-filters-btn:active,
+  .clear-search-btn:active,
+  .retry-button:active,
+  .scroll-top:active,
+  .pagination-btn:active,
+  .preset-btn:active,
+  .download-pdf-btn:active {
+    transform: scale(0.95);
+  }
+  
+  .search-wrapper:active,
+  .date-input-wrapper:active {
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* ===== DARK MODE SUPPORT ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #000c18;
+    --card-bg: #001428;
+  }
+  
+  .article-image-container {
+    background: linear-gradient(45deg, #000214, #003366);
+  }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  .app-header,
+  .filters-container,
+  .scroll-top,
+  .close-overlay,
+  .pagination-container,
+  .period-presets,
+  .download-pdf-btn,
+  .stats-bar {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+  
+  #articles-container {
+    display: block;
+    padding: 0;
+  }
+  
+  .article-card {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+  
+  .article-image-container {
+    height: 150px;
+  }
+  
+  .media-logo-container {
+    display: none !important;
+  }
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+@media (prefers-contrast: high) {
+  :root {
+    --primary: #0057d9;
+    --accent-1: #ff3333;
+    --accent-2: #00a3a3;
+  }
+  
+  .search-wrapper,
+  .date-input-wrapper {
+    border-width: 2px;
+  }
+  
+  .article-main-title {
+    color: #FFFFFF;
+    text-shadow: 0 2px 4px #000000;
+  }
+}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .article-card {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  
+  .pagination-btn:hover,
+  .preset-btn:hover,
+  .download-pdf-btn:hover {
+    transform: none !important;
+  }
+}
+</style>
+</head>
+
+<body>
+<header class="app-header">
+  <div class="title-search-container">
+    <h1 class="main-title">مراجعة الصحافة<br>الأسبوعية</h1>
+    
+    <div class="filters-container">
+      <div class="search-container">
+        <div class="search-wrapper">
+          <div class="search-icon">🔍</div>
+          <input type="text" id="search-input" placeholder="بحث في المقالات..." autocomplete="off" spellcheck="false" enterkeyhint="search">
+          <button class="clear-search" id="clear-search" aria-label="مسح البحث">✕</button>
+        </div>
+      </div>
+      
+      <div class="date-filters">
+        <div class="date-group">
+          <span class="date-label">بداية:</span>
+          <div class="date-input-wrapper">
+            <input type="date" id="start-date" class="date-input" aria-label="تاريخ البداية">
+          </div>
+        </div>
+        
+        <div class="date-separator">→</div>
+        
+        <div class="date-group">
+          <span class="date-label">نهاية:</span>
+          <div class="date-input-wrapper">
+            <input type="date" id="end-date" class="date-input" aria-label="تاريخ النهاية">
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Boutons de période prédéfinis -->
+    <div class="period-presets">
+      <button class="preset-btn active" data-period="week">أسبوعي</button>
+      <button class="preset-btn" data-period="biweekly">نصف شهري</button>
+      <button class="preset-btn" data-period="month">شهري</button>
+      <button class="preset-btn" data-period="custom">مخصص</button>
+    </div>
+    
+    <!-- Boutons d'action -->
+    <div class="action-buttons">
+      <button class="clear-filters-btn" id="clear-filters">
+        <span>🗑️</span>
+        <span>مسح الكل</span>
+      </button>
+      <button class="download-pdf-btn" id="download-pdf-btn">
+        <span>📄</span>
+        <span>تحميل PDF</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="stats-bar" id="stats-bar" style="display: none;">
+  <div class="results-count" id="results-count">0 مقال</div>
+  <div class="active-filters" id="active-filters">
+    <!-- Filtres actifs apparaîtront ici -->
+  </div>
+</div>
+
+<main id="articles-container">
+  <div id="loading-indicator">
+    <div class="loading-spinner"></div>
+    <p>جاري تحميل المقالات...</p>
+  </div>
+</main>
+
+<!-- Pagination -->
+<div class="pagination-container" id="pagination-container" style="display: none;">
+  <button class="pagination-btn" id="first-btn" title="الصفحة الأولى">««</button>
+  <button class="pagination-btn" id="prev-btn" title="الصفحة السابقة">‹</button>
+  
+  <div class="pagination-numbers" id="pagination-numbers">
+    <!-- Les numéros de page seront générés ici -->
+  </div>
+  
+  <button class="pagination-btn" id="next-btn" title="الصفحة التالية">›</button>
+  <button class="pagination-btn" id="last-btn" title="الصفحة الأخيرة">»»</button>
+  
+  <div class="pagination-info" id="pagination-info">الصفحة 1 من 1</div>
+</div>
+
+<button class="scroll-top" id="scroll-top" aria-label="العودة للأعلى">↑</button>
+
+<div id="article-overlay">
+  <div class="overlay-container">
+    <div class="overlay-header-extended">
+      <div class="overlay-header-top">
+        <div class="overlay-title" id="overlay-article-title"></div>
+        <button class="close-overlay" id="close-overlay" aria-label="إغلاق">×</button>
+      </div>
+      <div class="overlay-details">
+        <div id="sentiment-display-overlay" class="sentiment-display-overlay sentiment-neutral">
+          <span>المشاعر:</span>
+          <span id="sentiment-value">جار التحميل...</span>
+        </div>
+        <div class="keywords-container-overlay" id="keywords-container-overlay">
+          <!-- Les mots-clés seront insérés ici -->
+        </div>
+      </div>
+    </div>
+    <div class="overlay-content">
+      <div class="article-frame-container">
+        <iframe id="article-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" title="محتوى المقال" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Conteneur caché pour le contenu PDF -->
+<div id="pdf-content" style="display: none;"></div>
+
+<script>
+// ===== VARIABLE GLOBALE POUR LES LOGOS =====
+let mediaLogos = [];
+
+// ===== APP CONFIGURATION =====
+const CONFIG = {
+  jsonUrl: 'data/datajson.json?t=' + Date.now(),
+  logosUrl: 'data/logo_media.json?t=' + Date.now(),
+  maxArticles: 1000,
+  imagesBasePath: 'images3/',
+  debounceDelay: 300,
+  touchDelay: 100,
+  articlesPerPage: 10
+};
+
+// ===== TOUCH DETECTION =====
+const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+// ===== APP STATE =====
+let appState = {
+  articles: [],
+  filteredArticles: [],
+  searchQuery: '',
+  startDate: null,
+  endDate: null,
+  isLoading: true,
+  lastTouchTime: 0,
+  currentPage: 1,
+  activePeriod: 'week'
+};
+
+const elements = {
+  searchInput: document.getElementById('search-input'),
+  clearSearch: document.getElementById('clear-search'),
+  startDate: document.getElementById('start-date'),
+  endDate: document.getElementById('end-date'),
+  clearFilters: document.getElementById('clear-filters'),
+  articlesContainer: document.getElementById('articles-container'),
+  articleOverlay: document.getElementById('article-overlay'),
+  closeOverlay: document.getElementById('close-overlay'),
+  articleFrame: document.getElementById('article-frame'),
+  overlayArticleTitle: document.getElementById('overlay-article-title'),
+  sentimentDisplayOverlay: document.getElementById('sentiment-display-overlay'),
+  sentimentValue: document.getElementById('sentiment-value'),
+  keywordsContainerOverlay: document.getElementById('keywords-container-overlay'),
+  loadingIndicator: document.getElementById('loading-indicator'),
+  scrollTop: document.getElementById('scroll-top'),
+  statsBar: document.getElementById('stats-bar'),
+  resultsCount: document.getElementById('results-count'),
+  activeFilters: document.getElementById('active-filters'),
+  paginationContainer: document.getElementById('pagination-container'),
+  firstBtn: document.getElementById('first-btn'),
+  prevBtn: document.getElementById('prev-btn'),
+  nextBtn: document.getElementById('next-btn'),
+  lastBtn: document.getElementById('last-btn'),
+  paginationNumbers: document.getElementById('pagination-numbers'),
+  paginationInfo: document.getElementById('pagination-info'),
+  periodPresets: document.querySelectorAll('.preset-btn'),
+  downloadPdfBtn: document.getElementById('download-pdf-btn'),
+  pdfContent: document.getElementById('pdf-content')
+};
+
+// ===== INITIALISATION =====
+async function initApp() {
+  setupEventListeners();
+  await loadMediaLogos();
+  setupPeriodPresets();
+  loadArticles();
+}
+
+// ===== LOAD MEDIA LOGOS =====
+async function loadMediaLogos() {
+  try {
+    const response = await fetch(CONFIG.logosUrl);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    mediaLogos = await response.json();
+    console.log('Logos des médias chargés:', mediaLogos.length, 'logos');
+  } catch (error) {
+    console.error('Erreur de chargement des logos:', error);
+    mediaLogos = [];
+  }
+}
+
+// ===== PERIOD PRESETS =====
+function setupPeriodPresets() {
+  setPeriod('week');
+  
+  elements.periodPresets.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const period = this.getAttribute('data-period');
+      setPeriod(period);
+    });
+  });
+}
+
+function setPeriod(period) {
+  const today = new Date();
+  const startDate = new Date();
+  
+  elements.endDate.value = today.toISOString().split('T')[0];
+  
+  switch(period) {
+    case 'week':
+      startDate.setDate(today.getDate() - 7);
+      elements.startDate.value = startDate.toISOString().split('T')[0];
+      break;
+      
+    case 'biweekly':
+      startDate.setDate(today.getDate() - 15);
+      elements.startDate.value = startDate.toISOString().split('T')[0];
+      break;
+      
+    case 'month':
+      startDate.setDate(today.getDate() - 30);
+      elements.startDate.value = startDate.toISOString().split('T')[0];
+      break;
+      
+    case 'custom':
+      // Laisser les dates telles quelles
+      break;
+  }
+  
+  appState.startDate = elements.startDate.value;
+  appState.endDate = elements.endDate.value;
+  appState.activePeriod = period;
+  appState.currentPage = 1;
+  
+  elements.periodPresets.forEach(btn => {
+    if (btn.getAttribute('data-period') === period) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+  
+  filterArticles();
+}
+
+// ===== EVENT LISTENERS - OPTIMISÉ MOBILE =====
+function setupEventListeners() {
+  // Recherche avec debounce
+  elements.searchInput.addEventListener('input', function(e) {
+    appState.searchQuery = e.target.value;
+    elements.clearSearch.style.display = appState.searchQuery ? 'flex' : 'none';
+    debounce(filterArticles, CONFIG.debounceDelay)();
+  });
+  
+  // Effacer recherche
+  elements.clearSearch.addEventListener('click', () => {
+    elements.searchInput.value = '';
+    appState.searchQuery = '';
+    elements.clearSearch.style.display = 'none';
+    filterArticles();
+    elements.searchInput.focus();
+  });
+  
+  // Filtres date
+  elements.startDate.addEventListener('change', function() {
+    appState.startDate = this.value;
+    appState.activePeriod = 'custom';
+    updatePeriodButtons();
+    filterArticles();
+  });
+  
+  elements.endDate.addEventListener('change', function() {
+    appState.endDate = this.value;
+    appState.activePeriod = 'custom';
+    updatePeriodButtons();
+    filterArticles();
+  });
+  
+  // Effacer tous les filtres
+  elements.clearFilters.addEventListener('click', () => {
+    elements.searchInput.value = '';
+    appState.searchQuery = '';
+    elements.clearSearch.style.display = 'none';
+    setPeriod('week');
+    filterArticles();
+    elements.searchInput.focus();
+  });
+  
+  // Fermer overlay
+  elements.closeOverlay.addEventListener('click', closeArticleOverlay);
+  
+  // Fermer avec Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeArticleOverlay();
+  });
+  
+  // Swipe pour fermer l'overlay (mobile)
+  let touchStartY = 0;
+  elements.articleOverlay.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  
+  elements.articleOverlay.addEventListener('touchmove', (e) => {
+    if (!touchStartY) return;
+    
+    const touchY = e.touches[0].clientY;
+    const diffY = touchStartY - touchY;
+    
+    if (diffY < -100) {
+      closeArticleOverlay();
+    }
+  }, { passive: true });
+  
+  // Scroll to top
+  elements.scrollTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  
+  window.addEventListener('scroll', () => {
+    elements.scrollTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+  });
+  
+  // Pagination
+  elements.firstBtn.addEventListener('click', () => goToPage(1));
+  elements.prevBtn.addEventListener('click', () => goToPage(appState.currentPage - 1));
+  elements.nextBtn.addEventListener('click', () => goToPage(appState.currentPage + 1));
+  elements.lastBtn.addEventListener('click', () => goToPage(getTotalPages()));
+  
+  // Générer PDF
+  elements.downloadPdfBtn.addEventListener('click', generatePDF);
+  
+  // Prévenir le double tap zoom sur mobile
+  let lastTouch = 0;
+  document.addEventListener('touchstart', (event) => {
+    const now = Date.now();
+    if (now - lastTouch <= 300) {
+      event.preventDefault();
+    }
+    lastTouch = now;
+  }, { passive: false });
+  
+  // Focus management pour mobile
+  elements.searchInput.addEventListener('focus', () => {
+    setTimeout(() => {
+      elements.searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 300);
+  });
+}
+
+function updatePeriodButtons() {
+  elements.periodPresets.forEach(btn => {
+    btn.classList.remove('active');
+  });
+}
+
+// ===== DATE HELPER FUNCTIONS =====
+function parseArticleDate(dateString) {
+  if (!dateString) return null;
+  
+  try {
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('/');
+    
+    if (!day || !month || !year) return null;
+    
+    return new Date(year, month - 1, day);
+  } catch (e) {
+    console.warn('Error parsing date:', dateString, e);
+    return null;
+  }
+}
+
+function formatDateToDDMMYYYY(dateString) {
+  if (!dateString) return '';
+  
+  try {
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('/');
+    
+    const paddedDay = day.padStart(2, '0');
+    const paddedMonth = month.padStart(2, '0');
+    
+    return `${paddedDay}/${paddedMonth}/${year}`;
+  } catch (e) {
+    console.warn('Error formatting date:', dateString, e);
+    return dateString || '';
+  }
+}
+
+function getTimeAgo(dateString) {
+  if (!dateString) return '';
+  
+  try {
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('/');
+    const [hours, minutes] = timePart ? timePart.split(':') : [0, 0];
+    
+    const articleDate = new Date(year, month - 1, day, hours, minutes);
+    const now = new Date();
+    const diffMs = now - articleDate;
+    
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    if (diffMins < 1) {
+      return `الآن`;
+    } else if (diffMins < 60) {
+      return `منذ ${diffMins} دقيقة`;
+    } else if (diffHours < 24) {
+      return `منذ ${diffHours} ساعة`;
+    } else if (diffDays === 1) {
+      return `منذ يوم`;
+    } else if (diffDays < 7) {
+      return `منذ ${diffDays} أيام`;
+    } else if (diffDays < 30) {
+      const weeks = Math.floor(diffDays / 7);
+      return `منذ ${weeks} أسبوع`;
+    } else {
+      const formattedDate = formatDateToDDMMYYYY(dateString);
+      return formattedDate;
+    }
+  } catch (e) {
+    return '';
+  }
+}
+
+function isDateInRange(articleDate, startDate, endDate) {
+  if (!articleDate) return false;
+  
+  const articleDateObj = parseArticleDate(articleDate);
+  if (!articleDateObj) return false;
+  
+  if (!startDate && !endDate) return true;
+  
+  const start = startDate ? new Date(startDate) : null;
+  const end = endDate ? new Date(endDate) : null;
+  
+  if (start) start.setHours(0, 0, 0, 0);
+  if (end) end.setHours(23, 59, 59, 999);
+  
+  if (start && articleDateObj < start) return false;
+  if (end && articleDateObj > end) return false;
+  
+  return true;
+}
+
+// ===== PAGINATION FUNCTIONS =====
+function getTotalPages() {
+  return Math.ceil(appState.filteredArticles.length / CONFIG.articlesPerPage);
+}
+
+function getCurrentPageArticles() {
+  const startIndex = (appState.currentPage - 1) * CONFIG.articlesPerPage;
+  const endIndex = startIndex + CONFIG.articlesPerPage;
+  return appState.filteredArticles.slice(startIndex, endIndex);
+}
+
+function goToPage(page) {
+  const totalPages = getTotalPages();
+  
+  if (page < 1 || page > totalPages) return;
+  
+  appState.currentPage = page;
+  displayArticles();
+  updatePagination();
+  
+  // Scroll doux vers le haut sur mobile
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updatePagination() {
+  const totalPages = getTotalPages();
+  const currentPage = appState.currentPage;
+  
+  if (totalPages <= 1) {
+    elements.paginationContainer.style.display = 'none';
+    return;
+  }
+  
+  elements.paginationContainer.style.display = 'flex';
+  
+  elements.firstBtn.disabled = currentPage === 1;
+  elements.prevBtn.disabled = currentPage === 1;
+  elements.nextBtn.disabled = currentPage === totalPages;
+  elements.lastBtn.disabled = currentPage === totalPages;
+  
+  elements.paginationInfo.textContent = `الصفحة ${currentPage} من ${totalPages}`;
+  
+  elements.paginationNumbers.innerHTML = '';
+  
+  let startPage = Math.max(1, currentPage - 2);
+  let endPage = Math.min(totalPages, startPage + 4);
+  
+  if (endPage - startPage < 4) {
+    startPage = Math.max(1, endPage - 4);
+  }
+  
+  for (let i = startPage; i <= endPage; i++) {
+    const pageBtn = document.createElement('div');
+    pageBtn.className = `pagination-number ${i === currentPage ? 'active' : ''}`;
+    pageBtn.textContent = i;
+    pageBtn.addEventListener('click', () => goToPage(i));
+    elements.paginationNumbers.appendChild(pageBtn);
+  }
+}
+
+// ===== IMAGE MANAGEMENT =====
+function getArticleImageUrl(article) {
+  if (article.image_brute) {
+    if (!article.image_brute.startsWith('http') && 
+        !article.image_brute.startsWith('/') &&
+        !article.image_brute.startsWith('images')) {
+      return CONFIG.imagesBasePath + article.image_brute;
+    }
+    return article.image_brute;
+  }
+  
+  return null;
+}
+
+// ===== LOGO MEDIA MANAGEMENT =====
+function getMediaLogoUrl(source) {
+  if (!source || mediaLogos.length === 0) return null;
+  
+  const media = mediaLogos.find(item => 
+    item.domaine && source && (
+      item.domaine.toLowerCase() === source.toLowerCase() ||
+      source.toLowerCase().includes(item.domaine.toLowerCase())
+    )
+  );
+  
+  return media ? media.url : null;
+}
+
+function createImageElement(imageUrl, title) {
+  if (!imageUrl) {
+    return '<div class="image-error">صورة غير متوفرة</div>';
+  }
+  
+  return `<img src="${imageUrl}" 
+                alt="${title || 'صورة المقال'}" 
+                class="article-image" 
+                loading="lazy"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'image-error\\'>صورة غير متوفرة</div>';"
+                onload="this.style.opacity='1'"
+                style="opacity:0; transition: opacity 0.3s ease;">`;
+}
+
+function createMediaLogoElement(source) {
+  const logoUrl = getMediaLogoUrl(source);
+  
+  if (!logoUrl) {
+    return '';
+  }
+  
+  return `
+    <div class="media-logo-container">
+      <img src="${logoUrl}" 
+           alt="شعار ${source}" 
+           class="media-logo"
+           loading="lazy"
+           onerror="this.style.display='none';"
+           onload="this.style.opacity='1'"
+           style="opacity:0; transition: opacity 0.3s ease;">
+    </div>
+  `;
+}
+
+// ===== LOAD & PROCESS ARTICLES =====
+async function loadArticles() {
+  try {
+    showLoading(true);
+    const response = await fetch(CONFIG.jsonUrl);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
+    appState.articles = processArticleData(data);
+    filterArticles();
+  } catch (error) {
+    console.error('Error loading articles:', error);
+    showError('تعذر تحميل المقالات. يرجى المحاولة مرة أخرى.');
+  } finally {
+    showLoading(false);
+  }
+}
+
+function processArticleData(articles) {
+  return articles
+    .filter(a => a.visible === true || a.visible === "true")
+    .sort((a, b) => {
+      try {
+        const parseDate = (str) => {
+          const [date, time] = str.split(' ');
+          const [d, m, y] = date.split('/');
+          const [h, min] = time ? time.split(':') : [0, 0];
+          return new Date(y, m - 1, d, h, min);
+        };
+        return parseDate(b.date_heure) - parseDate(a.date_heure);
+      } catch (e) {
+        return 0;
+      }
+    })
+    .slice(0, CONFIG.maxArticles);
+}
+
+function filterArticles() {
+  const query = appState.searchQuery.toLowerCase().trim();
+  const startDate = appState.startDate;
+  const endDate = appState.endDate;
+  
+  appState.filteredArticles = appState.articles.filter(article => {
+    let matchesText = true;
+    if (query) {
+      const searchableText = `
+        ${article.titre || ''}
+        ${article.source || ''}
+        ${article.theme || ''}
+        ${article.mots_cles || ''}
+        ${article.langue || ''}
+        ${article.sentiment || ''}
+      `.toLowerCase();
+      
+      matchesText = searchableText.includes(query);
+    }
+    
+    const matchesDate = isDateInRange(article.date_heure, startDate, endDate);
+    
+    return matchesText && matchesDate;
+  });
+  
+  appState.currentPage = 1;
+  
+  displayArticles();
+  updateStatsBar();
+  updatePagination();
+  
+  elements.downloadPdfBtn.disabled = appState.filteredArticles.length === 0;
+}
+
+function updateStatsBar() {
+  const count = appState.filteredArticles.length;
+  const total = appState.articles.length;
+  
+  elements.resultsCount.textContent = `${count} مقال${count !== 1 ? 'ات' : ''} (${total} المجموع)`;
+  elements.statsBar.style.display = 'flex';
+  
+  updateActiveFilters();
+}
+
+function updateActiveFilters() {
+  elements.activeFilters.innerHTML = '';
+  
+  if (appState.searchQuery) {
+    const filterTag = document.createElement('div');
+    filterTag.className = 'filter-tag';
+    filterTag.innerHTML = `
+      <span>🔍 "${appState.searchQuery}"</span>
+      <button class="remove-filter" onclick="clearSearchFilter()" aria-label="إزالة هذا الفلتر">×</button>
+    `;
+    elements.activeFilters.appendChild(filterTag);
+  }
+  
+  if (appState.startDate || appState.endDate) {
+    const formatFilterDate = (dateStr) => {
+      if (!dateStr) return '';
+      const [year, month, day] = dateStr.split('-');
+      return `${day}/${month}/${year}`;
+    };
+    
+    const start = appState.startDate ? formatFilterDate(appState.startDate) : 'البداية';
+    const end = appState.endDate ? formatFilterDate(appState.endDate) : 'النهاية';
+    
+    const filterTag = document.createElement('div');
+    filterTag.className = 'filter-tag';
+    filterTag.innerHTML = `
+      <span>📅 ${start} → ${end}</span>
+      <button class="remove-filter" onclick="clearDateFilters()" aria-label="إزالة هذا الفلتر">×</button>
+    `;
+    elements.activeFilters.appendChild(filterTag);
+  }
+  
+  let periodText = '';
+  switch(appState.activePeriod) {
+    case 'week': periodText = 'أسبوعي'; break;
+    case 'biweekly': periodText = 'نصف شهري'; break;
+    case 'month': periodText = 'شهري'; break;
+    case 'custom': periodText = 'مخصص'; break;
+  }
+  
+  const periodTag = document.createElement('div');
+  periodTag.className = 'filter-tag';
+  periodTag.innerHTML = `
+    <span>⏰ ${periodText}</span>
+  `;
+  elements.activeFilters.appendChild(periodTag);
+}
+
+function clearSearchFilter() {
+  elements.searchInput.value = '';
+  appState.searchQuery = '';
+  elements.clearSearch.style.display = 'none';
+  filterArticles();
+}
+
+function clearDateFilters() {
+  setPeriod('week');
+}
+
+function displayArticles() {
+  elements.articlesContainer.innerHTML = '';
+  
+  if (appState.filteredArticles.length === 0) {
+    showNoResults();
+    return;
+  }
+  
+  const currentArticles = getCurrentPageArticles();
+  const fragment = document.createDocumentFragment();
+  
+  currentArticles.forEach((article, index) => {
+    const card = createArticleCard(article, index);
+    fragment.appendChild(card);
+  });
+  
+  elements.articlesContainer.appendChild(fragment);
+  
+  // Animation staggered pour mobile
+  const cards = elements.articlesContainer.querySelectorAll('.article-card');
+  cards.forEach((card, i) => {
+    card.style.animationDelay = `${i * 0.02}s`;
+  });
+}
+
+function createArticleCard(article, index) {
+  const card = document.createElement('div');
+  card.className = 'article-card';
+  card.setAttribute('role', 'button');
+  card.setAttribute('tabindex', '0');
+  card.setAttribute('aria-label', `مشاهدة مقال: ${article.titre || 'بدون عنوان'}`);
+  
+  const imageUrl = getArticleImageUrl(article);
+  const formattedDate = formatDateToDDMMYYYY(article.date_heure);
+  const timeAgo = getTimeAgo(article.date_heure);
+  const isCategoryArabic = /[\u0600-\u06FF]/.test(article.theme || '');
+  const imageElement = createImageElement(imageUrl, article.titre);
+  const mediaLogoElement = createMediaLogoElement(article.source);
+
+  card.innerHTML = `
+    <div class="article-image-container">
+      ${imageElement}
+      ${mediaLogoElement}
+      <div class="metadata-badges">
+        <div class="metadata-badge date-badge" title="${formattedDate || ''}">
+          <span>📅</span>
+          <span>${formattedDate || 'تاريخ غير معروف'}</span>
+        </div>
+        <div class="metadata-badge category-badge ${isCategoryArabic ? 'rtl' : 'ltr'}" title="${article.theme || ''}">
+          <span>🏷️</span>
+          <span>${truncateTitle(article.theme || 'غير مصنف', 15)}</span>
+        </div>
+      </div>
+      ${timeAgo ? `<div class="time-ago">${timeAgo}</div>` : ''}
+      <div class="title-overlay">
+        <h2 class="article-main-title">${truncateTitle(article.titre || 'بدون عنوان', 80)}</h2>
+        <div class="article-source">
+          <span>📰</span>
+          <span>${article.source || 'مصدر غير معروف'}</span>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Gestion des événements tactiles et clics
+  if (isTouchDevice) {
+    let tapTimer;
+    
+    card.addEventListener('touchstart', (e) => {
+      tapTimer = setTimeout(() => {
+        e.currentTarget.classList.add('active');
+      }, 50);
+    }, { passive: true });
+    
+    card.addEventListener('touchend', (e) => {
+      clearTimeout(tapTimer);
+      e.currentTarget.classList.remove('active');
+      const now = Date.now();
+      if (now - appState.lastTouchTime < CONFIG.touchDelay) return;
+      appState.lastTouchTime = now;
+      openArticleOverlay(article);
+    }, { passive: true });
+    
+    card.addEventListener('touchcancel', (e) => {
+      clearTimeout(tapTimer);
+      e.currentTarget.classList.remove('active');
+    }, { passive: true });
+  } else {
+    card.addEventListener('click', () => {
+      openArticleOverlay(article);
+    });
+    
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openArticleOverlay(article);
+      }
+    });
+  }
+  
+  return card;
+}
+
+function truncateTitle(title, maxLength = 80) {
+  if (!title || title.length <= maxLength) return title;
+  return title.substring(0, maxLength) + '...';
+}
+
+function openArticleOverlay(article) {
+  elements.overlayArticleTitle.textContent = article.titre || 'المقال';
+  elements.articleFrame.src = article.url || '#';
+  
+  const sentiment = article.sentiment || 'غير محدد';
+  elements.sentimentValue.textContent = sentiment;
+  
+  elements.sentimentDisplayOverlay.className = 'sentiment-display-overlay';
+  if (sentiment.toLowerCase().includes('positif') || sentiment.toLowerCase().includes('positive') || sentiment.toLowerCase().includes('إيجابي')) {
+    elements.sentimentDisplayOverlay.classList.add('sentiment-positive');
+  } else if (sentiment.toLowerCase().includes('négatif') || sentiment.toLowerCase().includes('negative') || sentiment.toLowerCase().includes('سلبي')) {
+    elements.sentimentDisplayOverlay.classList.add('sentiment-negative');
+  } else {
+    elements.sentimentDisplayOverlay.classList.add('sentiment-neutral');
+  }
+  
+  const keywords = article.mots_cles ? 
+    article.mots_cles.split(',').map(k => k.trim()).filter(k => k) : 
+    [];
+  
+  elements.keywordsContainerOverlay.innerHTML = '';
+  keywords.forEach(keyword => {
+    const keywordElement = document.createElement('div');
+    keywordElement.className = 'keyword-overlay';
+    keywordElement.textContent = keyword;
+    elements.keywordsContainerOverlay.appendChild(keywordElement);
+  });
+  
+  elements.articleOverlay.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  
+  // Focus management pour accessibilité
+  setTimeout(() => elements.closeOverlay.focus(), 100);
+}
+
+function closeArticleOverlay() {
+  elements.articleOverlay.style.display = 'none';
+  elements.articleFrame.src = '';
+  document.body.style.overflow = '';
+  elements.searchInput.focus();
+}
+
+function showLoading(show) {
+  appState.isLoading = show;
+  if (elements.loadingIndicator) {
+    elements.loadingIndicator.style.display = show ? 'block' : 'none';
+  }
+}
+
+function showNoResults() {
+  elements.articlesContainer.innerHTML = `
+    <div class="no-results">
+      <div class="no-results-icon">🔍</div>
+      <h3>لا توجد نتائج</h3>
+      <p>لا توجد مقالات تطابق معايير البحث الخاصة بك</p>
+      <button class="clear-search-btn" onclick="elements.clearFilters.click()">
+        مسح جميع الفلاتر
+      </button>
+    </div>
+  `;
+  elements.statsBar.style.display = 'none';
+  elements.paginationContainer.style.display = 'none';
+}
+
+function showError(message) {
+  elements.articlesContainer.innerHTML = `
+    <div class="error-state">
+      <div class="error-icon">⚠️</div>
+      <h3>خطأ</h3>
+      <p>${message}</p>
+      <button class="retry-button" onclick="loadArticles()">
+        إعادة المحاولة
+      </button>
+    </div>
+  `;
+  elements.statsBar.style.display = 'none';
+  elements.paginationContainer.style.display = 'none';
+}
+
+// ===== PDF GENERATION =====
+async function generatePDF() {
+  try {
+    if (appState.filteredArticles.length === 0) {
+      alert('لا توجد مقالات لتحميلها. يرجى تصفية المقالات أولاً.');
+      return;
+    }
+
+    // Désactiver le bouton pendant la génération
+    const originalText = elements.downloadPdfBtn.innerHTML;
+    elements.downloadPdfBtn.disabled = true;
+    elements.downloadPdfBtn.innerHTML = '<span>⏳</span><span>جار التوليد...</span>';
+
+    // Créer le contenu HTML pour le PDF
+    createPdfContent();
+
+    const element = elements.pdfContent;
+
+    // S'assurer que le contenu PDF est visible temporairement pour html2pdf
+    element.style.position = 'absolute';
+    element.style.left = '0';
+    element.style.top = '0';
+    element.style.width = '800px';
+    element.style.background = 'white';
+    element.style.zIndex = '9999';
+    element.style.display = 'block';
+
+    const options = {
+      margin: [15, 15, 15, 15],
+      filename: `مراجعة_الصحافة_${new Date().toISOString().split('T')[0]}.pdf`,
+      image: { 
+        type: 'jpeg', 
+        quality: 0.95 
+      },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        allowTaint: false,
+        logging: false,
+        backgroundColor: '#ffffff',
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: element.scrollWidth,
+        windowHeight: element.scrollHeight,
+        onclone: function(clonedDoc) {
+          // S'assurer que les polices arabes sont chargées
+          const style = clonedDoc.createElement('style');
+          style.textContent = `
+            @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700&family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&display=swap');
+            * {
+              font-family: 'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif !important;
+              direction: rtl !important;
+              text-align: right !important;
+            }
+            body {
+              margin: 0;
+              padding: 0;
+              background: white !important;
+              color: black !important;
+            }
+            .pdf-container {
+              padding: 20px;
+              max-width: 100%;
+            }
+            img {
+              max-width: 100%;
+              height: auto;
+            }
+          `;
+          clonedDoc.head.appendChild(style);
+          
+          // Forcer le chargement des images
+          const images = clonedDoc.querySelectorAll('img');
+          images.forEach(img => {
+            if (!img.complete) {
+              const src = img.src;
+              img.src = '';
+              img.src = src;
+            }
+          });
+        }
+      },
+      jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait',
+        compress: true,
+        hotfixes: ['px_scaling']
+      },
+      pagebreak: {
+        mode: ['avoid-all', 'css', 'legacy']
+      }
+    };
+
+    // Attendre un peu pour que le DOM soit mis à jour
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Générer le PDF
+    await html2pdf().set(options).from(element).save();
+
+    // Réactiver le bouton après la génération
+    elements.downloadPdfBtn.disabled = false;
+    elements.downloadPdfBtn.innerHTML = originalText;
+
+  } catch (error) {
+    console.error('Erreur lors de la génération du PDF:', error);
+    alert('حدث خطأ أثناء إنشاء ملف PDF. يرجى المحاولة مرة أخرى.');
+    
+    // Réactiver le bouton en cas d'erreur
+    elements.downloadPdfBtn.disabled = false;
+    elements.downloadPdfBtn.innerHTML = '<span>📄</span><span>تحميل PDF</span>';
+  } finally {
+    // Toujours remettre le contenu PDF en display: none
+    elements.pdfContent.style.display = 'none';
+    elements.pdfContent.style.position = '';
+    elements.pdfContent.style.left = '';
+    elements.pdfContent.style.top = '';
+    elements.pdfContent.style.width = '';
+    elements.pdfContent.style.background = '';
+    elements.pdfContent.style.zIndex = '';
+  }
+}
+
+function createPdfContent() {
+  const pdfContent = elements.pdfContent;
+  pdfContent.innerHTML = '';
+  
+  const container = document.createElement('div');
+  container.className = 'pdf-container';
+  
+  // Header du PDF
+  const header = document.createElement('div');
+  header.className = 'pdf-header';
+  header.style.textAlign = 'center';
+  header.style.marginBottom = '30px';
+  header.style.borderBottom = '2px solid #1a73e8';
+  header.style.paddingBottom = '20px';
+  
+  const title = document.createElement('h1');
+  title.className = 'pdf-title';
+  title.textContent = 'مراجعة الصحافة الأسبوعية';
+  title.style.fontSize = '28px';
+  title.style.fontWeight = 'bold';
+  title.style.color = '#1a73e8';
+  title.style.marginBottom = '10px';
+  title.style.fontFamily = "'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif";
+  
+  const subtitle = document.createElement('div');
+  subtitle.className = 'pdf-subtitle';
+  subtitle.textContent = 'Revue de Presse Hebdomadaire';
+  subtitle.style.fontSize = '16px';
+  subtitle.style.color = '#666';
+  subtitle.style.marginBottom = '10px';
+  subtitle.style.fontFamily = "'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif";
+  
+  header.appendChild(title);
+  header.appendChild(subtitle);
+  
+  // Informations sur la période
+  if (appState.startDate && appState.endDate) {
+    const formatDate = (dateStr) => {
+      if (!dateStr) return '';
+      const [year, month, day] = dateStr.split('-');
+      return `${day}/${month}/${year}`;
+    };
+    
+    const start = formatDate(appState.startDate);
+    const end = formatDate(appState.endDate);
+    
+    const dateRange = document.createElement('div');
+    dateRange.className = 'pdf-date-range';
+    dateRange.style.fontSize = '14px';
+    dateRange.style.color = '#888';
+    dateRange.style.marginBottom = '5px';
+    dateRange.style.fontFamily = "'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif";
+    dateRange.innerHTML = `
+      <strong>الفترة:</strong> ${start} - ${end}<br>
+      <strong>Période:</strong> ${start} - ${end}
+    `;
+    header.appendChild(dateRange);
+  }
+  
+  // Statistiques
+  const count = appState.filteredArticles.length;
+  const total = appState.articles.length;
+  const stats = document.createElement('div');
+  stats.className = 'pdf-date-range';
+  stats.style.fontSize = '14px';
+  stats.style.color = '#888';
+  stats.style.fontFamily = "'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif";
+  stats.innerHTML = `
+    <strong>عدد المقالات:</strong> ${count} مقال${count !== 1 ? 'ات' : ''} (${total} المجموع)<br>
+    <strong>Nombre d'articles:</strong> ${count} article${count !== 1 ? 's' : ''} (${total} total)
+  `;
+  header.appendChild(stats);
+  
+  container.appendChild(header);
+  
+  // Articles
+  appState.filteredArticles.forEach((article, index) => {
+    const articleDiv = document.createElement('div');
+    articleDiv.className = 'pdf-article';
+    articleDiv.style.marginBottom = '25px';
+    articleDiv.style.pageBreakInside = 'avoid';
+    articleDiv.style.border = '1px solid #ddd';
+    articleDiv.style.borderRadius = '8px';
+    articleDiv.style.padding = '15px';
+    articleDiv.style.background = '#f9f9f9';
+    articleDiv.style.fontFamily = "'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif";
+    
+    // Titre
+    const title = document.createElement('h2');
+    title.className = 'pdf-article-title';
+    title.textContent = `${index + 1}. ${article.titre || 'بدون عنوان'}`;
+    title.style.fontSize = '18px';
+    title.style.fontWeight = 'bold';
+    title.style.color = '#333';
+    title.style.marginBottom = '10px';
+    title.style.lineHeight = '1.4';
+    title.style.fontFamily = "'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif";
+    articleDiv.appendChild(title);
+    
+    // Image
+    const imageUrl = getArticleImageUrl(article);
+    if (imageUrl) {
+      const imgContainer = document.createElement('div');
+      imgContainer.style.textAlign = 'center';
+      imgContainer.style.margin = '10px 0';
+      imgContainer.style.maxHeight = '150px';
+      imgContainer.style.overflow = 'hidden';
+      
+      const img = document.createElement('img');
+      img.className = 'pdf-article-image';
+      img.src = imageUrl;
+      img.style.maxWidth = '100%';
+      img.style.maxHeight = '150px';
+      img.style.objectFit = 'contain';
+      img.style.borderRadius = '4px';
+      img.style.display = 'block';
+      img.style.margin = '0 auto';
+      
+      img.onerror = function() {
+        imgContainer.style.display = 'none';
+      };
+      
+      imgContainer.appendChild(img);
+      articleDiv.appendChild(imgContainer);
+    }
+    
+    // Métadonnées
+    const meta = document.createElement('div');
+    meta.className = 'pdf-article-meta';
+    meta.style.fontSize = '14px';
+    meta.style.color = '#666';
+    meta.style.marginBottom = '8px';
+    meta.style.display = 'flex';
+    meta.style.flexWrap = 'wrap';
+    meta.style.gap = '15px';
+    meta.style.fontFamily = "'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif";
+    
+    const formattedDate = formatDateToDDMMYYYY(article.date_heure) || 'تاريخ غير معروف';
+    
+    meta.innerHTML = `
+      <div><strong>المصدر:</strong> ${article.source || 'غير معروف'}</div>
+      <div><strong>التاريخ:</strong> ${formattedDate}</div>
+      ${article.theme ? `<div><strong>الفئة:</strong> ${article.theme}</div>` : ''}
+      ${article.sentiment ? `<div><strong>المشاعر:</strong> ${article.sentiment}</div>` : ''}
+      ${article.langue ? `<div><strong>اللغة:</strong> ${article.langue}</div>` : ''}
+    `;
+    
+    articleDiv.appendChild(meta);
+    
+    // Mots-clés
+    if (article.mots_cles) {
+      const keywords = article.mots_cles.split(',').map(k => k.trim()).filter(k => k);
+      if (keywords.length > 0) {
+        const keywordsDiv = document.createElement('div');
+        keywordsDiv.className = 'pdf-keywords';
+        keywordsDiv.style.display = 'flex';
+        keywordsDiv.style.flexWrap = 'wrap';
+        keywordsDiv.style.gap = '8px';
+        keywordsDiv.style.marginTop = '10px';
+        
+        keywords.forEach(keyword => {
+          const keywordSpan = document.createElement('span');
+          keywordSpan.className = 'pdf-keyword';
+          keywordSpan.textContent = keyword;
+          keywordSpan.style.background = '#1a73e8';
+          keywordSpan.style.color = 'white';
+          keywordSpan.style.padding = '4px 12px';
+          keywordSpan.style.borderRadius = '12px';
+          keywordSpan.style.fontSize = '12px';
+          keywordSpan.style.fontFamily = "'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif";
+          keywordsDiv.appendChild(keywordSpan);
+        });
+        
+        articleDiv.appendChild(keywordsDiv);
+      }
+    }
+    
+    // URL
+    if (article.url) {
+      const urlDiv = document.createElement('div');
+      urlDiv.style.marginTop = '10px';
+      urlDiv.style.fontSize = '12px';
+      urlDiv.style.color = '#666';
+      urlDiv.style.fontFamily = "'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif";
+      urlDiv.innerHTML = `<strong>الرابط:</strong> ${article.url}`;
+      articleDiv.appendChild(urlDiv);
+    }
+    
+    container.appendChild(articleDiv);
+  });
+  
+  // Footer
+  const footer = document.createElement('div');
+  footer.className = 'pdf-footer';
+  footer.style.textAlign = 'center';
+  footer.style.marginTop = '30px';
+  footer.style.paddingTop = '20px';
+  footer.style.borderTop = '1px solid #ddd';
+  footer.style.fontSize = '12px';
+  footer.style.color = '#888';
+  footer.style.fontFamily = "'Tajawal', 'Amiri', 'Noto Naskh Arabic', sans-serif";
+  
+  const today = new Date();
+  const dateAr = today.toLocaleDateString('ar-EG');
+  const dateFr = today.toLocaleDateString('fr-FR');
+  
+  footer.innerHTML = `
+    تم إنشاء هذا التقرير في ${dateAr}<br>
+    Ce rapport a été généré le ${dateFr}<br>
+    <em>مراجعة الصحافة الأسبوعية - Revue de Presse Hebdomadaire</em>
+  `;
+  
+  container.appendChild(footer);
+  pdfContent.appendChild(container);
+}
+
+function debounce(func, wait) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
+
+// ===== INITIALISER L'APPLICATION =====
+document.addEventListener('DOMContentLoaded', initApp);
+
+// ===== GESTION DE L'ORIENTATION SUR MOBILE =====
+window.addEventListener('orientationchange', function() {
+  setTimeout(() => {
+    window.scrollTo(0, 0);
+  }, 100);
+});
+
+// ===== PREVENT ZOOM ON DOUBLE TAP =====
+let lastTouchEnd = 0;
+document.addEventListener('touchend', function(event) {
+  const now = (new Date()).getTime();
+  if (now - lastTouchEnd <= 300) {
+    event.preventDefault();
+  }
+  lastTouchEnd = now;
+}, false);
+</script>
+</body>
+</html>

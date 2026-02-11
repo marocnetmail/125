@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#001122">
+    <title>مراجعة الصحافة الذكية — Template Pro</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-dark: #001122;
+            --hes-red: #cc0000;
+            --hes-blue: #005a9c;
+            --text-white: #ffffff;
+            --shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #f4f4f4;
+            color: #333;
+            direction: rtl;
+        }
+
+        /* الهيدر بنمط هسبريس */
+        .app-header {
+            background: var(--primary-dark);
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .header-icons { display: flex; gap: 15px; align-items: center; }
+        .header-icons span { color: white; cursor: pointer; font-size: 1.2rem; }
+
+        .app-title img { max-height: 35px; vertical-align: middle; }
+
+        /* حاوية البحث */
+        .search-area {
+            background: #eee;
+            padding: 10px;
+            display: none; /* تظهر عند الضغط على البحث */
+        }
+        #search-input {
+            width: 100%;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            font-family: inherit;
+            outline: none;
+        }
+
+        /* حاوية المقالات */
+        #articles-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding-bottom: 20px;
+        }
+
+        /* البطاقة بنمط الصورة الكاملة */
+        .article-card {
+            position: relative;
+            width: 100%;
+            min-height: 280px;
+            background: #fff;
+            margin-bottom: 8px; /* فاصل بسيط مثل الصور المرفقة */
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0; left: 0;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        /* طبقة التظليل لظهور النص */
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 40px 15px 15px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 20%, rgba(0,0,0,0.4) 60%, transparent 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        /* الوسم العلوي (رياضة، مجتمع، الخ) */
+        .category-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(204, 0, 0, 0.85); /* لون افتراضي أحمر */
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .meta-info {
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+
+        .article-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* تخصيص في حال عدم وجود صورة */
+        .no-image-card {
+            background: var(--primary-dark) !important;
+            min-height: auto !important;
+            padding: 20px 15px !important;
+            position: relative !important;
+        }
+        .no-image-card .card-overlay { position: static; background: none; padding: 0; }
+
+        /* نافذة العرض iFrame */
+        #article-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            z-index: 2000;
+            flex-direction: column;
+        }
+        .overlay-header {
+            padding: 10px 15px;
+            background: var(--primary-dark);
+            display: flex;
+            justify-content: space-between;
+            color: white;
+            align-items: center;
+        }
+        .close-btn { background: var(--hes-red); color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; }
+
+        iframe { width: 100%; flex: 1; border: none; }
+
+        #loader { text-align: center; padding: 50px; color: #666; }
+        .spinner { width: 30px; height: 30px; border: 3px solid #ddd; border-top-color: var(--hes-red); border-radius: 50%; animation: spin 1s infinite linear; margin: 0 auto 10px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<header class="app-header">
+    <div class="header-icons">
+        <span onclick="toggleSearch()">🔍</span>
+    </div>
+    <div class="app-title">
+        <img src="images/title.png" alt="Logo" onerror="this.style.display='none'">
+        <span id="brand-fallback" style="color:white; font-weight:bold; display:none;">الصحافة الذكية</span>
+    </div>
+    <div class="header-icons">
+        <span onclick="location.reload()">🔄</span>
+        <span>☰</span>
+    </div>
+</header>
+
+<div class="search-area" id="search-bar">
+    <input type="text" id="search-input" placeholder="ابحث عن خبر...">
+</div>
+
+<main id="articles-container">
+    <div id="loader">
+        <div class="spinner"></div>
+        <p>جاري تحديث الأخبار...</p>
+    </div>
+</main>
+
+<div id="article-overlay">
+    <div class="overlay-header">
+        <span id="overlay-title" style="font-size: 0.9rem; max-width: 70%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></span>
+        <button class="close-btn" onclick="closeOverlay()">إغلاق ✕</button>
+    </div>
+    <iframe id="article-frame"></iframe>
+</div>
+
+<script>
+    const GITHUB_URL = "https://raw.githubusercontent.com/marocnetmail/125/main/data/data_fusionnee.json";
+    const IMAGE_BASE_PATH = "img05/";
+    let allArticles = [];
+
+    async function fetchData() {
+        try {
+            const response = await fetch(`${GITHUB_URL}?t=${Date.now()}`);
+            const data = await response.json();
+            allArticles = data.filter(a => a.visible === true || a.visible === "true");
+            allArticles.sort((a, b) => new Date(b["date/heure"]) - new Date(a["date/heure"]));
+            
+            document.getElementById('loader').style.display = 'none';
+            renderArticles(allArticles);
+        } catch (e) {
+            document.getElementById('loader').innerHTML = "⚠️ تعذر الاتصال بالمصدر.";
+        }
+    }
+
+    function getDomain(url) {
+        try { return new URL(url).hostname.replace('www.', ''); } 
+        catch { return "أخبار"; }
+    }
+
+    function getTimeAgo(dateStr) {
+        if (!dateStr) return "";
+        const now = new Date();
+        const past = new Date(dateStr);
+        const diffInMs = now - past;
+        const diffInHrs = Math.floor(diffInMs / (1000 * 60 * 60));
+        
+        if (diffInHrs < 1) return "الآن";
+        if (diffInHrs < 24) return `منذ ${diffInHrs} ساعة`;
+        return `منذ ${Math.floor(diffInHrs/24)} يوم`;
+    }
+
+    function renderArticles(articles) {
+        const container = document.getElementById('articles-container');
+        container.innerHTML = "";
+
+        articles.forEach((article, index) => {
+            const card = document.createElement('div');
+            card.className = 'article-card';
+            
+            const domain = getDomain(article.url);
+            const timeAgo = getTimeAgo(article["date/heure"]);
+            const imgId = article.index || (articles.length - index);
+            const imgUrl = `${IMAGE_BASE_PATH}${imgId}.jpg`;
+
+            card.innerHTML = `
+                <span class="category-badge">${domain.split('.')[0]}</span>
+                <img src="${imgUrl}" class="card-image" 
+                     onerror="this.parentElement.classList.add('no-image-card'); this.remove();">
+                <div class="card-overlay">
+                    <div class="meta-info">${timeAgo}</div>
+                    <h2 class="article-title">${article.titre || article.title || 'بدون عنوان'}</h2>
+                </div>
+            `;
+
+            card.onclick = () => openArticle(article.url, article.titre || article.title);
+            container.appendChild(card);
+        });
+    }
+
+    function openArticle(url, title) {
+        document.getElementById('overlay-title').innerText = title;
+        document.getElementById('article-frame').src = url;
+        document.getElementById('article-overlay').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeOverlay() {
+        document.getElementById('article-overlay').style.display = 'none';
+        document.getElementById('article-frame').src = "";
+        document.body.style.overflow = 'auto';
+    }
+
+    function toggleSearch() {
+        const bar = document.getElementById('search-bar');
+        bar.style.display = bar.style.display === 'block' ? 'none' : 'block';
+    }
+
+    document.getElementById('search-input').addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = allArticles.filter(a => 
+            (a.titre || "").toLowerCase().includes(term) || 
+            getDomain(a.url).toLowerCase().includes(term)
+        );
+        renderArticles(filtered);
+    });
+
+    // معالجة شعار العنوان
+    window.onload = () => {
+        fetchData();
+        const img = document.querySelector('.app-title img');
+        if (!img.complete || img.naturalWidth === 0) {
+            document.getElementById('brand-fallback').style.display = 'block';
+        }
+    };
+</script>
+
+</body>
+</html>

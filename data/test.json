@@ -1,0 +1,36 @@
+[
+  {
+    "id": 20260206070924000,
+    "date/heure": "2026-02-06T07:09:00.000Z",
+    "source": "GMS Veille",
+    "titre": "Samir Goudar : «Nous présentons Fatima Ezzahra El Mansouri comme candidate naturelle à la tête du gouvernement»",
+    "thème": "Habitat",
+    "mots-clés": "Goudar, présentons, Fatima",
+    "langue": "FR",
+    "sentiment": "Neutre",
+    "image_brute": "20260206070924000.jpg",
+    "numero_semaine": "2026-S06",
+    "url": "https://gmsveille.com/storage/files/2026/02/RBmZVjaJ1G8EYZ2iVamhCc59LPTplIukCMhAUV45.pdf",
+    "lien_json": "datajson/02/2026-S06.json",
+    "actif": true
+	
+  }
+  ,
+  {
+	"id": 20260206070924000,
+    "date/heure": "2026-02-06T07:09:00.000Z",
+    "source": "GMS Veille",
+    "titre": "Samir Goudar : «Nous présentons Fatima Ezzahra El Mansouri comme candidate naturelle à la tête du gouvernement»",
+    "thème": "Habitat",
+    "mots-clés": "Goudar, présentons, Fatima",
+    "langue": "FR",
+    "sentiment": "Neutre",
+    "image_brute": "20260206070924000.jpg",
+    "numero_semaine": "2026-S06",
+    "url": "https://www.hespress.com/%d9%88%d8%b2%d8%a7%d8%b1%d8%a9-%d8%a7%d9%84%d8%aa%d8%b1%d8%a8%d9%8a%d8%a9-%d8%aa%d8%b9%d8%aa%d9%85%d8%af-%d8%aa%d8%af%d8%a7%d8%a8%d9%8a%d8%b1-%d8%a7%d8%b3%d8%aa%d8%b9%d8%ac%d8%a7%d9%84%d9%8a%d8%a9-1698640.html",
+    "lien_json": "datajson/02/2026-S06.json",
+    "actif": true
+	
+	  }
+  ]
+  

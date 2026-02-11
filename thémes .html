@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Thèmes Stratégiques</title>
+    <style>
+        /* RESET MINIMALISTE */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            padding: 0;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.4;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* CONTAINER PRINCIPAL */
+        .mobile-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0;
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* HEADER FIXÉ */
+        .mobile-header {
+            background: #2c3e50;
+            color: white;
+            padding: 12px 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .mobile-header h1 {
+            font-size: 16px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* ZONE DE RECHERCHE */
+        .search-container {
+            padding: 10px 15px;
+            background: white;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .search-wrapper {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #f8f9fa;
+        }
+        
+        .search-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0 15px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        /* LIGNES DE BOUTONS - LAYOUT FIXE */
+        .buttons-container {
+            padding: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* PREMIÈRE LIGNE - Thèmes */
+        .first-line {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding: 8px 10px;
+            gap: 8px;
+            background: white;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: #3498db #f1f1f1;
+            min-height: 70px;
+            align-items: center;
+            /* Alignement à gauche par défaut */
+            justify-content: flex-start;
+            scroll-padding-left: 10px;
+        }
+        
+        /* FORCER L'ALIGNEMENT À GAUCHE AU PREMIER AFFICHAGE */
+        .first-line:not(.has-scrolled) {
+            justify-content: flex-start !important;
+        }
+        
+        .first-line::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .first-line::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+            margin: 0 10px;
+        }
+        
+        .first-line::-webkit-scrollbar-thumb {
+            background: #3498db;
+            border-radius: 3px;
+        }
+        
+        .first-line::-webkit-scrollbar-thumb:hover {
+            background: #2980b9;
+        }
+        
+        .theme-btn {
+            flex-shrink: 0;
+            min-width: 160px;
+            background: #f8f9fa;
+            color: #2c3e50;
+            border: 1px solid #ddd;
+            padding: 14px 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            white-space: normal;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            /* Pour s'assurer que le premier thème est aligné à gauche */
+            margin-right: 8px;
+        }
+        
+        /* Premier bouton aligné à gauche */
+        .first-line .theme-btn:first-child {
+            margin-left: 0;
+        }
+        
+        .theme-btn.active {
+            color: white;
+            border-color: transparent;
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        /* COULEURS PERSONNALISÉES POUR CHAQUE THÈME */
+        .theme-btn[data-theme-id="fatima"] {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+            color: white;
+            border: none;
+        }
+        
+        .theme-btn[data-theme-id="fatima"] strong {
+            font-weight: 800;
+            font-size: 14px;
+        }
+        
+        .theme-btn[data-theme-id="fatima"].active {
+            background: linear-gradient(135deg, #7d3c98, #8e44ad);
+            box-shadow: 0 4px 15px rgba(142, 68, 173, 0.4);
+        }
+        
+        .theme-btn[data-theme-id="1"] {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            border: none;
+        }
+        
+        .theme-btn[data-theme-id="1"].active {
+            background: linear-gradient(135deg, #1a252f, #2c3e50);
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.4);
+        }
+        
+        .theme-btn[data-theme-id="2"] {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+        }
+        
+        .theme-btn[data-theme-id="2"].active {
+            background: linear-gradient(135deg, #2980b9, #1f6399);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .theme-btn[data-theme-id="3"] {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+        }
+        
+        .theme-btn[data-theme-id="3"].active {
+            background: linear-gradient(135deg, #c0392b, #a93226);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        .theme-btn[data-theme-id="4"] {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            border: none;
+        }
+        
+        .theme-btn[data-theme-id="4"].active {
+            background: linear-gradient(135deg, #229954, #1e8449);
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
+        }
+        
+        /* DEUXIÈME LIGNE - Sous-thèmes */
+        .second-line {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px;
+            gap: 10px;
+            background: white;
+            border-top: 1px solid #eee;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: #3498db #f1f1f1;
+            min-height: 70px;
+            align-items: center;
+            /* Alignement à gauche par défaut */
+            justify-content: flex-start;
+            scroll-padding-left: 10px;
+        }
+        
+        /* FORCER L'ALIGNEMENT À GAUCHE AU PREMIER AFFICHAGE */
+        .second-line:not(.has-scrolled) {
+            justify-content: flex-start !important;
+        }
+        
+        .second-line::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .second-line::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+            margin: 0 10px;
+        }
+        
+        .second-line::-webkit-scrollbar-thumb {
+            background: #3498db;
+            border-radius: 3px;
+        }
+        
+        .second-line::-webkit-scrollbar-thumb:hover {
+            background: #2980b9;
+        }
+        
+        .subtheme-btn {
+            flex-shrink: 0;
+            background: white;
+            color: #2c3e50;
+            border: 1px solid #e0e0e0;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            text-align: center;
+            white-space: nowrap;
+            min-width: 180px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            position: relative;
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+        
+        /* Premier sous-thème aligné à gauche */
+        .second-line .subtheme-btn:first-child {
+            margin-left: 0;
+        }
+        
+        .subtheme-btn.active {
+            color: white;
+            border-color: transparent;
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        /* COULEURS DES SOUS-THÈMES BASÉES SUR LE THÈME PARENT */
+        .subtheme-btn[data-theme-id="fatima"] {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .subtheme-btn[data-theme-id="fatima"].active {
+            background: linear-gradient(135deg, #d68910, #ca6f1e);
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
+        }
+        
+        .subtheme-btn[data-theme-id="1"] {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .subtheme-btn[data-theme-id="1"].active {
+            background: linear-gradient(135deg, #2980b9, #1f6399);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .subtheme-btn[data-theme-id="2"] {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .subtheme-btn[data-theme-id="2"].active {
+            background: linear-gradient(135deg, #27ae60, #219653);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+        }
+        
+        .subtheme-btn[data-theme-id="3"] {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .subtheme-btn[data-theme-id="3"].active {
+            background: linear-gradient(135deg, #c0392b, #a93226);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        .subtheme-btn[data-theme-id="4"] {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .subtheme-btn[data-theme-id="4"].active {
+            background: linear-gradient(135deg, #8e44ad, #7d3c98);
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4);
+        }
+        
+        .subtheme-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e74c3c;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 12px;
+            min-width: 24px;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        /* ZONE DE CONTENU - SUPPRIMÉE ET REMPLACÉE */
+        .content-replacement {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .replacement-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #bdc3c7;
+        }
+        
+        .replacement-text {
+            font-size: 14px;
+            max-width: 300px;
+            line-height: 1.5;
+        }
+        
+        /* INDICATEUR DE DÉFILEMENT */
+        .scroll-indicator {
+            text-align: center;
+            padding: 5px;
+            color: #95a5a6;
+            font-size: 11px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+        
+        .scroll-indicator i {
+            margin: 0 5px;
+            color: #3498db;
+        }
+        
+        /* MENU INFÉRIEUR POUR MOBILE */
+        .mobile-bottom-nav {
+            display: flex;
+            background: white;
+            border-top: 1px solid #eee;
+            padding: 8px 0;
+            position: sticky;
+            bottom: 0;
+            z-index: 100;
+        }
+        
+        .nav-btn {
+            flex: 1;
+            text-align: center;
+            padding: 10px 5px;
+            color: #7f8c8d;
+            font-size: 12px;
+            border: none;
+            background: none;
+        }
+        
+        .nav-btn.active {
+            color: #3498db;
+        }
+        
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* OPTIMISATIONS TOUCH */
+        button {
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+        
+        button:active {
+            transform: scale(0.95);
+            transition: transform 0.1s;
+        }
+        
+        /* RESPONSIVE ADAPTATIONS */
+        @media (max-width: 480px) {
+            .theme-btn {
+                min-width: 140px;
+                font-size: 12px;
+                padding: 12px 8px;
+            }
+            
+            .subtheme-btn {
+                min-width: 160px;
+                font-size: 12px;
+                padding: 10px 12px;
+            }
+            
+            .search-input {
+                font-size: 13px;
+                padding: 12px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .mobile-container {
+                max-width: 768px;
+                margin: 0 auto;
+                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            }
+            
+            .first-line {
+                padding: 10px 15px;
+            }
+            
+            .second-line {
+                padding: 12px 15px;
+            }
+        }
+        
+        /* DARK MODE SUPPORT */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #121212;
+                color: #e0e0e0;
+            }
+            
+            .mobile-container {
+                background: #1e1e1e;
+            }
+            
+            .mobile-header {
+                background: #0d1117;
+            }
+            
+            .search-input {
+                background: #2d2d2d;
+                color: #e0e0e0;
+                border-color: #444;
+            }
+            
+            .first-line {
+                background: #2d2d2d;
+            }
+            
+            .second-line {
+                background: #2d2d2d;
+                border-top-color: #444;
+            }
+            
+            .content-replacement {
+                background: #1a1a1a;
+            }
+            
+            .scroll-indicator {
+                background: #2d2d2d;
+                color: #95a5a6;
+                border-top-color: #444;
+            }
+            
+            .first-line::-webkit-scrollbar-track {
+                background: #444;
+            }
+            
+            .second-line::-webkit-scrollbar-track {
+                background: #444;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- HEADER FIXE -->
+        <div class="mobile-header">
+            <h1>Thèmes Stratégiques</h1>
+        </div>
+        
+        <!-- ZONE DE RECHERCHE -->
+        <div class="search-container">
+            <div class="search-wrapper">
+                <input type="text" class="search-input" id="searchInput" 
+                       placeholder="Rechercher un programme..." 
+                       autocapitalize="off" autocomplete="off">
+                <button class="search-btn" id="searchBtn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- INDICATEUR DE DÉFILEMENT POUR LES THÈMES -->
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-left"></i>
+            Défilez pour voir tous les thèmes
+            <i class="fas fa-chevron-right"></i>
+        </div>
+        
+        <!-- PREMIÈRE LIGNE - Thèmes principaux -->
+        <div class="buttons-container">
+            <div class="first-line" id="firstLine">
+                <!-- Généré par JS -->
+            </div>
+            
+            <!-- INDICATEUR DE DÉFILEMENT POUR LES SOUS-THÈMES -->
+            <div class="scroll-indicator">
+                <i class="fas fa-chevron-left"></i>
+                Défilez pour voir tous les sous-thèmes
+                <i class="fas fa-chevron-right"></i>
+            </div>
+            
+            <!-- DEUXIÈME LIGNE - Sous-thèmes -->
+            <div class="second-line" id="secondLine">
+                <div style="padding: 20px; color: #95a5a6; font-size: 13px; text-align: center; min-width: 300px;">
+                    Sélectionnez un thème pour voir les sous-thèmes
+                </div>
+            </div>
+            
+            <!-- REMPLACEMENT DE LA ZONE DE CONTENU -->
+            <div class="content-replacement">
+                <div class="replacement-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div class="replacement-text">
+                    Sélectionnez un thème puis un sous-thème pour voir les détails complets.
+                    <br><br>
+                    <small><i class="fas fa-info-circle"></i> Utilisez le défilement horizontal pour voir tous les éléments</small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MENU INFÉRIEUR MOBILE -->
+        <div class="mobile-bottom-nav">
+            <button class="nav-btn active" id="navHome">
+                <i class="fas fa-home"></i><br>
+                Accueil
+            </button>
+            <button class="nav-btn" id="navSearch">
+                <i class="fas fa-search"></i><br>
+                Recherche
+            </button>
+            <button class="nav-btn" id="navThemes">
+                <i class="fas fa-layer-group"></i><br>
+                Thèmes
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Données optimisées avec le nouveau thème Fatima Zahra Mansouri
+        const themes = {
+            fatima: {
+                nom: "<strong>Me Fatima Zahra Mansouri</strong>",
+                color: "#8e44ad",
+                items: [
+                    {nom: "Les Visites", desc: "Visites officielles et rencontres sur le terrain"},
+                    {nom: "Parlements", desc: "Participation aux sessions parlementaires et commissions"},
+                    {nom: "Réunions Publiques", desc: "Rencontres avec les citoyens et la société civile"},
+                    {nom: "Conférences", desc: "Participation à des conférences nationales et internationales"},
+                    {nom: "Cérémonies", desc: "Présence aux cérémonies officielles et événements spéciaux"}
+                ]
+            },
+            1: {
+                nom: "AMÉNAGEMENT DU TERRITOIRE",
+                color: "#2c3e50",
+                items: [
+                    {nom: "OPPAT", desc: "Orientations de la Politique Publique d'Aménagement du Territoire"},
+                    {nom: "SRAT", desc: "Schémas Régionaux d'Aménagement du Territoire"},
+                    {nom: "Développement Rural", desc: "Programme de développement des zones rurales"},
+                    {nom: "Villes Intermédiaires", desc: "Stratégie de développement des villes moyennes"},
+                    {nom: "Zones de l'Atlas", desc: "Programme pour les zones montagneuses fragiles"},
+                    {nom: "Infrastructures", desc: "Développement des infrastructures territoriales"},
+                    {nom: "Connectivité", desc: "Amélioration de la connectivité entre les régions"}
+                ]
+            },
+            2: {
+                nom: "URBANISME & PLANIFICATION",
+                color: "#3498db",
+                items: [
+                    {nom: "Planification Nouvelle Génération", desc: "Nouveaux outils de planification urbaine"},
+                    {nom: "Documents d'Urbanisme", desc: "SDAU, PA, PDAR et autres documents réglementaires"},
+                    {nom: "Digitalisation Rokhas", desc: "Simplification des procédures urbanistiques"},
+                    {nom: "Agences Urbaines", desc: "Accompagnement des collectivités territoriales"},
+                    {nom: "Régularisation", desc: "Mise en conformité des constructions existantes"},
+                    {nom: "Zones Industrielles", desc: "Aménagement et gestion des zones industrielles"},
+                    {nom: "Transport Urbain", desc: "Planification des systèmes de transport urbain"}
+                ]
+            },
+            3: {
+                nom: "HABITAT & LOGEMENT",
+                color: "#e74c3c",
+                items: [
+                    {nom: "Daam Sakane", desc: "Aide directe à l'accession au logement"},
+                    {nom: "Villes Sans Bidonvilles", desc: "Programme d'éradication des habitats précaires"},
+                    {nom: "Habitat Menaçant Ruine", desc: "Réhabilitation du bâti dégradé"},
+                    {nom: "Reconstruction Al Haouz", desc: "Programme post-sismique de reconstruction"},
+                    {nom: "PPP Al Omrane", desc: "Partenariats public-privé pour le logement"},
+                    {nom: "Logement Social", desc: "Programmes de logement social et abordable"},
+                    {nom: "Rénovation Urbaine", desc: "Rénovation des quartiers anciens"}
+                ]
+            },
+            4: {
+                nom: "POLITIQUE DE LA VILLE",
+                color: "#27ae60",
+                items: [
+                    {nom: "Mise à niveau urbaine", desc: "Amélioration des infrastructures urbaines"},
+                    {nom: "Sauvegarde Médinas", desc: "Protection et valorisation du patrimoine"},
+                    {nom: "ANRUR", desc: "Agence Nationale de la Rénovation Urbaine"},
+                    {nom: "Espaces Publics", desc: "Aménagement des parcs et espaces verts"},
+                    {nom: "Centres Émergents", desc: "Développement de nouveaux pôles urbains"},
+                    {nom: "Smart Cities", desc: "Villes intelligentes et développement durable"},
+                    {nom: "Gouvernance Urbaine", desc: "Amélioration de la gestion urbaine"}
+                ]
+            }
+        };
+
+        // État de l'application
+        let currentTheme = null;
+        let currentItem = null;
+        let searchActive = false;
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            initThemeButtons();
+            setupSearch();
+            setupNavigation();
+            setupScrollIndicators();
+            
+            // FORCER L'ALIGNEMENT À GAUCHE AU PREMIER AFFICHAGE
+            setTimeout(() => {
+                const firstLine = document.getElementById('firstLine');
+                const secondLine = document.getElementById('secondLine');
+                
+                // S'assurer que le scroll est à gauche
+                firstLine.scrollLeft = 0;
+                secondLine.scrollLeft = 0;
+                
+                // Forcer l'alignement à gauche
+                firstLine.style.justifyContent = 'flex-start';
+                secondLine.style.justifyContent = 'flex-start';
+            }, 100);
+        });
+
+        // Initialiser les boutons de thèmes
+        function initThemeButtons() {
+            const firstLine = document.getElementById('firstLine');
+            
+            // Trier les thèmes pour que Fatima soit en premier
+            const themeOrder = ['fatima', '1', '2', '3', '4'];
+            
+            themeOrder.forEach(id => {
+                if (themes[id]) {
+                    const theme = themes[id];
+                    const btn = document.createElement('button');
+                    btn.className = 'theme-btn';
+                    btn.id = `theme-${id}`;
+                    btn.dataset.themeId = id;
+                    
+                    // Ajouter le nom du thème (en gras pour Fatima)
+                    btn.innerHTML = theme.nom;
+                    btn.title = theme.nom.replace(/<[^>]*>/g, '');
+                    
+                    btn.addEventListener('click', function() {
+                        selectTheme(id);
+                    });
+                    
+                    firstLine.appendChild(btn);
+                }
+            });
+        }
+
+        // Sélectionner un thème
+        function selectTheme(themeId) {
+            currentTheme = themeId;
+            currentItem = null;
+            searchActive = false;
+            
+            // Mettre à jour les boutons actifs
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`theme-${themeId}`).classList.add('active');
+            
+            // Mettre à jour la deuxième ligne
+            updateSecondLine();
+            
+            // Forcer l'alignement à gauche après sélection
+            setTimeout(() => {
+                const firstLine = document.getElementById('firstLine');
+                const secondLine = document.getElementById('secondLine');
+                
+                // Aligner à gauche
+                firstLine.scrollLeft = 0;
+                secondLine.scrollLeft = 0;
+                
+                // Ajouter la classe pour forcer l'alignement à gauche
+                firstLine.classList.add('force-left');
+                secondLine.classList.add('force-left');
+            }, 50);
+        }
+
+        // Sélectionner un programme
+        function selectProgramme(programmeIndex) {
+            currentItem = programmeIndex;
+            
+            // Mettre à jour les boutons actifs
+            document.querySelectorAll('.subtheme-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const activeBtn = document.querySelector(`.subtheme-btn[data-index="${programmeIndex}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+            
+            // Afficher les détails
+            showProgrammeDetails(programmeIndex);
+        }
+
+        // Mettre à jour la deuxième ligne
+        function updateSecondLine() {
+            const secondLine = document.getElementById('secondLine');
+            const theme = themes[currentTheme];
+            
+            secondLine.innerHTML = '';
+            
+            theme.items.forEach((item, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'subtheme-btn';
+                btn.dataset.index = index;
+                btn.dataset.themeId = currentTheme;
+                
+                btn.innerHTML = `
+                    ${item.nom}
+                    <span class="subtheme-badge">${index + 1}</span>
+                `;
+                btn.title = item.desc;
+                
+                btn.addEventListener('click', function() {
+                    selectProgramme(index);
+                });
+                
+                secondLine.appendChild(btn);
+            });
+            
+            // FORCER L'ALIGNEMENT À GAUCHE
+            setTimeout(() => {
+                secondLine.scrollLeft = 0;
+                secondLine.style.justifyContent = 'flex-start';
+            }, 50);
+        }
+
+        // Configurer la recherche
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('input', function() {
+                if (this.value.trim() === '') {
+                    showHome();
+                }
+            });
+            
+            // Recherche en temps réel avec délai
+            let searchTimeout;
+            searchInput.addEventListener('keyup', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    if (this.value.length >= 2) {
+                        performSearch();
+                    }
+                }, 300);
+            });
+        }
+
+        // Configurer la navigation inférieure
+        function setupNavigation() {
+            const navHome = document.getElementById('navHome');
+            const navSearch = document.getElementById('navSearch');
+            const navThemes = document.getElementById('navThemes');
+            
+            navHome.addEventListener('click', function() {
+                setActiveNav('home');
+                showHome();
+                document.getElementById('searchInput').value = '';
+                
+                // Réinitialiser l'alignement à gauche
+                const firstLine = document.getElementById('firstLine');
+                const secondLine = document.getElementById('secondLine');
+                firstLine.scrollLeft = 0;
+                secondLine.scrollLeft = 0;
+                firstLine.style.justifyContent = 'flex-start';
+                secondLine.style.justifyContent = 'flex-start';
+            });
+            
+            navSearch.addEventListener('click', function() {
+                setActiveNav('search');
+                document.getElementById('searchInput').focus();
+            });
+            
+            navThemes.addEventListener('click', function() {
+                setActiveNav('themes');
+                showThemes();
+            });
+        }
+
+        // Configurer les indicateurs de défilement
+        function setupScrollIndicators() {
+            const firstLine = document.getElementById('firstLine');
+            const secondLine = document.getElementById('secondLine');
+            
+            // Suivre l'état du défilement
+            firstLine.addEventListener('scroll', function() {
+                const indicators = document.querySelectorAll('.scroll-indicator');
+                if (this.scrollLeft > 10) {
+                    indicators[0].style.opacity = '0.7';
+                    this.classList.add('has-scrolled');
+                } else {
+                    indicators[0].style.opacity = '1';
+                    this.classList.remove('has-scrolled');
+                    // Quand on revient au début, forcer l'alignement à gauche
+                    this.style.justifyContent = 'flex-start';
+                }
+            });
+            
+            secondLine.addEventListener('scroll', function() {
+                const indicators = document.querySelectorAll('.scroll-indicator');
+                if (this.scrollLeft > 10) {
+                    indicators[1].style.opacity = '0.7';
+                    this.classList.add('has-scrolled');
+                } else {
+                    indicators[1].style.opacity = '1';
+                    this.classList.remove('has-scrolled');
+                    // Quand on revient au début, forcer l'alignement à gauche
+                    this.style.justifyContent = 'flex-start';
+                }
+            });
+        }
+
+        // Changer l'onglet actif
+        function setActiveNav(nav) {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (nav === 'home') document.getElementById('navHome').classList.add('active');
+            else if (nav === 'search') document.getElementById('navSearch').classList.add('active');
+            else if (nav === 'themes') document.getElementById('navThemes').classList.add('active');
+        }
+
+        // Exécuter la recherche
+        function performSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const query = searchInput.value.toLowerCase().trim();
+            
+            if (!query) {
+                showHome();
+                return;
+            }
+            
+            searchActive = true;
+            
+            // Rechercher dans tous les thèmes
+            let results = [];
+            
+            Object.entries(themes).forEach(([themeId, theme]) => {
+                theme.items.forEach((item, index) => {
+                    const searchText = (
+                        theme.nom.toLowerCase() + ' ' +
+                        item.nom.toLowerCase() + ' ' +
+                        item.desc.toLowerCase()
+                    );
+                    
+                    if (searchText.includes(query)) {
+                        results.push({
+                            themeId: themeId,
+                            themeName: theme.nom,
+                            itemIndex: index,
+                            item: item
+                        });
+                    }
+                });
+            });
+            
+            // Afficher les résultats
+            if (results.length > 0) {
+                let resultText = `Recherche: "${query}"\n\n`;
+                resultText += `${results.length} résultat(s) trouvé(s):\n\n`;
+                
+                results.forEach((result, i) => {
+                    resultText += `${i+1}. ${result.item.nom}\n`;
+                    resultText += `   Thème: ${result.themeName.replace(/<[^>]*>/g, '')}\n`;
+                    resultText += `   Description: ${result.item.desc}\n\n`;
+                });
+                
+                alert(resultText);
+            } else {
+                alert(`Aucun résultat trouvé pour "${query}"`);
+            }
+        }
+
+        // Afficher l'accueil
+        function showHome() {
+            searchActive = false;
+            // Afficher le premier thème par défaut
+            if (!currentTheme) {
+                selectTheme('fatima');
+            }
+        }
+
+        // Afficher les thèmes
+        function showThemes() {
+            // Activer le premier thème si aucun n'est sélectionné
+            if (!currentTheme) {
+                selectTheme('fatima');
+            }
+            
+            // Forcer l'alignement à gauche
+            const firstLine = document.getElementById('firstLine');
+            const secondLine = document.getElementById('secondLine');
+            firstLine.scrollLeft = 0;
+            secondLine.scrollLeft = 0;
+            firstLine.style.justifyContent = 'flex-start';
+            secondLine.style.justifyContent = 'flex-start';
+        }
+
+        // Afficher les détails d'un programme
+        function showProgrammeDetails(programmeIndex) {
+            const theme = themes[currentTheme];
+            const item = theme.items[programmeIndex];
+            
+            // Afficher les détails dans une alerte
+            let details = `THÈME: ${theme.nom.replace(/<[^>]*>/g, '')}\n\n`;
+            details += `SOUS-THÈME: ${item.nom}\n\n`;
+            details += `DESCRIPTION: ${item.desc}\n\n`;
+            details += `POSITION: ${parseInt(programmeIndex) + 1}/${theme.items.length}`;
+            
+            alert(details);
+        }
+
+        // Initialiser avec le premier thème
+        setTimeout(() => {
+            if (!currentTheme) {
+                selectTheme('fatima');
+            }
+        }, 100);
+    </script>
+</body>
+</html>

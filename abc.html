@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Vidéos MATUHPV – mini-iframe + visionneuse top</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root{--bg:#f0f7f4;--fg:#333;--card:#fff;--primary:#0b5d3f;--border:#ddd;}
+    body.dark{--bg:#121212;--fg:#eee;--card:#1e1e1e;--border:#444;}
+    *{box-sizing:border-box;font-family:"Segoe UI",Tahoma,sans-serif;}
+    body{margin:0;background:var(--bg);color:var(--fg);transition:.3s;}
+    header{padding:20px;text-align:center;}
+    h1{color:var(--primary);}
+    #topPlayer{margin:auto;text-align:center;margin-bottom:25px;}
+    #topPlayer iframe{width:100%;max-width:560px;height:315px;border:none;overflow:hidden;}
+    .controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:25px;}
+    input,select,button{padding:8px 12px;font-size:1rem;border:1px solid var(--border);background:var(--card);color:var(--fg);border-radius:4px;}
+    button{cursor:pointer;}
+    #tree{max-width:1100px;margin:auto;padding:0 10px;}
+    .year-btn{width:100%;padding:18px;background:var(--primary);color:#fff;border:none;text-align:left;font-size:1.3em;font-weight:bold;border-radius:8px;margin-bottom:8px;cursor:pointer;transition:.3s;}
+    .year-btn:hover{background:#094c34;}
+    .year-btn::after{content:'▶';float:right;transition:transform .2s;}
+    .year-btn.open::after{transform:rotate(90deg);}
+    .panel{padding:0 20px 20px;background:var(--card);border-radius:0 0 8px;margin-bottom:12px;display:none;}
+    .video-card{display:flex;gap:15px;padding:15px;border-bottom:1px solid var(--border);}
+    .video-card:last-child{border-bottom:none;}
+    .info{flex:1;}
+    .video-title-ar{font-weight:bold;color:var(--primary);margin-bottom:6px;}
+    .video-title-fr{font-style:italic;color:#555;margin-bottom:10px;}
+    .btn-link{display:inline-block;padding:8px 16px;background:var(--primary);color:#fff;text-decoration:none;border-radius:6px;font-size:.9em;font-weight:bold;margin-top:6px;}
+    .btn-link:hover{opacity:.9;}
+    .mini-thumb{width:150px;height:110px;border:none;overflow:hidden;border-radius:6px;cursor:pointer;}
+    #noResult{text-align:center;margin-top:40px;opacity:.7;}
+    footer{text-align:center;padding:30px 10px;font-size:.9em;color:#666;}
+    @media (max-width:600px){.controls{flex-direction:column;}.video-card{flex-direction:column;align-items:center;}.mini-thumb{width:100%;max-width:280px;height:160px;}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎥 Vidéos MATUHPV</h1>
+    <!-- VISIONNEUSE PRINCIPALE (TOP) -->
+    <div id="topPlayer">
+      <iframe src="https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/FatimaZahraMansouri.pam/videos/1720356395238723/&show_text=false&width=560" width="560" height="315" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+    </div>
+    <div class="controls">
+      <input id="search" type="search" placeholder="Rechercher un titre…">
+      <select id="yearFilter"><option value="">Toutes les années</option></select>
+      <button id="themeToggle" title="Thème">🌓</button>
+    </div>
+  </header>
+
+  <main id="app">
+    <div id="tree"></div>
+    <p id="noResult" class="hidden">Aucune vidéo trouvée.</p>
+  </main>
+
+  <footer>Mise à jour : 31 décembre 2025 – Source page Facebook MATUHPV</footer>
+
+  <script>
+    /* ----------  DONNÉES ---------- */
+    const DATA = [
+      {
+        fbid: "1720356395238723",
+        date: "2025-04-29",
+        titre_ar: "أهم التدابير التي اتخذتها وزارة إعداد التراب الوطني و التعمير و الاسكان و سياسة المدينة لتحفيز الاستثمار ودعم التنمية المجالية",
+        titre_fr: "Mesures clés du MATUHPV pour stimuler l’investissement",
+        url_facebook: "https://www.facebook.com/FatimaZahraMansouri.pam/videos/1720356395238723/",
+        year: 2025
+      },
+      {
+        fbid: "1020806361885024",
+        date: "2022-05-30",
+        titre_ar: "Film institutionnel relatif à la promotion des villes intermédiaires du Maroc projeté à Africités",
+        titre_fr: "Film institutionnel – Promotion des villes intermédiaires",
+        url_facebook: "https://www.facebook.com/MATUHPV/videos/1020806361885024/",
+        year: 2022
+      },
+      {
+        fbid: "1026126788508799",
+        date: "2023-10-21",
+        titre_ar: "ندوة صحفية للسيدة فاطمة الزهراء المنصوري حول برنامج دعم السكن",
+        titre_fr: "Conférence de presse – Programme d’aide au logement",
+        url_facebook: "https://www.facebook.com/MATUHPV/videos/1026126788508799/",
+        year: 2023
+      }
+    ];
+
+    /* ----------  UTILS ---------- */
+    const ui = {
+      tree: document.getElementById('tree'),
+      search: document.getElementById('search'),
+      yearFilter: document.getElementById('yearFilter'),
+      noResult: document.getElementById('noResult'),
+      themeBtn: document.getElementById('themeToggle'),
+      topPlayer: document.getElementById('topPlayer')
+    };
+
+    function init() {
+      buildFilters();
+      render();
+      attachEvents();
+      restorePrefs();
+    }
+
+    function buildFilters() {
+      const years = [...new Set(DATA.map(v => v.year))].sort((a, b) => b - a);
+      years.forEach(y => ui.yearFilter.innerHTML += `<option value="${y}">${y}</option>`);
+    }
+
+    function render() {
+      const q = ui.search.value.trim().toLowerCase();
+      const y = ui.yearFilter.value;
+      ui.tree.innerHTML = '';
+      let has = false;
+
+      const grouped = {};
+      DATA.forEach(v => {
+        if (y && v.year != y) return;
+        if (!v.titre_ar.toLowerCase().includes(q) && !v.titre_fr.toLowerCase().includes(q)) return;
+        if (!grouped[v.year]) grouped[v.year] = [];
+        grouped[v.year].push(v);
+        has = true;
+      });
+
+      Object.keys(grouped).sort((a, b) => b - a).forEach(year => {
+        const btn = Object.assign(document.createElement('button'), { className: 'year-btn', textContent: `${year} (${grouped[year].length})` });
+        btn.dataset.year = year;
+        const panel = document.createElement('div'); panel.className = 'panel';
+        grouped[year].forEach(v => {
+          const card = document.createElement('div'); card.className = 'video-card';
+          card.innerHTML = `
+            <div class="info">
+              <div class="video-title-ar">${v.titre_ar}</div>
+              <div class="video-title-fr">${v.titre_fr}</div>
+              <a href="#" class="btn-link" onclick="openTop('${v.url_facebook}');return false;">▶ Voir</a>
+            </div>
+            <iframe class="mini-thumb" src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(v.url_facebook)}&show_text=false&width=150&height=110" scrolling="no" frameborder="0" allowfullscreen="true" onclick="openTop('${v.url_facebook}')"></iframe>
+          `;
+          panel.appendChild(card);
+        });
+        ui.tree.appendChild(btn); ui.tree.appendChild(panel);
+      });
+      ui.noResult.classList.toggle('hidden', has);
+    }
+
+    function openTop(url) {
+      const clean = url.split('?')[0];
+      ui.topPlayer.innerHTML = `<iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(clean)}&show_text=false&width=560" width="560" height="315" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`;
+      ui.topPlayer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function attachEvents() {
+      ui.search.addEventListener('input', render);
+      ui.yearFilter.addEventListener('change', render);
+      ui.themeBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+      });
+      ui.tree.addEventListener('click', e => {
+        if (!e.target.matches('.year-btn')) return;
+        const panel = e.target.nextElementSibling;
+        const open = e.target.classList.contains('open');
+        document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('open'));
+        document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+        if (!open) {
+          e.target.classList.add('open');
+          panel.style.display = 'block';
+          localStorage.setItem('lastYear', e.target.dataset.year);
+        }
+      });
+    }
+
+    function restorePrefs() {
+      const t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+      if (t === 'dark') document.body.classList.add('dark');
+      const last = localStorage.getItem('lastYear');
+      if (last) {
+        const btn = document.querySelector(`.year-btn[data-year="${last}"]`);
+        if (btn) btn.click();
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#001122">
+<title>Revue de presse – Aujourd’hui en évidence</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#001122;
+  --card:#001a44;
+  --today:#0f6b4f;      /* 🟢 اليوم */
+  --accent:#4ECDC4;
+  --text:#fff;
+  --muted:#b0b0b0;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Tajawal,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+header{
+  position:sticky;
+  top:0;
+  background:#001122;
+  padding:15px;
+  text-align:center;
+  z-index:10;
+}
+.search{
+  margin-top:10px;
+  display:flex;
+  background:rgba(255,255,255,.1);
+  padding:8px 12px;
+  border-radius:12px;
+}
+.search input{
+  flex:1;
+  background:transparent;
+  border:none;
+  color:white;
+  outline:none;
+}
+main{
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  align-items:center;
+}
+.card{
+  max-width:520px;
+  width:100%;
+  padding:18px;
+  border-radius:16px;
+  box-shadow:0 4px 15px rgba(0,0,0,.4);
+}
+.card.today{
+  outline:2px solid #4ECDC4;
+}
+.meta{
+  display:flex;
+  justify-content:space-between;
+  font-size:.75rem;
+  color:var(--muted);
+}
+.domain{color:var(--accent);font-weight:bold}
+.title{
+  font-size:1.1rem;
+  font-weight:700;
+  margin:10px 0;
+}
+.excerpt{font-size:.9rem;opacity:.85}
+.link{
+  margin-top:8px;
+  font-size:.75rem;
+  word-break:break-all;
+}
+.link a{color:var(--accent);text-decoration:none}
+.today-badge{
+  background:#2ecc71;
+  color:#003;
+  padding:2px 8px;
+  border-radius:8px;
+  font-size:.65rem;
+  font-weight:bold;
+  margin-left:6px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>🗞️ Revue de presse</h2>
+  <div class="search">
+    <input id="search" placeholder="Rechercher titre ou source…">
+    🔍
+  </div>
+</header>
+
+<main id="articles">
+  <p id="loading">⏳ Chargement en temps réel…</p>
+</main>
+
+<script>
+const JSON_URL =
+  "https://raw.githubusercontent.com/marocnetmail/125/main/data/data_fusionnee.json";
+
+const DAY_COLORS = [
+  "#001a44",
+  "#0a2a3f",
+  "#1b2f55",
+  "#0f3d3e",
+  "#2a2f4f",
+  "#243447",
+  "#2c2c54"
+];
+
+let ALL = [];
+
+function extractDomain(url){
+  if(!url) return "";
+  const m = url.match(/https?:\/\/([^\/]+)/i);
+  return m ? m[1].replace("www.","") : "";
+}
+
+function formatDate(d){
+  if(!d) return "";
+  const x = new Date(d);
+  return x.toLocaleDateString("fr-FR")+" "+x.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+}
+
+function getDayKey(dateTime){
+  return dateTime ? dateTime.split("T")[0] : "";
+}
+
+function todayKey(){
+  const d = new Date();
+  return d.toISOString().split("T")[0];
+}
+
+function colorForDay(dayKey){
+  let hash = 0;
+  for(let i=0;i<dayKey.length;i++){
+    hash = dayKey.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return DAY_COLORS[Math.abs(hash) % DAY_COLORS.length];
+}
+
+async function loadJSON(){
+  try{
+    const res = await fetch(JSON_URL + "?t=" + Date.now());
+    const data = await res.json();
+
+    ALL = data
+      .filter(a => a.actif !== false && a.actif !== "false")
+      .sort((a,b)=> new Date(b["date/heure"]) - new Date(a["date/heure"]));
+
+    document.getElementById("loading").remove();
+    render(ALL);
+  }catch(e){
+    document.getElementById("loading").innerText =
+      "❌ Impossible de charger le fichier JSON";
+  }
+}
+
+function render(list){
+  const box = document.getElementById("articles");
+  box.querySelectorAll(".card").forEach(e=>e.remove());
+
+  const TODAY = todayKey();
+
+  list.forEach(a=>{
+    const dayKey = getDayKey(a["date/heure"]);
+    const isToday = dayKey === TODAY;
+
+    const d = document.createElement("div");
+    d.className = "card" + (isToday ? " today" : "");
+    d.style.background = isToday
+      ? "var(--today)"
+      : colorForDay(dayKey);
+
+    d.innerHTML=`
+      <div class="meta">
+        <span class="domain">
+          🌐 ${extractDomain(a.url)}
+          ${isToday ? '<span class="today-badge">اليوم</span>' : ''}
+        </span>
+        <span>🕒 ${formatDate(a["date/heure"])}</span>
+      </div>
+      <div class="title">${a.titre || "Sans titre"}</div>
+      <div class="excerpt">${a.texte || ""}</div>
+      <div class="link">
+        <a href="${a.url}" target="_blank">${a.url}</a>
+      </div>
+    `;
+    box.appendChild(d);
+  });
+}
+
+document.getElementById("search").oninput = e => {
+  const q = e.target.value.toLowerCase();
+  render(ALL.filter(a =>
+    (a.titre||"").toLowerCase().includes(q) ||
+    extractDomain(a.url).toLowerCase().includes(q)
+  ));
+};
+
+loadJSON();
+
+/* 🔁 Rafraîchissement auto (optionnel) */
+// setInterval(loadJSON, 60000);
+</script>
+
+</body>
+</html>

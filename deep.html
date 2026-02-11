@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Vidéos MATUHPV – Miniatures Facebook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #f0f7f4;
+      --fg: #333;
+      --card: #fff;
+      --primary: #0b5d3f;
+      --secondary: #094c34;
+      --border: #ddd;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    body.dark {
+      --bg: #121212;
+      --fg: #eee;
+      --card: #1e1e1e;
+      --border: #444;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      transition: background-color 0.3s, color 0.3s;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+    
+    header {
+      padding: 1.5rem 0;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    h1 {
+      color: var(--primary);
+      text-align: center;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      margin-bottom: 1.5rem;
+      padding: 0 10px;
+    }
+    
+    .video-section {
+      margin: 2rem auto;
+      text-align: center;
+      position: relative;
+    }
+    
+    .video-placeholder {
+      padding: 60px 20px;
+      background: linear-gradient(135deg, var(--card) 0%, rgba(11, 93, 63, 0.1) 100%);
+      border-radius: 16px;
+      border: 3px dashed var(--border);
+      color: var(--fg);
+      opacity: 0.8;
+      font-size: 1.2rem;
+      transition: all 0.3s;
+      cursor: default;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .video-placeholder i {
+      font-size: 2.5rem;
+      opacity: 0.6;
+    }
+    
+    .video-container {
+      display: none;
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      animation: slideIn 0.5s ease;
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    
+    .video-container.active {
+      display: block;
+    }
+    
+    .video-header {
+      padding: 1.5rem;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .video-header h2 {
+      margin: 0;
+      font-size: 1.3rem;
+      flex: 1;
+      text-align: left;
+    }
+    
+    .close-video {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s;
+    }
+    
+    .close-video:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%; /* Ratio 16:9 */
+      height: 0;
+      overflow: hidden;
+      background: #000;
+    }
+    
+    .video-iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    .video-info {
+      padding: 1.5rem;
+      text-align: left;
+      border-top: 1px solid var(--border);
+    }
+    
+    .video-title-ar {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.2rem;
+      margin-bottom: 0.8rem;
+      line-height: 1.4;
+    }
+    
+    .video-title-fr {
+      font-style: italic;
+      color: var(--fg);
+      opacity: 0.9;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+    
+    .video-meta {
+      display: flex;
+      gap: 1.5rem;
+      color: var(--fg);
+      opacity: 0.7;
+      font-size: 0.9rem;
+      flex-wrap: wrap;
+    }
+    
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+      margin: 1.5rem auto;
+      max-width: 800px;
+      padding: 0 10px;
+    }
+    
+    .search-input,
+    .year-select {
+      flex: 1;
+      min-width: 200px;
+      padding: 14px 16px;
+      font-size: 1rem;
+      border: 2px solid var(--border);
+      background: var(--card);
+      color: var(--fg);
+      border-radius: 10px;
+      transition: all 0.3s;
+    }
+    
+    .search-input:focus,
+    .year-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(11, 93, 63, 0.1);
+    }
+    
+    .theme-toggle {
+      padding: 14px 18px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s;
+      min-width: 54px;
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .theme-toggle:hover,
+    .theme-toggle:active {
+      background: var(--secondary);
+      transform: scale(1.05);
+    }
+    
+    .year-section {
+      margin-bottom: 1.2rem;
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s;
+    }
+    
+    .year-section:active {
+      transform: scale(0.99);
+    }
+    
+    .year-header {
+      width: 100%;
+      padding: 1.2rem 1.5rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      text-align: left;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.3s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .year-header:hover {
+      background: var(--secondary);
+    }
+    
+    .year-icon {
+      transition: transform 0.3s ease;
+      font-size: 0.9rem;
+    }
+    
+    .year-header.open .year-icon {
+      transform: rotate(90deg);
+    }
+    
+    .videos-panel {
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .year-header.open + .videos-panel {
+      max-height: 5000px;
+      padding: 1.2rem;
+    }
+    
+    .video-card {
+      padding: 1.2rem;
+      border-bottom: 1px solid var(--border);
+      animation: fadeIn 0.4s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .video-card:last-child {
+      border-bottom: none;
+    }
+    
+    .video-list-title-ar {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+      margin-bottom: 0.6rem;
+      line-height: 1.4;
+    }
+    
+    .video-list-title-fr {
+      font-style: italic;
+      color: var(--fg);
+      opacity: 0.9;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+    
+    .video-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .watch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 1rem;
+      -webkit-tap-highlight-color: transparent;
+      flex: 1;
+      min-width: 140px;
+      justify-content: center;
+    }
+    
+    .watch-btn:hover,
+    .watch-btn:active {
+      background: var(--secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .no-results {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      color: var(--fg);
+      opacity: 0.7;
+      display: none;
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      margin: 2rem auto;
+      max-width: 600px;
+    }
+    
+    .no-results.show {
+      display: block;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      margin-top: 2rem;
+      color: var(--fg);
+      opacity: 0.8;
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+    }
+    
+    @keyframes fadeIn {
+      from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0); 
+      }
+    }
+    
+    @keyframes slideIn {
+      from { 
+        opacity: 0; 
+        transform: translateY(-20px); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0); 
+      }
+    }
+    
+    /* Optimisations pour mobile */
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 12px;
+      }
+      
+      header {
+        padding: 1rem 0;
+        margin-bottom: 1rem;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+      
+      .video-section {
+        margin: 1rem auto;
+      }
+      
+      .video-placeholder {
+        padding: 40px 20px;
+        font-size: 1.1rem;
+        min-height: 150px;
+      }
+      
+      .video-placeholder i {
+        font-size: 2rem;
+      }
+      
+      .video-header {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+      
+      .video-header h2 {
+        font-size: 1.1rem;
+        text-align: center;
+      }
+      
+      .close-video {
+        align-self: flex-end;
+        margin-top: -10px;
+      }
+      
+      .video-info {
+        padding: 1rem;
+      }
+      
+      .video-title-ar {
+        font-size: 1.1rem;
+      }
+      
+      .video-title-fr {
+        font-size: 0.95rem;
+      }
+      
+      .video-meta {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+      
+      .controls {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        margin: 1rem auto 1.5rem;
+      }
+      
+      .search-input,
+      .year-select {
+        width: 100%;
+        min-width: unset;
+        padding: 16px;
+        font-size: 1.05rem;
+      }
+      
+      .theme-toggle {
+        width: 100%;
+        max-width: 200px;
+        margin-top: 0.5rem;
+      }
+      
+      .year-header {
+        padding: 1.2rem;
+        font-size: 1.15rem;
+      }
+      
+      .year-header.open + .videos-panel {
+        padding: 1rem;
+      }
+      
+      .video-card {
+        padding: 1rem;
+      }
+      
+      .video-list-title-ar {
+        font-size: 1.05rem;
+      }
+      
+      .video-list-title-fr {
+        font-size: 0.95rem;
+      }
+      
+      .video-actions {
+        flex-direction: column;
+      }
+      
+      .watch-btn {
+        width: 100%;
+        padding: 14px 20px;
+        font-size: 1.05rem;
+      }
+      
+      footer {
+        padding: 1.5rem 1rem;
+        font-size: 0.85rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 8px;
+      }
+      
+      h1 {
+        font-size: 1.3rem;
+        padding: 0 5px;
+      }
+      
+      .video-placeholder {
+        padding: 30px 15px;
+        font-size: 1rem;
+      }
+      
+      .year-header {
+        padding: 1rem;
+        font-size: 1.1rem;
+      }
+      
+      .video-card {
+        padding: 0.9rem;
+      }
+      
+      .video-list-title-ar {
+        font-size: 1rem;
+      }
+      
+      .video-list-title-fr {
+        font-size: 0.9rem;
+      }
+      
+      .watch-btn {
+        padding: 12px 16px;
+        min-width: unset;
+      }
+    }
+    
+    /* Support pour les appareils avec notch */
+    @supports (padding: max(0px)) {
+      .container {
+        padding-left: max(16px, env(safe-area-inset-left));
+        padding-right: max(16px, env(safe-area-inset-right));
+      }
+      
+      @media (max-width: 768px) {
+        .container {
+          padding-left: max(12px, env(safe-area-inset-left));
+          padding-right: max(12px, env(safe-area-inset-right));
+        }
+      }
+    }
+    
+    /* Amélioration du touch sur iOS */
+    @media (hover: none) and (pointer: coarse) {
+      .watch-btn,
+      .year-header,
+      .theme-toggle {
+        min-height: 44px;
+      }
+      
+      .search-input,
+      .year-select {
+        font-size: 16px;
+        min-height: 44px;
+      }
+      
+      .watch-btn:active,
+      .year-header:active,
+      .theme-toggle:active {
+        opacity: 0.7;
+      }
+      
+      .close-video {
+        min-height: 44px;
+        min-width: 44px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>🎥 Vidéos MATUHPV – Miniatures Facebook</h1>
+      
+      <div class="video-section">
+        <!-- Placeholder initial -->
+        <div id="videoPlaceholder" class="video-placeholder">
+          <div>👆</div>
+          <div>Sélectionnez une vidéo dans la liste pour la lire ici</div>
+        </div>
+        
+        <!-- Conteneur vidéo (caché initialement) -->
+        <div id="videoContainer" class="video-container">
+          <div class="video-header">
+            <h2 id="videoTitleHeader">Titre de la vidéo</h2>
+            <button id="closeVideo" class="close-video" aria-label="Fermer la vidéo">×</button>
+          </div>
+          
+          <div class="video-wrapper">
+            <iframe 
+              id="videoIframe"
+              class="video-iframe"
+              scrolling="no"
+              frameborder="0"
+              allowfullscreen="true"
+              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+              title="Vidéo Facebook MATUHPV">
+            </iframe>
+          </div>
+          
+          <div class="video-info">
+            <div id="videoTitleAr" class="video-title-ar"></div>
+            <div id="videoTitleFr" class="video-title-fr"></div>
+            <div class="video-meta">
+              <div class="meta-item">
+                <span>📅</span>
+                <span id="videoDate">Date</span>
+              </div>
+              <div class="meta-item">
+                <span>🏷️</span>
+                <span id="videoYear">Année</span>
+              </div>
+              <div class="meta-item">
+                <span>🔗</span>
+                <span>ID: <span id="videoId">ID</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="controls">
+        <input 
+          type="search" 
+          id="searchInput" 
+          class="search-input" 
+          placeholder="Rechercher un titre…"
+          aria-label="Rechercher des vidéos"
+          autocapitalize="none"
+          autocomplete="off">
+        
+        <select id="yearSelect" class="year-select" aria-label="Filtrer par année">
+          <option value="">Toutes les années</option>
+        </select>
+        
+        <button 
+          id="themeToggle" 
+          class="theme-toggle" 
+          aria-label="Changer le thème"
+          type="button">
+          🌓
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="videosTree"></div>
+    <div id="noResults" class="no-results">
+      Aucune vidéo trouvée. Essayez d'autres termes de recherche.
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>Mise à jour : 31 décembre 2025 – Source page Facebook MATUHPV</p>
+    </div>
+  </footer>
+
+  <script>
+    // Données structurées
+    const VIDEO_DATA = [
+      {
+        fbid: "1720356395238723",
+        date: "2025-04-29",
+        titre_ar: "أهم التدابير التي اتخذتها وزارة إعداد التراب الوطني و التعمير و الاسكان و سياسة المدينة لتحفيز الاستثمار ودعم التنمية المجالية",
+        titre_fr: "Mesures clés du MATUHPV pour stimuler l'investissement",
+        url_facebook: "https://www.facebook.com/FatimaZahraMansouri.pam/videos/1720356395238723/",
+        year: 2025
+      },
+      {
+        fbid: "1020806361885024",
+        date: "2022-05-30",
+        titre_ar: "Film institutionnel relatif à la promotion des villes intermédiaires du Maroc projeté à Africités",
+        titre_fr: "Film institutionnel – Promotion des villes intermédiaires",
+        url_facebook: "https://www.facebook.com/MATUHPV/videos/1020806361885024/",
+        year: 2022
+      },
+      {
+        fbid: "1026126788508799",
+        date: "2023-10-21",
+        titre_ar: "ندوة صحفية للسيدة فاطمة الزهراء المنصوري حول برنامج دعم السكن",
+        titre_fr: "Conférence de presse – Programme d'aide au logement",
+        url_facebook: "https://www.facebook.com/MATUHPV/videos/1026126788508799/",
+        year: 2023
+      }
+    ];
+
+    // Éléments DOM
+    const DOM = {
+      videosTree: document.getElementById('videosTree'),
+      searchInput: document.getElementById('searchInput'),
+      yearSelect: document.getElementById('yearSelect'),
+      noResults: document.getElementById('noResults'),
+      themeToggle: document.getElementById('themeToggle'),
+      videoPlaceholder: document.getElementById('videoPlaceholder'),
+      videoContainer: document.getElementById('videoContainer'),
+      videoIframe: document.getElementById('videoIframe'),
+      videoTitleHeader: document.getElementById('videoTitleHeader'),
+      videoTitleAr: document.getElementById('videoTitleAr'),
+      videoTitleFr: document.getElementById('videoTitleFr'),
+      videoDate: document.getElementById('videoDate'),
+      videoYear: document.getElementById('videoYear'),
+      videoId: document.getElementById('videoId'),
+      closeVideo: document.getElementById('closeVideo')
+    };
+
+    // État de l'application
+    const state = {
+      openYear: null,
+      currentFilter: '',
+      currentYear: '',
+      activeVideo: null
+    };
+
+    // Initialisation
+    function init() {
+      populateYearFilter();
+      renderVideos();
+      setupEventListeners();
+      restorePreferences();
+      optimizeForMobile();
+    }
+
+    // Remplir le filtre des années
+    function populateYearFilter() {
+      const years = [...new Set(VIDEO_DATA.map(v => v.year))]
+        .sort((a, b) => b - a);
+      
+      years.forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        DOM.yearSelect.appendChild(option);
+      });
+    }
+
+    // Formater la date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const options = { day: 'numeric', month: 'long', year: 'numeric' };
+      return date.toLocaleDateString('fr-FR', options);
+    }
+
+    // Filtrer les vidéos
+    function filterVideos() {
+      const searchTerm = DOM.searchInput.value.trim().toLowerCase();
+      const selectedYear = DOM.yearSelect.value;
+      
+      state.currentFilter = searchTerm;
+      state.currentYear = selectedYear;
+      
+      return VIDEO_DATA.filter(video => {
+        const matchesYear = !selectedYear || video.year.toString() === selectedYear;
+        const matchesSearch = !searchTerm || 
+          video.titre_ar.toLowerCase().includes(searchTerm) ||
+          video.titre_fr.toLowerCase().includes(searchTerm);
+        
+        return matchesYear && matchesSearch;
+      });
+    }
+
+    // Afficher une vidéo
+    function showVideo(video) {
+      state.activeVideo = video;
+      
+      // Masquer le placeholder, afficher le conteneur vidéo
+      DOM.videoPlaceholder.style.display = 'none';
+      DOM.videoContainer.classList.add('active');
+      
+      // Mettre à jour le titre de l'en-tête
+      DOM.videoTitleHeader.textContent = video.titre_fr.substring(0, 60) + (video.titre_fr.length > 60 ? '...' : '');
+      
+      // Mettre à jour les informations de la vidéo
+      DOM.videoTitleAr.textContent = video.titre_ar;
+      DOM.videoTitleFr.textContent = video.titre_fr;
+      DOM.videoDate.textContent = formatDate(video.date);
+      DOM.videoYear.textContent = video.year;
+      DOM.videoId.textContent = video.fbid;
+      
+      // Charger l'iframe SEULEMENT maintenant
+      const cleanUrl = video.url_facebook.split('?')[0];
+      const iframeUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(cleanUrl)}&show_text=false&width=560`;
+      DOM.videoIframe.src = iframeUrl;
+      
+      // Faire défiler jusqu'à la vidéo
+      DOM.videoContainer.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+      
+      // Marquer la vidéo active dans la liste
+      document.querySelectorAll('.video-card').forEach(card => {
+        card.classList.remove('active');
+        if (card.dataset.fbid === video.fbid) {
+          card.classList.add('active');
+        }
+      });
+    }
+
+    // Cacher la vidéo et revenir au placeholder
+    function hideVideo() {
+      DOM.videoPlaceholder.style.display = 'flex';
+      DOM.videoContainer.classList.remove('active');
+      
+      // Arrêter la vidéo en retirant la source de l'iframe
+      DOM.videoIframe.src = '';
+      state.activeVideo = null;
+      
+      // Retirer la classe active des cartes
+      document.querySelectorAll('.video-card').forEach(card => {
+        card.classList.remove('active');
+      });
+    }
+
+    // Rendu des vidéos
+    function renderVideos() {
+      const filteredVideos = filterVideos();
+      const groupedByYear = groupByYear(filteredVideos);
+      
+      DOM.videosTree.innerHTML = '';
+      
+      if (filteredVideos.length === 0) {
+        DOM.noResults.classList.add('show');
+        // Si on filtre et qu'il n'y a pas de résultats, cacher la vidéo active
+        if (state.activeVideo && !filteredVideos.some(v => v.fbid === state.activeVideo.fbid)) {
+          hideVideo();
+        }
+        return;
+      }
+      
+      DOM.noResults.classList.remove('show');
+      
+      // Si la vidéo active n'est plus dans les résultats filtrés, la cacher
+      if (state.activeVideo && !filteredVideos.some(v => v.fbid === state.activeVideo.fbid)) {
+        hideVideo();
+      }
+      
+      Object.keys(groupedByYear)
+        .sort((a, b) => b - a)
+        .forEach(year => {
+          const yearSection = createYearSection(year, groupedByYear[year]);
+          DOM.videosTree.appendChild(yearSection);
+        });
+      
+      // Réouvrir l'année précédente si elle existe
+      if (state.openYear && document.querySelector(`[data-year="${state.openYear}"]`)) {
+        const yearBtn = document.querySelector(`[data-year="${state.openYear}"]`);
+        yearBtn.click();
+      }
+    }
+
+    // Grouper les vidéos par année
+    function groupByYear(videos) {
+      return videos.reduce((groups, video) => {
+        if (!groups[video.year]) groups[video.year] = [];
+        groups[video.year].push(video);
+        return groups;
+      }, {});
+    }
+
+    // Créer une section année
+    function createYearSection(year, videos) {
+      const section = document.createElement('div');
+      section.className = 'year-section';
+      
+      const header = document.createElement('button');
+      header.className = 'year-header';
+      header.dataset.year = year;
+      header.type = 'button';
+      header.innerHTML = `
+        <span>${year} (${videos.length})</span>
+        <span class="year-icon">▶</span>
+      `;
+      
+      const panel = document.createElement('div');
+      panel.className = 'videos-panel';
+      
+      videos.forEach(video => {
+        const videoCard = createVideoCard(video);
+        panel.appendChild(videoCard);
+      });
+      
+      section.appendChild(header);
+      section.appendChild(panel);
+      
+      return section;
+    }
+
+    // Créer une carte vidéo
+    function createVideoCard(video) {
+      const card = document.createElement('article');
+      card.className = `video-card ${state.activeVideo && state.activeVideo.fbid === video.fbid ? 'active' : ''}`;
+      card.dataset.fbid = video.fbid;
+      
+      card.innerHTML = `
+        <h3 class="video-list-title-ar">${escapeHtml(video.titre_ar)}</h3>
+        <p class="video-list-title-fr">${escapeHtml(video.titre_fr)}</p>
+        <div class="video-meta">
+          <div class="meta-item">
+            <span>📅</span>
+            <span>${formatDate(video.date)}</span>
+          </div>
+        </div>
+        <div class="video-actions">
+          <button 
+            class="watch-btn" 
+            data-fbid="${video.fbid}"
+            aria-label="Voir la vidéo : ${escapeHtml(video.titre_fr)}"
+            type="button">
+            <span>▶</span> ${state.activeVideo && state.activeVideo.fbid === video.fbid ? 'Vidéo en cours' : 'Voir la vidéo'}
+          </button>
+        </div>
+      `;
+      
+      return card;
+    }
+
+    // Gestion des événements
+    function setupEventListeners() {
+      // Recherche avec debounce
+      let searchTimeout;
+      DOM.searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(renderVideos, 300);
+      });
+      
+      DOM.yearSelect.addEventListener('change', renderVideos);
+      
+      // Thème
+      DOM.themeToggle.addEventListener('click', toggleTheme);
+      
+      // Fermer la vidéo
+      DOM.closeVideo.addEventListener('click', hideVideo);
+      
+      // Délégation d'événements
+      DOM.videosTree.addEventListener('click', handleTreeClick);
+      
+      // Éviter le zoom sur iOS lors de la saisie
+      DOM.searchInput.addEventListener('touchstart', function(e) {
+        this.style.fontSize = '16px';
+      });
+      
+      // Réinitialiser la taille après la saisie
+      DOM.searchInput.addEventListener('blur', function() {
+        this.style.fontSize = '';
+      });
+      
+      // Fermer la vidéo avec la touche Échap
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && state.activeVideo) {
+          hideVideo();
+        }
+      });
+    }
+
+    // Gérer les clics sur l'arborescence
+    function handleTreeClick(event) {
+      // Ouverture/fermeture des années
+      if (event.target.closest('.year-header')) {
+        const header = event.target.closest('.year-header');
+        const year = header.dataset.year;
+        const panel = header.nextElementSibling;
+        
+        const isOpen = header.classList.contains('open');
+        
+        // Sur mobile, fermer les autres années automatiquement
+        if (window.innerWidth <= 768) {
+          document.querySelectorAll('.year-header').forEach(h => {
+            if (h !== header) {
+              h.classList.remove('open');
+              h.nextElementSibling.style.maxHeight = null;
+            }
+          });
+        }
+        
+        // Basculer l'état actuel
+        if (!isOpen) {
+          header.classList.add('open');
+          panel.style.maxHeight = panel.scrollHeight + 'px';
+          state.openYear = year;
+          localStorage.setItem('openYear', year);
+        } else {
+          header.classList.remove('open');
+          panel.style.maxHeight = null;
+          state.openYear = null;
+          localStorage.removeItem('openYear');
+        }
+      }
+      
+      // Boutons "Voir la vidéo"
+      if (event.target.closest('.watch-btn')) {
+        const button = event.target.closest('.watch-btn');
+        const fbid = button.dataset.fbid;
+        const video = VIDEO_DATA.find(v => v.fbid === fbid);
+        
+        if (video) {
+          if (state.activeVideo && state.activeVideo.fbid === fbid) {
+            // Si on clique sur la vidéo déjà active, la cacher
+            hideVideo();
+          } else {
+            // Sinon, afficher la nouvelle vidéo
+            showVideo(video);
+          }
+        }
+        
+        // Feedback tactile sur mobile
+        if (window.innerWidth <= 768) {
+          button.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            button.style.transform = '';
+          }, 200);
+        }
+      }
+    }
+
+    // Basculer le thème
+    function toggleTheme() {
+      const isDark = document.body.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      DOM.themeToggle.textContent = isDark ? '☀️' : '🌓';
+      
+      // Feedback tactile sur mobile
+      if (window.innerWidth <= 768) {
+        DOM.themeToggle.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          DOM.themeToggle.style.transform = '';
+        }, 200);
+      }
+    }
+
+    // Restaurer les préférences
+    function restorePreferences() {
+      // Thème
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.body.classList.add('dark');
+        DOM.themeToggle.textContent = '☀️';
+      }
+      
+      // Année ouverte
+      const savedYear = localStorage.getItem('openYear');
+      if (savedYear) {
+        state.openYear = savedYear;
+      }
+    }
+
+    // Optimisations spécifiques pour mobile
+    function optimizeForMobile() {
+      // Détecter si c'est un appareil mobile
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        // Ajouter une classe pour le style mobile
+        document.body.classList.add('is-mobile');
+        
+        // Optimiser le rendu initial pour mobile
+        setTimeout(() => {
+          // Forcer un repaint pour éviter les problèmes de rendu
+          document.body.style.opacity = '0.99';
+          setTimeout(() => {
+            document.body.style.opacity = '';
+          }, 10);
+        }, 100);
+      }
+    }
+
+    // Échapper le HTML (sécurité)
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Gestionnaire pour le redimensionnement
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        // Réajuster les hauteurs des panels ouverts
+        document.querySelectorAll('.year-header.open').forEach(header => {
+          const panel = header.nextElementSibling;
+          if (panel) {
+            panel.style.maxHeight = panel.scrollHeight + 'px';
+          }
+        });
+      }, 250);
+    });
+
+    // Initialiser l'application
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>
