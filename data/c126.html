@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Diagnostic Image GitHub</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    background: #f5f5f5;
+}
+
+h1 {
+    margin-bottom: 10px;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+img {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 8px;
+    border: 2px solid #333;
+    margin-top: 15px;
+}
+
+#log {
+    margin-top: 20px;
+    text-align: left;
+    background: #111;
+    color: #eee;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.success { color: #00e676; }
+.error { color: #ff5252; }
+.info { color: #40c4ff; }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Test Image GitHub</h1>
+
+    <p>Diagnostic complet de chargement image</p>
+
+    <img id="test-img" alt="Image GitHub">
+
+    <div id="log">Logs :</div>
+</div>
+
+<script>
+
+// ===== CONFIGURATION IMAGE =====
+const imageUrl = "https://github.com/marocnetmail/125/blob/main/images/img05/20260206160404000.jpg?raw=true";
+
+const img = document.getElementById("test-img");
+const logDiv = document.getElementById("log");
+
+// ===== Fonction Log =====
+function log(message, type="info") {
+    console.log(message);
+    const p = document.createElement("div");
+    p.textContent = message;
+    p.className = type;
+    logDiv.appendChild(p);
+}
+
+// ===== Chargement Image =====
+img.onload = function() {
+    log("✅ Image chargée correctement", "success");
+};
+
+img.onerror = function() {
+    log("❌ Erreur affichage image", "error");
+};
+
+// ===== Test HTTP =====
+fetch(imageUrl)
+.then(response => {
+    log("Status HTTP: " + response.status, "info");
+
+    if(response.ok){
+        log("✅ Le fichier existe sur GitHub", "success");
+    } else {
+        log("❌ Fichier introuvable (404 ou autre)", "error");
+    }
+})
+.catch(error => {
+    log("❌ Erreur réseau ou CORS", "error");
+});
+
+// ===== Affecter la source après test =====
+img.src = imageUrl;
+
+</script>
+
+</body>
+</html>
