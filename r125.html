@@ -2,1401 +2,1075 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<!-- META TAGS CRUCIAUX POUR MOBILE -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<meta name="theme-color" content="#001122">
+<meta name="theme-color" content="#0f172a">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="format-detection" content="telephone=no">
-<meta name="description" content="مراجعة الصحافة الأسبوعية">
+<meta name="description" content="مراجعة الصحافة الأسبوعية - جميع المقالات">
 <title>مراجعة الصحافة الأسبوعية</title>
 <link rel="icon" type="image/png" href="images1/00011.png">
-<!-- Bibliothèque html2pdf -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<!-- Police arabe optimisée -->
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
-/* ===== CSS RESET OPTIMISÉ POUR MOBILE ===== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
+
 :root {
-  --primary: #1a73e8;
-  --primary-dark: #0d5cb6;
-  --background: #001122;
-  --card-bg: #001a44;
-  --text: #ffffff;
-  --text-secondary: #cccccc;
-  --accent-1: #FF6B6B;
-  --accent-2: #4ECDC4;
-  --accent-3: #FFD166;
-  --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  --radius: 8px;
-  --transition: all 0.3s ease;
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
+  --secondary: #06b6d4;
+  --accent: #f59e0b;
+  --success: #10b981;
+  --danger: #ef4444;
+  --background: #0f172a;
+  --surface: #1e293b;
+  --surface-light: #334155;
+  --text: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: rgba(148, 163, 184, 0.1);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-/* ===== BASE STYLES ===== */
+
 html {
   font-size: 16px;
-  -webkit-text-size-adjust: 100%;
-  -moz-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
-  text-size-adjust: 100%;
+  scroll-behavior: smooth;
 }
+
 body {
-  font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, sans-serif;
   background: var(--background);
   color: var(--text);
-  line-height: 1.4;
-  overflow-x: hidden;
+  line-height: 1.6;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  padding: 0;
-  margin: 0;
 }
-/* ===== HEADER OPTIMISÉ POUR MOBILE ===== */
+
+/* Header */
 .app-header {
-  background: #001122;
-  padding: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, var(--surface) 0%, var(--background) 100%);
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 100;
-  width: 100%;
+  backdrop-filter: blur(10px);
 }
+
 .main-title {
-  font-size: 1.5rem;
-  font-weight: 900;
-  color: white;
-  line-height: 1.2;
   text-align: center;
-  margin-bottom: 15px;
-  padding: 0 5px;
+  margin-bottom: 20px;
 }
+
 .main-title img {
   max-width: 100%;
   height: auto;
-  display: block;
-  margin: 0 auto;
+  max-height: 60px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
-/* ===== FILTRES MOBILE ===== */
-.filters-container {
+
+/* Stats Bar */
+.stats-bar {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 10px;
 }
-.search-container {
-  width: 100%;
-}
-.search-wrapper {
+
+.stats-item {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 5px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-.search-icon {
-  padding: 0 10px;
-  color: var(--text-secondary);
-}
-#search-input {
-  flex: 1;
-  padding: 12px 10px 12px 0;
-  background: transparent;
-  border: none;
-  color: var(--text);
-  font-size: 16px;
-  outline: none;
-  font-family: inherit;
-  text-align: right;
-  direction: rtl;
-  width: 100%;
-}
-#search-input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-}
-.clear-search {
-  padding: 0 10px;
-  color: var(--text-secondary);
-  font-size: 1.1rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-/* ===== DATE FILTERS MOBILE ===== */
-.date-filters {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.date-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.date-label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--accent-3);
-  min-width: 60px;
-}
-.date-input-wrapper {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-.date-input {
-  width: 100%;
-  padding: 12px;
-  background: transparent;
-  border: none;
-  color: var(--text);
-  font-size: 16px;
-  outline: none;
-  text-align: right;
-  direction: rtl;
-}
-/* ===== BOUTONS PÉRIODE ===== */
-.period-presets {
-  display: flex;
   gap: 8px;
-  margin-bottom: 10px;
-  overflow-x: auto;
-  padding-bottom: 5px;
-  -webkit-overflow-scrolling: touch;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
 }
-.preset-btn {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 12px 15px;
-  border-radius: 8px;
+
+.stats-value {
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  white-space: nowrap;
-  min-width: 100px;
-  text-align: center;
-}
-.preset-btn.active {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: white;
-}
-/* ===== BOUTONS ACTION ===== */
-.action-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-.clear-filters-btn, .download-pdf-btn {
-  flex: 1;
-  padding: 14px 10px;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
+  transition: var(--transition);
   border: none;
-  cursor: pointer;
-  text-align: center;
+  outline: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px -1px rgba(59, 130, 246, 0.4);
+}
+
+.btn-secondary {
+  background: var(--surface-light);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--primary);
   color: white;
 }
-.clear-filters-btn {
-  background: linear-gradient(135deg, var(--accent-1), #ff5252);
-}
-.download-pdf-btn {
-  background: linear-gradient(135deg, #4CAF50, #2E7D32);
-}
-.download-pdf-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-/* ===== LOADING ===== */
-#loading-indicator {
-  text-align: center;
-  padding: 40px 15px;
-  color: var(--text-secondary);
-}
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  margin: 0 auto 15px;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-/* ===== ARTICLES CONTAINER ===== */
-#articles-container {
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  max-width: 100%;
+
+/* Articles Grid */
+.articles-wrapper {
+  padding: 20px;
+  max-width: 1400px;
   margin: 0 auto;
 }
-/* ===== ARTICLE CARD MOBILE ===== */
+
+.articles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .articles-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* Article Card */
 .article-card {
-  background: var(--card-bg);
-  border-radius: 10px;
+  background: var(--surface);
+  border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: var(--transition);
   cursor: pointer;
-  animation: fadeIn 0.3s ease;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+
+.article-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary);
 }
-.article-image-container {
+
+.article-image-wrapper {
   position: relative;
   width: 100%;
-  height: 200px;
-  background: linear-gradient(45deg, #000428, #004e92);
+  height: 220px;
   overflow: hidden;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
 }
+
 .article-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
+  transition: transform 0.3s ease;
 }
-/* ===== TITRE ARTICLE ===== */
-.title-overlay {
+
+.article-card:hover .article-image {
+  transform: scale(1.05);
+}
+
+.image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  font-size: 3rem;
+}
+
+/* Badges */
+.badges {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 15px;
-  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-}
-.article-main-title {
-  font-size: 1.3rem;
-  font-weight: 900;
-  color: white;
-  line-height: 1.3;
-  margin-bottom: 5px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-}
-.article-source {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--accent-2);
-}
-/* ===== BADGES ===== */
-.metadata-badges {
-  position: absolute;
-  top: 10px;
-  left: 0;
-  width: 100%;
+  top: 12px;
+  right: 12px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 0 10px;
 }
-.metadata-badge {
-  padding: 8px 12px;
-  font-size: 0.8rem;
-  font-weight: 800;
+
+.badge {
+  padding: 6px 12px;
   border-radius: 20px;
-  backdrop-filter: blur(5px);
+  font-size: 0.75rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
   gap: 6px;
-  max-width: fit-content;
+  backdrop-filter: blur(8px);
 }
-.date-badge {
-  background: rgba(255, 107, 107, 0.9);
+
+.badge-date {
+  background: rgba(239, 68, 68, 0.9);
   color: white;
-  align-self: flex-end;
 }
-.category-badge {
-  background: rgba(78, 205, 196, 0.9);
+
+.badge-theme {
+  background: rgba(6, 182, 212, 0.9);
   color: white;
-  align-self: flex-end;
 }
-/* ===== LOGO MÉDIA ===== */
-.media-logo-container {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  width: 50px;
-  height: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
+
+.badge-lang {
+  background: rgba(245, 158, 11, 0.9);
+  color: white;
+  text-transform: uppercase;
 }
-.media-logo {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-/* ===== TEMPS ÉCOULÉ ===== */
+
 .time-ago {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 5px 10px;
-  background: rgba(0,0,0,0.7);
-  color: rgba(255,255,255,0.9);
+  top: 12px;
+  left: 12px;
+  padding: 6px 12px;
+  background: rgba(15, 23, 42, 0.8);
+  color: var(--text-secondary);
   font-size: 0.75rem;
   font-weight: 600;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
 }
-/* ===== PAGINATION MOBILE ===== */
-.pagination-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 15px 10px;
-  gap: 5px;
-  margin-top: 15px;
-  flex-wrap: wrap;
-}
-.pagination-btn {
-  background: rgba(255,255,255,0.1);
-  color: var(--text);
-  border: 1px solid rgba(255,255,255,0.2);
-  padding: 10px 12px;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  min-width: 40px;
-  min-height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.pagination-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-.pagination-numbers {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.pagination-number {
-  background: rgba(255,255,255,0.1);
-  color: var(--text);
-  border: 1px solid rgba(255,255,255,0.2);
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-.pagination-number.active {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: white;
-}
-.pagination-info {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  width: 100%;
-  text-align: center;
-  margin-top: 8px;
-}
-/* ===== OVERLAY ARTICLE MOBILE ===== */
-#article-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.98);
-  z-index: 1000;
-}
-.overlay-container {
-  width: 100%;
-  height: 100%;
+
+/* Article Content */
+.article-content {
+  padding: 20px;
+  flex: 1;
   display: flex;
   flex-direction: column;
 }
-.overlay-header-extended {
-  padding: 15px;
-  background: rgba(0,26,68,0.95);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  flex-shrink: 0;
-}
-.overlay-header-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-.overlay-title {
-  font-size: 1.3rem;
-  font-weight: 900;
-  color: white;
-  flex: 1;
-  line-height: 1.3;
+
+.article-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.5;
+  margin-bottom: 12px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.close-overlay {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--accent-1);
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-/* ===== CONTENU ARTICLE ===== */
-.overlay-content {
-  flex: 1;
+
+.article-meta {
   display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-.article-frame-container {
-  flex: 1;
-  position: relative;
-  background: white;
-}
-#article-frame {
-  width: 100%;
-  height: 100%;
-  border: none;
-  display: block;
-}
-/* ===== STATS BAR ===== */
-.stats-bar {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 10px;
-  background: rgba(0,26,68,0.5);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
   font-size: 0.85rem;
   color: var(--text-secondary);
 }
-.results-count {
-  font-weight: 600;
-  color: var(--accent-2);
-}
-.active-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.filter-tag {
-  background: rgba(255,255,255,0.1);
-  padding: 6px 10px;
-  border-radius: 12px;
-  font-size: 0.8rem;
+
+.meta-item {
   display: flex;
   align-items: center;
   gap: 6px;
 }
-/* ===== BOUTON SCROLL TOP ===== */
+
+.meta-item.source {
+  color: var(--secondary);
+  font-weight: 600;
+}
+
+/* Keywords */
+.keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.keyword {
+  padding: 4px 10px;
+  background: var(--surface-light);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  border-radius: 12px;
+  transition: var(--transition);
+}
+
+.keyword:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* Sentiment */
+.sentiment {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.sentiment-positive {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success);
+}
+
+.sentiment-negative {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--danger);
+}
+
+.sentiment-neutral {
+  background: rgba(148, 163, 184, 0.2);
+  color: var(--text-secondary);
+}
+
+/* Loading */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid var(--surface-light);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error State */
+.error-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+}
+
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+/* Overlay */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.95);
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+.overlay.active {
+  display: flex;
+  flex-direction: column;
+}
+
+.overlay-header {
+  padding: 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.overlay-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+  flex: 1;
+  line-height: 1.4;
+}
+
+.overlay-close {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--danger);
+  color: white;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.overlay-close:hover {
+  transform: rotate(90deg);
+  background: #dc2626;
+}
+
+.overlay-body {
+  flex: 1;
+  overflow: hidden;
+  background: white;
+}
+
+.overlay-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Scroll Top */
 .scroll-top {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 24px;
+  right: 24px;
   width: 50px;
   height: 50px;
   border-radius: 50%;
   background: var(--primary);
   color: white;
   border: none;
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   cursor: pointer;
-  display: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+  box-shadow: var(--shadow-lg);
   z-index: 99;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-}
-/* ===== MESSAGES D'ERREUR ===== */
-.no-results, .error-state {
-  text-align: center;
-  padding: 40px 15px;
-  color: var(--text-secondary);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 250px;
 }
-.no-results-icon, .error-icon {
-  font-size: 3rem;
-  margin-bottom: 20px;
-  opacity: 0.5;
+
+.scroll-top.visible {
+  opacity: 1;
+  visibility: visible;
 }
-.clear-search-btn, .retry-button {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 14px 24px;
-  border-radius: 24px;
-  cursor: pointer;
-  margin-top: 20px;
-  font-size: 1rem;
-  font-weight: 600;
+
+.scroll-top:hover {
+  transform: translateY(-4px);
+  background: var(--primary-dark);
 }
-/* ===== MEDIA QUERIES ===== */
-/* Tablette */
-@media (min-width: 481px) {
-  .main-title {
-    font-size: 1.8rem;
-  }
-  .article-image-container {
-    height: 220px;
-  }
-  .article-main-title {
-    font-size: 1.5rem;
-  }
-  .metadata-badges {
-    flex-direction: row;
-    justify-content: space-between;
-  }
-  .date-badge, .category-badge {
-    align-self: auto;
-  }
-  .date-filters {
-    flex-direction: row;
-    align-items: center;
-  }
-  .period-presets {
-    justify-content: center;
-  }
-}
-/* Desktop */
-@media (min-width: 769px) {
-  .main-title {
-    font-size: 2rem;
-  }
-  .article-image-container {
-    height: 250px;
-  }
-  .article-main-title {
-    font-size: 1.8rem;
-  }
-  #articles-container {
-    max-width: 800px;
-  }
-  .overlay-container {
-    max-width: 900px;
-    margin: 20px auto;
-    height: calc(100vh - 40px);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-}
-/* Large Desktop */
-@media (min-width: 1025px) {
-  .article-image-container {
-    height: 280px;
-  }
-  .article-main-title {
-    font-size: 2rem;
-  }
-}
-/* Support tactile */
-@media (hover: none) and (pointer: coarse) {
-  .article-card:active {
-    transform: scale(0.98);
-  }
-  .clear-filters-btn:active,
-  .download-pdf-btn:active,
-  .preset-btn:active,
-  .pagination-btn:active,
-  .pagination-number:active {
-    transform: scale(0.95);
-  }
-}
-/* Print */
+
+/* Print Styles */
 @media print {
-  .app-header,
-  .filters-container,
-  .scroll-top,
-  .close-overlay,
-  .pagination-container,
-  .period-presets,
-  .download-pdf-btn,
-  .stats-bar {
+  .app-header, .stats-bar, .scroll-top, .overlay, .controls {
     display: none !important;
   }
+  
   body {
     background: white;
     color: black;
   }
-  #articles-container {
+  
+  .articles-grid {
     display: block;
-    padding: 0;
   }
+  
   .article-card {
     break-inside: avoid;
     margin-bottom: 20px;
+    page-break-inside: avoid;
     box-shadow: none;
     border: 1px solid #ddd;
   }
+}
+
+/* Mobile Optimizations */
+@media (max-width: 480px) {
+  .app-header {
+    padding: 15px;
+  }
+  
+  .stats-bar {
+    padding: 12px 15px;
+    font-size: 0.85rem;
+  }
+  
+  .articles-wrapper {
+    padding: 12px;
+  }
+  
+  .article-image-wrapper {
+    height: 180px;
+  }
+  
+  .article-content {
+    padding: 15px;
+  }
+  
+  .article-title {
+    font-size: 1rem;
+  }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.article-card {
+  animation: fadeInUp 0.4s ease forwards;
 }
 </style>
 </head>
 <body>
 <header class="app-header">
-  <div class="title-search-container">
-    <h1 class="main-title"><img src="images/title.png" alt="مراجعة الصحافة الأسبوعية"></h1>
-   
-    <div class="filters-container">
-      <div class="search-container">
-        <div class="search-wrapper">
-          <div class="search-icon">🔍</div>
-          <input type="text" id="search-input" placeholder="بحث في المقالات..." autocomplete="off" spellcheck="false" enterkeyhint="search">
-          <button class="clear-search" id="clear-search" aria-label="مسح البحث">✕</button>
-        </div>
-      </div>
-     
-      <div class="date-filters">
-        <div class="date-group">
-          <span class="date-label">بداية:</span>
-          <div class="date-input-wrapper">
-            <input type="date" id="start-date" class="date-input" aria-label="تاريخ البداية">
-          </div>
-        </div>
-     
-        <div class="date-group">
-          <span class="date-label">نهاية:</span>
-          <div class="date-input-wrapper">
-            <input type="date" id="end-date" class="date-input" aria-label="تاريخ النهاية">
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="main-title">
+    <img src="images/title.png" alt="مراجعة الصحافة الأسبوعية">
+  </div>
   
-    <div class="period-presets">
-      <button class="preset-btn active" data-period="week">أسبوعي</button>
-      <button class="preset-btn" data-period="biweekly">نصف شهري</button>
-      <button class="preset-btn" data-period="month">شهري</button>
-    </div>
-  
-    <div class="action-buttons">
-      <button class="clear-filters-btn" id="clear-filters">
-        <span>🗑️</span>
-        <span>مسح الكل</span>
-      </button>
-      <button class="download-pdf-btn" id="download-pdf-btn">
-        <span>📄</span>
-        <span>تحميل PDF</span>
-      </button>
-    </div>
+  <div class="controls">
+    <button class="btn btn-primary" id="download-pdf">
+      <span>📄</span>
+      <span>تحميل PDF</span>
+    </button>
+    <button class="btn btn-secondary" id="refresh-data">
+      <span>🔄</span>
+      <span>تحديث</span>
+    </button>
   </div>
 </header>
 
-<div class="stats-bar" id="stats-bar" style="display: none;">
-  <div class="results-count" id="results-count">0 مقال</div>
-  <div class="active-filters" id="active-filters"></div>
+<div class="stats-bar">
+  <div class="stats-item">
+    <span>📊</span>
+    <span>إجمالي المقالات:</span>
+    <span class="stats-value" id="total-count">0</span>
+  </div>
+  <div class="stats-item">
+    <span>📅</span>
+    <span>آخر تحديث:</span>
+    <span class="stats-value" id="last-update">--</span>
+  </div>
 </div>
 
-<main id="articles-container">
-  <div id="loading-indicator">
-    <div class="loading-spinner"></div>
+<main class="articles-wrapper">
+  <div id="loading" class="loading-container">
+    <div class="spinner"></div>
     <p>جاري تحميل المقالات...</p>
+  </div>
+  
+  <div id="articles-container" class="articles-grid" style="display: none;"></div>
+  
+  <div id="error" class="error-state" style="display: none;">
+    <div class="error-icon">⚠️</div>
+    <h3>حدث خطأ</h3>
+    <p id="error-message">تعذر تحميل البيانات</p>
+    <button class="btn btn-primary" onclick="loadArticles()" style="margin-top: 20px;">
+      إعادة المحاولة
+    </button>
   </div>
 </main>
 
-<div class="pagination-container" id="pagination-container" style="display: none;">
-  <button class="pagination-btn" id="first-btn" title="الصفحة الأولى">««</button>
-  <button class="pagination-btn" id="prev-btn" title="الصفحة السابقة">‹</button>
+<button class="scroll-top" id="scroll-top">↑</button>
 
-  <div class="pagination-numbers" id="pagination-numbers"></div>
-
-  <button class="pagination-btn" id="next-btn" title="الصفحة التالية">›</button>
-  <button class="pagination-btn" id="last-btn" title="الصفحة الأخيرة">»»</button>
-
-  <div class="pagination-info" id="pagination-info">الصفحة 1 من 1</div>
-</div>
-
-<button class="scroll-top" id="scroll-top" aria-label="العودة للأعلى">↑</button>
-
-<div id="article-overlay">
-  <div class="overlay-container">
-    <div class="overlay-header-extended">
-      <div class="overlay-header-top">
-        <div class="overlay-title" id="overlay-article-title"></div>
-        <button class="close-overlay" id="close-overlay" aria-label="إغلاق">×</button>
-      </div>
-    </div>
-    <div class="overlay-content">
-      <div class="article-frame-container">
-        <iframe id="article-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" title="محتوى المقال"></iframe>
-      </div>
-    </div>
+<div class="overlay" id="overlay">
+  <div class="overlay-header">
+    <div class="overlay-title" id="overlay-title"></div>
+    <button class="overlay-close" id="overlay-close">×</button>
+  </div>
+  <div class="overlay-body">
+    <iframe class="overlay-frame" id="overlay-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
   </div>
 </div>
 
-<div id="pdf-temp-container"></div>
+<div id="pdf-container" style="display: none;"></div>
 
 <script>
-// ===== CONFIGURATION =====
+// Configuration
 const CONFIG = {
-  jsonUrl: 'data/data_fusionnee.json?t=' + Date.now(),
-  logosUrl: 'data/logo_media.json?t=' + Date.now(),
-  maxArticles: 1000,
-  // Configuration GitHub pour les images - adaptée à votre structure
-  githubBaseUrl: 'https://github.com/marocnetmail/125/blob/main/',
-  githubRawSuffix: '?raw=true',
-  // Chemin vers le dossier des images (à adapter selon votre structure)
-  imagesFolder: 'images/img05/',
-  debounceDelay: 300,
-  articlesPerPage: 10
+  dataUrl: 'data/data_fusionnee.json?t=' + Date.now(),
+  githubBase: 'https://github.com/marocnetmail/125/blob/main/',
+  imagesPath: 'images/img05/',
+  rawSuffix: '?raw=true'
 };
 
-// ===== STATE =====
-let appState = {
-  articles: [],
-  filteredArticles: [],
-  searchQuery: '',
-  startDate: null,
-  endDate: null,
-  isLoading: true,
-  currentPage: 1,
-  activePeriod: 'week'
-};
+// State
+let articles = [];
+let currentArticle = null;
 
-let mediaLogos = [];
-
-// ===== ELEMENTS =====
+// Elements
 const elements = {
-  searchInput: document.getElementById('search-input'),
-  clearSearch: document.getElementById('clear-search'),
-  startDate: document.getElementById('start-date'),
-  endDate: document.getElementById('end-date'),
-  clearFilters: document.getElementById('clear-filters'),
-  articlesContainer: document.getElementById('articles-container'),
-  articleOverlay: document.getElementById('article-overlay'),
-  closeOverlay: document.getElementById('close-overlay'),
-  articleFrame: document.getElementById('article-frame'),
-  overlayArticleTitle: document.getElementById('overlay-article-title'),
-  loadingIndicator: document.getElementById('loading-indicator'),
+  loading: document.getElementById('loading'),
+  container: document.getElementById('articles-container'),
+  error: document.getElementById('error'),
+  errorMessage: document.getElementById('error-message'),
+  totalCount: document.getElementById('total-count'),
+  lastUpdate: document.getElementById('last-update'),
   scrollTop: document.getElementById('scroll-top'),
-  statsBar: document.getElementById('stats-bar'),
-  resultsCount: document.getElementById('results-count'),
-  activeFilters: document.getElementById('active-filters'),
-  paginationContainer: document.getElementById('pagination-container'),
-  firstBtn: document.getElementById('first-btn'),
-  prevBtn: document.getElementById('prev-btn'),
-  nextBtn: document.getElementById('next-btn'),
-  lastBtn: document.getElementById('last-btn'),
-  paginationNumbers: document.getElementById('pagination-numbers'),
-  paginationInfo: document.getElementById('pagination-info'),
-  periodPresets: document.querySelectorAll('.preset-btn'),
-  downloadPdfBtn: document.getElementById('download-pdf-btn'),
-  pdfTempContainer: document.getElementById('pdf-temp-container')
+  overlay: document.getElementById('overlay'),
+  overlayTitle: document.getElementById('overlay-title'),
+  overlayFrame: document.getElementById('overlay-frame'),
+  overlayClose: document.getElementById('overlay-close'),
+  downloadBtn: document.getElementById('download-pdf'),
+  refreshBtn: document.getElementById('refresh-data'),
+  pdfContainer: document.getElementById('pdf-container')
 };
 
-// ===== INITIALIZATION =====
-async function initApp() {
-  setupEventListeners();
-  await loadMediaLogos();
-  setupPeriodPresets();
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
   loadArticles();
-}
+  setupEventListeners();
+});
 
-async function loadMediaLogos() {
-  try {
-    const response = await fetch(CONFIG.logosUrl);
-    if (response.ok) {
-      mediaLogos = await response.json();
-    }
-  } catch (error) {
-    console.log('Impossible de charger les logos');
-  }
-}
-
-function setupPeriodPresets() {
-  setPeriod('week');
-
-  elements.periodPresets.forEach(btn => {
-    btn.addEventListener('click', function() {
-      const period = this.getAttribute('data-period');
-      setPeriod(period);
-    });
-  });
-}
-
-function setPeriod(period) {
-  const today = new Date();
-  const startDate = new Date();
-
-  elements.endDate.value = today.toISOString().split('T')[0];
-
-  switch(period) {
-    case 'week':
-      startDate.setDate(today.getDate() - 7);
-      break;
-    case 'biweekly':
-      startDate.setDate(today.getDate() - 15);
-      break;
-    case 'month':
-      startDate.setDate(today.getDate() - 30);
-      break;
-  }
-
-  elements.startDate.value = startDate.toISOString().split('T')[0];
-
-  appState.startDate = elements.startDate.value;
-  appState.endDate = elements.endDate.value;
-  appState.activePeriod = period;
-  appState.currentPage = 1;
-
-  elements.periodPresets.forEach(btn => {
-    btn.classList.remove('active');
-    if (btn.getAttribute('data-period') === period) {
-      btn.classList.add('active');
-    }
-  });
-
-  filterArticles();
-}
-
-// ===== EVENT LISTENERS =====
 function setupEventListeners() {
-  elements.searchInput.addEventListener('input', function(e) {
-    appState.searchQuery = e.target.value;
-    elements.clearSearch.style.display = appState.searchQuery ? 'flex' : 'none';
-    debounce(filterArticles, CONFIG.debounceDelay)();
+  // Scroll to top
+  window.addEventListener('scroll', () => {
+    elements.scrollTop.classList.toggle('visible', window.scrollY > 400);
   });
-
-  elements.clearSearch.addEventListener('click', () => {
-    elements.searchInput.value = '';
-    appState.searchQuery = '';
-    elements.clearSearch.style.display = 'none';
-    filterArticles();
-  });
-
-  elements.startDate.addEventListener('change', function() {
-    appState.startDate = this.value;
-    appState.activePeriod = 'custom';
-    updatePeriodButtons();
-    filterArticles();
-  });
-
-  elements.endDate.addEventListener('change', function() {
-    appState.endDate = this.value;
-    appState.activePeriod = 'custom';
-    updatePeriodButtons();
-    filterArticles();
-  });
-
-  elements.clearFilters.addEventListener('click', () => {
-    elements.searchInput.value = '';
-    appState.searchQuery = '';
-    elements.clearSearch.style.display = 'none';
-    setPeriod('week');
-  });
-
-  elements.closeOverlay.addEventListener('click', closeArticleOverlay);
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeArticleOverlay();
-  });
-
+  
   elements.scrollTop.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
-
-  window.addEventListener('scroll', () => {
-    elements.scrollTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+  
+  // Overlay
+  elements.overlayClose.addEventListener('click', closeOverlay);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeOverlay();
   });
-
-  elements.firstBtn.addEventListener('click', () => goToPage(1));
-  elements.prevBtn.addEventListener('click', () => goToPage(appState.currentPage - 1));
-  elements.nextBtn.addEventListener('click', () => goToPage(appState.currentPage + 1));
-  elements.lastBtn.addEventListener('click', () => goToPage(getTotalPages()));
-
-  elements.downloadPdfBtn.addEventListener('click', generatePDF);
   
-  // Support tactile
-  document.addEventListener('touchstart', function() {}, {passive: true});
+  // Buttons
+  elements.downloadBtn.addEventListener('click', generatePDF);
+  elements.refreshBtn.addEventListener('click', loadArticles);
 }
 
-function updatePeriodButtons() {
-  elements.periodPresets.forEach(btn => {
-    btn.classList.remove('active');
-  });
-}
-
-// ===== DATE FUNCTIONS =====
-function parseArticleDate(dateString) {
-  if (!dateString) return null;
-  try {
-    // Format ISO: 2026-01-25T15:58:00.000Z
-    const date = new Date(dateString);
-    return isNaN(date.getTime()) ? null : date;
-  } catch (e) {
-    return null;
-  }
-}
-
-function formatDateToDDMMYYYY(dateString) {
-  if (!dateString) return '';
-  try {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) return '';
-    
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    
-    return `${day}/${month}/${year}`;
-  } catch (e) {
-    return dateString || '';
-  }
-}
-
-function getTimeAgo(dateString) {
-  if (!dateString) return '';
-  try {
-    const articleDate = new Date(dateString);
-    if (isNaN(articleDate.getTime())) return '';
-    
-    const now = new Date();
-    const diffMs = now - articleDate;
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 0) return 'اليوم';
-    if (diffDays === 1) return 'أمس';
-    if (diffDays < 7) return `منذ ${diffDays} أيام`;
-    if (diffDays < 30) {
-      const weeks = Math.floor(diffDays / 7);
-      return `منذ ${weeks} أسبوع${weeks > 1 ? 'ين' : ''}`;
-    }
-    return formatDateToDDMMYYYY(dateString);
-  } catch (e) {
-    return '';
-  }
-}
-
-function isDateInRange(articleDateStr, startDate, endDate) {
-  if (!articleDateStr) return false;
-  
-  const articleDate = parseArticleDate(articleDateStr);
-  if (!articleDate) return false;
-  
-  if (!startDate && !endDate) return true;
-  
-  // Réinitialiser les heures pour comparaison date seule
-  const articleDateOnly = new Date(articleDate.getFullYear(), articleDate.getMonth(), articleDate.getDate());
-  
-  if (startDate) {
-    const start = new Date(startDate);
-    start.setHours(0, 0, 0, 0);
-    if (articleDateOnly < start) return false;
-  }
-  
-  if (endDate) {
-    const end = new Date(endDate);
-    end.setHours(23, 59, 59, 999);
-    if (articleDateOnly > end) return false;
-  }
-  
-  return true;
-}
-
-// ===== PAGINATION =====
-function getTotalPages() {
-  return Math.ceil(appState.filteredArticles.length / CONFIG.articlesPerPage);
-}
-
-function getCurrentPageArticles() {
-  const startIndex = (appState.currentPage - 1) * CONFIG.articlesPerPage;
-  const endIndex = startIndex + CONFIG.articlesPerPage;
-  return appState.filteredArticles.slice(startIndex, endIndex);
-}
-
-function goToPage(page) {
-  const totalPages = getTotalPages();
-  if (page < 1 || page > totalPages) return;
-  
-  appState.currentPage = page;
-  displayArticles();
-  updatePagination();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function updatePagination() {
-  const totalPages = getTotalPages();
-  const currentPage = appState.currentPage;
-  
-  if (totalPages <= 1) {
-    elements.paginationContainer.style.display = 'none';
-    return;
-  }
-  
-  elements.paginationContainer.style.display = 'flex';
-  
-  elements.firstBtn.disabled = currentPage === 1;
-  elements.prevBtn.disabled = currentPage === 1;
-  elements.nextBtn.disabled = currentPage === totalPages;
-  elements.lastBtn.disabled = currentPage === totalPages;
-  
-  elements.paginationInfo.textContent = `الصفحة ${currentPage} من ${totalPages}`;
-  
-  elements.paginationNumbers.innerHTML = '';
-  
-  let startPage = Math.max(1, currentPage - 2);
-  let endPage = Math.min(totalPages, startPage + 4);
-  
-  if (endPage - startPage < 4) {
-    startPage = Math.max(1, endPage - 4);
-  }
-  
-  for (let i = startPage; i <= endPage; i++) {
-    const pageBtn = document.createElement('div');
-    pageBtn.className = `pagination-number ${i === currentPage ? 'active' : ''}`;
-    pageBtn.textContent = i;
-    pageBtn.addEventListener('click', () => goToPage(i));
-    elements.paginationNumbers.appendChild(pageBtn);
-  }
-}
-
-// ===== IMAGE & LOGO FUNCTIONS - NOUVELLE MÉTHODE GITHUB =====
-function getArticleImageUrl(article) {
-  // Nouvelle méthode : construire l'URL GitHub à partir du nom de fichier
-  if (article.image_brute) {
-    // Si c'est déjà une URL complète, la retourner telle quelle
-    if (article.image_brute.startsWith('http')) {
-      return article.image_brute;
-    }
-    
-    // Construire l'URL GitHub avec le dossier images configuré
-    // Format: https://github.com/marocnetmail/125/blob/main/images/img05/2026012515582600-image-brute.jpg?raw=true
-    const imageFileName = article.image_brute.startsWith('/') ? article.image_brute.substring(1) : article.image_brute;
-    return `${CONFIG.githubBaseUrl}${CONFIG.imagesFolder}${imageFileName}${CONFIG.githubRawSuffix}`;
-  }
-  return null;
-}
-
-function getMediaLogoUrl(source) {
-  if (!source || mediaLogos.length === 0) return null;
-  
-  const media = mediaLogos.find(item =>
-    item.domaine && source && (
-      item.domaine.toLowerCase() === source.toLowerCase() ||
-      source.toLowerCase().includes(item.domaine.toLowerCase())
-    )
-  );
-  
-  return media ? media.url : null;
-}
-
-function createImageElement(imageUrl, title) {
-  if (!imageUrl) {
-    return '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.7);">صورة غير متوفرة</div>';
-  }
-  
-  return `<img src="${imageUrl}" alt="${title || 'صورة المقال'}" class="article-image" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.7);\\'>صورة غير متوفرة</div>';">`;
-}
-
-function createMediaLogoElement(source) {
-  const logoUrl = getMediaLogoUrl(source);
-  if (!logoUrl) return '';
-  
-  return `<div class="media-logo-container"><img src="${logoUrl}" alt="شعار ${source}" class="media-logo" loading="lazy"></div>`;
-}
-
-// ===== LOAD & PROCESS ARTICLES =====
 async function loadArticles() {
+  showLoading();
+  
   try {
-    showLoading(true);
-    const response = await fetch(CONFIG.jsonUrl);
-    if (!response.ok) throw new Error('HTTP error');
+    const response = await fetch(CONFIG.dataUrl);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    
     const data = await response.json();
-    appState.articles = processArticleData(data);
-    filterArticles();
-  } catch (error) {
-    console.error('Error loading articles:', error);
-    showError('تعذر تحميل المقالات. يرجى المحاولة مرة أخرى.');
-  } finally {
-    showLoading(false);
-  }
-}
-
-function processArticleData(articles) {
-  return articles
-    .filter(a => a.visible === true || a.visible === "true" || a.visible === 1)
-    .sort((a, b) => {
-      try {
-        const dateA = new Date(a.date_heure);
-        const dateB = new Date(b.date_heure);
-        return dateB - dateA; // Plus récent en premier
-      } catch (e) {
-        return 0;
-      }
-    })
-    .slice(0, CONFIG.maxArticles);
-}
-
-function filterArticles() {
-  const query = appState.searchQuery.toLowerCase().trim();
-  const startDate = appState.startDate;
-  const endDate = appState.endDate;
-
-  appState.filteredArticles = appState.articles.filter(article => {
-    let matchesText = true;
-    if (query) {
-      const searchableText = `
-        ${article.titre || ''}
-        ${article.source || ''}
-        ${article.theme || ''}
-        ${article.mots_cles || ''}
-      `.toLowerCase();
-      matchesText = searchableText.includes(query);
+    
+    // Process all articles without filtering
+    articles = data
+      .filter(a => a.visible !== false && a.visible !== "false" && a.visible !== 0)
+      .sort((a, b) => new Date(b.date_heure) - new Date(a.date_heure));
+    
+    if (articles.length === 0) {
+      throw new Error('لا توجد مقالات متاحة');
     }
     
-    const matchesDate = isDateInRange(article.date_heure, startDate, endDate);
-    return matchesText && matchesDate;
-  });
-
-  appState.currentPage = 1;
-  displayArticles();
-  updateStatsBar();
-  updatePagination();
-  elements.downloadPdfBtn.disabled = appState.filteredArticles.length === 0;
-}
-
-function updateStatsBar() {
-  const count = appState.filteredArticles.length;
-  const total = appState.articles.length;
-  
-  elements.resultsCount.textContent = `${count} مقال${count !== 1 ? '' : ''} (${total} المجموع)`;
-  elements.statsBar.style.display = 'flex';
-  updateActiveFilters();
-}
-
-function updateActiveFilters() {
-  elements.activeFilters.innerHTML = '';
-  
-  if (appState.searchQuery) {
-    const filterTag = document.createElement('div');
-    filterTag.className = 'filter-tag';
-    filterTag.innerHTML = `
-      <span>🔍 "${appState.searchQuery}"</span>
-      <button class="remove-filter" onclick="clearSearchFilter()" aria-label="إزالة هذا الفلتر">×</button>
-    `;
-    elements.activeFilters.appendChild(filterTag);
-  }
-  
-  if (appState.startDate || appState.endDate) {
-    const formatFilterDate = (dateStr) => {
-      if (!dateStr) return '';
-      const [year, month, day] = dateStr.split('-');
-      return `${day}/${month}/${year}`;
-    };
+    displayArticles();
+    updateStats();
+    hideLoading();
     
-    const start = appState.startDate ? formatFilterDate(appState.startDate) : 'البداية';
-    const end = appState.endDate ? formatFilterDate(appState.endDate) : 'النهاية';
-    
-    const filterTag = document.createElement('div');
-    filterTag.className = 'filter-tag';
-    filterTag.innerHTML = `
-      <span>📅 ${start} → ${end}</span>
-      <button class="remove-filter" onclick="clearDateFilters()" aria-label="إزالة هذا الفلتر">×</button>
-    `;
-    elements.activeFilters.appendChild(filterTag);
+  } catch (error) {
+    showError(error.message);
   }
-}
-
-function clearSearchFilter() {
-  elements.searchInput.value = '';
-  appState.searchQuery = '';
-  elements.clearSearch.style.display = 'none';
-  filterArticles();
-}
-
-function clearDateFilters() {
-  setPeriod('week');
 }
 
 function displayArticles() {
-  elements.articlesContainer.innerHTML = '';
+  elements.container.innerHTML = '';
   
-  if (appState.filteredArticles.length === 0) {
-    showNoResults();
-    return;
-  }
-  
-  const currentArticles = getCurrentPageArticles();
-  
-  currentArticles.forEach((article, index) => {
+  articles.forEach((article, index) => {
     const card = createArticleCard(article, index);
-    elements.articlesContainer.appendChild(card);
+    elements.container.appendChild(card);
+  });
+  
+  elements.container.style.display = 'grid';
+  
+  // Stagger animation
+  document.querySelectorAll('.article-card').forEach((card, i) => {
+    card.style.animationDelay = `${i * 0.05}s`;
   });
 }
 
 function createArticleCard(article, index) {
-  const card = document.createElement('div');
+  const card = document.createElement('article');
   card.className = 'article-card';
   
-  const imageUrl = getArticleImageUrl(article);
-  const formattedDate = formatDateToDDMMYYYY(article.date_heure);
+  const imageUrl = getImageUrl(article.image_brute);
+  const date = formatDate(article.date_heure);
   const timeAgo = getTimeAgo(article.date_heure);
-  const imageElement = createImageElement(imageUrl, article.titre);
-  const mediaLogoElement = createMediaLogoElement(article.source);
+  const keywords = parseKeywords(article.mots_cles);
+  const sentimentClass = getSentimentClass(article.sentiment);
   
   card.innerHTML = `
-    <div class="article-image-container">
-      ${imageElement}
-      ${mediaLogoElement}
-      <div class="metadata-badges">
-        <div class="metadata-badge date-badge" title="${formattedDate || ''}">
-          <span>📅</span>
-          <span>${formattedDate || 'تاريخ غير معروف'}</span>
-        </div>
-        <div class="metadata-badge category-badge" title="${article.theme || ''}">
-          <span>🏷️</span>
-          <span>${truncateTitle(article.theme || 'غير مصنف', 20)}</span>
-        </div>
+    <div class="article-image-wrapper">
+      ${imageUrl ? 
+        `<img src="${imageUrl}" class="article-image" alt="${article.titre}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'>📰</div>'">` :
+        `<div class="image-placeholder">📰</div>`
+      }
+      
+      <div class="badges">
+        <span class="badge badge-date">📅 ${date}</span>
+        ${article.theme ? `<span class="badge badge-theme">🏷️ ${article.theme}</span>` : ''}
+        ${article.langue ? `<span class="badge badge-lang">${article.langue}</span>` : ''}
       </div>
+      
       ${timeAgo ? `<div class="time-ago">${timeAgo}</div>` : ''}
-      <div class="title-overlay">
-        <h2 class="article-main-title">${truncateTitle(article.titre || 'بدون عنوان', 100)}</h2>
-        <div class="article-source">
-          <span>📰</span>
-          <span>${article.source || 'مصدر غير معروف'}</span>
-        </div>
+    </div>
+    
+    <div class="article-content">
+      <h2 class="article-title">${escapeHtml(article.titre || 'بدون عنوان')}</h2>
+      
+      <div class="article-meta">
+        <span class="meta-item source">📰 ${article.source || 'مصدر غير معروف'}</span>
+        ${article.sentiment ? `
+          <span class="sentiment ${sentimentClass}">
+            ${getSentimentIcon(article.sentiment)} ${article.sentiment}
+          </span>
+        ` : ''}
       </div>
+      
+      ${keywords.length > 0 ? `
+        <div class="keywords">
+          ${keywords.map(k => `<span class="keyword">${escapeHtml(k)}</span>`).join('')}
+        </div>
+      ` : ''}
     </div>
   `;
   
-  card.addEventListener('click', () => {
-    openArticleOverlay(article);
-  });
+  card.addEventListener('click', () => openArticle(article));
   
   return card;
 }
 
-function truncateTitle(title, maxLength = 100) {
-  if (!title || title.length <= maxLength) return title;
-  return title.substring(0, maxLength) + '...';
+function getImageUrl(filename) {
+  if (!filename) return null;
+  if (filename.startsWith('http')) return filename;
+  return `${CONFIG.githubBase}${CONFIG.imagesPath}${filename}${CONFIG.rawSuffix}`;
 }
 
-function openArticleOverlay(article) {
-  elements.overlayArticleTitle.textContent = article.titre || 'المقال';
-  elements.articleFrame.src = article.url || '#';
-  elements.articleOverlay.style.display = 'block';
+function formatDate(dateString) {
+  if (!dateString) return '--';
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return '--';
+  
+  return date.toLocaleDateString('ar-MA', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+}
+
+function getTimeAgo(dateString) {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return '';
+  
+  const now = new Date();
+  const diffMs = now - date;
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  
+  if (diffDays === 0) {
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    if (diffHours === 0) {
+      const diffMins = Math.floor(diffMs / (1000 * 60));
+      return diffMins < 1 ? 'الآن' : `منذ ${diffMins} دقيقة`;
+    }
+    return `منذ ${diffHours} ساعة`;
+  }
+  if (diffDays === 1) return 'أمس';
+  if (diffDays < 7) return `منذ ${diffDays} أيام`;
+  if (diffDays < 30) return `منذ ${Math.floor(diffDays / 7)} أسابيع`;
+  return '';
+}
+
+function parseKeywords(keywordsString) {
+  if (!keywordsString) return [];
+  return keywordsString
+    .split(/[,،]/)
+    .map(k => k.trim())
+    .filter(k => k.length > 0)
+    .slice(0, 5); // Limit to 5 keywords
+}
+
+function getSentimentClass(sentiment) {
+  if (!sentiment) return 'sentiment-neutral';
+  const s = sentiment.toLowerCase();
+  if (s.includes('positif') || s.includes('إيجابي')) return 'sentiment-positive';
+  if (s.includes('negatif') || s.includes('سلبي')) return 'sentiment-negative';
+  return 'sentiment-neutral';
+}
+
+function getSentimentIcon(sentiment) {
+  if (!sentiment) return '⚪';
+  const s = sentiment.toLowerCase();
+  if (s.includes('positif') || s.includes('إيجابي')) return '😊';
+  if (s.includes('negatif') || s.includes('سلبي')) return '😔';
+  return '😐';
+}
+
+function escapeHtml(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function openArticle(article) {
+  currentArticle = article;
+  elements.overlayTitle.textContent = article.titre || 'المقال';
+  elements.overlayFrame.src = article.url || '#';
+  elements.overlay.classList.add('active');
   document.body.style.overflow = 'hidden';
 }
 
-function closeArticleOverlay() {
-  elements.articleOverlay.style.display = 'none';
-  elements.articleFrame.src = '';
+function closeOverlay() {
+  elements.overlay.classList.remove('active');
+  elements.overlayFrame.src = '';
   document.body.style.overflow = '';
+  currentArticle = null;
 }
 
-function showLoading(show) {
-  elements.loadingIndicator.style.display = show ? 'block' : 'none';
+function updateStats() {
+  elements.totalCount.textContent = articles.length.toLocaleString('ar-MA');
+  elements.lastUpdate.textContent = new Date().toLocaleTimeString('ar-MA', {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
 }
 
-function showNoResults() {
-  elements.articlesContainer.innerHTML = `
-    <div class="no-results">
-      <div class="no-results-icon">🔍</div>
-      <h3>لا توجد نتائج</h3>
-      <p>لا توجد مقالات تطابق معايير البحث الخاصة بك</p>
-      <button class="clear-search-btn" onclick="elements.clearFilters.click()">
-        مسح جميع الفلاتر
-      </button>
-    </div>
-  `;
-  elements.statsBar.style.display = 'none';
-  elements.paginationContainer.style.display = 'none';
+function showLoading() {
+  elements.loading.style.display = 'flex';
+  elements.container.style.display = 'none';
+  elements.error.style.display = 'none';
+}
+
+function hideLoading() {
+  elements.loading.style.display = 'none';
 }
 
 function showError(message) {
-  elements.articlesContainer.innerHTML = `
-    <div class="error-state">
-      <div class="error-icon">⚠️</div>
-      <h3>خطأ</h3>
-      <p>${message}</p>
-      <button class="retry-button" onclick="loadArticles()">
-        إعادة المحاولة
-      </button>
-    </div>
-  `;
-  elements.statsBar.style.display = 'none';
-  elements.paginationContainer.style.display = 'none';
+  elements.loading.style.display = 'none';
+  elements.container.style.display = 'none';
+  elements.error.style.display = 'block';
+  elements.errorMessage.textContent = message;
 }
 
-// ===== PDF GENERATION =====
+// PDF Generation
 async function generatePDF() {
+  if (articles.length === 0) {
+    alert('لا توجد مقالات للتصدير');
+    return;
+  }
+  
+  elements.downloadBtn.disabled = true;
+  const originalText = elements.downloadBtn.innerHTML;
+  elements.downloadBtn.innerHTML = '<span>⏳</span><span>جاري التحميل...</span>';
+  
   try {
-    if (appState.filteredArticles.length === 0) {
-      alert('لا توجد مقالات لتحميلها');
-      return;
-    }
+    const content = createPDFContent();
+    elements.pdfContainer.innerHTML = '';
+    elements.pdfContainer.appendChild(content);
+    elements.pdfContainer.style.display = 'block';
     
-    elements.downloadPdfBtn.disabled = true;
-    const originalText = elements.downloadPdfBtn.innerHTML;
-    elements.downloadPdfBtn.innerHTML = '<span>⏳</span><span>جار التوليد...</span>';
-    
-    const pdfContent = createPdfContent();
-    elements.pdfTempContainer.innerHTML = '';
-    elements.pdfTempContainer.appendChild(pdfContent);
-    
-    await waitForImages(pdfContent);
+    await waitForImages(content);
     
     const options = {
-      margin: [10, 10, 10, 10],
+      margin: [15, 15, 15, 15],
       filename: `مراجعة_الصحافة_${new Date().toISOString().split('T')[0]}.pdf`,
-      image: { type: 'jpeg', quality: 0.95 },
+      image: { type: 'jpeg', quality: 0.98 },
       html2canvas: {
         scale: 2,
         useCORS: true,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
+        logging: false
       },
       jsPDF: {
         unit: 'mm',
         format: 'a4',
-        orientation: 'portrait'
+        orientation: 'portrait',
+        compress: true
       }
     };
     
-    await html2pdf().set(options).from(pdfContent).save();
-    
-    elements.pdfTempContainer.innerHTML = '';
-    elements.downloadPdfBtn.disabled = false;
-    elements.downloadPdfBtn.innerHTML = originalText;
+    await html2pdf().set(options).from(content).save();
     
   } catch (error) {
-    console.error('Erreur PDF:', error);
+    console.error('PDF Error:', error);
     alert('حدث خطأ أثناء إنشاء ملف PDF');
-    elements.downloadPdfBtn.disabled = false;
-    elements.downloadPdfBtn.innerHTML = '<span>📄</span><span>تحميل PDF</span>';
-    if (elements.pdfTempContainer) {
-      elements.pdfTempContainer.innerHTML = '';
-    }
+  } finally {
+    elements.pdfContainer.innerHTML = '';
+    elements.pdfContainer.style.display = 'none';
+    elements.downloadBtn.disabled = false;
+    elements.downloadBtn.innerHTML = originalText;
   }
+}
+
+function createPDFContent() {
+  const container = document.createElement('div');
+  container.style.cssText = `
+    font-family: 'Tajawal', sans-serif;
+    direction: rtl;
+    text-align: right;
+    padding: 20px;
+    background: white;
+    color: #1e293b;
+    line-height: 1.6;
+  `;
+  
+  // Header
+  const header = document.createElement('div');
+  header.style.cssText = `
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #3b82f6;
+  `;
+  
+  header.innerHTML = `
+    <h1 style="font-size: 28px; color: #1e293b; margin-bottom: 8px; font-weight: 900;">
+      مراجعة الصحافة الأسبوعية
+    </h1>
+    <p style="font-size: 14px; color: #64748b; margin-bottom: 5px;">
+      Revue de Presse Hebdomadaire
+    </p>
+    <p style="font-size: 12px; color: #94a3b8;">
+      تم إنشاء هذا التقرير بتاريخ: ${new Date().toLocaleDateString('ar-MA')}
+    </p>
+    <p style="font-size: 12px; color: #3b82f6; font-weight: 700; margin-top: 10px;">
+      إجمالي المقالات: ${articles.length}
+    </p>
+  `;
+  
+  container.appendChild(header);
+  
+  // Articles
+  articles.forEach((article, index) => {
+    const articleDiv = document.createElement('div');
+    articleDiv.style.cssText = `
+      margin-bottom: 25px;
+      padding: 20px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: #f8fafc;
+      page-break-inside: avoid;
+    `;
+    
+    const imageUrl = getImageUrl(article.image_brute);
+    const date = formatDate(article.date_heure);
+    const keywords = parseKeywords(article.mots_cles);
+    
+    articleDiv.innerHTML = `
+      <div style="display: flex; gap: 15px; margin-bottom: 15px; ${index % 2 === 1 ? 'flex-direction: row-reverse;' : ''}">
+        ${imageUrl ? `
+          <div style="flex-shrink: 0; width: 120px; height: 80px; border-radius: 8px; overflow: hidden; background: #e2e8f0;">
+            <img src="${imageUrl}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'">
+          </div>
+        ` : ''}
+        
+        <div style="flex: 1;">
+          <h2 style="font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 8px; line-height: 1.4;">
+            ${index + 1}. ${escapeHtml(article.titre || 'بدون عنوان')}
+          </h2>
+          
+          <div style="font-size: 12px; color: #64748b; display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 8px;">
+            <span><strong>المصدر:</strong> ${escapeHtml(article.source || 'غير معروف')}</span>
+            <span><strong>التاريخ:</strong> ${date}</span>
+            ${article.theme ? `<span><strong>الفئة:</strong> ${escapeHtml(article.theme)}</span>` : ''}
+            ${article.langue ? `<span><strong>اللغة:</strong> ${article.langue}</span>` : ''}
+          </div>
+          
+          ${article.sentiment ? `
+            <div style="font-size: 11px; margin-bottom: 8px;">
+              <span style="
+                padding: 3px 10px;
+                border-radius: 12px;
+                background: ${getSentimentClass(article.sentiment).includes('positive') ? '#d1fae5' : getSentimentClass(article.sentiment).includes('negative') ? '#fee2e2' : '#f1f5f9'};
+                color: ${getSentimentClass(article.sentiment).includes('positive') ? '#059669' : getSentimentClass(article.sentiment).includes('negative') ? '#dc2626' : '#64748b'};
+                font-weight: 600;
+              ">
+                ${getSentimentIcon(article.sentiment)} ${article.sentiment}
+              </span>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+      
+      ${keywords.length > 0 ? `
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; padding-top: 10px; border-top: 1px dashed #cbd5e1;">
+          <span style="font-size: 11px; color: #94a3b8; font-weight: 600;">الكلمات المفتاحية:</span>
+          ${keywords.map(k => `
+            <span style="
+              padding: 3px 10px;
+              background: #3b82f6;
+              color: white;
+              font-size: 10px;
+              border-radius: 10px;
+            ">${escapeHtml(k)}</span>
+          `).join('')}
+        </div>
+      ` : ''}
+      
+      ${article.url ? `
+        <div style="margin-top: 10px; font-size: 10px; color: #3b82f6; word-break: break-all;">
+          🔗 ${article.url}
+        </div>
+      ` : ''}
+    `;
+    
+    container.appendChild(articleDiv);
+  });
+  
+  // Footer
+  const footer = document.createElement('div');
+  footer.style.cssText = `
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+    font-size: 11px;
+    color: #94a3b8;
+  `;
+  footer.innerHTML = `
+    <p>© ${new Date().getFullYear()} مراجعة الصحافة الأسبوعية</p>
+    <p>تم إنشاء هذا التقرير تلقائياً</p>
+  `;
+  container.appendChild(footer);
+  
+  return container;
 }
 
 function waitForImages(container) {
@@ -1406,19 +1080,19 @@ function waitForImages(container) {
     const total = images.length;
     
     if (total === 0) {
-      resolve();
+      setTimeout(resolve, 100);
       return;
     }
     
     const checkComplete = () => {
       loaded++;
       if (loaded >= total) {
-        setTimeout(resolve, 500);
+        setTimeout(resolve, 300);
       }
     };
     
     images.forEach(img => {
-      if (img.complete) {
+      if (img.complete && img.naturalHeight !== 0) {
         checkComplete();
       } else {
         img.onload = checkComplete;
@@ -1426,129 +1100,10 @@ function waitForImages(container) {
       }
     });
     
-    setTimeout(resolve, 5000);
+    // Timeout fallback
+    setTimeout(resolve, 3000);
   });
 }
-
-function createPdfContent() {
-  const container = document.createElement('div');
-  container.style.fontFamily = "'Tajawal', sans-serif";
-  container.style.direction = 'rtl';
-  container.style.textAlign = 'right';
-  container.style.padding = '20px';
-  container.style.background = 'white';
-  container.style.color = 'black';
-  
-  const header = document.createElement('div');
-  header.style.textAlign = 'center';
-  header.style.marginBottom = '20px';
-  header.style.borderBottom = '2px solid #1a73e8';
-  header.style.paddingBottom = '15px';
-  
-  const title = document.createElement('h1');
-  title.textContent = 'مراجعة الصحافة الأسبوعية';
-  title.style.fontSize = '24px';
-  title.style.color = '#1a73e8';
-  title.style.marginBottom = '8px';
-  
-  const subtitle = document.createElement('div');
-  subtitle.textContent = 'Revue de Presse Hebdomadaire';
-  subtitle.style.fontSize = '14px';
-  subtitle.style.color = '#666';
-  subtitle.style.marginBottom = '10px';
-  
-  header.appendChild(title);
-  header.appendChild(subtitle);
-  container.appendChild(header);
-  
-  appState.filteredArticles.forEach((article, index) => {
-    const articleDiv = document.createElement('div');
-    articleDiv.style.marginBottom = '20px';
-    articleDiv.style.border = '1px solid #ddd';
-    articleDiv.style.borderRadius = '8px';
-    articleDiv.style.padding = '15px';
-    articleDiv.style.background = '#f9f9f9';
-    
-    const title = document.createElement('h2');
-    title.textContent = `${index + 1}. ${article.titre || 'بدون عنوان'}`;
-    title.style.fontSize = '16px';
-    title.style.fontWeight = 'bold';
-    title.style.marginBottom = '8px';
-    articleDiv.appendChild(title);
-    
-    const meta = document.createElement('div');
-    meta.style.fontSize = '12px';
-    meta.style.color = '#666';
-    meta.style.marginBottom = '8px';
-    
-    const formattedDate = formatDateToDDMMYYYY(article.date_heure) || 'تاريخ غير معروف';
-    
-    meta.innerHTML = `
-      <div><strong>المصدر:</strong> ${article.source || 'غير معروف'}</div>
-      <div><strong>التاريخ:</strong> ${formattedDate}</div>
-      ${article.theme ? `<div><strong>الفئة:</strong> ${article.theme}</div>` : ''}
-    `;
-    
-    articleDiv.appendChild(meta);
-    
-    // Ajouter l'image dans le PDF si disponible
-    const imageUrl = getArticleImageUrl(article);
-    if (imageUrl) {
-      const imgContainer = document.createElement('div');
-      imgContainer.style.marginTop = '10px';
-      imgContainer.style.textAlign = 'center';
-      
-      const img = document.createElement('img');
-      img.src = imageUrl;
-      img.style.maxWidth = '100%';
-      img.style.maxHeight = '150px';
-      img.style.objectFit = 'cover';
-      img.style.borderRadius = '4px';
-      
-      imgContainer.appendChild(img);
-      articleDiv.appendChild(imgContainer);
-    }
-    
-    if (article.mots_cles) {
-      const keywords = article.mots_cles.split(',').map(k => k.trim()).filter(k => k);
-      if (keywords.length > 0) {
-        const keywordsDiv = document.createElement('div');
-        keywordsDiv.style.display = 'flex';
-        keywordsDiv.style.flexWrap = 'wrap';
-        keywordsDiv.style.gap = '5px';
-        keywordsDiv.style.marginTop = '8px';
-        
-        keywords.forEach(keyword => {
-          const keywordSpan = document.createElement('span');
-          keywordSpan.textContent = keyword;
-          keywordSpan.style.background = '#1a73e8';
-          keywordSpan.style.color = 'white';
-          keywordSpan.style.padding = '3px 10px';
-          keywordSpan.style.borderRadius = '10px';
-          keywordSpan.style.fontSize = '11px';
-          keywordsDiv.appendChild(keywordSpan);
-        });
-        
-        articleDiv.appendChild(keywordsDiv);
-      }
-    }
-    
-    container.appendChild(articleDiv);
-  });
-  
-  return container;
-}
-
-function debounce(func, wait) {
-  let timeout;
-  return (...args) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
-  };
-}
-
-// ===== INITIALIZE APP =====
-document.addEventListener('DOMContentLoaded', initApp);
 </script>
 </body>
 </html>
