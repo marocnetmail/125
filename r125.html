@@ -76,6 +76,12 @@ body {
   margin-bottom: 15px;
   padding: 0 5px;
 }
+.main-title img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
 /* ===== FILTRES MOBILE ===== */
 .filters-container {
   display: flex;
@@ -557,6 +563,7 @@ body {
   font-weight: 600;
 }
 /* ===== MEDIA QUERIES ===== */
+/* Tablette */
 @media (min-width: 481px) {
   .main-title {
     font-size: 1.8rem;
@@ -582,6 +589,7 @@ body {
     justify-content: center;
   }
 }
+/* Desktop */
 @media (min-width: 769px) {
   .main-title {
     font-size: 2rem;
@@ -603,6 +611,7 @@ body {
     overflow: hidden;
   }
 }
+/* Large Desktop */
 @media (min-width: 1025px) {
   .article-image-container {
     height: 280px;
@@ -611,6 +620,7 @@ body {
     font-size: 2rem;
   }
 }
+/* Support tactile */
 @media (hover: none) and (pointer: coarse) {
   .article-card:active {
     transform: scale(0.98);
@@ -623,6 +633,7 @@ body {
     transform: scale(0.95);
   }
 }
+/* Print */
 @media print {
   .app-header,
   .filters-container,
@@ -751,8 +762,11 @@ const CONFIG = {
   jsonUrl: 'data/data_fusionnee.json?t=' + Date.now(),
   logosUrl: 'data/logo_media.json?t=' + Date.now(),
   maxArticles: 1000,
-  imagesBasePath: 'https://github.com/marocnetmail/125/blob/main/images/img05/',
-  imagesRawParam: '?raw=true',
+  // Configuration GitHub pour les images - adaptée à votre structure
+  githubBaseUrl: 'https://github.com/marocnetmail/125/blob/main/',
+  githubRawSuffix: '?raw=true',
+  // Chemin vers le dossier des images (à adapter selon votre structure)
+  imagesFolder: 'images/img05/',
   debounceDelay: 300,
   articlesPerPage: 10
 };
@@ -936,9 +950,9 @@ function updatePeriodButtons() {
 function parseArticleDate(dateString) {
   if (!dateString) return null;
   try {
-    const [datePart, timePart] = dateString.split(' ');
-    const [day, month, year] = datePart.split('/');
-    return new Date(year, month - 1, day);
+    // Format ISO: 2026-01-25T15:58:00.000Z
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? null : date;
   } catch (e) {
     return null;
   }
@@ -947,11 +961,14 @@ function parseArticleDate(dateString) {
 function formatDateToDDMMYYYY(dateString) {
   if (!dateString) return '';
   try {
-    const [datePart, timePart] = dateString.split(' ');
-    const [day, month, year] = datePart.split('/');
-    const paddedDay = day.padStart(2, '0');
-    const paddedMonth = month.padStart(2, '0');
-    return `${paddedDay}/${paddedMonth}/${year}`;
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '';
+    
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    
+    return `${day}/${month}/${year}`;
   } catch (e) {
     return dateString || '';
   }
@@ -960,9 +977,9 @@ function formatDateToDDMMYYYY(dateString) {
 function getTimeAgo(dateString) {
   if (!dateString) return '';
   try {
-    const [datePart, timePart] = dateString.split(' ');
-    const [day, month, year] = datePart.split('/');
-    const articleDate = new Date(year, month - 1, day);
+    const articleDate = new Date(dateString);
+    if (isNaN(articleDate.getTime())) return '';
+    
     const now = new Date();
     const diffMs = now - articleDate;
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -972,7 +989,7 @@ function getTimeAgo(dateString) {
     if (diffDays < 7) return `منذ ${diffDays} أيام`;
     if (diffDays < 30) {
       const weeks = Math.floor(diffDays / 7);
-      return `منذ ${weeks} أسبوع`;
+      return `منذ ${weeks} أسبوع${weeks > 1 ? 'ين' : ''}`;
     }
     return formatDateToDDMMYYYY(dateString);
   } catch (e) {
@@ -980,20 +997,28 @@ function getTimeAgo(dateString) {
   }
 }
 
-function isDateInRange(articleDate, startDate, endDate) {
+function isDateInRange(articleDateStr, startDate, endDate) {
+  if (!articleDateStr) return false;
+  
+  const articleDate = parseArticleDate(articleDateStr);
   if (!articleDate) return false;
-  const articleDateObj = parseArticleDate(articleDate);
-  if (!articleDateObj) return false;
+  
   if (!startDate && !endDate) return true;
   
-  const start = startDate ? new Date(startDate) : null;
-  const end = endDate ? new Date(endDate) : null;
+  // Réinitialiser les heures pour comparaison date seule
+  const articleDateOnly = new Date(articleDate.getFullYear(), articleDate.getMonth(), articleDate.getDate());
   
-  if (start) start.setHours(0, 0, 0, 0);
-  if (end) end.setHours(23, 59, 59, 999);
+  if (startDate) {
+    const start = new Date(startDate);
+    start.setHours(0, 0, 0, 0);
+    if (articleDateOnly < start) return false;
+  }
   
-  if (start && articleDateObj < start) return false;
-  if (end && articleDateObj > end) return false;
+  if (endDate) {
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+    if (articleDateOnly > end) return false;
+  }
   
   return true;
 }
@@ -1055,11 +1080,19 @@ function updatePagination() {
   }
 }
 
-// ===== IMAGE & LOGO FUNCTIONS =====
+// ===== IMAGE & LOGO FUNCTIONS - NOUVELLE MÉTHODE GITHUB =====
 function getArticleImageUrl(article) {
+  // Nouvelle méthode : construire l'URL GitHub à partir du nom de fichier
   if (article.image_brute) {
-    // Utiliser la méthode GitHub avec le chemin spécifié
-    return CONFIG.imagesBasePath + article.image_brute + CONFIG.imagesRawParam;
+    // Si c'est déjà une URL complète, la retourner telle quelle
+    if (article.image_brute.startsWith('http')) {
+      return article.image_brute;
+    }
+    
+    // Construire l'URL GitHub avec le dossier images configuré
+    // Format: https://github.com/marocnetmail/125/blob/main/images/img05/2026012515582600-image-brute.jpg?raw=true
+    const imageFileName = article.image_brute.startsWith('/') ? article.image_brute.substring(1) : article.image_brute;
+    return `${CONFIG.githubBaseUrl}${CONFIG.imagesFolder}${imageFileName}${CONFIG.githubRawSuffix}`;
   }
   return null;
 }
@@ -1082,15 +1115,14 @@ function createImageElement(imageUrl, title) {
     return '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.7);">صورة غير متوفرة</div>';
   }
   
-  // URL déjà formatée avec le paramètre ?raw=true
-  return `<img src="${imageUrl}" alt="${title || 'صورة المقال'}" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null; this.src=''; this.parentNode.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.7);\'>صورة غير متوفرة</div>';">`;
+  return `<img src="${imageUrl}" alt="${title || 'صورة المقال'}" class="article-image" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.7);\\'>صورة غير متوفرة</div>';">`;
 }
 
 function createMediaLogoElement(source) {
   const logoUrl = getMediaLogoUrl(source);
   if (!logoUrl) return '';
   
-  return `<div class="media-logo-container"><img src="${logoUrl}" alt="شعار ${source}" class="media-logo" onerror="this.style.display='none';"></div>`;
+  return `<div class="media-logo-container"><img src="${logoUrl}" alt="شعار ${source}" class="media-logo" loading="lazy"></div>`;
 }
 
 // ===== LOAD & PROCESS ARTICLES =====
@@ -1112,16 +1144,12 @@ async function loadArticles() {
 
 function processArticleData(articles) {
   return articles
-    .filter(a => a.visible === true || a.visible === "true")
+    .filter(a => a.visible === true || a.visible === "true" || a.visible === 1)
     .sort((a, b) => {
       try {
-        const parseDate = (str) => {
-          const [date, time] = str.split(' ');
-          const [d, m, y] = date.split('/');
-          const [h, min] = time ? time.split(':') : [0, 0];
-          return new Date(y, m - 1, d, h, min);
-        };
-        return parseDate(b.date_heure) - parseDate(a.date_heure);
+        const dateA = new Date(a.date_heure);
+        const dateB = new Date(b.date_heure);
+        return dateB - dateA; // Plus récent en premier
       } catch (e) {
         return 0;
       }
@@ -1161,7 +1189,7 @@ function updateStatsBar() {
   const count = appState.filteredArticles.length;
   const total = appState.articles.length;
   
-  elements.resultsCount.textContent = `${count} مقال${count !== 1 ? 'ات' : ''} (${total} المجموع)`;
+  elements.resultsCount.textContent = `${count} مقال${count !== 1 ? '' : ''} (${total} المجموع)`;
   elements.statsBar.style.display = 'flex';
   updateActiveFilters();
 }
@@ -1462,6 +1490,24 @@ function createPdfContent() {
     `;
     
     articleDiv.appendChild(meta);
+    
+    // Ajouter l'image dans le PDF si disponible
+    const imageUrl = getArticleImageUrl(article);
+    if (imageUrl) {
+      const imgContainer = document.createElement('div');
+      imgContainer.style.marginTop = '10px';
+      imgContainer.style.textAlign = 'center';
+      
+      const img = document.createElement('img');
+      img.src = imageUrl;
+      img.style.maxWidth = '100%';
+      img.style.maxHeight = '150px';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '4px';
+      
+      imgContainer.appendChild(img);
+      articleDiv.appendChild(imgContainer);
+    }
     
     if (article.mots_cles) {
       const keywords = article.mots_cles.split(',').map(k => k.trim()).filter(k => k);
