@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Accès sécurisé</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+.box {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+input {
+    padding: 10px;
+    margin-top: 10px;
+    width: 200px;
+}
+button {
+    padding: 10px 20px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+.error {
+    color: red;
+    margin-top: 15px;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Accès protégé</h2>
+    <input type="password" id="password" placeholder="Mot de passe">
+    <br>
+    <button onclick="checkPassword()">Entrer</button>
+    <div class="error" id="message"></div>
+</div>
+
+<script>
+async function hash(text) {
+  const msgUint8 = new TextEncoder().encode(text);
+  const hashBuffer = await crypto.subtle.digest('SHA-1', msgUint8);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function checkPassword() {
+  const response = await fetch('config.json');
+  const config = await response.json();
+
+  const input = document.getElementById("password").value;
+  const inputHash = await hash(input);
+
+  if (inputHash === config.passwordHash) {
+    window.location.href = "orga.html";
+  } else {
+    document.getElementById("message").innerHTML =
+    "Cette veille est adressée seulement à l'utilisation interne. <br>Vous n'avez pas le droit de publier ce contenu.";
+  }
+}
+</script>
+
+</body>
+</html>
