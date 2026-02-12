@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Accès Protégé</title>
 
 <style>
@@ -17,9 +18,10 @@ body {
 
 .box {
     background: white;
-    padding: 40px;
+    padding: 30px;
     border-radius: 12px;
-    width: 350px;
+    width: 90%; /* s’adapte aux smartphones */
+    max-width: 400px; /* limite sur grands écrans */
     text-align: center;
     box-shadow: 0 10px 25px rgba(0,0,0,0.3);
 }
@@ -27,6 +29,7 @@ body {
 h1 {
     margin-bottom: 20px;
     color: #001122;
+    font-size: 1.5em;
 }
 
 input {
@@ -35,6 +38,7 @@ input {
     border-radius: 6px;
     border: 1px solid #ccc;
     margin-top: 10px;
+    font-size: 1em;
 }
 
 button {
@@ -47,6 +51,7 @@ button {
     color: white;
     cursor: pointer;
     font-weight: bold;
+    font-size: 1em;
 }
 
 button:hover {
@@ -56,7 +61,7 @@ button:hover {
 .error {
     margin-top: 15px;
     color: red;
-    font-size: 14px;
+    font-size: 0.9em;
 }
 </style>
 </head>
