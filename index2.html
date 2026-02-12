@@ -2,46 +2,73 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Accès sécurisé</title>
+<title>Veille de Presse</title>
+
 <style>
 body {
     font-family: Arial, sans-serif;
-    background: #f4f4f4;
+    background: linear-gradient(135deg, #001122, #003366);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    text-align: center;
+    color: white;
+    margin: 0;
 }
+
 .box {
     background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    color: #001122;
+    padding: 40px;
+    border-radius: 12px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
 }
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 22px;
+}
+
 input {
-    padding: 10px;
+    padding: 12px;
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid #ccc;
     margin-top: 10px;
-    width: 200px;
 }
+
 button {
-    padding: 10px 20px;
-    margin-top: 15px;
+    margin-top: 20px;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 6px;
+    background: #003366;
+    color: white;
     cursor: pointer;
+    font-weight: bold;
 }
+
+button:hover {
+    background: #005599;
+}
+
 .error {
-    color: red;
     margin-top: 15px;
+    color: red;
+    font-size: 14px;
 }
 </style>
 </head>
+
 <body>
 
 <div class="box">
-    <h2>Accès protégé</h2>
+    <h1>Veille de Presse</h1>
     <input type="password" id="password" placeholder="Mot de passe">
-    <br>
-    <button onclick="checkPassword()">Entrer</button>
+    <button onclick="checkPassword()">Accéder</button>
     <div class="error" id="message"></div>
 </div>
 
@@ -54,17 +81,22 @@ async function hash(text) {
 }
 
 async function checkPassword() {
-  const response = await fetch('config.json');
-  const config = await response.json();
+  try {
+    const response = await fetch('config.json');
+    const config = await response.json();
 
-  const input = document.getElementById("password").value;
-  const inputHash = await hash(input);
+    const input = document.getElementById("password").value;
+    const inputHash = await hash(input);
 
-  if (inputHash === config.passwordHash) {
-    window.location.href = "orga.html";
-  } else {
+    if (inputHash === config.passwordHash) {
+      window.location.href = "orga.html";
+    } else {
+      document.getElementById("message").innerHTML =
+      "Cette veille est adressée seulement à l'utilisation interne.<br>Vous n'avez pas le droit de publier ce contenu.";
+    }
+  } catch (error) {
     document.getElementById("message").innerHTML =
-    "Cette veille est adressée seulement à l'utilisation interne. <br>Vous n'avez pas le droit de publier ce contenu.";
+    "Erreur de configuration.";
   }
 }
 </script>
