@@ -54,11 +54,23 @@
     </style>
 </head>
 <body>
+111111111111111111111
     <h1>5 manières d'afficher la même image</h1>
 
     <!-- 1. Image simple (URL absolue) -->
     <h2>1. Image simple (URL absolue) voila</h2>
     <img src="./images/img05/20260206160404000.jpg" alt="Image simple" width="300">
+    <img src="125/images/img05/20260206160404000.jpg" alt="Image simple" width="300">
+  <img src="/images/img05/20260206160404000.jpg" alt="Image simple" width="300">
+
+<img id="dynamic-img" alt="Dynamic Image">
+
+<script>
+  const GITHUB_ROOT = "https://raw.githubusercontent.com/username/myrepo/main/images/";
+  const imageId = "20260208230203028"; // ID of your image
+  document.getElementById("dynamic-img").src = `${GITHUB_ROOT}${imageId}.jpg`;
+</script>
+
 
     <!-- 2. Image comme background d'un div (URL relative) -->
     <h2>2. Image en background (URL relative)</h2>
