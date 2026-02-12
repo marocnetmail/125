@@ -1,5 +1,35 @@
 [
   {
+    "index": 20260212160304000,
+    "date/heure": "2026-02-12T16:03:00.000Z",
+    "source": "GMS Veille",
+    "titre": "Les autorités marocaines utilisent des « drones » pour surveiller l’extension de l’habitat clandestin avant le Ramadan",
+    "thème": "Général",
+    "mots-clés": "autorités, marocaines, utilisent",
+    "langue": "FR",
+    "sentiment": "Neutre",
+    "image_brute": "20260212160304000-image.jpg",
+    "numero_semaine": "2026-S07",
+    "url": "http://email.mg.gmsveille.com/c/eJx0kU2OgzAMhU8TdkX5j73IYja9hyFmQAqaiqBy_VEjTVBHZff07O_ZllM0FqnjqEKQqLQC381R0pSMRNBo3eTl5KUMI2jg5CdMVnVLTDZoPfDgnBwRlHE4skdlHSYyFllY-b2WJy85cz_-rF2O874_ijBfQt-Fvh_H0c9cHhuX8mqorksgtKPwUii0A_vnDeaDF96Jquh2FVOVazA1pRoBra9VCc9AamVo8Imoy8nVm97nnTFV-ctT_t3clh3cGX1TQUoLoZ_3NXdbpLTkdaOB91AfQUuuT3hG_RsAAP__tRF9bA",
+    "lien_json": "datajson/02/2026-S07.json",
+    "visible": true
+  },
+  {
+    "index": "20260212160304002",
+    "date/heure": "2026-02-12T16:03:00.000Z",
+    "source": "GMS Veille",
+    "titre": "Immobilier: vers un nouveau cycle ou simple phase de stabilisation?",
+    "thème": "Général",
+    "mots-clés": "Immobilier:, nouveau, simple",
+    "langue": "FR",
+    "sentiment": "Neutre",
+    "image_brute": "20260212160304002-image.jpg",
+    "numero_semaine": "2026-S07",
+    "url": "http://email.mg.gmsveille.com/c/eJwcztFq8yAUAOCnMXeWeNRYL7z4_65CGWwX3ejlONHTVdAYYhLY24_1AT74opPKYkdOGNNbAeI4dA9ngwIdQZDBAUapjFU63qU-2oiKUHTJRWUARhq17oM9CqltoMEKpW1EqSwx1X-XtlPKmQ6hli67x7rOjcl_DDwDf18OmeTQHwoy8BTqVEsiBj6VUseUEy18p6XxbeJT3XbCjYefkInXjbdU5kx8fmAjHom3Ff9IwzXV6evyebsNr8Pp7P-fXk7wfvVn-SY_rrcLA98tDmPKZcGRVvNsYsrP4u7gNwAA___58lUt",
+    "lien_json": "datajson/02/2026-S07.json",
+    "visible": true
+  },
+  {
     "index": 20260212070920000,
     "date/heure": "2026-02-12T07:09:00.000Z",
     "source": "GMS Veille",
