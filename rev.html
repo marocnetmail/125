@@ -1,87 +1,91 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5 manières d'afficher l'image GitHub</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
-        }
-        h2 {
-            margin-top: 40px;
-        }
-        /* 2. Image en background */
-        .bg-image {
-            width: 300px;
-            height: 200px;
-            margin: 20px auto;
-            background-size: cover;
-            background-position: center;
-            border: 2px solid #333;
-        }
-        /* 3. Image avec zoom au survol */
-        .zoom-img {
-            width: 300px;
-            height: auto;
-            transition: transform 0.3s ease;
-        }
-        .zoom-img:hover {
-            transform: scale(1.2);
-        }
-        /* 4. Image responsive */
-        .responsive-img {
-            width: 100%;
-            max-width: 500px;
-            height: auto;
-            border: 2px solid #333;
-        }
-        /* 5. Image circulaire */
-        .circle-img {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #333;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debug Image GitHub</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+}
+
+img {
+    width: 300px;
+    margin: 20px;
+    border: 2px solid #333;
+}
+
+#log {
+    margin-top: 20px;
+    padding: 10px;
+    background: #f4f4f4;
+    border: 1px solid #ccc;
+    text-align: left;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 14px;
+}
+.success { color: green; }
+.error { color: red; }
+</style>
 </head>
+
 <body>
-    <h1>5 manières d'afficher la même image depuis GitHub</h1>
-    
-    <!-- URL raw GitHub pour l'image -->
-    <!-- https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg -->
-    
-    <!-- 1. Image simple (URL raw absolue) -->
-    <h2>1. Image simple (URL raw absolue)</h2>
-    <img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg" alt="Image simple" width="300">
 
-    <!-- 2. Image comme background d'un div (URL raw absolue) -->
-    <h2>2. Image en background (URL raw absolue)</h2>
-    <div class="bg-image" style="background-image: url('https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg');"></div>
+<h1>Test Debug Image GitHub</h1>
 
-    <!-- 3. Image avec effet zoom (URL raw absolue) -->
-    <h2>3. Image avec effet zoom (URL raw absolue)</h2>
-    <img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg" alt="Image zoom" class="zoom-img">
+<img id="test-img"
+     src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg"
+     alt="Test Image">
 
-    <!-- 4. Image responsive (URL raw absolue) -->
-    <h2>4. Image responsive (URL raw absolue)</h2>
-    <img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg" alt="Image responsive" class="responsive-img">
+<div id="log">Logs :</div>
 
-    <!-- 5. Image circulaire (URL raw absolue) -->
-    <h2>5. Image circulaire (URL raw absolue)</h2>
-    <img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg" alt="Image circulaire" class="circle-img">
+<script>
 
-    <!-- Bonus: Image dynamique via JavaScript (URL raw absolue) -->
-    <h2>Bonus: Image dynamique via JavaScript</h2>
-    <img id="dynamic-img" alt="Dynamic Image" width="300">
-    <script>
-        const GITHUB_ROOT = "https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/";
-        const imageId = "20260206160404000"; // ID de votre image
-        document.getElementById("dynamic-img").src = `${GITHUB_ROOT}${imageId}.jpg`;
-    </script>
-    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+const imageUrl = "https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg";
+const img = document.getElementById("test-img");
+const logDiv = document.getElementById("log");
+
+function log(message, type="") {
+    console.log(message);
+    const p = document.createElement("p");
+    p.textContent = message;
+    if(type) p.className = type;
+    logDiv.appendChild(p);
+}
+
+/* ===== Image Load Events ===== */
+
+img.onload = function() {
+    log("✅ Image chargée avec succès", "success");
+};
+
+img.onerror = function(e) {
+    log("❌ Erreur de chargement de l'image", "error");
+    log("Vérifiez le chemin ou si le fichier existe sur GitHub", "error");
+};
+
+/* ===== Fetch Test ===== */
+
+fetch(imageUrl)
+.then(response => {
+    log("Status HTTP: " + response.status);
+    if(response.ok){
+        log("✅ Le fichier existe sur GitHub", "success");
+    } else {
+        log("❌ Le fichier n'existe pas (404 ou autre erreur)", "error");
+    }
+})
+.catch(error => {
+    log("❌ Erreur réseau ou CORS", "error");
+    console.error(error);
+});
+
+</script>
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 </body>
 </html>
