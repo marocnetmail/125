@@ -10,11 +10,9 @@
             text-align: center;
             margin: 20px;
         }
-
         h2 {
             margin-top: 40px;
         }
-
         /* 2. Image en background */
         .bg-image {
             width: 300px;
@@ -24,7 +22,6 @@
             background-position: center;
             border: 2px solid #333;
         }
-
         /* 3. Image avec zoom au survol */
         .zoom-img {
             width: 300px;
@@ -34,7 +31,6 @@
         .zoom-img:hover {
             transform: scale(1.2);
         }
-
         /* 4. Image responsive */
         .responsive-img {
             width: 100%;
@@ -42,7 +38,6 @@
             height: auto;
             border: 2px solid #333;
         }
-
         /* 5. Image circulaire */
         .circle-img {
             width: 200px;
@@ -54,39 +49,39 @@
     </style>
 </head>
 <body>
-111111111111111111111
-    <h1>5 manières d'afficher la même image</h1>
+    <h1>5 manières d'afficher la même image depuis GitHub</h1>
+    
+    <!-- URL raw GitHub pour l'image -->
+    <!-- https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg -->
+    
+    <!-- 1. Image simple (URL raw absolue) -->
+    <h2>1. Image simple (URL raw absolue)</h2>
+    <img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg" alt="Image simple" width="300">
 
-    <!-- 1. Image simple (URL absolue) -->
-    <h2>1. Image simple (URL absolue) voila</h2>
-    <img src="./images/img05/20260206160404000.jpg" alt="Image simple" width="300">
-    <img src="125/images/img05/20260206160404000.jpg" alt="Image simple" width="300">
-  <img src="/images/img05/20260206160404000.jpg" alt="Image simple" width="300">
+    <!-- 2. Image comme background d'un div (URL raw absolue) -->
+    <h2>2. Image en background (URL raw absolue)</h2>
+    <div class="bg-image" style="background-image: url('https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg');"></div>
 
-<img id="dynamic-img" alt="Dynamic Image">
-
-<script>
-  const GITHUB_ROOT = "https://raw.githubusercontent.com/username/myrepo/main/images/";
-  const imageId = "20260208230203028"; // ID of your image
-  document.getElementById("dynamic-img").src = `${GITHUB_ROOT}${imageId}.jpg`;
-</script>
-
-
-    <!-- 2. Image comme background d'un div (URL relative) -->
-    <h2>2. Image en background (URL relative)</h2>
-    <div class="bg-image" style="background-image: url('./images/img05/20260206160404000.jpg');"></div>
-
-    <!-- 3. Image avec effet zoom (URL absolue) -->
-    <h2>3. Image avec effet zoom (URL absolue)</h2>
+    <!-- 3. Image avec effet zoom (URL raw absolue) -->
+    <h2>3. Image avec effet zoom (URL raw absolue)</h2>
     <img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg" alt="Image zoom" class="zoom-img">
 
-    <!-- 4. Image responsive (URL relative) -->
-    <h2>4. Image responsive (URL relative)</h2>
-    <img src="./images/img05/20260206160404000.jpg" alt="Image responsive" class="responsive-img">
+    <!-- 4. Image responsive (URL raw absolue) -->
+    <h2>4. Image responsive (URL raw absolue)</h2>
+    <img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg" alt="Image responsive" class="responsive-img">
 
-    <!-- 5. Image circulaire (URL absolue) -->
-    <h2>5. Image circulaire (URL absolue)</h2>
+    <!-- 5. Image circulaire (URL raw absolue) -->
+    <h2>5. Image circulaire (URL raw absolue)</h2>
     <img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg" alt="Image circulaire" class="circle-img">
-zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+
+    <!-- Bonus: Image dynamique via JavaScript (URL raw absolue) -->
+    <h2>Bonus: Image dynamique via JavaScript</h2>
+    <img id="dynamic-img" alt="Dynamic Image" width="300">
+    <script>
+        const GITHUB_ROOT = "https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/";
+        const imageId = "20260206160404000"; // ID de votre image
+        document.getElementById("dynamic-img").src = `${GITHUB_ROOT}${imageId}.jpg`;
+    </script>
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 </body>
 </html>
