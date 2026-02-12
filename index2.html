@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Veille de Presse</title>
+<title>Accès Protégé</title>
 
 <style>
 body {
@@ -12,23 +12,21 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    color: white;
     margin: 0;
 }
 
 .box {
     background: white;
-    color: #001122;
     padding: 40px;
     border-radius: 12px;
-    width: 320px;
+    width: 350px;
     text-align: center;
     box-shadow: 0 10px 25px rgba(0,0,0,0.3);
 }
 
 h1 {
     margin-bottom: 20px;
-    font-size: 22px;
+    color: #001122;
 }
 
 input {
@@ -66,16 +64,16 @@ button:hover {
 <body>
 
 <div class="box">
-    <h1>Veille de Presse</h1>
+    <h1>Accès Protégé</h1>
     <input type="password" id="password" placeholder="Mot de passe">
-    <button onclick="checkPassword()">Accéder</button>
+    <button onclick="checkPassword()">Entrer</button>
     <div class="error" id="message"></div>
 </div>
 
 <script>
 async function hash(text) {
   const msgUint8 = new TextEncoder().encode(text);
-  const hashBuffer = await crypto.subtle.digest('SHA-1', msgUint8);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
@@ -89,6 +87,7 @@ async function checkPassword() {
     const inputHash = await hash(input);
 
     if (inputHash === config.passwordHash) {
+      sessionStorage.setItem("auth", "ok");
       window.location.href = "orga.html";
     } else {
       document.getElementById("message").innerHTML =
