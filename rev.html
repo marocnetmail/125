@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"> 
 <meta name="theme-color" content="#001122">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -14,181 +14,86 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
 /* ===== CSS RESET OPTIMISÉ POUR MOBILE ===== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
+* {margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
 :root {
-  --primary: #1a73e8;
-  --primary-dark: #0d5cb6;
-  --background: #001122;
-  --card-bg: #001a44;
-  --text: #ffffff;
-  --text-secondary: #cccccc;
-  --accent-1: #FF6B6B;
-  --accent-2: #4ECDC4;
-  --accent-3: #FFD166;
-  --shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  --radius: 12px;
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --primary:#1a73e8; --primary-dark:#0d5cb6; --background:#001122; --card-bg:#001a44;
+  --text:#ffffff; --text-secondary:#cccccc; --accent-1:#FF6B6B; --accent-2:#4ECDC4;
+  --accent-3:#FFD166; --shadow:0 4px 15px rgba(0,0,0,0.4); --radius:12px;
+  --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 }
-/* ===== BASE STYLES ===== */
-html {
-  font-size: 16px;
-  scroll-behavior: smooth;
-}
-body {
-  font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--background);
-  color: var(--text);
-  line-height: 1.6;
-  overflow-x: hidden;
-  min-height: 100vh;
-}
+html { font-size:16px; scroll-behavior:smooth; }
+body { font-family:'Tajawal',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+       background:var(--background); color:var(--text); line-height:1.6; overflow-x:hidden; min-height:100vh; }
 
-/* التحسينات الجديدة لقسم الصور في البداية */
-.featured-header {
-    padding: 15px;
-    margin-bottom: 5px;
-}
-.featured-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 15px;
-    padding: 10px;
-    margin-bottom: 20px;
-}
-.featured-item {
-    border-radius: var(--radius);
-    overflow: hidden;
-    height: 200px;
-    border: 2px solid var(--primary);
-    box-shadow: var(--shadow);
-}
-.featured-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: var(--transition);
-}
-.featured-item:hover img {
-    transform: scale(1.05);
-}
-
-/* ===== HEADER OPTIMISÉ ===== */
+/* ===== HEADER ===== */
 .app-header {
-  background: rgba(0, 17, 34, 0.95);
-  padding: 15px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  backdrop-filter: blur(10px);
+  background: rgba(0,17,34,0.95); padding:15px; border-bottom:1px solid rgba(255,255,255,0.1);
+  position: sticky; top:0; z-index:100; backdrop-filter: blur(10px);
 }
-.main-title {
-  text-align: center;
-  margin-bottom: 20px;
-}
-.main-title img {
-  max-width: 220px;
-  height: auto;
-  filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
-}
+.main-title { text-align:center; margin-bottom:20px; }
+.main-title img { max-width:220px; height:auto; filter: drop-shadow(0 0 8px rgba(255,255,255,0.2)); }
 
-/* ===== SEARCH & FILTERS ===== */
-.search-wrapper {
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  padding: 8px 15px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  transition: var(--transition);
-}
-.search-wrapper:focus-within {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.3);
-}
-#search-input {
-  flex: 1;
-  padding: 10px;
-  background: transparent;
-  border: none;
-  color: var(--text);
-  font-size: 16px;
-  outline: none;
-  font-family: inherit;
-}
+/* ===== SEARCH & FILTER ===== */
+.search-wrapper { display:flex; align-items:center; background:rgba(255,255,255,0.08); border-radius:10px; padding:8px 15px; border:1px solid rgba(255,255,255,0.15); transition:var(--transition);}
+.search-wrapper:focus-within { background:rgba(255,255,255,0.12); border-color:var(--primary); box-shadow:0 0 0 3px rgba(26,115,232,0.3);}
+#search-input { flex:1; padding:10px; background:transparent; border:none; color:var(--text); font-size:16px; outline:none; font-family:inherit;}
 
-/* ===== ARTICLES CARD ENHANCEMENTS ===== */
-.article-card {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  transition: var(--transition);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-.article-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-  border-color: var(--primary);
-}
+/* ===== FEATURED GRID ===== */
+.featured-header { padding:15px; margin-bottom:5px; }
+.featured-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:15px; padding:10px; margin-bottom:20px; }
+.featured-item { border-radius:var(--radius); overflow:hidden; height:200px; border:2px solid var(--primary); box-shadow:var(--shadow); }
+.featured-item img { width:100%; height:100%; object-fit:cover; transition:var(--transition);}
+.featured-item:hover img { transform:scale(1.05); }
 
-.article-image-container {
-  height: 240px;
-  position: relative;
-}
+/* ===== ARTICLE CARDS ===== */
+.article-card { background:var(--card-bg); border-radius:var(--radius); transition:var(--transition); border:1px solid rgba(255,255,255,0.08); }
+.article-card:hover { transform:translateY(-5px); box-shadow:0 8px 25px rgba(0,0,0,0.5); border-color:var(--primary); }
+.article-image-container { height:240px; position:relative; }
+.title-overlay { background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 50%, transparent 100%); }
+.article-main-title { font-size:1.25rem; line-height:1.4; margin-bottom:8px; }
 
-.title-overlay {
-  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);
-}
+/* ===== ADVANCED SEARCH ===== */
+.advanced-search-toggle { display:flex; justify-content:center; margin:10px 0; }
+.toggle-advanced-btn { background: rgba(255,255,255,0.1); color: var(--text); border:1px solid rgba(255,255,255,0.2); padding:10px 20px; border-radius:8px; cursor:pointer; display:flex; align-items:center; gap:8px; transition:var(--transition); }
+.advanced-search-section { display:none; animation:fadeIn 0.3s ease; }
+.advanced-search-section.active { display:block; }
 
-.article-main-title {
-  font-size: 1.25rem;
-  line-height: 1.4;
-  margin-bottom: 8px;
-}
+/* ===== OTHER STYLES ===== */
+.filters-container { display:flex; flex-direction:column; gap:10px; margin-bottom:10px; }
+.date-filters { display:flex; flex-direction:column; gap:10px; }
+.date-group { display:flex; align-items:center; gap:10px; }
+.date-label { font-size:0.9rem; font-weight:600; color:var(--accent-3); min-width:60px; }
+.date-input-wrapper { flex:1; background:rgba(255,255,255,0.1); border-radius:8px; border:1px solid rgba(255,255,255,0.2); }
+.date-input { width:100%; padding:12px; background:transparent; border:none; color:var(--text); font-size:16px; text-align:right; }
+.period-presets { display:flex; gap:8px; margin-bottom:10px; overflow-x:auto; padding-bottom:5px; }
+.preset-btn { background: rgba(255,255,255,0.1); color:var(--text); border:1px solid rgba(255,255,255,0.2); padding:12px 15px; border-radius:8px; cursor:pointer; white-space:nowrap; }
+.preset-btn.active { background:var(--primary); border-color:var(--primary); }
+.action-buttons { display:flex; gap:10px; margin-top:10px; }
+.clear-filters-btn { flex:1; padding:14px; border-radius:8px; background: linear-gradient(135deg, var(--accent-1), #ff5252); color:white; border:none; cursor:pointer; }
+.download-pdf-btn { flex:1; padding:14px; border-radius:8px; background: linear-gradient(135deg, #4CAF50, #2E7D32); color:white; border:none; cursor:pointer; }
 
-/* الباقي من الستايلات الخاصة بك */
-.advanced-search-toggle { display: flex; justify-content: center; margin: 10px 0; }
-.toggle-advanced-btn { background: rgba(255, 255, 255, 0.1); color: var(--text); border: 1px solid rgba(255, 255, 255, 0.2); padding: 10px 20px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: var(--transition); }
-.advanced-search-section { display: none; animation: fadeIn 0.3s ease; }
-.advanced-search-section.active { display: block; }
-.filters-container { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
-.date-filters { display: flex; flex-direction: column; gap: 10px; }
-.date-group { display: flex; align-items: center; gap: 10px; }
-.date-label { font-size: 0.9rem; font-weight: 600; color: var(--accent-3); min-width: 60px; }
-.date-input-wrapper { flex: 1; background: rgba(255, 255, 255, 0.1); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); }
-.date-input { width: 100%; padding: 12px; background: transparent; border: none; color: var(--text); font-size: 16px; text-align: right; }
-.period-presets { display: flex; gap: 8px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 5px; }
-.preset-btn { background: rgba(255, 255, 255, 0.1); color: var(--text); border: 1px solid rgba(255, 255, 255, 0.2); padding: 12px 15px; border-radius: 8px; cursor: pointer; white-space: nowrap; }
-.preset-btn.active { background: var(--primary); border-color: var(--primary); }
-.action-buttons { display: flex; gap: 10px; margin-top: 10px; }
-.clear-filters-btn { flex: 1; padding: 14px; border-radius: 8px; background: linear-gradient(135deg, var(--accent-1), #ff5252); color: white; border:none; cursor:pointer;}
-.download-pdf-btn { flex: 1; padding: 14px; border-radius: 8px; background: linear-gradient(135deg, #4CAF50, #2E7D32); color: white; border:none; cursor:pointer;}
-#loading-indicator { text-align: center; padding: 40px; color: var(--text-secondary); }
-.loading-spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--primary); border-radius: 50%; margin: 0 auto 15px; animation: spin 1s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-#articles-container { padding: 10px; display: flex; flex-direction: column; gap: 20px; max-width: 900px; margin: 0 auto; }
-.metadata-badges { position: absolute; top: 10px; left: 0; width: 100%; display: flex; flex-direction: column; gap: 8px; padding: 0 10px; }
-.metadata-badge { padding: 6px 12px; font-size: 0.75rem; font-weight: 700; border-radius: 20px; backdrop-filter: blur(5px); display: flex; align-items: center; gap: 6px; width: fit-content; }
-.date-badge { background: rgba(255, 107, 107, 0.9); color: white; align-self: flex-end; }
-.category-badge { background: rgba(78, 205, 196, 0.9); color: white; align-self: flex-end; }
-.media-logo-container { position: absolute; bottom: 10px; left: 10px; width: 60px; height: 30px; }
-.media-logo { max-width: 100%; max-height: 100%; object-fit: contain; }
-.time-ago { position: absolute; top: 10px; right: 10px; padding: 4px 8px; background: rgba(0,0,0,0.6); border-radius: 8px; font-size: 0.7rem; }
-.pagination-container { display: flex; justify-content: center; align-items: center; padding: 20px; gap: 5px; flex-wrap: wrap; }
-.pagination-btn { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px; border-radius: 8px; cursor: pointer; }
-#article-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; }
-.overlay-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
-.overlay-header-extended { padding: 15px; background: var(--card-bg); display: flex; justify-content: space-between; align-items: center; }
-.close-overlay { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-1); border: none; color: white; font-size: 1.5rem; cursor: pointer; }
-.overlay-content { flex: 1; }
-#article-frame { width: 100%; height: 100%; border: none; background: white; }
-.scroll-top { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: var(--primary); color: white; border: none; display: none; z-index: 99; cursor: pointer; }
-.stats-bar { padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); font-size: 0.85rem; }
+#loading-indicator { text-align:center; padding:40px; color:var(--text-secondary); }
+.loading-spinner { width:40px; height:40px; border:3px solid rgba(255,255,255,0.1); border-top-color:var(--primary); border-radius:50%; margin:0 auto 15px; animation:spin 1s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+#articles-container { padding:10px; display:flex; flex-direction:column; gap:20px; max-width:900px; margin:0 auto; }
+.metadata-badges { position:absolute; top:10px; left:0; width:100%; display:flex; flex-direction:column; gap:8px; padding:0 10px; }
+.metadata-badge { padding:6px 12px; font-size:0.75rem; font-weight:700; border-radius:20px; backdrop-filter:blur(5px); display:flex; align-items:center; gap:6px; width:fit-content; }
+.date-badge { background: rgba(255,107,107,0.9); color:white; align-self:flex-end; }
+.category-badge { background: rgba(78,205,196,0.9); color:white; align-self:flex-end; }
+
+.scroll-top { position:fixed; bottom:20px; right:20px; width:50px; height:50px; border-radius:50%; background:var(--primary); color:white; border:none; display:none; z-index:99; cursor:pointer; }
+.pagination-container { display:flex; justify-content:center; align-items:center; padding:20px; gap:5px; flex-wrap:wrap; }
+.pagination-btn { background: rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); padding:10px; border-radius:8px; cursor:pointer; }
+
+#article-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:1000; }
+.overlay-container { width:100%; height:100%; display:flex; flex-direction:column; }
+.overlay-header-extended { padding:15px; background:var(--card-bg); display:flex; justify-content:space-between; align-items:center; }
+.close-overlay { width:40px; height:40px; border-radius:50%; background:var(--accent-1); border:none; color:white; font-size:1.5rem; cursor:pointer; }
+.overlay-content { flex:1; }
+#article-frame { width:100%; height:100%; border:none; background:white; }
+
+.stats-bar { padding:10px 15px; display:flex; justify-content:space-between; align-items:center; background: rgba(255,255,255,0.05); font-size:0.85rem; }
 </style>
 </head>
 <body>
@@ -196,7 +101,6 @@ body {
 <header class="app-header">
   <div class="title-search-container">
     <h1 class="main-title"><img src="images/title.png" alt="Logo"></h1>
-   
     <div class="filters-container">
       <div class="search-container">
         <div class="search-wrapper">
@@ -206,14 +110,12 @@ body {
         </div>
       </div>
     </div>
-   
     <div class="advanced-search-toggle">
       <button class="toggle-advanced-btn" id="toggle-advanced-btn">
         <span class="toggle-icon">▼</span>
         <span>خيارات متقدمة</span>
       </button>
     </div>
-   
     <div class="advanced-search-section" id="advanced-search-section">
       <div class="date-filters">
         <div class="date-group">
@@ -242,20 +144,18 @@ body {
   </div>
 </header>
 
-
 <section id="featured-section">
-    <div class="featured-header">
-        <h3 style="color: var(--accent-3); font-size: 1.1rem; border-right: 4px solid var(--accent-1); padding-right: 10px;">آخر التحديثات الهامة</h3>
-    </div>
-	     
-    <div class="featured-grid">
-        <div><img src="images/img05/20260206160404000.jpg" alt="Update 1"></div>
-        <div class="featured-item"><img src="/125/images/img05/20260208230203058.jpg" alt="Update 2"></div>
-        <div class="featured-item"><img src="images/img05/20260208230203060.jpg" alt="Update 3"></div>
-    </div>
+  <div class="featured-header">
+      <h3 style="color: var(--accent-3); font-size:1.1rem; border-right:4px solid var(--accent-1); padding-right:10px;">آخر التحديثات الهامة</h3>
+  </div>
+  <div class="featured-grid">
+      <div class="featured-item"><img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg" alt="Update 1"></div>
+      <div class="featured-item"><img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260208230203058.jpg" alt="Update 2"></div>
+      <div class="featured-item"><img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260208230203060.jpg" alt="Update 3"></div>
+  </div>
 </section>
 
-<div class="stats-bar" id="stats-bar" style="display: none;">
+<div class="stats-bar" id="stats-bar" style="display:none;">
   <div class="results-count" id="results-count">0 مقال</div>
   <div class="active-filters" id="active-filters"></div>
 </div>
@@ -267,9 +167,9 @@ body {
   </div>
 </main>
 
-<div class="pagination-container" id="pagination-container" style="display: none;">
+<div class="pagination-container" id="pagination-container" style="display:none;">
   <button class="pagination-btn" id="prev-btn">‹ السابق</button>
-  <div id="pagination-numbers" style="display: flex; gap: 5px;"></div>
+  <div id="pagination-numbers" style="display:flex; gap:5px;"></div>
   <button class="pagination-btn" id="next-btn">التالي ›</button>
 </div>
 
@@ -291,27 +191,18 @@ body {
 
 <script>
 // ===== CONFIGURATION =====
-// تم تعديل المسار ليتوافق مع الصور المرفقة img5 بدل img05
 const GITHUB_BASE = "https://raw.githubusercontent.com/marocnetmail/125/main";
 const CONFIG = {
   jsonUrl: `${GITHUB_BASE}/data/data_fusionnee.json?t=` + Date.now(),
   logosUrl: `${GITHUB_BASE}/data/logo_media.json?t=` + Date.now(),
   maxArticles: 1000,
-  imagesBasePath: `images/img05`, // المسار المحلي أو النسبي الصحيح
+  imagesBasePath: `${GITHUB_BASE}/images/img05`,
   debounceDelay: 300,
   articlesPerPage: 15
 };
 
 // ===== STATE =====
-let appState = {
-  articles: [],
-  filteredArticles: [],
-  searchQuery: '',
-  startDate: null,
-  endDate: null,
-  currentPage: 1,
-  advancedSearchVisible: false
-};
+let appState = { articles:[], filteredArticles:[], searchQuery:'', startDate:null, endDate:null, currentPage:1, advancedSearchVisible:false };
 let mediaLogos = [];
 
 const elements = {
@@ -337,6 +228,7 @@ const elements = {
   downloadPdfBtn: document.getElementById('download-pdf-btn')
 };
 
+// ===== FUNCTIONS =====
 async function initApp() {
   setupEventListeners();
   await loadMediaLogos();
@@ -344,119 +236,32 @@ async function initApp() {
 }
 
 async function loadMediaLogos() {
-  try {
-    const response = await fetch(CONFIG.logosUrl);
-    if (response.ok) mediaLogos = await response.json();
-  } catch (e) { console.log('Logos fail'); }
+  try { const res = await fetch(CONFIG.logosUrl); if(res.ok) mediaLogos = await res.json(); }
+  catch(e){ console.log('Logos fail'); }
 }
 
 async function loadArticles() {
   try {
-    const response = await fetch(CONFIG.jsonUrl);
-    const data = await response.json();
-    appState.articles = data.filter(a => a.visible === true || a.visible === "true")
-                             .sort((a,b) => new Date(b["date/heure"]) - new Date(a["date/heure"]));
+    const res = await fetch(CONFIG.jsonUrl);
+    const data = await res.json();
+    appState.articles = data.filter(a=>a.visible===true||a.visible==="true")
+                             .sort((a,b)=>new Date(b["date/heure"])-new Date(a["date/heure"]));
     filterArticles();
-  } catch (error) {
-    elements.articlesContainer.innerHTML = "<p style='text-align:center'>خطأ في تحميل البيانات</p>";
-  } finally {
-    elements.loadingIndicator.style.display = 'none';
-  }
+  } catch(e){ elements.articlesContainer.innerHTML="<p style='text-align:center'>خطأ في تحميل البيانات</p>"; }
+  finally{ elements.loadingIndicator.style.display='none'; }
 }
 
 function filterArticles() {
   const query = appState.searchQuery.toLowerCase();
-  appState.filteredArticles = appState.articles.filter(article => {
+  appState.filteredArticles = appState.articles.filter(article=>{
     const matchesText = !query || `${article.titre} ${article.source}`.toLowerCase().includes(query);
     const articleDate = new Date(article["date/heure"]);
     let matchesDate = true;
-    if (appState.startDate) matchesDate = matchesDate && articleDate >= new Date(appState.startDate);
-    if (appState.endDate) matchesDate = matchesDate && articleDate <= new Date(appState.endDate);
+    if(appState.startDate) matchesDate &= articleDate>=new Date(appState.startDate);
+    if(appState.endDate) matchesDate &= articleDate<=new Date(appState.endDate);
     return matchesText && matchesDate;
   });
-  
   displayArticles();
   updatePagination();
-  
   elements.resultsCount.textContent = `${appState.filteredArticles.length} مقال`;
-  elements.statsBar.style.display = 'flex';
-}
-
-function displayArticles() {
-  elements.articlesContainer.innerHTML = '';
-  const start = (appState.currentPage - 1) * CONFIG.articlesPerPage;
-  const pageArticles = appState.filteredArticles.slice(start, start + CONFIG.articlesPerPage);
-  
-  if(pageArticles.length === 0) {
-    elements.articlesContainer.innerHTML = '<div style="text-align:center; padding:50px">لا توجد نتائج للبحث</div>';
-    return;
-  }
-
-  pageArticles.forEach(article => {
-    const card = document.createElement('div');
-    card.className = 'article-card';
-    const imgUrl = article.index ? `${CONFIG.imagesBasePath}/${article.index}.jpg` : 'images/img05/placeholder.jpg';
-    
-    card.innerHTML = `
-      <div class="article-image-container">
-        <img src="${imgUrl}" class="article-image" style="width:100%; height:100%; object-fit:cover" onerror="this.src='images/img05/title.png'">
-        <div class="metadata-badges">
-            <span class="metadata-badge date-badge">📅 ${article["date/heure"]?.split('T')[0] || ''}</span>
-            <span class="metadata-badge category-badge">🏷️ ${article["thème"] || 'عام'}</span>
-        </div>
-        <div class="title-overlay" style="position:absolute; bottom:0; width:100%; padding:20px; color:white">
-            <h2 class="article-main-title">${article.titre}</h2>
-            <div style="font-size:0.8rem; opacity:0.8">📰 ${article.source}</div>
-        </div>
-      </div>
-    `;
-    card.onclick = () => {
-      elements.overlayArticleTitle.textContent = article.titre;
-      elements.articleFrame.src = article.url;
-      elements.articleOverlay.style.display = 'block';
-      document.body.style.overflow = 'hidden';
-    };
-    elements.articlesContainer.appendChild(card);
-  });
-}
-
-function updatePagination() {
-    const total = Math.ceil(appState.filteredArticles.length / CONFIG.articlesPerPage);
-    elements.paginationContainer.style.display = total > 1 ? 'flex' : 'none';
-    elements.prevBtn.disabled = appState.currentPage === 1;
-    elements.nextBtn.disabled = appState.currentPage === total;
-}
-
-function setupEventListeners() {
-  elements.searchInput.oninput = (e) => {
-    appState.searchQuery = e.target.value;
-    appState.currentPage = 1;
-    elements.clearSearch.style.display = e.target.value ? 'block' : 'none';
-    filterArticles();
-  };
-
-  elements.toggleAdvancedBtn.onclick = () => {
-    appState.advancedSearchVisible = !appState.advancedSearchVisible;
-    elements.advancedSearchSection.classList.toggle('active');
-    elements.toggleAdvancedBtn.querySelector('.toggle-icon').textContent = appState.advancedSearchVisible ? '▲' : '▼';
-  };
-
-  elements.closeOverlay.onclick = () => {
-    elements.articleOverlay.style.display = 'none';
-    elements.articleFrame.src = '';
-    document.body.style.overflow = '';
-  };
-
-  elements.nextBtn.onclick = () => { appState.currentPage++; filterArticles(); window.scrollTo(0,0); };
-  elements.prevBtn.onclick = () => { appState.currentPage--; filterArticles(); window.scrollTo(0,0); };
-  
-  window.onscroll = () => { elements.scrollTop.style.display = window.scrollY > 500 ? 'block' : 'none'; };
-  elements.scrollTop.onclick = () => window.scrollTo({top:0, behavior:'smooth'});
-
-  elements.downloadPdfBtn.onclick = () => alert('جاري تجهيز التقرير...');
-}
-
-document.addEventListener('DOMContentLoaded', initApp);
-</script>
-</body>
-</html>
+ 
