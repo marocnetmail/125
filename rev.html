@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>4 manières d'afficher l'image GitHub</title>
+    <title>5 manières d'afficher l'image GitHub</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,7 +20,6 @@
             width: 300px;
             height: 200px;
             margin: 20px auto;
-            background-image: url('https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg');
             background-size: cover;
             background-position: center;
             border: 2px solid #333;
@@ -43,21 +42,39 @@
             height: auto;
             border: 2px solid #333;
         }
+
+        /* 5. Image circulaire */
+        .circle-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #333;
+        }
     </style>
 </head>
 <body>
-    <h1>4 manières d'afficher la même image depuis GitHub</h1>
+    <h1>5 manières d'afficher la même image</h1>
 
-    <h2>1. Image simple</h2>
-    <img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg" alt="Image simple" width="300">
+    <!-- 1. Image simple (URL absolue) -->
+    <h2>1. Image simple (URL absolue) voila</h2>
+    <img src="./images/img05/20260206160404000.jpg" alt="Image simple" width="300">
 
-    <h2>2. Image comme background d'un div</h2>
-    <div class="bg-image"></div>
+    <!-- 2. Image comme background d'un div (URL relative) -->
+    <h2>2. Image en background (URL relative)</h2>
+    <div class="bg-image" style="background-image: url('./images/img05/20260206160404000.jpg');"></div>
 
-    <h2>3. Image avec effet zoom au survol</h2>
+    <!-- 3. Image avec effet zoom (URL absolue) -->
+    <h2>3. Image avec effet zoom (URL absolue)</h2>
     <img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg" alt="Image zoom" class="zoom-img">
 
-    <h2>4. Image responsive</h2>
-    <img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg" alt="Image responsive" class="responsive-img">
+    <!-- 4. Image responsive (URL relative) -->
+    <h2>4. Image responsive (URL relative)</h2>
+    <img src="./images/img05/20260206160404000.jpg" alt="Image responsive" class="responsive-img">
+
+    <!-- 5. Image circulaire (URL absolue) -->
+    <h2>5. Image circulaire (URL absolue)</h2>
+    <img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg" alt="Image circulaire" class="circle-img">
+
 </body>
 </html>
