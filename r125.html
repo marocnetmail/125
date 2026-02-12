@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<!-- META TAGS CRUCIAUX POUR MOBILE -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <meta name="theme-color" content="#001122">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -10,146 +11,1497 @@
 <meta name="description" content="مراجعة الصحافة الأسبوعية">
 <title>مراجعة الصحافة الأسبوعية</title>
 <link rel="icon" type="image/png" href="images1/00011.png">
+<!-- Bibliothèque html2pdf -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<!-- Police arabe optimisée -->
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
-/* (نفس تنسيقات CSS الأصلية تماماً لضمان عدم تغير المظهر) */
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-:root { --primary: #1a73e8; --primary-dark: #0d5cb6; --background: #001122; --card-bg: #001a44; --text: #ffffff; --text-secondary: #cccccc; --accent-1: #FF6B6B; --accent-2: #4ECDC4; --accent-3: #FFD166; --shadow: 0 2px 10px rgba(0, 0, 0, 0.3); --radius: 8px; --transition: all 0.3s ease; }
-body { font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--background); color: var(--text); line-height: 1.4; overflow-x: hidden; min-height: 100vh; -webkit-font-smoothing: antialiased; }
-.app-header { background: #001122; padding: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); position: sticky; top: 0; z-index: 100; width: 100%; }
-.main-title { font-size: 1.5rem; font-weight: 900; color: white; text-align: center; margin-bottom: 15px; }
-.filters-container { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
-.search-wrapper { display: flex; align-items: center; background: rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 5px; border: 1px solid rgba(255, 255, 255, 0.2); }
-#search-input { flex: 1; padding: 12px; background: transparent; border: none; color: var(--text); font-size: 16px; outline: none; text-align: right; direction: rtl; }
-#articles-container { padding: 10px; display: flex; flex-direction: column; gap: 15px; }
-.article-card { background: var(--card-bg); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer; }
-.article-image-container { position: relative; width: 100%; height: 200px; background: #000428; }
-.article-image { width: 100%; height: 100%; object-fit: cover; }
-.title-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); }
-.article-main-title { font-size: 1.2rem; font-weight: 700; color: white; line-height: 1.3; }
-#article-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; }
-.overlay-container { width: 100%; height: 100%; display: flex; flex-direction: column; }
-.overlay-header-extended { padding: 15px; background: #001a44; display: flex; justify-content: space-between; align-items: center; }
-.close-overlay { width: 35px; height: 35px; border-radius: 50%; background: var(--accent-1); border: none; color: white; font-size: 1.2rem; cursor: pointer; }
-.article-frame-container { flex: 1; background: white; }
-#article-frame { width: 100%; height: 100%; border: none; }
+/* ===== CSS RESET OPTIMISÉ POUR MOBILE ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+:root {
+  --primary: #1a73e8;
+  --primary-dark: #0d5cb6;
+  --background: #001122;
+  --card-bg: #001a44;
+  --text: #ffffff;
+  --text-secondary: #cccccc;
+  --accent-1: #FF6B6B;
+  --accent-2: #4ECDC4;
+  --accent-3: #FFD166;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  --radius: 8px;
+  --transition: all 0.3s ease;
+}
+/* ===== BASE STYLES ===== */
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--background);
+  color: var(--text);
+  line-height: 1.4;
+  overflow-x: hidden;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  margin: 0;
+}
+/* ===== HEADER OPTIMISÉ POUR MOBILE ===== */
+.app-header {
+  background: #001122;
+  padding: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+.main-title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: white;
+  line-height: 1.2;
+  text-align: center;
+  margin-bottom: 15px;
+  padding: 0 5px;
+}
+/* ===== FILTRES MOBILE ===== */
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.search-container {
+  width: 100%;
+}
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.search-icon {
+  padding: 0 10px;
+  color: var(--text-secondary);
+}
+#search-input {
+  flex: 1;
+  padding: 12px 10px 12px 0;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 16px;
+  outline: none;
+  font-family: inherit;
+  text-align: right;
+  direction: rtl;
+  width: 100%;
+}
+#search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+.clear-search {
+  padding: 0 10px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+/* ===== DATE FILTERS MOBILE ===== */
+.date-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.date-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.date-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent-3);
+  min-width: 60px;
+}
+.date-input-wrapper {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.date-input {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 16px;
+  outline: none;
+  text-align: right;
+  direction: rtl;
+}
+/* ===== BOUTONS PÉRIODE ===== */
+.period-presets {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  overflow-x: auto;
+  padding-bottom: 5px;
+  -webkit-overflow-scrolling: touch;
+}
+.preset-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 15px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  min-width: 100px;
+  text-align: center;
+}
+.preset-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+/* ===== BOUTONS ACTION ===== */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.clear-filters-btn, .download-pdf-btn {
+  flex: 1;
+  padding: 14px 10px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  color: white;
+}
+.clear-filters-btn {
+  background: linear-gradient(135deg, var(--accent-1), #ff5252);
+}
+.download-pdf-btn {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+}
+.download-pdf-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+/* ===== LOADING ===== */
+#loading-indicator {
+  text-align: center;
+  padding: 40px 15px;
+  color: var(--text-secondary);
+}
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+/* ===== ARTICLES CONTAINER ===== */
+#articles-container {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+/* ===== ARTICLE CARD MOBILE ===== */
+.article-card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.article-image-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(45deg, #000428, #004e92);
+  overflow: hidden;
+}
+.article-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* ===== TITRE ARTICLE ===== */
+.title-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+}
+.article-main-title {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: white;
+  line-height: 1.3;
+  margin-bottom: 5px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+.article-source {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-2);
+}
+/* ===== BADGES ===== */
+.metadata-badges {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 10px;
+}
+.metadata-badge {
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  border-radius: 20px;
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: fit-content;
+}
+.date-badge {
+  background: rgba(255, 107, 107, 0.9);
+  color: white;
+  align-self: flex-end;
+}
+.category-badge {
+  background: rgba(78, 205, 196, 0.9);
+  color: white;
+  align-self: flex-end;
+}
+/* ===== LOGO MÉDIA ===== */
+.media-logo-container {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 50px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+.media-logo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+/* ===== TEMPS ÉCOULÉ ===== */
+.time-ago {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background: rgba(0,0,0,0.7);
+  color: rgba(255,255,255,0.9);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+/* ===== PAGINATION MOBILE ===== */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 10px;
+  gap: 5px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+.pagination-btn {
+  background: rgba(255,255,255,0.1);
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pagination-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.pagination-numbers {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.pagination-number {
+  background: rgba(255,255,255,0.1);
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.2);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.pagination-number.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+.pagination-info {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  width: 100%;
+  text-align: center;
+  margin-top: 8px;
+}
+/* ===== OVERLAY ARTICLE MOBILE ===== */
+#article-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.98);
+  z-index: 1000;
+}
+.overlay-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.overlay-header-extended {
+  padding: 15px;
+  background: rgba(0,26,68,0.95);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  flex-shrink: 0;
+}
+.overlay-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.overlay-title {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: white;
+  flex: 1;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.close-overlay {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent-1);
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+/* ===== CONTENU ARTICLE ===== */
+.overlay-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.article-frame-container {
+  flex: 1;
+  position: relative;
+  background: white;
+}
+#article-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+/* ===== STATS BAR ===== */
+.stats-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background: rgba(0,26,68,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+.results-count {
+  font-weight: 600;
+  color: var(--accent-2);
+}
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.filter-tag {
+  background: rgba(255,255,255,0.1);
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+/* ===== BOUTON SCROLL TOP ===== */
+.scroll-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: none;
+  z-index: 99;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+/* ===== MESSAGES D'ERREUR ===== */
+.no-results, .error-state {
+  text-align: center;
+  padding: 40px 15px;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+}
+.no-results-icon, .error-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+.clear-search-btn, .retry-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 24px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+/* ===== MEDIA QUERIES ===== */
+@media (min-width: 481px) {
+  .main-title {
+    font-size: 1.8rem;
+  }
+  .article-image-container {
+    height: 220px;
+  }
+  .article-main-title {
+    font-size: 1.5rem;
+  }
+  .metadata-badges {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .date-badge, .category-badge {
+    align-self: auto;
+  }
+  .date-filters {
+    flex-direction: row;
+    align-items: center;
+  }
+  .period-presets {
+    justify-content: center;
+  }
+}
+@media (min-width: 769px) {
+  .main-title {
+    font-size: 2rem;
+  }
+  .article-image-container {
+    height: 250px;
+  }
+  .article-main-title {
+    font-size: 1.8rem;
+  }
+  #articles-container {
+    max-width: 800px;
+  }
+  .overlay-container {
+    max-width: 900px;
+    margin: 20px auto;
+    height: calc(100vh - 40px);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+}
+@media (min-width: 1025px) {
+  .article-image-container {
+    height: 280px;
+  }
+  .article-main-title {
+    font-size: 2rem;
+  }
+}
+@media (hover: none) and (pointer: coarse) {
+  .article-card:active {
+    transform: scale(0.98);
+  }
+  .clear-filters-btn:active,
+  .download-pdf-btn:active,
+  .preset-btn:active,
+  .pagination-btn:active,
+  .pagination-number:active {
+    transform: scale(0.95);
+  }
+}
+@media print {
+  .app-header,
+  .filters-container,
+  .scroll-top,
+  .close-overlay,
+  .pagination-container,
+  .period-presets,
+  .download-pdf-btn,
+  .stats-bar {
+    display: none !important;
+  }
+  body {
+    background: white;
+    color: black;
+  }
+  #articles-container {
+    display: block;
+    padding: 0;
+  }
+  .article-card {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+}
 </style>
 </head>
 <body>
-
 <header class="app-header">
-  <h1 class="main-title"><img src="images/title.png" alt="الصحافة الأسبوعية" style="max-height: 50px;"></h1>
-  <div class="filters-container">
-    <div class="search-wrapper">
-      <input type="text" id="search-input" placeholder="بحث في المقالات...">
+  <div class="title-search-container">
+    <h1 class="main-title"><img src="images/title.png" alt="مراجعة الصحافة الأسبوعية"></h1>
+   
+    <div class="filters-container">
+      <div class="search-container">
+        <div class="search-wrapper">
+          <div class="search-icon">🔍</div>
+          <input type="text" id="search-input" placeholder="بحث في المقالات..." autocomplete="off" spellcheck="false" enterkeyhint="search">
+          <button class="clear-search" id="clear-search" aria-label="مسح البحث">✕</button>
+        </div>
+      </div>
+     
+      <div class="date-filters">
+        <div class="date-group">
+          <span class="date-label">بداية:</span>
+          <div class="date-input-wrapper">
+            <input type="date" id="start-date" class="date-input" aria-label="تاريخ البداية">
+          </div>
+        </div>
+     
+        <div class="date-group">
+          <span class="date-label">نهاية:</span>
+          <div class="date-input-wrapper">
+            <input type="date" id="end-date" class="date-input" aria-label="تاريخ النهاية">
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="period-presets">
+      <button class="preset-btn active" data-period="week">أسبوعي</button>
+      <button class="preset-btn" data-period="biweekly">نصف شهري</button>
+      <button class="preset-btn" data-period="month">شهري</button>
+    </div>
+  
+    <div class="action-buttons">
+      <button class="clear-filters-btn" id="clear-filters">
+        <span>🗑️</span>
+        <span>مسح الكل</span>
+      </button>
+      <button class="download-pdf-btn" id="download-pdf-btn">
+        <span>📄</span>
+        <span>تحميل PDF</span>
+      </button>
     </div>
   </div>
 </header>
 
+<div class="stats-bar" id="stats-bar" style="display: none;">
+  <div class="results-count" id="results-count">0 مقال</div>
+  <div class="active-filters" id="active-filters"></div>
+</div>
+
 <main id="articles-container">
-  <div id="loading-indicator" style="text-align:center; padding:50px;">جاري التحميل...</div>
+  <div id="loading-indicator">
+    <div class="loading-spinner"></div>
+    <p>جاري تحميل المقالات...</p>
+  </div>
 </main>
+
+<div class="pagination-container" id="pagination-container" style="display: none;">
+  <button class="pagination-btn" id="first-btn" title="الصفحة الأولى">««</button>
+  <button class="pagination-btn" id="prev-btn" title="الصفحة السابقة">‹</button>
+
+  <div class="pagination-numbers" id="pagination-numbers"></div>
+
+  <button class="pagination-btn" id="next-btn" title="الصفحة التالية">›</button>
+  <button class="pagination-btn" id="last-btn" title="الصفحة الأخيرة">»»</button>
+
+  <div class="pagination-info" id="pagination-info">الصفحة 1 من 1</div>
+</div>
+
+<button class="scroll-top" id="scroll-top" aria-label="العودة للأعلى">↑</button>
 
 <div id="article-overlay">
   <div class="overlay-container">
     <div class="overlay-header-extended">
-      <div id="overlay-article-title" style="color:white; font-weight:bold; font-size:1rem; flex:1;"></div>
-      <button class="close-overlay" id="close-overlay">×</button>
+      <div class="overlay-header-top">
+        <div class="overlay-title" id="overlay-article-title"></div>
+        <button class="close-overlay" id="close-overlay" aria-label="إغلاق">×</button>
+      </div>
     </div>
-    <div class="article-frame-container">
-      <iframe id="article-frame"></iframe>
+    <div class="overlay-content">
+      <div class="article-frame-container">
+        <iframe id="article-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" title="محتوى المقال"></iframe>
+      </div>
     </div>
   </div>
 </div>
 
+<div id="pdf-temp-container"></div>
+
 <script>
-// الإعدادات الخاصة بالروابط
+// ===== CONFIGURATION =====
 const CONFIG = {
   jsonUrl: 'data/datajson.json?t=' + Date.now(),
-  // القاعدة الأساسية لرابط الصور من GitHub
-  githubImageBase: 'https://github.com/marocnetmail/125/blob/main/images/img05/',
-  githubImageSuffix: '?raw=true'
+  logosUrl: 'data/logo_media.json?t=' + Date.now(),
+  maxArticles: 1000,
+  imagesBasePath: 'https://github.com/marocnetmail/125/blob/main/images/img05/',
+  imagesRawParam: '?raw=true',
+  debounceDelay: 300,
+  articlesPerPage: 10
 };
 
-let allArticles = [];
+// ===== STATE =====
+let appState = {
+  articles: [],
+  filteredArticles: [],
+  searchQuery: '',
+  startDate: null,
+  endDate: null,
+  isLoading: true,
+  currentPage: 1,
+  activePeriod: 'week'
+};
 
-// === الدالة المسؤولة عن بناء رابط الصورة بنفس الطريقة المطلوبة ===
-function getArticleImageUrl(imageName) {
-  if (!imageName) return 'images/default.jpg';
-  
-  // إذا كان الاسم يحتوي على مسار كامل، نأخذ اسم الملف فقط
-  const fileName = imageName.split('/').pop();
-  
-  // دمج الرابط: Base + FileName + Suffix
-  return `${CONFIG.githubImageBase}${fileName}${CONFIG.githubImageSuffix}`;
+let mediaLogos = [];
+
+// ===== ELEMENTS =====
+const elements = {
+  searchInput: document.getElementById('search-input'),
+  clearSearch: document.getElementById('clear-search'),
+  startDate: document.getElementById('start-date'),
+  endDate: document.getElementById('end-date'),
+  clearFilters: document.getElementById('clear-filters'),
+  articlesContainer: document.getElementById('articles-container'),
+  articleOverlay: document.getElementById('article-overlay'),
+  closeOverlay: document.getElementById('close-overlay'),
+  articleFrame: document.getElementById('article-frame'),
+  overlayArticleTitle: document.getElementById('overlay-article-title'),
+  loadingIndicator: document.getElementById('loading-indicator'),
+  scrollTop: document.getElementById('scroll-top'),
+  statsBar: document.getElementById('stats-bar'),
+  resultsCount: document.getElementById('results-count'),
+  activeFilters: document.getElementById('active-filters'),
+  paginationContainer: document.getElementById('pagination-container'),
+  firstBtn: document.getElementById('first-btn'),
+  prevBtn: document.getElementById('prev-btn'),
+  nextBtn: document.getElementById('next-btn'),
+  lastBtn: document.getElementById('last-btn'),
+  paginationNumbers: document.getElementById('pagination-numbers'),
+  paginationInfo: document.getElementById('pagination-info'),
+  periodPresets: document.querySelectorAll('.preset-btn'),
+  downloadPdfBtn: document.getElementById('download-pdf-btn'),
+  pdfTempContainer: document.getElementById('pdf-temp-container')
+};
+
+// ===== INITIALIZATION =====
+async function initApp() {
+  setupEventListeners();
+  await loadMediaLogos();
+  setupPeriodPresets();
+  loadArticles();
 }
 
-async function initApp() {
+async function loadMediaLogos() {
   try {
-    const response = await fetch(CONFIG.jsonUrl);
-    const data = await response.json();
-    
-    // فلترة المقالات المرئية فقط
-    allArticles = data.filter(a => a.visible === true || a.visible === "true");
-    
-    displayArticles(allArticles);
-    setupSearch();
-    
+    const response = await fetch(CONFIG.logosUrl);
+    if (response.ok) {
+      mediaLogos = await response.json();
+    }
   } catch (error) {
-    document.getElementById('articles-container').innerHTML = "تعذر تحميل البيانات.";
-    console.error(error);
+    console.log('Impossible de charger les logos');
   }
 }
 
-function displayArticles(articles) {
-  const container = document.getElementById('articles-container');
-  container.innerHTML = '';
+function setupPeriodPresets() {
+  setPeriod('week');
 
-  articles.forEach(article => {
-    const card = document.createElement('div');
-    card.className = 'article-card';
-    
-    // استخدام الدالة الجديدة لجلب الصورة
-    const imageUrl = getArticleImageUrl(article.image_brute);
-
-    card.innerHTML = `
-      <div class="article-image-container">
-        <img src="${imageUrl}" class="article-image" loading="lazy" onerror="this.src='images/default.jpg'">
-        <div class="title-overlay">
-          <h2 class="article-main-title">${article.titre}</h2>
-          <div style="font-size:0.8rem; color:var(--accent-2); margin-top:5px;">📰 ${article.source}</div>
-        </div>
-      </div>
-    `;
-
-    card.onclick = () => {
-      document.getElementById('overlay-article-title').textContent = article.titre;
-      document.getElementById('article-frame').src = article.url;
-      document.getElementById('article-overlay').style.display = 'block';
-    };
-
-    container.appendChild(card);
+  elements.periodPresets.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const period = this.getAttribute('data-period');
+      setPeriod(period);
+    });
   });
 }
 
-function setupSearch() {
-  const searchInput = document.getElementById('search-input');
-  searchInput.addEventListener('input', (e) => {
-    const query = e.target.value.toLowerCase();
-    const filtered = allArticles.filter(a => 
-      a.titre.toLowerCase().includes(query) || 
-      a.source.toLowerCase().includes(query)
-    );
-    displayArticles(filtered);
+function setPeriod(period) {
+  const today = new Date();
+  const startDate = new Date();
+
+  elements.endDate.value = today.toISOString().split('T')[0];
+
+  switch(period) {
+    case 'week':
+      startDate.setDate(today.getDate() - 7);
+      break;
+    case 'biweekly':
+      startDate.setDate(today.getDate() - 15);
+      break;
+    case 'month':
+      startDate.setDate(today.getDate() - 30);
+      break;
+  }
+
+  elements.startDate.value = startDate.toISOString().split('T')[0];
+
+  appState.startDate = elements.startDate.value;
+  appState.endDate = elements.endDate.value;
+  appState.activePeriod = period;
+  appState.currentPage = 1;
+
+  elements.periodPresets.forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.getAttribute('data-period') === period) {
+      btn.classList.add('active');
+    }
   });
 
-  document.getElementById('close-overlay').onclick = () => {
-    document.getElementById('article-overlay').style.display = 'none';
-    document.getElementById('article-frame').src = '';
+  filterArticles();
+}
+
+// ===== EVENT LISTENERS =====
+function setupEventListeners() {
+  elements.searchInput.addEventListener('input', function(e) {
+    appState.searchQuery = e.target.value;
+    elements.clearSearch.style.display = appState.searchQuery ? 'flex' : 'none';
+    debounce(filterArticles, CONFIG.debounceDelay)();
+  });
+
+  elements.clearSearch.addEventListener('click', () => {
+    elements.searchInput.value = '';
+    appState.searchQuery = '';
+    elements.clearSearch.style.display = 'none';
+    filterArticles();
+  });
+
+  elements.startDate.addEventListener('change', function() {
+    appState.startDate = this.value;
+    appState.activePeriod = 'custom';
+    updatePeriodButtons();
+    filterArticles();
+  });
+
+  elements.endDate.addEventListener('change', function() {
+    appState.endDate = this.value;
+    appState.activePeriod = 'custom';
+    updatePeriodButtons();
+    filterArticles();
+  });
+
+  elements.clearFilters.addEventListener('click', () => {
+    elements.searchInput.value = '';
+    appState.searchQuery = '';
+    elements.clearSearch.style.display = 'none';
+    setPeriod('week');
+  });
+
+  elements.closeOverlay.addEventListener('click', closeArticleOverlay);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeArticleOverlay();
+  });
+
+  elements.scrollTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  window.addEventListener('scroll', () => {
+    elements.scrollTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+  });
+
+  elements.firstBtn.addEventListener('click', () => goToPage(1));
+  elements.prevBtn.addEventListener('click', () => goToPage(appState.currentPage - 1));
+  elements.nextBtn.addEventListener('click', () => goToPage(appState.currentPage + 1));
+  elements.lastBtn.addEventListener('click', () => goToPage(getTotalPages()));
+
+  elements.downloadPdfBtn.addEventListener('click', generatePDF);
+  
+  // Support tactile
+  document.addEventListener('touchstart', function() {}, {passive: true});
+}
+
+function updatePeriodButtons() {
+  elements.periodPresets.forEach(btn => {
+    btn.classList.remove('active');
+  });
+}
+
+// ===== DATE FUNCTIONS =====
+function parseArticleDate(dateString) {
+  if (!dateString) return null;
+  try {
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('/');
+    return new Date(year, month - 1, day);
+  } catch (e) {
+    return null;
+  }
+}
+
+function formatDateToDDMMYYYY(dateString) {
+  if (!dateString) return '';
+  try {
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('/');
+    const paddedDay = day.padStart(2, '0');
+    const paddedMonth = month.padStart(2, '0');
+    return `${paddedDay}/${paddedMonth}/${year}`;
+  } catch (e) {
+    return dateString || '';
+  }
+}
+
+function getTimeAgo(dateString) {
+  if (!dateString) return '';
+  try {
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('/');
+    const articleDate = new Date(year, month - 1, day);
+    const now = new Date();
+    const diffMs = now - articleDate;
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return 'اليوم';
+    if (diffDays === 1) return 'أمس';
+    if (diffDays < 7) return `منذ ${diffDays} أيام`;
+    if (diffDays < 30) {
+      const weeks = Math.floor(diffDays / 7);
+      return `منذ ${weeks} أسبوع`;
+    }
+    return formatDateToDDMMYYYY(dateString);
+  } catch (e) {
+    return '';
+  }
+}
+
+function isDateInRange(articleDate, startDate, endDate) {
+  if (!articleDate) return false;
+  const articleDateObj = parseArticleDate(articleDate);
+  if (!articleDateObj) return false;
+  if (!startDate && !endDate) return true;
+  
+  const start = startDate ? new Date(startDate) : null;
+  const end = endDate ? new Date(endDate) : null;
+  
+  if (start) start.setHours(0, 0, 0, 0);
+  if (end) end.setHours(23, 59, 59, 999);
+  
+  if (start && articleDateObj < start) return false;
+  if (end && articleDateObj > end) return false;
+  
+  return true;
+}
+
+// ===== PAGINATION =====
+function getTotalPages() {
+  return Math.ceil(appState.filteredArticles.length / CONFIG.articlesPerPage);
+}
+
+function getCurrentPageArticles() {
+  const startIndex = (appState.currentPage - 1) * CONFIG.articlesPerPage;
+  const endIndex = startIndex + CONFIG.articlesPerPage;
+  return appState.filteredArticles.slice(startIndex, endIndex);
+}
+
+function goToPage(page) {
+  const totalPages = getTotalPages();
+  if (page < 1 || page > totalPages) return;
+  
+  appState.currentPage = page;
+  displayArticles();
+  updatePagination();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updatePagination() {
+  const totalPages = getTotalPages();
+  const currentPage = appState.currentPage;
+  
+  if (totalPages <= 1) {
+    elements.paginationContainer.style.display = 'none';
+    return;
+  }
+  
+  elements.paginationContainer.style.display = 'flex';
+  
+  elements.firstBtn.disabled = currentPage === 1;
+  elements.prevBtn.disabled = currentPage === 1;
+  elements.nextBtn.disabled = currentPage === totalPages;
+  elements.lastBtn.disabled = currentPage === totalPages;
+  
+  elements.paginationInfo.textContent = `الصفحة ${currentPage} من ${totalPages}`;
+  
+  elements.paginationNumbers.innerHTML = '';
+  
+  let startPage = Math.max(1, currentPage - 2);
+  let endPage = Math.min(totalPages, startPage + 4);
+  
+  if (endPage - startPage < 4) {
+    startPage = Math.max(1, endPage - 4);
+  }
+  
+  for (let i = startPage; i <= endPage; i++) {
+    const pageBtn = document.createElement('div');
+    pageBtn.className = `pagination-number ${i === currentPage ? 'active' : ''}`;
+    pageBtn.textContent = i;
+    pageBtn.addEventListener('click', () => goToPage(i));
+    elements.paginationNumbers.appendChild(pageBtn);
+  }
+}
+
+// ===== IMAGE & LOGO FUNCTIONS =====
+function getArticleImageUrl(article) {
+  if (article.image_brute) {
+    // Utiliser la méthode GitHub avec le chemin spécifié
+    return CONFIG.imagesBasePath + article.image_brute + CONFIG.imagesRawParam;
+  }
+  return null;
+}
+
+function getMediaLogoUrl(source) {
+  if (!source || mediaLogos.length === 0) return null;
+  
+  const media = mediaLogos.find(item =>
+    item.domaine && source && (
+      item.domaine.toLowerCase() === source.toLowerCase() ||
+      source.toLowerCase().includes(item.domaine.toLowerCase())
+    )
+  );
+  
+  return media ? media.url : null;
+}
+
+function createImageElement(imageUrl, title) {
+  if (!imageUrl) {
+    return '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.7);">صورة غير متوفرة</div>';
+  }
+  
+  // URL déjà formatée avec le paramètre ?raw=true
+  return `<img src="${imageUrl}" alt="${title || 'صورة المقال'}" style="width:100%;height:100%;object-fit:cover;" onerror="this.onerror=null; this.src=''; this.parentNode.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.7);\'>صورة غير متوفرة</div>';">`;
+}
+
+function createMediaLogoElement(source) {
+  const logoUrl = getMediaLogoUrl(source);
+  if (!logoUrl) return '';
+  
+  return `<div class="media-logo-container"><img src="${logoUrl}" alt="شعار ${source}" class="media-logo" onerror="this.style.display='none';"></div>`;
+}
+
+// ===== LOAD & PROCESS ARTICLES =====
+async function loadArticles() {
+  try {
+    showLoading(true);
+    const response = await fetch(CONFIG.jsonUrl);
+    if (!response.ok) throw new Error('HTTP error');
+    const data = await response.json();
+    appState.articles = processArticleData(data);
+    filterArticles();
+  } catch (error) {
+    console.error('Error loading articles:', error);
+    showError('تعذر تحميل المقالات. يرجى المحاولة مرة أخرى.');
+  } finally {
+    showLoading(false);
+  }
+}
+
+function processArticleData(articles) {
+  return articles
+    .filter(a => a.visible === true || a.visible === "true")
+    .sort((a, b) => {
+      try {
+        const parseDate = (str) => {
+          const [date, time] = str.split(' ');
+          const [d, m, y] = date.split('/');
+          const [h, min] = time ? time.split(':') : [0, 0];
+          return new Date(y, m - 1, d, h, min);
+        };
+        return parseDate(b.date_heure) - parseDate(a.date_heure);
+      } catch (e) {
+        return 0;
+      }
+    })
+    .slice(0, CONFIG.maxArticles);
+}
+
+function filterArticles() {
+  const query = appState.searchQuery.toLowerCase().trim();
+  const startDate = appState.startDate;
+  const endDate = appState.endDate;
+
+  appState.filteredArticles = appState.articles.filter(article => {
+    let matchesText = true;
+    if (query) {
+      const searchableText = `
+        ${article.titre || ''}
+        ${article.source || ''}
+        ${article.theme || ''}
+        ${article.mots_cles || ''}
+      `.toLowerCase();
+      matchesText = searchableText.includes(query);
+    }
+    
+    const matchesDate = isDateInRange(article.date_heure, startDate, endDate);
+    return matchesText && matchesDate;
+  });
+
+  appState.currentPage = 1;
+  displayArticles();
+  updateStatsBar();
+  updatePagination();
+  elements.downloadPdfBtn.disabled = appState.filteredArticles.length === 0;
+}
+
+function updateStatsBar() {
+  const count = appState.filteredArticles.length;
+  const total = appState.articles.length;
+  
+  elements.resultsCount.textContent = `${count} مقال${count !== 1 ? 'ات' : ''} (${total} المجموع)`;
+  elements.statsBar.style.display = 'flex';
+  updateActiveFilters();
+}
+
+function updateActiveFilters() {
+  elements.activeFilters.innerHTML = '';
+  
+  if (appState.searchQuery) {
+    const filterTag = document.createElement('div');
+    filterTag.className = 'filter-tag';
+    filterTag.innerHTML = `
+      <span>🔍 "${appState.searchQuery}"</span>
+      <button class="remove-filter" onclick="clearSearchFilter()" aria-label="إزالة هذا الفلتر">×</button>
+    `;
+    elements.activeFilters.appendChild(filterTag);
+  }
+  
+  if (appState.startDate || appState.endDate) {
+    const formatFilterDate = (dateStr) => {
+      if (!dateStr) return '';
+      const [year, month, day] = dateStr.split('-');
+      return `${day}/${month}/${year}`;
+    };
+    
+    const start = appState.startDate ? formatFilterDate(appState.startDate) : 'البداية';
+    const end = appState.endDate ? formatFilterDate(appState.endDate) : 'النهاية';
+    
+    const filterTag = document.createElement('div');
+    filterTag.className = 'filter-tag';
+    filterTag.innerHTML = `
+      <span>📅 ${start} → ${end}</span>
+      <button class="remove-filter" onclick="clearDateFilters()" aria-label="إزالة هذا الفلتر">×</button>
+    `;
+    elements.activeFilters.appendChild(filterTag);
+  }
+}
+
+function clearSearchFilter() {
+  elements.searchInput.value = '';
+  appState.searchQuery = '';
+  elements.clearSearch.style.display = 'none';
+  filterArticles();
+}
+
+function clearDateFilters() {
+  setPeriod('week');
+}
+
+function displayArticles() {
+  elements.articlesContainer.innerHTML = '';
+  
+  if (appState.filteredArticles.length === 0) {
+    showNoResults();
+    return;
+  }
+  
+  const currentArticles = getCurrentPageArticles();
+  
+  currentArticles.forEach((article, index) => {
+    const card = createArticleCard(article, index);
+    elements.articlesContainer.appendChild(card);
+  });
+}
+
+function createArticleCard(article, index) {
+  const card = document.createElement('div');
+  card.className = 'article-card';
+  
+  const imageUrl = getArticleImageUrl(article);
+  const formattedDate = formatDateToDDMMYYYY(article.date_heure);
+  const timeAgo = getTimeAgo(article.date_heure);
+  const imageElement = createImageElement(imageUrl, article.titre);
+  const mediaLogoElement = createMediaLogoElement(article.source);
+  
+  card.innerHTML = `
+    <div class="article-image-container">
+      ${imageElement}
+      ${mediaLogoElement}
+      <div class="metadata-badges">
+        <div class="metadata-badge date-badge" title="${formattedDate || ''}">
+          <span>📅</span>
+          <span>${formattedDate || 'تاريخ غير معروف'}</span>
+        </div>
+        <div class="metadata-badge category-badge" title="${article.theme || ''}">
+          <span>🏷️</span>
+          <span>${truncateTitle(article.theme || 'غير مصنف', 20)}</span>
+        </div>
+      </div>
+      ${timeAgo ? `<div class="time-ago">${timeAgo}</div>` : ''}
+      <div class="title-overlay">
+        <h2 class="article-main-title">${truncateTitle(article.titre || 'بدون عنوان', 100)}</h2>
+        <div class="article-source">
+          <span>📰</span>
+          <span>${article.source || 'مصدر غير معروف'}</span>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  card.addEventListener('click', () => {
+    openArticleOverlay(article);
+  });
+  
+  return card;
+}
+
+function truncateTitle(title, maxLength = 100) {
+  if (!title || title.length <= maxLength) return title;
+  return title.substring(0, maxLength) + '...';
+}
+
+function openArticleOverlay(article) {
+  elements.overlayArticleTitle.textContent = article.titre || 'المقال';
+  elements.articleFrame.src = article.url || '#';
+  elements.articleOverlay.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeArticleOverlay() {
+  elements.articleOverlay.style.display = 'none';
+  elements.articleFrame.src = '';
+  document.body.style.overflow = '';
+}
+
+function showLoading(show) {
+  elements.loadingIndicator.style.display = show ? 'block' : 'none';
+}
+
+function showNoResults() {
+  elements.articlesContainer.innerHTML = `
+    <div class="no-results">
+      <div class="no-results-icon">🔍</div>
+      <h3>لا توجد نتائج</h3>
+      <p>لا توجد مقالات تطابق معايير البحث الخاصة بك</p>
+      <button class="clear-search-btn" onclick="elements.clearFilters.click()">
+        مسح جميع الفلاتر
+      </button>
+    </div>
+  `;
+  elements.statsBar.style.display = 'none';
+  elements.paginationContainer.style.display = 'none';
+}
+
+function showError(message) {
+  elements.articlesContainer.innerHTML = `
+    <div class="error-state">
+      <div class="error-icon">⚠️</div>
+      <h3>خطأ</h3>
+      <p>${message}</p>
+      <button class="retry-button" onclick="loadArticles()">
+        إعادة المحاولة
+      </button>
+    </div>
+  `;
+  elements.statsBar.style.display = 'none';
+  elements.paginationContainer.style.display = 'none';
+}
+
+// ===== PDF GENERATION =====
+async function generatePDF() {
+  try {
+    if (appState.filteredArticles.length === 0) {
+      alert('لا توجد مقالات لتحميلها');
+      return;
+    }
+    
+    elements.downloadPdfBtn.disabled = true;
+    const originalText = elements.downloadPdfBtn.innerHTML;
+    elements.downloadPdfBtn.innerHTML = '<span>⏳</span><span>جار التوليد...</span>';
+    
+    const pdfContent = createPdfContent();
+    elements.pdfTempContainer.innerHTML = '';
+    elements.pdfTempContainer.appendChild(pdfContent);
+    
+    await waitForImages(pdfContent);
+    
+    const options = {
+      margin: [10, 10, 10, 10],
+      filename: `مراجعة_الصحافة_${new Date().toISOString().split('T')[0]}.pdf`,
+      image: { type: 'jpeg', quality: 0.95 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff'
+      },
+      jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+      }
+    };
+    
+    await html2pdf().set(options).from(pdfContent).save();
+    
+    elements.pdfTempContainer.innerHTML = '';
+    elements.downloadPdfBtn.disabled = false;
+    elements.downloadPdfBtn.innerHTML = originalText;
+    
+  } catch (error) {
+    console.error('Erreur PDF:', error);
+    alert('حدث خطأ أثناء إنشاء ملف PDF');
+    elements.downloadPdfBtn.disabled = false;
+    elements.downloadPdfBtn.innerHTML = '<span>📄</span><span>تحميل PDF</span>';
+    if (elements.pdfTempContainer) {
+      elements.pdfTempContainer.innerHTML = '';
+    }
+  }
+}
+
+function waitForImages(container) {
+  return new Promise((resolve) => {
+    const images = container.querySelectorAll('img');
+    let loaded = 0;
+    const total = images.length;
+    
+    if (total === 0) {
+      resolve();
+      return;
+    }
+    
+    const checkComplete = () => {
+      loaded++;
+      if (loaded >= total) {
+        setTimeout(resolve, 500);
+      }
+    };
+    
+    images.forEach(img => {
+      if (img.complete) {
+        checkComplete();
+      } else {
+        img.onload = checkComplete;
+        img.onerror = checkComplete;
+      }
+    });
+    
+    setTimeout(resolve, 5000);
+  });
+}
+
+function createPdfContent() {
+  const container = document.createElement('div');
+  container.style.fontFamily = "'Tajawal', sans-serif";
+  container.style.direction = 'rtl';
+  container.style.textAlign = 'right';
+  container.style.padding = '20px';
+  container.style.background = 'white';
+  container.style.color = 'black';
+  
+  const header = document.createElement('div');
+  header.style.textAlign = 'center';
+  header.style.marginBottom = '20px';
+  header.style.borderBottom = '2px solid #1a73e8';
+  header.style.paddingBottom = '15px';
+  
+  const title = document.createElement('h1');
+  title.textContent = 'مراجعة الصحافة الأسبوعية';
+  title.style.fontSize = '24px';
+  title.style.color = '#1a73e8';
+  title.style.marginBottom = '8px';
+  
+  const subtitle = document.createElement('div');
+  subtitle.textContent = 'Revue de Presse Hebdomadaire';
+  subtitle.style.fontSize = '14px';
+  subtitle.style.color = '#666';
+  subtitle.style.marginBottom = '10px';
+  
+  header.appendChild(title);
+  header.appendChild(subtitle);
+  container.appendChild(header);
+  
+  appState.filteredArticles.forEach((article, index) => {
+    const articleDiv = document.createElement('div');
+    articleDiv.style.marginBottom = '20px';
+    articleDiv.style.border = '1px solid #ddd';
+    articleDiv.style.borderRadius = '8px';
+    articleDiv.style.padding = '15px';
+    articleDiv.style.background = '#f9f9f9';
+    
+    const title = document.createElement('h2');
+    title.textContent = `${index + 1}. ${article.titre || 'بدون عنوان'}`;
+    title.style.fontSize = '16px';
+    title.style.fontWeight = 'bold';
+    title.style.marginBottom = '8px';
+    articleDiv.appendChild(title);
+    
+    const meta = document.createElement('div');
+    meta.style.fontSize = '12px';
+    meta.style.color = '#666';
+    meta.style.marginBottom = '8px';
+    
+    const formattedDate = formatDateToDDMMYYYY(article.date_heure) || 'تاريخ غير معروف';
+    
+    meta.innerHTML = `
+      <div><strong>المصدر:</strong> ${article.source || 'غير معروف'}</div>
+      <div><strong>التاريخ:</strong> ${formattedDate}</div>
+      ${article.theme ? `<div><strong>الفئة:</strong> ${article.theme}</div>` : ''}
+    `;
+    
+    articleDiv.appendChild(meta);
+    
+    if (article.mots_cles) {
+      const keywords = article.mots_cles.split(',').map(k => k.trim()).filter(k => k);
+      if (keywords.length > 0) {
+        const keywordsDiv = document.createElement('div');
+        keywordsDiv.style.display = 'flex';
+        keywordsDiv.style.flexWrap = 'wrap';
+        keywordsDiv.style.gap = '5px';
+        keywordsDiv.style.marginTop = '8px';
+        
+        keywords.forEach(keyword => {
+          const keywordSpan = document.createElement('span');
+          keywordSpan.textContent = keyword;
+          keywordSpan.style.background = '#1a73e8';
+          keywordSpan.style.color = 'white';
+          keywordSpan.style.padding = '3px 10px';
+          keywordSpan.style.borderRadius = '10px';
+          keywordSpan.style.fontSize = '11px';
+          keywordsDiv.appendChild(keywordSpan);
+        });
+        
+        articleDiv.appendChild(keywordsDiv);
+      }
+    }
+    
+    container.appendChild(articleDiv);
+  });
+  
+  return container;
+}
+
+function debounce(func, wait) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
   };
 }
 
+// ===== INITIALIZE APP =====
 document.addEventListener('DOMContentLoaded', initApp);
 </script>
 </body>
