@@ -154,9 +154,12 @@ body{
 </main>
 
 <script>
+// URL JSON sur GitHub
 const GITHUB_JSON = "https://raw.githubusercontent.com/marocnetmail/125/main/data/data_fusionnee.json";
+// Base URL images (raw)
 const IMAGE_BASE = "https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/";
 
+// Formater la date en style arabe
 function formatDateTime(dateStr){
     if(!dateStr) return "";
     const date = new Date(dateStr);
@@ -165,6 +168,7 @@ function formatDateTime(dateStr){
            date.toLocaleDateString('ar-EG',{day:'numeric',month:'short'});
 }
 
+// Créer une carte d'actualité
 function createCard(item){
     const source = item.url
         ? new URL(item.url).hostname.replace('www.','').split('.')[0].toUpperCase()
@@ -172,7 +176,7 @@ function createCard(item){
 
     const timeStr = formatDateTime(item["date/heure"]);
 
-    // ✅ lien image corrigé (raw.githubusercontent)
+    // Lien image corrigé
     const imgUrl = IMAGE_BASE + item.id + ".jpg";
 
     const card = document.createElement('div');
@@ -183,6 +187,7 @@ function createCard(item){
             <img src="${imgUrl}"
                  loading="lazy"
                  class="main-img"
+                 style="width:100%; height:auto; object-fit:cover;"
                  onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400/001122/FFFFFF?text=Smart+Press';">
             <div class="content-overlay">
                 <h2 class="news-title">${item.titre || item.title || "بدون عنوان"}</h2>
@@ -198,6 +203,7 @@ function createCard(item){
     return card;
 }
 
+// Récupérer et afficher les actualités
 async function fetchNews(){
     const feed = document.getElementById('news-feed');
 
@@ -227,7 +233,9 @@ async function fetchNews(){
     }
 }
 
+// Lancer le fetch
 fetchNews();
 </script>
 
-</body
+</body>
+</html>
