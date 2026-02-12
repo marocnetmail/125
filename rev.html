@@ -242,14 +242,16 @@ body {
   </div>
 </header>
 
+
 <section id="featured-section">
     <div class="featured-header">
         <h3 style="color: var(--accent-3); font-size: 1.1rem; border-right: 4px solid var(--accent-1); padding-right: 10px;">آخر التحديثات الهامة</h3>
     </div>
+	     
     <div class="featured-grid">
-        <div class="featured-item"><img src="images/img5/20260208230203057.jpg" alt="Update 1"></div>
-        <div class="featured-item"><img src="images/img5/20260208230203058.jpg" alt="Update 2"></div>
-        <div class="featured-item"><img src="images/img5/20260208230203060.jpg" alt="Update 3"></div>
+        <div><img src="images/img05/20260206160404000.jpg" alt="Update 1"></div>
+        <div class="featured-item"><img src="images/img05/20260208230203058.jpg" alt="Update 2"></div>
+        <div class="featured-item"><img src="images/img05/20260208230203060.jpg" alt="Update 3"></div>
     </div>
 </section>
 
@@ -295,7 +297,7 @@ const CONFIG = {
   jsonUrl: `${GITHUB_BASE}/data/data_fusionnee.json?t=` + Date.now(),
   logosUrl: `${GITHUB_BASE}/data/logo_media.json?t=` + Date.now(),
   maxArticles: 1000,
-  imagesBasePath: `images/img5`, // المسار المحلي أو النسبي الصحيح
+  imagesBasePath: `images/img05`, // المسار المحلي أو النسبي الصحيح
   debounceDelay: 300,
   articlesPerPage: 15
 };
@@ -393,11 +395,11 @@ function displayArticles() {
   pageArticles.forEach(article => {
     const card = document.createElement('div');
     card.className = 'article-card';
-    const imgUrl = article.index ? `${CONFIG.imagesBasePath}/${article.index}.jpg` : 'images/placeholder.jpg';
+    const imgUrl = article.index ? `${CONFIG.imagesBasePath}/${article.index}.jpg` : 'images/img05/placeholder.jpg';
     
     card.innerHTML = `
       <div class="article-image-container">
-        <img src="${imgUrl}" class="article-image" style="width:100%; height:100%; object-fit:cover" onerror="this.src='images/title.png'">
+        <img src="${imgUrl}" class="article-image" style="width:100%; height:100%; object-fit:cover" onerror="this.src='images/img05/title.png'">
         <div class="metadata-badges">
             <span class="metadata-badge date-badge">📅 ${article["date/heure"]?.split('T')[0] || ''}</span>
             <span class="metadata-badge category-badge">🏷️ ${article["thème"] || 'عام'}</span>
