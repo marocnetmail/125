@@ -1,176 +1,233 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الصحافة الذكية | Smart Press</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الصحافة الذكية | Smart Press</title>
 
-<style>
-:root{
-    --primary:#001122;
-    --accent:#cc0000;
-    --bg:#f0f2f5;
-}
+    <style>
+        :root {
+            --primary: #001122;
+            --accent: #cc0000;
+            --bg: #f4f7f6;
+            --text-dark: #333;
+            --card-bg: #ffffff;
+        }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-body{
-    font-family:Arial, sans-serif;
-    background:var(--bg);
-    direction:rtl;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
 
-header{
-    background:var(--primary);
-    color:white;
-    padding:15px;
-    text-align:center;
-    font-weight:bold;
-    font-size:18px;
-}
+        /* Header */
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-#news-feed{
-    max-width:650px;
-    margin:20px auto;
-    padding:10px;
-}
+        /* News Container */
+        #news-feed {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 0 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
 
-.card{
-    background:white;
-    margin-bottom:20px;
-    border-radius:12px;
-    overflow:hidden;
-    box-shadow:0 4px 15px rgba(0,0,0,.1);
-    cursor:pointer;
-    transition:0.3s;
-}
+        /* Card Style */
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            border: 1px solid #eee;
+        }
 
-.card:hover{
-    transform:translateY(-4px);
-}
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
 
-.card img{
-    width:100%;
-    height:260px;
-    object-fit:cover;
-    display:block;
-}
+        .image-container {
+            width: 100%;
+            height: 200px;
+            background: #e0e0e0;
+            overflow: hidden;
+        }
 
-.card-content{
-    padding:12px;
-}
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s;
+        }
 
-.card-title{
-    font-size:16px;
-    font-weight:bold;
-    margin-bottom:8px;
-}
+        .card:hover img {
+            scale: 1.05;
+        }
 
-.card-meta{
-    font-size:13px;
-    color:#555;
-}
+        .card-content {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
 
-.loader{
-    text-align:center;
-    padding:40px;
-}
-</style>
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-meta {
+            font-size: 0.85rem;
+            color: #777;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badge {
+            background: var(--accent);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+        }
+
+        /* States */
+        .loader {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .error-msg {
+            color: var(--accent);
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 20px;
+        }
+
+        @media (max-width: 600px) {
+            #news-feed {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
 <header>الصحافة الذكية</header>
 
-<div id="news-feed">
+<main id="news-feed">
     <div class="loader">جاري تحميل الأخبار...</div>
-</div>
+</main>
 
 <script>
+    const CONFIG = {
+        JSON_URL: "https://marocnetmail.github.io/125/data/data_fusionnee.json",
+        IMAGE_BASE: "https://marocnetmail.github.io/125/images/img05/",
+        PLACEHOLDER: "https://via.placeholder.com/600x400/001122/FFFFFF?text=Smart+Press"
+    };
 
-// ✅ JSON via GitHub Pages
-const JSON_URL = "https://marocnetmail.github.io/125/data/data_fusionnee.json";
+    async function fetchNews() {
+        const container = document.getElementById("news-feed");
+        
+        try {
+            // إضافة cache-busting لتجنب المشاكل عند تحديث GitHub Pages
+            const response = await fetch(`${CONFIG.JSON_URL}?v=${new Date().getTime()}`);
+            
+            if (!response.ok) throw new Error("فشل الاتصال بالخادم");
 
-// ✅ Images via GitHub Pages
-const IMAGE_BASE = "https://marocnetmail.github.io/125/images/img05/";
+            const data = await response.json();
+            
+            // تصفية البيانات (تأكد من وجود ID وحالة الظهور)
+            const filteredData = data.filter(item => 
+                (item.visible === true || item.visible === "true") && item.id
+            );
 
-async function loadNews(){
+            renderNews(filteredData.slice(0, 24)); // عرض أول 24 خبر
 
-    const container = document.getElementById("news-feed");
-
-    try{
-
-        const response = await fetch(JSON_URL + "?v=" + Date.now());
-
-        if(!response.ok){
-            throw new Error("Erreur chargement JSON");
+        } catch (error) {
+            console.error("Error:", error);
+            container.innerHTML = `
+                <div class="error-msg">
+                    <p>⚠️ عذراً، تعذر تحميل الأخبار حالياً.</p>
+                    <button onclick="location.reload()" style="margin-top:10px; padding:5px 15px; cursor:pointer;">إعادة المحاولة</button>
+                </div>`;
         }
+    }
 
-        const data = await response.json();
-
-        container.innerHTML = "";
-
-        // Filtrer visible
-        const visibleNews = data.filter(item =>
-            item.visible === true || item.visible === "true"
-        );
-
-        if(visibleNews.length === 0){
-            container.innerHTML = "<div class='loader'>لا توجد أخبار حالياً</div>";
+    function renderNews(newsItems) {
+        const container = document.getElementById("news-feed");
+        
+        if (newsItems.length === 0) {
+            container.innerHTML = "<div class='loader'>لا توجد أخبار متاحة حالياً.</div>";
             return;
         }
 
-        visibleNews.slice(0,20).forEach(item => {
+        container.innerHTML = newsItems.map(item => createCardHTML(item)).join('');
+    }
 
-            if(!item.id) return;
+    function createCardHTML(item) {
+        const imgUrl = `${CONFIG.IMAGE_BASE}${item.id}.jpg`;
+        const title = item.titre || item.title || "عنوان غير متوفر";
+        const date = item["date/heure"] || "منذ وقت قليل";
+        const link = item.url ? `onclick="window.open('${item.url}', '_blank')"` : "";
 
-            const imgUrl = IMAGE_BASE + item.id + ".jpg";
-
-            const card = document.createElement("div");
-            card.className = "card";
-
-            card.innerHTML = `
-                <img src="${imgUrl}"
-                     loading="lazy"
-                     onerror="this.onerror=null;this.src='https://via.placeholder.com/600x400/001122/FFFFFF?text=Smart+Press'">
-
+        return `
+            <article class="card" ${link}>
+                <div class="image-container">
+                    <img src="${imgUrl}" 
+                         alt="${title}" 
+                         loading="lazy" 
+                         onerror="this.src='${CONFIG.PLACEHOLDER}'">
+                </div>
                 <div class="card-content">
-                    <div class="card-title">
-                        ${item.titre || item.title || "بدون عنوان"}
-                    </div>
+                    <h2 class="card-title">${title}</h2>
                     <div class="card-meta">
-                        ${item["date/heure"] || ""}
+                        <span>${date}</span>
+                        <span class="badge">عاجل</span>
                     </div>
                 </div>
-            `;
-
-            if(item.url){
-                card.onclick = () => window.open(item.url,'_blank');
-            }
-
-            container.appendChild(card);
-
-        });
-
-    }catch(error){
-
-        console.error(error);
-
-        container.innerHTML = `
-            <div class='loader'>
-                ❌ خطأ في تحميل البيانات<br><br>
-                تأكد أن GitHub Pages مفعل
-            </div>
+            </article>
         `;
     }
-}
 
-loadNews();
-
+    // تشغيل التطبيق
+    document.addEventListener("DOMContentLoaded", fetchNews);
 </script>
 
 </body>
