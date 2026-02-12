@@ -1,53 +1,333 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Affichage image GitHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#001122">
+    <title>مراجعة الصحافة - النسخة المحدثة</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --primary: #1a73e8;
+            --background: #001122;
+            --card-bg: #001a44;
+            --text: #ffffff;
+            --accent: #4ECDC4;
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
+            font-family: 'Tajawal', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
         }
 
-        h2 {
-            margin-top: 40px;
+        /* Header & Logo */
+        .app-header {
+            background: rgba(0, 17, 34, 0.98);
+            padding: 20px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        .main-title img {
+            max-width: 180px;
+            display: block;
+            margin: 0 auto 15px;
         }
 
-        /* 2. Image en background */
-        .bg-image {
-            width: 300px;
-            height: 200px;
-            margin: 20px auto;
-            background-image: url('https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg');
-            background-size: cover;
-            background-position: center;
-            border: 2px solid #333;
+        /* Search Box */
+        .search-wrapper {
+            background: rgba(255,255,255,0.08);
+            border-radius: var(--radius);
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.15);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        #search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 10px;
+            font-size: 16px;
+            outline: none;
+            font-family: inherit;
         }
 
-        /* 3. Image avec zoom au survol */
-        .zoom-img {
-            width: 300px;
-            height: auto;
-            transition: transform 0.3s ease;
+        /* Featured Section */
+        .featured-header { padding: 20px 15px 5px; max-width: 1000px; margin: 0 auto; }
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            padding: 15px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .featured-item {
+            height: 180px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 2px solid var(--primary);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .featured-item img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Articles Grid */
+        #articles-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .zoom-img:hover {
-            transform: scale(1.2);
+        .article-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        .article-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+
+        .image-box { position: relative; height: 180px; background: #000; }
+        .image-box img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .card-content { padding: 15px; flex: 1; }
+        .article-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; color: #fff; }
+        .meta-info { font-size: 0.85rem; color: var(--accent); display: flex; justify-content: space-between; }
+
+        /* Overlay */
+        #article-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 2000;
+        }
+        .overlay-nav { padding: 15px; display: flex; justify-content: space-between; background: var(--card-bg); align-items: center; }
+        .close-btn { background: #ff4444; border: none; color: white; padding: 5px 15px; border-radius: 5px; cursor: pointer; }
+
+        /* Controls */
+        .controls { max-width: 600px; margin: 15px auto; display: flex; gap: 10px; padding: 0 15px; }
+        .btn-pdf { background: #2e7d32; color: white; border: none; padding: 12px; border-radius: 8px; flex: 1; cursor: pointer; font-weight: bold; }
+
+        @media (max-width: 600px) {
+            #articles-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <h1>Affichage de l'image depuis GitHub</h1>
 
-    <h2>1. Image simple</h2>
-    <img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg" alt="Image simple" width="300">
+<header class="app-header">
+    <div class="main-title">
+        <img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/title.png" alt="Logo">
+    </div>
+    
+    <div class="search-wrapper">
+        <span>🔍</span>
+        <input type="text" id="search-input" placeholder="بحث في المقالات..." autocomplete="off">
+    </div>
 
-    <h2>2. Image comme background d'un div</h2>
-    <div class="bg-image"></div>
+    <div class="controls">
+        <button class="btn-pdf" id="download-pdf">📄 تحميل التقرير (PDF)</button>
+    </div>
+</header>
 
-    <h2>3. Image avec effet zoom au survol</h2>
-    <img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg" alt="Image zoom" class="zoom-img">
+<section id="featured">
+    <div class="featured-header">
+        <h3 style="color: var(--accent); font-size: 1rem;">✨ أهم المستجدات</h3>
+    </div>
+    <div class="featured-grid">
+        <div class="featured-item"><img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260206160404000.jpg" alt="1"></div>
+        <div class="featured-item"><img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260208230203058.jpg" alt="2"></div>
+        <div class="featured-item"><img src="https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/20260208230203060.jpg" alt="3"></div>
+    </div>
+</section>
+
+<div style="text-align: center; padding: 10px; font-size: 0.9rem; color: var(--accent);" id="results-count">
+    جاري تحميل البيانات...
+</div>
+
+<main id="articles-container">
+    </main>
+
+<div id="article-overlay">
+    <div class="overlay-nav">
+        <span id="overlay-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%;"></span>
+        <button class="close-btn" id="close-overlay">إغلاق ×</button>
+    </div>
+    <iframe id="article-frame" style="width: 100%; height: calc(100% - 60px); border: none; background: white;"></iframe>
+</div>
+
+<script>
+/**
+ * CONFIGURATION
+ */
+const CONFIG = {
+    // رابط البيانات الخام من GitHub
+    dataUrl: 'https://raw.githubusercontent.com/marocnetmail/125/main/data/data_fusionnee.json',
+    // مسار الصور المرفق في طلبك
+    imagesBase: 'https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/',
+    fallbackImg: 'https://raw.githubusercontent.com/marocnetmail/125/main/images/title.png'
+};
+
+let allArticles = [];
+
+/**
+ * INIT APP
+ */
+async function init() {
+    try {
+        const response = await fetch(CONFIG.dataUrl + '?v=' + Date.now());
+        const data = await response.json();
+        
+        // تنظيف وفلترة البيانات
+        allArticles = data.filter(a => a.visible === true || a.visible === "true")
+                         .sort((a, b) => new Date(b.date_heure || 0) - new Date(a.date_heure || 0));
+        
+        renderArticles(allArticles);
+        setupSearch();
+    } catch (error) {
+        document.getElementById('results-count').textContent = "فشل تحميل البيانات. تأكد من الاتصال.";
+        console.error("Fetch Error:", error);
+    }
+}
+
+/**
+ * RENDER FUNCTION
+ */
+function renderArticles(list) {
+    const container = document.getElementById('articles-container');
+    const countLabel = document.getElementById('results-count');
+    
+    container.innerHTML = '';
+    countLabel.textContent = `تم العثور على ${list.length} مقال`;
+
+    list.forEach(article => {
+        // تحديد رابط الصورة بشكل قوي
+        let imgPath = article.image_brute;
+        if (imgPath && !imgPath.startsWith('http')) {
+            imgPath = CONFIG.imagesBase + imgPath;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'article-card';
+        card.innerHTML = `
+            <div class="image-box">
+                <img src="${imgPath || CONFIG.fallbackImg}" 
+                     onerror="this.src='${CONFIG.fallbackImg}'" loading="lazy">
+            </div>
+            <div class="card-content">
+                <h2 class="article-title">${article.titre}</h2>
+                <div class="meta-info">
+                    <span>📰 ${article.source || 'مصدر غير معروف'}</span>
+                    <span>📅 ${article.date_heure ? article.date_heure.split(' ')[0] : '-'}</span>
+                </div>
+            </div>
+        `;
+        
+        card.onclick = () => openReader(article.url, article.titre);
+        container.appendChild(card);
+    });
+}
+
+/**
+ * SEARCH LOGIC
+ */
+function setupSearch() {
+    const input = document.getElementById('search-input');
+    input.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = allArticles.filter(a => 
+            a.titre.toLowerCase().includes(term) || 
+            (a.source && a.source.toLowerCase().includes(term)) ||
+            (a.theme && a.theme.toLowerCase().includes(term))
+        );
+        renderArticles(filtered);
+    });
+}
+
+/**
+ * READER OVERLAY
+ */
+function openReader(url, title) {
+    const overlay = document.getElementById('article-overlay');
+    document.getElementById('overlay-title').textContent = title;
+    document.getElementById('article-frame').src = url;
+    overlay.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+document.getElementById('close-overlay').onclick = () => {
+    document.getElementById('article-overlay').style.display = 'none';
+    document.getElementById('article-frame').src = '';
+    document.body.style.overflow = 'auto';
+};
+
+/**
+ * PDF GENERATOR
+ */
+document.getElementById('download-pdf').onclick = async function() {
+    const btn = this;
+    btn.disabled = true;
+    btn.textContent = "جاري التوليد...";
+
+    const content = document.createElement('div');
+    content.style.padding = '30px';
+    content.style.direction = 'rtl';
+    content.style.fontFamily = 'Tajawal, sans-serif';
+
+    let html = `<h1 style="text-align:center; color:#1a73e8">تقرير مراجعة الصحافة</h1><hr><br>`;
+    
+    // نأخذ أول 20 نتيجة فقط للـ PDF للحفاظ على حجم الملف
+    const listToExport = allArticles.slice(0, 25);
+    
+    listToExport.forEach((a, i) => {
+        html += `
+            <div style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                <h3 style="margin:0">${i+1}. ${a.titre}</h3>
+                <p style="color:#666; font-size:12px">المصدر: ${a.source} | التاريخ: ${a.date_heure}</p>
+                <a href="${a.url}" style="color:#1a73e8; font-size:11px">${a.url}</a>
+            </div>
+        `;
+    });
+
+    content.innerHTML = html;
+
+    const opt = {
+        margin: 10,
+        filename: `Press_Review_${new Date().toLocaleDateString('en-GB')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(content).save().then(() => {
+        btn.disabled = false;
+        btn.textContent = "📄 تحميل التقرير (PDF)";
+    });
+};
+
+// Start
+init();
+</script>
+
 </body>
 </html>
