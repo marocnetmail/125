@@ -5,82 +5,229 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الصحافة الذكية | Smart Press</title>
     <style>
-        :root { --primary: #001122; --accent: #cc0000; --bg: #f0f2f5; }
-        body { font-family: sans-serif; background: var(--bg); direction: rtl; margin: 0; }
-        header { background: var(--primary); color: white; padding: 15px; text-align: center; font-size: 20px; }
-        #news-feed { max-width: 1000px; margin: 20px auto; padding: 15px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); cursor: pointer; }
-        .card img { width: 100%; height: 180px; object-fit: cover; }
-        .card-content { padding: 15px; }
-        .debug-box { grid-column: 1/-1; background: #eee; border: 1px dashed #999; padding: 15px; font-family: monospace; direction: ltr; text-align: left; white-space: pre-wrap; font-size: 12px; }
-        .status { grid-column: 1/-1; text-align: center; padding: 50px; color: #666; }
+        :root {
+            --primary: #001122;
+            --accent: #cc0000;
+            --bg: #f0f2f5;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: var(--bg);
+            direction: rtl;
+            color: #333;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Grille des nouvelles */
+        #news-feed {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Carte article */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: 0.3s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card:hover { transform: translateY(-5px); }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #ddd;
+        }
+
+        .card-content { padding: 15px; flex-grow: 1; }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            color: var(--primary);
+        }
+
+        .card-meta {
+            font-size: 13px;
+            color: #777;
+            margin-top: auto;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .page-btn {
+            padding: 8px 16px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .page-btn:hover { background: var(--accent); }
+        .page-btn.active { background: var(--accent); font-weight: bold; }
+        .page-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* Chargement */
+        .loader { text-align: center; grid-column: 1/-1; padding: 50px; font-size: 18px; }
+
+        @media (max-width: 600px) {
+            #news-feed { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-
+ddddddddddddddddddddddd
 <header>الصحافة الذكية</header>
 
 <div id="news-feed">
-    <div class="status">جاري فحص مصدر البيانات...</div>
+    <div class="loader">جاري تحميل الأخبار...</div>
 </div>
+
+<div class="pagination" id="pagination"></div>
 
 <script>
     const CONFIG = {
         JSON_URL: "https://marocnetmail.github.io/125/data/data_fusionnee.json",
-        IMAGE_BASE: "https://marocnetmail.github.io/125/images/img05/"
+        // Format demandé : URL GitHub avec ?raw=true
+        IMAGE_FORMAT: (id) => `https://github.com/marocnetmail/125/blob/main/images/img05/${id}.jpg?raw=true`,
+        ITEMS_PER_PAGE: 12
     };
 
-    async function init() {
-        const feed = document.getElementById("news-feed");
-        
+    let allNews = [];
+    let currentPage = 1;
+
+    async function loadData() {
         try {
-            const res = await fetch(CONFIG.JSON_URL + "?nocache=" + Date.now());
-            if (!res.ok) throw new Error(`خطأ في السيرفر: ${res.status}`);
-            
-            const data = await res.json();
+            const response = await fetch(CONFIG.JSON_URL + "?v=" + Date.now());
+            const data = await response.json();
 
-            // --- محرك البحث عن البيانات داخل الملف ---
-            let articles = [];
-            if (Array.isArray(data)) {
-                articles = data;
-            } else if (typeof data === 'object') {
-                // البحث عن أول مصفوفة داخل الكائن (Array)
-                articles = Object.values(data).find(val => Array.isArray(val)) || [];
-            }
+            // Extraction des données (gestion si c'est une liste ou un objet)
+            allNews = Array.isArray(data) ? data : (data.news || data.articles || Object.values(data)[0]);
 
-            if (articles.length === 0) {
-                feed.innerHTML = `
-                    <div class="status">⚠️ لم يتم العثور على مصفوفة أخبار داخل ملف الـ JSON.</div>
-                    <div class="debug-box">محتوى الملف الذي وصلني:\n${JSON.stringify(data, null, 2)}</div>
-                `;
-                return;
-            }
+            // Filtrer uniquement les éléments ayant un ID
+            allNews = allNews.filter(item => item.id);
 
-            // عرض الأخبار (بدون فلترة صارمة هذه المرة للتأكد من ظهورها)
-            feed.innerHTML = "";
-            articles.slice(0, 20).forEach(item => {
-                const card = document.createElement("div");
-                card.className = "card";
-                const img = item.id ? `${CONFIG.IMAGE_BASE}${item.id}.jpg` : 'https://via.placeholder.com/300x200';
-                
-                card.innerHTML = `
-                    <img src="${img}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
-                    <div class="card-content">
-                        <strong>${item.titre || item.title || "عنوان مفقود"}</strong>
-                        <div style="font-size:12px; color:gray; margin-top:10px;">${item["date/heure"] || ""}</div>
-                    </div>
-                `;
-                if(item.url) card.onclick = () => window.open(item.url, '_blank');
-                feed.appendChild(card);
-            });
-
-        } catch (err) {
-            feed.innerHTML = `<div class="status">❌ فشل الاتصال: ${err.message}</div>`;
+            renderPage(1);
+        } catch (error) {
+            console.error(error);
+            document.getElementById("news-feed").innerHTML = "<div class='loader'>❌ خطأ في تحميل البيانات</div>";
         }
     }
 
-    init();
+    function renderPage(page) {
+        currentPage = page;
+        const container = document.getElementById("news-feed");
+        const paginationContainer = document.getElementById("pagination");
+        
+        container.innerHTML = "";
+        
+        const start = (page - 1) * CONFIG.ITEMS_PER_PAGE;
+        const end = start + CONFIG.ITEMS_PER_PAGE;
+        const pageItems = allNews.slice(start, end);
+
+        pageItems.forEach(item => {
+            const card = document.createElement("div");
+            card.className = "card";
+            
+            const imgUrl = CONFIG.IMAGE_FORMAT(item.id);
+            const title = item.titre || item.title || "بدون عنوان";
+            const date = item["date/heure"] || "";
+
+            card.innerHTML = `
+                <img src="${imgUrl}" loading="lazy" 
+                     onerror="this.onerror=null;this.src='https://via.placeholder.com/600x400/001122/FFFFFF?text=Smart+Press'">
+                <div class="card-content">
+                    <div class="card-title">${title}</div>
+                    <div class="card-meta">${date}</div>
+                </div>
+            `;
+
+            if(item.url) card.onclick = () => window.open(item.url, '_blank');
+            container.appendChild(card);
+        });
+
+        renderPaginationUI();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderPaginationUI() {
+        const paginationContainer = document.getElementById("pagination");
+        paginationContainer.innerHTML = "";
+        
+        const totalPages = Math.ceil(allNews.length / CONFIG.ITEMS_PER_PAGE);
+
+        if(totalPages <= 1) return;
+
+        // Bouton Précédent
+        const prevBtn = document.createElement("button");
+        prevBtn.innerText = "السابق";
+        prevBtn.className = "page-btn";
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.onclick = () => renderPage(currentPage - 1);
+        paginationContainer.appendChild(prevBtn);
+
+        // Numéros de pages (limité pour ne pas surcharger)
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, startPage + 4);
+
+        for (let i = startPage; i <= endPage; i++) {
+            const btn = document.createElement("button");
+            btn.innerText = i;
+            btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+            btn.onclick = () => renderPage(i);
+            paginationContainer.appendChild(btn);
+        }
+
+        // Bouton Suivant
+        const nextBtn = document.createElement("button");
+        nextBtn.innerText = "التالي";
+        nextBtn.className = "page-btn";
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.onclick = () => renderPage(currentPage + 1);
+        paginationContainer.appendChild(nextBtn);
+    }
+
+    // Lancement
+    loadData();
 </script>
-    111111111111111111111111
+
 </body>
 </html>
