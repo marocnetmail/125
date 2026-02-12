@@ -3,238 +3,100 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الصحافة الذكية | Smart Press</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+<title>الصحافة الذكية</title>
 
 <style>
-:root{
-    --primary:#001122;
-    --accent:#cc0000;
-    --bg:#f0f2f5;
-}
-
-*{margin:0;padding:0;box-sizing:border-box}
-
 body{
-    font-family:'Tajawal',sans-serif;
-    background:var(--bg);
+    margin:0;
+    font-family:Arial;
+    background:#f0f2f5;
     direction:rtl;
 }
 
-/* Header */
-.app-header{
-    background:var(--primary);
-    padding:15px 20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    position:sticky;
-    top:0;
-    z-index:1000;
-    box-shadow:0 2px 10px rgba(0,0,0,.3);
-}
-
-.logo{
-    color:#fff;
+header{
+    background:#001122;
+    color:white;
+    padding:15px;
+    text-align:center;
     font-weight:bold;
-    font-size:1.2rem;
 }
 
-/* Feed */
 #news-feed{
-    max-width:650px;
-    margin:15px auto;
-    padding:0 10px 40px;
+    max-width:600px;
+    margin:20px auto;
+    padding:10px;
 }
 
-/* Card */
-.news-item{
-    background:#fff;
+.card{
+    background:white;
     margin-bottom:20px;
-    border-radius:14px;
+    border-radius:10px;
     overflow:hidden;
-    box-shadow:0 4px 15px rgba(0,0,0,.1);
-    cursor:pointer;
-    transition:.3s;
+    box-shadow:0 4px 10px rgba(0,0,0,.1);
 }
 
-.news-item:hover{
-    transform:translateY(-4px);
-}
-
-.image-box{
+.card img{
     width:100%;
-    height:280px;
-    background:#222;
-    position:relative;
-}
-
-.main-img{
-    width:100%;
-    height:100%;
+    height:250px;
     object-fit:cover;
 }
 
-/* Overlay */
-.content-overlay{
-    position:absolute;
-    bottom:0;
-    width:100%;
-    padding:40px 15px 15px;
-    background:linear-gradient(transparent,rgba(0,0,0,.95));
-    color:#fff;
-}
-
-.news-title{
-    font-size:1.1rem;
-    font-weight:700;
-    line-height:1.5;
-    margin-bottom:8px;
-}
-
-.meta-row{
-    display:flex;
-    justify-content:space-between;
-    font-size:.85rem;
-}
-
-.source-tag{
-    background:var(--accent);
-    padding:4px 10px;
-    border-radius:6px;
-    font-weight:bold;
-}
-
-.date-text{
-    font-weight:800;
-}
-
-/* Loader */
-#loader{
-    text-align:center;
-    padding:60px;
-}
-
-.spinner{
-    width:40px;
-    height:40px;
-    border:4px solid #ddd;
-    border-top:4px solid var(--accent);
-    border-radius:50%;
-    animation:spin 1s linear infinite;
-    margin:auto;
-}
-
-@keyframes spin{
-    to{transform:rotate(360deg)}
-}
-
-/* Responsive */
-@media(max-width:480px){
-    .image-box{height:230px}
-    .news-title{font-size:1rem}
+.card h3{
+    padding:10px;
+    font-size:16px;
 }
 </style>
 </head>
-
 <body>
 
-<header class="app-header">
-    <div style="color:white;cursor:pointer">☰</div>
-    <div class="logo">الصحافة الذكية</div>
-    <div style="color:white;cursor:pointer" onclick="location.reload()">🔄</div>
-</header>
+<header>الصحافة الذكية</header>
 
-<main id="news-feed">
-    <div id="loader">
-        <div class="spinner"></div>
-        <p style="margin-top:10px">جاري جلب آخر الأخبار...</p>
-    </div>
-</main>
+<div id="news-feed">
+تحميل...
+</div>
 
 <script>
-// URL JSON sur GitHub
-const GITHUB_JSON = "https://raw.githubusercontent.com/marocnetmail/125/main/data/data_fusionnee.json";
-// Base URL images (raw)
+
+const JSON_URL = "https://raw.githubusercontent.com/marocnetmail/125/main/data/data_fusionnee.json";
 const IMAGE_BASE = "https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/";
 
-// Formater la date en style arabe
-function formatDateTime(dateStr){
-    if(!dateStr) return "";
-    const date = new Date(dateStr);
-    return date.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'}) +
-           " | " +
-           date.toLocaleDateString('ar-EG',{day:'numeric',month:'short'});
-}
-
-// Créer une carte d'actualité
-function createCard(item){
-    const source = item.url
-        ? new URL(item.url).hostname.replace('www.','').split('.')[0].toUpperCase()
-        : 'أخبار';
-
-    const timeStr = formatDateTime(item["date/heure"]);
-
-    // Lien image corrigé
-    const imgUrl = IMAGE_BASE + item.id + ".jpg";
-
-    const card = document.createElement('div');
-    card.className = 'news-item';
-
-    card.innerHTML = `
-        <div class="image-box">
-            <img src="${imgUrl}"
-                 loading="lazy"
-                 class="main-img"
-                 style="width:100%; height:auto; object-fit:cover;"
-                 onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400/001122/FFFFFF?text=Smart+Press';">
-            <div class="content-overlay">
-                <h2 class="news-title">${item.titre || item.title || "بدون عنوان"}</h2>
-                <div class="meta-row">
-                    <span class="source-tag">${source}</span>
-                    <span class="date-text">${timeStr}</span>
-                </div>
-            </div>
-        </div>
-    `;
-
-    card.onclick = () => window.open(item.url,'_blank');
-    return card;
-}
-
-// Récupérer et afficher les actualités
-async function fetchNews(){
-    const feed = document.getElementById('news-feed');
+async function loadNews(){
+    const container = document.getElementById("news-feed");
 
     try{
-        const response = await fetch(GITHUB_JSON + "?v=" + Date.now());
-        if(!response.ok) throw new Error("Network error");
+        const res = await fetch(JSON_URL);
+        const data = await res.json();
 
-        const articles = await response.json();
+        container.innerHTML = "";
 
-        feed.innerHTML = "";
+        data.slice(0,10).forEach(item => {
 
-        const visibleNews = articles.filter(a =>
-            a.visible === true || a.visible === "true"
-        );
+            // ⚠️ IMPORTANT : vérifier si id existe
+            if(!item.id) return;
 
-        visibleNews.forEach(item=>{
-            if(item.id) feed.appendChild(createCard(item));
+            const imgUrl = IMAGE_BASE + item.id + ".jpg";
+
+            const card = document.createElement("div");
+            card.className = "card";
+
+            card.innerHTML = `
+                <img src="${imgUrl}"
+                     loading="lazy"
+                     onerror="this.src='https://via.placeholder.com/600x400?text=Image+Non+Disponible'">
+                <h3>${item.titre || item.title || "Sans titre"}</h3>
+            `;
+
+            container.appendChild(card);
         });
 
-        if(visibleNews.length === 0){
-            feed.innerHTML = "<p style='text-align:center;padding:40px;'>لا توجد أخبار متاحة حالياً</p>";
-        }
-
-    }catch(error){
-        console.error(error);
-        feed.innerHTML = "<p style='text-align:center;padding:40px;'>⚠️ حدث خطأ أثناء تحميل البيانات.</p>";
+    }catch(e){
+        container.innerHTML = "❌ Erreur chargement JSON";
+        console.error(e);
     }
 }
 
-// Lancer le fetch
-fetchNews();
+loadNews();
+
 </script>
 
 </body>
