@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الصحافة الذكية | Smart Press</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #001122;
+            --accent: #cc0000;
+            --bg: #f0f2f5;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); direction: rtl; }
+
+        /* Header */
+        .app-header {
+            background: var(--primary);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .logo { color: white; font-weight: bold; font-size: 1.2rem; }
+
+        /* News Feed */
+        #news-feed {
+            max-width: 650px;
+            margin: 15px auto;
+            padding: 0 10px 40px;
+        }
+
+        .news-item {
+            background: #fff;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .news-item:hover { transform: translateY(-5px); }
+
+        .image-box {
+            width: 100%;
+            height: 280px;
+            background: #222;
+            position: relative;
+        }
+
+        .main-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Overlay */
+        .content-overlay {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 40px 15px 15px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.95));
+            color: white;
+        }
+
+        .news-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        .source-tag {
+            background: var(--accent);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .date-text { font-weight: 800; }
+
+        /* Loader */
+        #loader { text-align: center; padding: 50px; }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 4px solid #ddd;
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
+            margin: auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<header class="app-header">
+    <div style="color:white; cursor:pointer">☰</div>
+    <div class="logo">الصحافة الذكية</div>
+    <div style="color:white; cursor:pointer" onclick="location.reload()">🔄</div>
+</header>
+
+<main id="news-feed">
+    <div id="loader">
+        <div class="spinner"></div>
+        <p style="margin-top:10px">جاري جلب آخر الأخبار...</p>
+    </div>
+</main>
+
+<script>
+    const GITHUB_JSON = "https://raw.githubusercontent.com/marocnetmail/125/main/data/data_fusionnee.json";
+
+    function formatDateTime(dateStr) {
+        if (!dateStr) return "";
+        const date = new Date(dateStr);
+        return date.toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'}) + " | " + 
+               date.toLocaleDateString('ar-EG', {day: 'numeric', month: 'short'});
+    }
+
+    async function fetchNews() {
+        const feed = document.getElementById('news-feed');
+        try {
+            const response = await fetch(`${GITHUB_JSON}?v=${Date.now()}`);
+            const articles = await response.json();
+            feed.innerHTML = "";
+
+            // تصفية الأخبار المرئية
+            const visibleNews = articles.filter(a => a.visible === true || a.visible === "true");
+
+            visibleNews.forEach((item) => {
+                // 1. تحديد المصدر من الرابط
+                const source = item.url ? new URL(item.url).hostname.replace('www.','').split('.')[0].toUpperCase() : 'أخبار';
+                const timeStr = formatDateTime(item["date/heure"]);
+                
+                // 2. ربط الصورة بحقل الـ id + الامتداد .jpg
+                // المسار محلي: images/img05/[id].jpg
+const imgUrl = `https://github.com/marocnetmail/125/blob/main/images/img05/${item.id}.jpg?raw=true`;
+	
+                const card = document.createElement('div');
+                card.className = 'news-item';
+                card.innerHTML = `
+                    <div class="image-box">
+                        <img src="${imgUrl}" 
+                             class="main-img" 
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400/001122/FFFFFF?text=Smart+Press';">
+                        <div class="content-overlay">
+                            <h2 class="news-title">${item.titre || item.title}</h2>
+                            <div class="meta-row">
+                                <span class="source-tag">${source}</span>
+                                <span class="date-text">${timeStr}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                card.onclick = () => window.open(item.url, '_blank');
+                feed.appendChild(card);
+            });
+
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            feed.innerHTML = "<p style='text-align:center;'>⚠️ حدث خطأ أثناء تحميل البيانات.</p>";
+        }
+    }
+
+    fetchNews();
+</script>
+</body>
+</html>
