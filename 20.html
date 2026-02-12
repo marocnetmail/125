@@ -4,410 +4,199 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الصحافة الذكية | Smart Press</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         :root {
             --primary: #001122;
             --accent: #cc0000;
             --bg: #f0f2f5;
-            --white: #ffffff;
-            --shadow: 0 4px 15px rgba(0,0,0,0.1);
-            --radius: 12px;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: var(--bg);
-            direction: rtl;
-            color: #333;
-            line-height: 1.6;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); direction: rtl; }
 
-        header {
+        /* Header */
+        .app-header {
             background: var(--primary);
-            color: white;
-            padding: 1.25rem;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
+        .logo { color: white; font-weight: bold; font-size: 1.2rem; }
 
+        /* News Feed */
         #news-feed {
-            max-width: 1200px;
-            margin: 1.25rem auto;
-            padding: 1rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
+            max-width: 650px;
+            margin: 15px auto;
+            padding: 0 10px 40px;
         }
 
-        .card {
-            background: var(--white);
-            border-radius: var(--radius);
+        .news-item {
+            background: #fff;
+            margin-bottom: 20px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
+            transition: 0.3s;
         }
+        .news-item:hover { transform: translateY(-5px); }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        .card-img {
+        .image-box {
             width: 100%;
-            height: 200px;
+            height: 280px;
+            background: #222;
+            position: relative;
+        }
+
+        .main-img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            background: #f5f5f5;
-            display: block;
         }
 
-        .card-content {
-            padding: 1.25rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-bottom: 0.75rem;
-            color: var(--primary);
-            line-height: 1.4;
-        }
-
-        .card-meta {
-            font-size: 0.85rem;
-            color: #666;
-            margin-top: auto;
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin: 2rem 0;
-            flex-wrap: wrap;
-            padding: 0 1rem;
-        }
-
-        .page-btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            background: var(--primary);
+        /* Overlay */
+        .content-overlay {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 40px 15px 15px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.95));
             color: white;
+        }
+
+        .news-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        .source-tag {
+            background: var(--accent);
+            color: white;
+            padding: 3px 10px;
             border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-            min-width: 40px;
-        }
-
-        .page-btn:hover:not(:disabled) {
-            background: var(--accent);
-            transform: scale(1.05);
-        }
-
-        .page-btn.active {
-            background: var(--accent);
             font-weight: bold;
         }
 
-        .page-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
+        .date-text { font-weight: 800; }
 
-        .loader, .error-state, .empty-state {
-            text-align: center;
-            grid-column: 1/-1;
-            padding: 3rem;
-            font-size: 1.1rem;
-            color: #666;
-        }
-
-        .error-state { color: var(--accent); }
-        .empty-state { color: var(--primary); }
-
+        /* Loader */
+        #loader { text-align: center; padding: 50px; }
         .spinner {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--accent);
+            width: 40px; height: 40px;
+            border: 4px solid #ddd;
+            border-top: 4px solid var(--accent);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 1rem;
+            animation: spin 1s infinite linear;
+            margin: auto;
         }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-            header { font-size: 1.25rem; }
-            #news-feed { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
-            .card-title { font-size: 1rem; }
-        }
-
-        @media (max-width: 480px) {
-            #news-feed { grid-template-columns: 1fr; }
-            .page-btn { padding: 0.4rem 0.8rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Error message styling */
+        .error-message {
+            text-align: center;
+            padding: 20px;
+            color: var(--accent);
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <header>📰 الصحافة الذكية</header>
 
-    <div id="news-feed">
-        <div class="loader">
-            <div class="spinner"></div>
-            جاري تحميل الأخبار...
-        </div>
+<header class="app-header">
+    <div style="color:white; cursor:pointer">☰</div>
+    <div class="logo">الصحافة الذكية</div>
+    <div style="color:white; cursor:pointer" onclick="location.reload()">🔄</div>
+</header>
+
+<main id="news-feed">
+    <div id="loader">
+        <div class="spinner"></div>
+        <p style="margin-top:10px">جاري جلب آخر الأخبار...</p>
     </div>
+</main>
 
-    <div class="pagination" id="pagination"></div>
+<script>
+    const GITHUB_JSON = "https://raw.githubusercontent.com/marocnetmail/125/main/data/data_fusionnee.json";
 
-    <script>
-        const CONFIG = {
-            // ✅ JSON URL - CORRECT avec timestamp pour éviter le cache
-            JSON_URL: 'data/data_fusionnee.json?t=' + Date.now(),
-            
-            // ✅ Images GitHub RAW
-            IMAGE_URL: (id) => `https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/${id}.jpg`,
-            
-            ITEMS_PER_PAGE: 12,
-            DEFAULT_IMAGE: "https://via.placeholder.com/600x400/001122/FFFFFF?text=Smart+Press"
-        };
+    function formatDateTime(dateStr) {
+        if (!dateStr) return "";
+        const date = new Date(dateStr);
+        return date.toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'}) + " | " + 
+               date.toLocaleDateString('ar-EG', {day: 'numeric', month: 'short'});
+    }
 
-        let allNews = [];
-        let currentPage = 1;
+    async function fetchNews() {
+        const feed = document.getElementById('news-feed');
+        try {
+            const response = await fetch(`${GITHUB_JSON}?v=${Date.now()}`);
+            const articles = await response.json();
+            feed.innerHTML = "";
 
-        async function loadData() {
-            try {
-                console.log("📦 Chargement depuis:", CONFIG.JSON_URL);
-                
-                const response = await fetch(CONFIG.JSON_URL, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                    },
-                    cache: 'no-store' // Désactive le cache
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status} - ${response.statusText}`);
-                }
-                
-                const data = await response.json();
-                console.log("✅ Données reçues:", data);
+            // تصفية الأخبار المرئية
+            const visibleNews = articles.filter(a => a.visible === true || a.visible === "true");
 
-                // 📊 Extraction intelligente des données
-                if (Array.isArray(data)) {
-                    allNews = data;
-                } else if (data && typeof data === 'object') {
-                    // Chercher le tableau dans l'objet
-                    allNews = data.news || data.articles || data.items || data.data || [];
-                    
-                    // Si toujours vide, prendre la première propriété tableau
-                    if (allNews.length === 0) {
-                        for (let key in data) {
-                            if (Array.isArray(data[key]) && data[key].length > 0) {
-                                allNews = data[key];
-                                console.log(`📁 Utilisation de la propriété: ${key}`);
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                // 🔍 Filtrer et normaliser
-                allNews = allNews
-                    .filter(item => item && item.id)
-                    .map(item => ({
-                        id: String(item.id).trim(),
-                        title: item.titre || item.title || item.headline || "بدون عنوان",
-                        date: item["date/heure"] || item.date || item.published || item.pubDate || "",
-                        url: item.url || item.link || item.permalink || "#"
-                    }));
-
-                console.log(`✅ ${allNews.length} articles valides chargés`);
-
-                if (allNews.length === 0) {
-                    throw new Error("⚠️ Aucun article avec ID trouvé dans le fichier JSON");
-                }
-
-                renderPage(1);
-            } catch (error) {
-                console.error("❌ Erreur de chargement:", error);
-                
-                const container = document.getElementById("news-feed");
-                container.innerHTML = `
-                    <div class="error-state">
-                        <div style="font-size: 3rem; margin-bottom: 1rem;">❌</div>
-                        <div style="font-size: 1.3rem; margin-bottom: 1rem;">خطأ في تحميل الأخبار</div>
-                        <div style="background: #f8d7da; color: #721c24; padding: 1rem; border-radius: 8px; margin: 1rem auto; max-width: 500px; text-align: right; direction: ltr; font-family: monospace;">
-                            <div style="margin-bottom: 0.5rem;">🔗 ${CONFIG.JSON_URL}</div>
-                            <div style="color: #856404;">${error.message}</div>
-                        </div>
-                        <div style="margin-top: 2rem;">
-                            <button onclick="location.reload()" style="background: var(--accent); color: white; border: none; padding: 0.75rem 2rem; border-radius: 5px; cursor: pointer; font-size: 1rem; margin: 0 0.5rem;">
-                                🔄 إعادة المحاولة
-                            </button>
-                            <button onclick="window.location.href='data/datajson.json'" style="background: var(--primary); color: white; border: none; padding: 0.75rem 2rem; border-radius: 5px; cursor: pointer; font-size: 1rem; margin: 0 0.5rem;">
-                                📁 Vérifier le fichier
-                            </button>
-                        </div>
-                    </div>
-                `;
+            if (visibleNews.length === 0) {
+                feed.innerHTML = "<p style='text-align:center;'>لا توجد أخبار متاحة حالياً</p>";
             }
-        }
 
-        function renderPage(page) {
-            if (!allNews.length) return;
-
-            currentPage = page;
-            const container = document.getElementById("news-feed");
-            const paginationContainer = document.getElementById("pagination");
-            
-            container.innerHTML = "";
-            
-            const start = (page - 1) * CONFIG.ITEMS_PER_PAGE;
-            const end = start + CONFIG.ITEMS_PER_PAGE;
-            const pageItems = allNews.slice(start, end);
-
-            pageItems.forEach(item => {
-                const card = document.createElement("article");
-                card.className = "card";
+            visibleNews.forEach((item) => {
+                // 1. تحديد المصدر من الرابط
+                const source = item.url ? new URL(item.url).hostname.replace('www.','').split('.')[0].toUpperCase() : 'أخبار';
+                const timeStr = formatDateTime(item["date/heure"]);
                 
-                // URL de l'image GitHub RAW
-                const imgUrl = CONFIG.IMAGE_URL(item.id);
-
-                // Image avec gestion d'erreur
-                const img = document.createElement("img");
-                img.className = "card-img";
-                img.loading = "lazy";
-                img.alt = item.title;
-                img.src = imgUrl;
+                // 2. ربط الصورة بحقل الـ index + الامتداد .jpg (corrigé: utilise 'index' pas 'id')
+                const imageIndex = item.index || item.id; // Utilise 'index' en priorité, sinon 'id'
+                const imgUrl = imageIndex 
+                    ? `https://github.com/marocnetmail/125/blob/main/images/img05/${imageIndex}.jpg?raw=true`
+                    : null;
                 
-                // Fallback si image non trouvée
-                img.onerror = function() {
-                    console.log(`🖼️ Image non trouvée: ${item.id}`);
-                    this.onerror = null;
-                    this.src = CONFIG.DEFAULT_IMAGE;
-                };
-
-                // Contenu
-                const content = document.createElement("div");
-                content.className = "card-content";
-                content.innerHTML = `
-                    <div class="card-title">${escapeHTML(item.title)}</div>
-                    <div class="card-meta">
-                        📅 ${escapeHTML(item.date) || "التاريخ غير متوفر"}
-                        ${item.id ? `<span style="margin-right: 0.5rem; color: #999;">🆔 ${escapeHTML(item.id)}</span>` : ''}
+                const card = document.createElement('div');
+                card.className = 'news-item';
+                
+                // Créer le HTML de l'image avec fallback
+                const imgHtml = imgUrl 
+                    ? `<img src="${imgUrl}" class="main-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400/001122/FFFFFF?text=Smart+Press';">` 
+                    : `<img src="https://via.placeholder.com/600x400/001122/FFFFFF?text=Smart+Press" class="main-img">`;
+                
+                card.innerHTML = `
+                    <div class="image-box">
+                        ${imgHtml}
+                        <div class="content-overlay">
+                            <h2 class="news-title">${item.titre || item.title}</h2>
+                            <div class="meta-row">
+                                <span class="source-tag">${source}</span>
+                                <span class="date-text">${timeStr}</span>
+                            </div>
+                        </div>
                     </div>
                 `;
-
-                card.appendChild(img);
-                card.appendChild(content);
-
-                // Lien vers l'article complet
-                if (item.url && item.url !== "#") {
-                    card.onclick = () => window.open(item.url, '_blank', 'noopener,noreferrer');
-                    card.style.cursor = "pointer";
-                }
-
-                container.appendChild(card);
+                
+                card.onclick = () => window.open(item.url, '_blank');
+                feed.appendChild(card);
             });
 
-            renderPaginationUI();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            feed.innerHTML = "<div class='error-message'>⚠️ حدث خطأ أثناء تحميل البيانات. يرجى المحاولة لاحقاً.</div>";
         }
+    }
 
-        function renderPaginationUI() {
-            const paginationContainer = document.getElementById("pagination");
-            paginationContainer.innerHTML = "";
-            
-            const totalPages = Math.ceil(allNews.length / CONFIG.ITEMS_PER_PAGE);
-
-            if (totalPages <= 1) return;
-
-            // Bouton précédent
-            const prevBtn = document.createElement("button");
-            prevBtn.innerText = "← السابق";
-            prevBtn.className = "page-btn";
-            prevBtn.disabled = currentPage === 1;
-            prevBtn.onclick = () => renderPage(currentPage - 1);
-            paginationContainer.appendChild(prevBtn);
-
-            // Numéros de page
-            let startPage = Math.max(1, currentPage - 2);
-            let endPage = Math.min(totalPages, startPage + 4);
-
-            if (startPage > 1) {
-                addPageButton(1);
-                if (startPage > 2) addEllipsis();
-            }
-
-            for (let i = startPage; i <= endPage; i++) {
-                addPageButton(i);
-            }
-
-            if (endPage < totalPages) {
-                if (endPage < totalPages - 1) addEllipsis();
-                addPageButton(totalPages);
-            }
-
-            function addPageButton(pageNum) {
-                const btn = document.createElement("button");
-                btn.innerText = pageNum;
-                btn.className = `page-btn ${pageNum === currentPage ? 'active' : ''}`;
-                btn.onclick = () => renderPage(pageNum);
-                paginationContainer.appendChild(btn);
-            }
-
-            function addEllipsis() {
-                const span = document.createElement("span");
-                span.innerText = "...";
-                span.style.padding = "0 0.5rem";
-                span.style.color = "#666";
-                paginationContainer.appendChild(span);
-            }
-
-            // Bouton suivant
-            const nextBtn = document.createElement("button");
-            nextBtn.innerText = "التالي →";
-            nextBtn.className = "page-btn";
-            nextBtn.disabled = currentPage === totalPages;
-            nextBtn.onclick = () => renderPage(currentPage + 1);
-            paginationContainer.appendChild(nextBtn);
-        }
-
-        function escapeHTML(text) {
-            if (!text) return "";
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', loadData);
-    </script>
+    fetchNews();
+</script>
 </body>
 </html>
