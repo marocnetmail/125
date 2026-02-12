@@ -1,5 +1,35 @@
 [
   {
+    "index": 20260212070920000,
+    "date/heure": "2026-02-12T07:09:00.000Z",
+    "source": "GMS Veille",
+    "titre": "Casablanca : Accélération des projets urbains et environnementaux",
+    "thème": "Général",
+    "mots-clés": "Casablanca, Accélération, projets",
+    "langue": "FR",
+    "sentiment": "Neutre",
+    "image_brute": "20260212070920000-image.jpg",
+    "numero_semaine": "2026-S07",
+    "url": "http://email.mg.gmsveille.com/c/eJxUzr1qwzAQAOCnkccgn35OHjR46LWkMSmUQFdZOiUCGRvbSfv4hWyZv-VLXukuNOxbROmcbK1sbr7lhBKjstnkEMGyM05rFzAxZjSxKX5sW22c7ZRNDpNFowBAsWIzdloHI7S8TtuDS618iPPUVH_b92UTqhdAAuhFBdC2z2u4sgDKpfImgECCFUASBNDP5S--fZRvOF-O9DkSxvvv9D4Mp6_-fBrKcVaK1vvSH5aUm9WHVOq0hpF3fEZCqc_Ew8N_AAAA__-61ki3",
+    "lien_json": "datajson/02/2026-S07.json",
+    "visible": true
+  },
+  {
+    "index": "20260212070920002",
+    "date/heure": "2026-02-12T07:09:00.000Z",
+    "source": "GMS Veille",
+    "titre": "Un décès lors des manifestations contre les démolitions à Marrakech",
+    "thème": "Général",
+    "mots-clés": "manifestations, contre, démolitions",
+    "langue": "FR",
+    "sentiment": "Neutre",
+    "image_brute": "20260212070920002-image.jpg",
+    "numero_semaine": "2026-S07",
+    "url": "http://email.mg.gmsveille.com/c/eJxUzrFugzAUBdCvMWNkro0Ng4cEYaVqliqqKnV7xg_i1pQUUJLPr5St81lOdEo3VLArrZV1LUsji4szJSpQ0EzEiNJyE_seCIR-qDU3RXKhLHVVm0aZWNtobKUAKFZchUZrqoSW47TeOOXMu36eiuwu23ZdhdoLeAH_TwX8us0LjSzgh5R5FfCQMAJeQsB_huPj63RfXh6nn338bttpPM-HvVbd-P52PNw_Onnu2t_X3TUOxeIopjwtFHizzwil_EzcHP4CAAD__ycfSVw",
+    "lien_json": "datajson/02/2026-S07.json",
+    "visible": true
+  },
+  {
     "index": 20260211181925000,
     "date/heure": "2026-02-11T18:19:00.000Z",
     "source": "GMS Veille",
