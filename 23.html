@@ -1460,6 +1460,7 @@ async function optimizeImage(url) {
 }
 
 // ===== NOUVELLE FONCTION DE GÉNÉRATION PDF =====
+// ===== FONCTION DE GÉNÉRATION PDF CORRIGÉE =====
 async function generatePDF() {
   if (appState.filteredArticles.length === 0) {
     alert('Aucun article à exporter');
@@ -1467,81 +1468,288 @@ async function generatePDF() {
   }
 
   showPdfProgress();
-  elements.pdfTempContainer.innerHTML = ''; // reset container
+  pdfCancelRequested = false;
   elements.downloadPdfBtn.disabled = true;
   const originalText = elements.downloadPdfBtn.innerHTML;
   elements.downloadPdfBtn.innerHTML = '<span>⏳</span><span>Génération...</span>';
 
-  const articles = getCurrentPageArticles(); // récupère articles de la page actuelle
+  // Créer un conteneur temporaire propre
+  const tempContainer = document.createElement('div');
+  tempContainer.style.cssText = `
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    width: 800px;
+    background: white;
+    padding: 20px;
+    font-family: 'Tajawal', Arial, sans-serif;
+  `;
+  document.body.appendChild(tempContainer);
+
+  const articles = getCurrentPageArticles();
   const totalArticles = articles.length;
 
-  for (let i = 0; i < totalArticles; i++) {
-    if (pdfCancelRequested) {
-      hidePdfProgress();
-      elements.pdfTempContainer.innerHTML = '';
-      elements.downloadPdfBtn.disabled = false;
-      elements.downloadPdfBtn.innerHTML = originalText;
-      return;
-    }
+  // En-tête du PDF
+  const headerHTML = `
+    <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px solid #1a73e8; padding-bottom: 20px;">
+      <h1 style="color: #001122; font-size: 28px; margin: 0; font-weight: 900;">Presse Intelligente</h1>
+      <p style="color: #666; font-size: 14px; margin: 10px 0 0 0;">
+        Revue de presse du ${formatDateToFrench(appState.startDate)} au ${formatDateToFrench(appState.endDate)}
+      </p>
+      <p style="color: #999; font-size: 12px; margin: 5px 0 0 0;">
+        ${totalArticles} article(s) • Généré le ${new Date().toLocaleDateString('fr-FR')}
+      </p>
+    </div>
+  `;
+  tempContainer.innerHTML = headerHTML;
 
-    const article = articles[i];
-    const imageUrl = getArticleImageUrl(article);
-    const optimizedImg = await optimizeImage(imageUrl);
+  // Traiter les articles par lots pour éviter de surcharger
+  const batchSize = 5;
+  const processedArticles = [];
 
-    const articleCard = `
-      <div class="article-card" style="margin-bottom: 15px; break-inside: avoid; background: white; border: 1px solid #ddd; border-radius: 8px; padding: 12px;">
-        <img src="${optimizedImg}" alt="${article.titre || 'Article'}" style="width:100%; height:auto; display:block; border-radius:8px; margin-bottom:8px; max-height:200px; object-fit:cover;">
-        <h2 style="font-size:1rem; font-weight:700; color:#001122; margin:8px 0;">${article.titre || 'Sans titre'}</h2>
-        <p style="font-size:0.85rem; color:#555;"><strong>Source:</strong> ${article.source || 'Inconnue'} | <strong>Date:</strong> ${formatDateToFrench(article.date_heure) || 'Inconnue'}</p>
-      </div>
-    `;
-    elements.pdfTempContainer.innerHTML += articleCard;
-
-    const percent = Math.floor(((i + 1) / totalArticles) * 100);
-    updatePdfProgress(percent, 'Optimisation des images...', `Article ${i + 1} sur ${totalArticles}`);
-    await new Promise(r => setTimeout(r, 10)); // permet update UI progress
+  for (let i = 0; i < totalArticles; i += batchSize) {
+    if (pdfCancelRequested) break;
+    
+    const batch = articles.slice(i, Math.min(i + batchSize, totalArticles));
+    const batchPromises = batch.map((article, index) => processArticleForPDF(article, i + index, totalArticles));
+    
+    const batchResults = await Promise.all(batchPromises);
+    processedArticles.push(...batchResults);
+    
+    const percent = Math.floor(Math.min(((i + batch.length) / totalArticles) * 90, 90));
+    updatePdfProgress(percent, 'Chargement des images...', `Article ${i + batch.length} sur ${totalArticles}`);
   }
 
   if (pdfCancelRequested) {
-    hidePdfProgress();
-    elements.pdfTempContainer.innerHTML = '';
-    elements.downloadPdfBtn.disabled = false;
-    elements.downloadPdfBtn.innerHTML = originalText;
+    cleanupPDFGeneration(tempContainer, originalText);
     return;
   }
 
-  updatePdfProgress(100, 'Création du PDF...', 'Finalisation');
+  // Assembler le HTML final
+  let articlesHTML = '<div style="display: flex; flex-direction: column; gap: 20px;">';
+  
+  for (let i = 0; i < processedArticles.length; i++) {
+    const article = processedArticles[i];
+    if (!article) continue;
+    
+    const imageData = article.imageData || CONFIG.fallbackImage;
+    
+    articlesHTML += `
+      <div style="
+        break-inside: avoid;
+        background: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      ">
+        <div style="width: 100%; height: 200px; overflow: hidden; background: linear-gradient(45deg, #001122, #004e92);">
+          <img src="${imageData}" 
+               style="width: 100%; height: 100%; object-fit: cover; display: block;" 
+               alt="${escapeHtml(article.titre || 'Article')}">
+        </div>
+        <div style="padding: 15px;">
+          <h2 style="
+            font-size: 18px; 
+            font-weight: 700; 
+            color: #001122; 
+            margin: 0 0 10px 0;
+            line-height: 1.3;
+          ">${escapeHtml(article.titre || 'Sans titre')}</h2>
+          
+          <div style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 13px;
+            color: #666;
+          ">
+            <span style="font-weight: 600; color: #1a73e8;">📰 ${escapeHtml(article.source || 'Source inconnue')}</span>
+            <span style="background: #FF6B6B; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 600;">
+              📅 ${formatDateToFrench(article.date_heure) || 'Date inconnue'}
+            </span>
+          </div>
+          
+          ${article.url ? `
+            <div style="margin-top: 10px; font-size: 11px; color: #999; word-break: break-all;">
+              🔗 ${escapeHtml(article.url)}
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }
+  
+  articlesHTML += '</div>';
+  tempContainer.innerHTML += articlesHTML;
 
+  // Pied de page
+  tempContainer.innerHTML += `
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee; text-align: center; color: #999; font-size: 12px;">
+      <p>Presse Intelligente - Smart Press © ${new Date().getFullYear()}</p>
+      <p>Ce document a été généré automatiquement à partir de la revue de presse.</p>
+    </div>
+  `;
+
+  if (pdfCancelRequested) {
+    cleanupPDFGeneration(tempContainer, originalText);
+    return;
+  }
+
+  updatePdfProgress(95, 'Génération du PDF...', 'Veuillez patienter');
+
+  // Configuration optimisée pour html2pdf
   const opt = {
-    margin:       10,
-    filename:     `SmartPress_${new Date().toISOString().split('T')[0]}.pdf`,
-    image:        { type: CONFIG.imageOptimization.format, quality: CONFIG.imageOptimization.quality },
-    html2canvas:  { scale: 2, useCORS: true, logging: false },
-    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    margin: [15, 15, 15, 15],
+    filename: `SmartPress_${appState.startDate || 'export'}_${new Date().getTime()}.pdf`,
+    image: { 
+      type: 'jpeg', 
+      quality: 0.95 
+    },
+    html2canvas: { 
+      scale: 2, 
+      useCORS: true, 
+      allowTaint: true,
+      logging: false,
+      backgroundColor: '#ffffff',
+      imageTimeout: 30000
+    },
+    jsPDF: { 
+      unit: 'mm', 
+      format: 'a4', 
+      orientation: 'portrait',
+      compress: true
+    },
+    pagebreak: { 
+      mode: ['avoid-all', 'css', 'legacy'],
+      before: '.page-break',
+      avoid: 'img'
+    }
   };
 
   try {
-    await html2pdf().set(opt).from(elements.pdfTempContainer).save();
+    await html2pdf().set(opt).from(tempContainer).save();
+    updatePdfProgress(100, 'Terminé !', 'PDF téléchargé avec succès');
+    setTimeout(() => {
+      hidePdfProgress();
+      cleanupPDFGeneration(tempContainer, originalText);
+    }, 1000);
   } catch (error) {
     console.error('Erreur PDF:', error);
-    alert('Erreur lors de la génération du PDF');
-  } finally {
+    alert('Erreur lors de la génération du PDF. Les images peuvent être protégées contre le téléchargement.');
+    cleanupPDFGeneration(tempContainer, originalText);
     hidePdfProgress();
-    elements.pdfTempContainer.innerHTML = '';
-    elements.downloadPdfBtn.disabled = false;
-    elements.downloadPdfBtn.innerHTML = originalText;
   }
 }
 
-function debounce(func, wait) {
-  let timeout;
-  return (...args) => { 
-    clearTimeout(timeout); 
-    timeout = setTimeout(() => func(...args), wait); 
+// ===== FONCTION AUXILIAIRE : TRAITEMENT D'UN ARTICLE =====
+async function processArticleForPDF(article, index, total) {
+  const imageUrl = getArticleImageUrl(article);
+  let imageData = CONFIG.fallbackImage;
+  
+  try {
+    // Essayer de charger et convertir l'image en base64
+    imageData = await loadImageAsBase64(imageUrl);
+  } catch (e) {
+    console.warn(`Impossible de charger l'image pour l'article ${index + 1}:`, e);
+  }
+
+  return {
+    ...article,
+    imageData: imageData,
+    index: index
   };
 }
 
-document.addEventListener('DOMContentLoaded', initApp);
-</script>
+// ===== FONCTION AUXILIAIRE : CHARGEMENT IMAGE EN BASE64 =====
+function loadImageAsBase64(url) {
+  return new Promise((resolve, reject) => {
+    // Si c'est déjà une data URL
+    if (url.startsWith('data:')) {
+      resolve(url);
+      return;
+    }
+
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    
+    const timeout = setTimeout(() => {
+      reject(new Error('Timeout chargement image'));
+    }, 10000);
+
+    img.onload = function() {
+      clearTimeout(timeout);
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.min(img.width, 1200);
+        canvas.height = Math.min(img.height, 800);
+        
+        // Calculer le ratio pour garder les proportions
+        const ratio = Math.min(
+          canvas.width / img.width,
+          canvas.height / img.height
+        );
+        
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#001122';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        const drawWidth = img.width * ratio;
+        const drawHeight = img.height * ratio;
+        const x = (canvas.width - drawWidth) / 2;
+        const y = (canvas.height - drawHeight) / 2;
+        
+        ctx.drawImage(img, x, y, drawWidth, drawHeight);
+        
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+        resolve(dataUrl);
+      } catch (e) {
+        reject(e);
+      }
+    };
+
+    img.onerror = function() {
+      clearTimeout(timeout);
+      reject(new Error('Erreur chargement image'));
+    };
+
+    // Ajouter un paramètre anti-cache
+    img.src = url + (url.includes('?') ? '&' : '?') + 'pdf=' + Date.now();
+  });
+}
+
+// ===== FONCTION AUXILIAIRE : NETTOYAGE =====
+function cleanupPDFGeneration(container, originalButtonText) {
+  if (container && container.parentNode) {
+    container.parentNode.removeChild(container);
+  }
+  elements.downloadPdfBtn.disabled = false;
+  elements.downloadPdfBtn.innerHTML = originalButtonText;
+}
+
+// ===== FONCTION AUXILIAIRE : ÉCHAPPEMENT HTML =====
+function escapeHtml(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// ===== FONCTION DE DÉBOUNCE (à garder si pas déjà présente) =====
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 </body>
 </html>
