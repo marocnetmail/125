@@ -1430,6 +1430,22 @@ async function optimizeImageForPDF(imgElement) {
     img.src = imgElement.src;
   });
 }
+// ===== FONCTION DE CONVERSION DES IMAGES EN BASE64 =====
+async function convertImagesToBase64(container) {
+  const images = container.querySelectorAll("img");
+  for (const img of images) {
+    const response = await fetch(img.src);
+    const blob = await response.blob();
+    const reader = new FileReader();
+    await new Promise(resolve => {
+      reader.onloadend = () => {
+        img.src = reader.result; // Base64
+        resolve();
+      };
+      reader.readAsDataURL(blob);
+    });
+  }
+}
 // ===== PDF GENERATION OPTIMISÉE =====
 async function generatePDF() {
   try {
@@ -1474,6 +1490,16 @@ async function generatePDF() {
         console.warn('Erreur optimisation:', e);
       }
     }
+   
+    if (pdfCancelRequested) {
+      hidePdfProgress();
+      elements.downloadPdfBtn.disabled = false;
+      elements.downloadPdfBtn.innerHTML = originalText;
+      return;
+    }
+   
+    updatePdfProgress(55, 'Conversion des images en Base64...', 'Pour l\'intégration PDF');
+    await convertImagesToBase64(pdfContent);
    
     if (pdfCancelRequested) {
       hidePdfProgress();
