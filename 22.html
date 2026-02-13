@@ -1619,7 +1619,7 @@ function createPdfContent() {
     if (imageUrl && imageUrl !== CONFIG.fallbackImage) {
       articleDiv.innerHTML += `
         <div style="margin-bottom:10px;text-align:center;">
-          <img src="${imageUrl}" alt="${article.titre}" style="max-width:100%;max-height:120px;object-fit:cover;border-radius:4px;" onerror="this.style.display='none'">
+          <img src="${imageUrl}" alt="" style="max-width:100%;max-height:120px;object-fit:cover;border-radius:4px;" onerror="this.style.display='none'">
         </div>
       `;
     }
