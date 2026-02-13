@@ -65,17 +65,21 @@ body {
   width: 100%;
 }
 .main-title {
-  font-size: 1.5rem;
+  font-size: clamp(2rem, 6vw, 4rem); /* s’adapte de 2rem à 4rem selon la largeur */
   font-weight: 900;
-  color: white;
-  line-height: 1.2;
+  color: #ffffff;
+  line-height: 1.1;
   text-align: center;
-  margin-bottom: 15px;
-  padding: 0 5px;
+  margin-bottom: 20px;
+  padding: 0 10px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.7); /* lisibilité sur fonds sombres */
 }
 .main-title img {
-  max-width: 400px;
+  max-width: 100%;
   height: auto;
+  max-height: 80px; /* limite la hauteur du logo sur mobile */
+  display: block;
+  margin: 0 auto;
 }
 /* ===== BOUTON RECHERCHE AVANCÉE ===== */
 .advanced-search-toggle {
