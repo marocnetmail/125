@@ -854,11 +854,19 @@ body {
 const CONFIG = {
   appName: 'Presse Intelligente | Smart Press',
   version: '1.0',
-  jsonUrl: 'https://raw.githubusercontent.com/marocnetmail/125/main/data/data_fusionnee.json?t=' + Date.now(),
-  logosUrl: 'data/logo_media.json?t=' + Date.now(),
-  imagesBasePath: 'https://github.com/marocnetmail/125/blob/main/images/img05/',
-  imagePattern: 'https://github.com/marocnetmail/125/blob/main/images/img05/{index}.jpg?raw=true',
-  fallbackImage: 'https://via.placeholder.com/600x400/001122/FFFFFF?text=Smart+Press',
+  jsonUrl:
+    'https://raw.githubusercontent.com/marocnetmail/125/main/data/data_fusionnee.json?t=' +
+    Date.now(),
+  logosUrl:
+    'https://raw.githubusercontent.com/marocnetmail/125/main/data/logo_media.json?t=' +
+    Date.now(),
+  // ✅ CHEMIN IMAGES CORRIGÉ
+  imagesBasePath:
+    'https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/',
+  imagePattern:
+    'https://raw.githubusercontent.com/marocnetmail/125/main/images/img05/{index}.jpg',
+  fallbackImage:
+    'https://via.placeholder.com/600x400/001122/FFFFFF?text=Smart+Press',
   maxArticles: 1000,
   debounceDelay: 300,
   articlesPerPage: 50,
@@ -1212,7 +1220,7 @@ function getArticleImageUrl(article) {
  
   if (article.image_brute) {
     if (!article.image_brute.startsWith('http')) {
-      return CONFIG.imagesBasePath + article.image_brute + '?raw=true';
+      return CONFIG.imagesBasePath + article.image_brute;
     }
     return article.image_brute;
   }
