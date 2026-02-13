@@ -270,15 +270,13 @@ body {
   margin: 0 auto 15px;
   animation: spin 1s linear infinite;
 }
-  @keyframes fadeInTitle {
+@keyframes fadeInTitle {
   from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 .main-title {
   animation: fadeInTitle 1s ease-out;
 }
-
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
@@ -844,8 +842,6 @@ body {
   </div>
 </div>
 
-<div id="pdf-temp-container"></div>
-
 <!-- Barre de progression pour le chargement initial -->
 <div id="initial-progress" class="progress-container" style="display: none;">
   <div class="progress-card">
@@ -937,7 +933,6 @@ const elements = {
   paginationInfo: document.getElementById('pagination-info'),
   periodPresets: document.querySelectorAll('.preset-btn'),
   downloadPdfBtn: document.getElementById('download-pdf-btn'),
-  pdfTempContainer: document.getElementById('pdf-temp-container'),
   toggleAdvancedBtn: document.getElementById('toggle-advanced-btn'),
   advancedSearchSection: document.getElementById('advanced-search-section'),
   initialProgress: document.getElementById('initial-progress'),
@@ -1122,7 +1117,6 @@ function setupEventListeners() {
     setTimeout(hidePdfProgress, 1000);
   });
   
-  // Gestionnaire d'erreur pour l'iframe
   elements.articleFrame.addEventListener('error', handleFrameError);
   elements.articleFrame.addEventListener('load', handleFrameLoad);
   
@@ -1142,7 +1136,6 @@ function handleFrameLoad() {
       elements.articleFrame.style.display = 'block';
     }
   } catch (e) {
-    // Erreur de cross-origin, on garde l'affichage normal
     elements.frameErrorMessage.style.display = 'none';
     elements.articleFrame.style.display = 'block';
   }
@@ -1398,12 +1391,10 @@ function openArticleOverlay(article) {
   elements.openExternalLink.href = articleUrl;
   elements.frameErrorLink.href = articleUrl;
   
-  // Réinitialiser l'iframe
   elements.articleFrame.src = '';
   elements.frameErrorMessage.style.display = 'none';
   elements.articleFrame.style.display = 'block';
   
-  // Essayer de charger l'URL
   try {
     elements.articleFrame.src = articleUrl;
   } catch (e) {
@@ -1432,35 +1423,7 @@ function showError(message) {
   elements.paginationContainer.style.display = 'none';
 }
 
-// ===== NOUVELLE FONCTION D'OPTIMISATION DES IMAGES =====
-async function optimizeImage(url) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.src = url;
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const scale = Math.min(
-        CONFIG.imageOptimization.maxWidth / img.width,
-        CONFIG.imageOptimization.maxHeight / img.height,
-        1
-      );
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      const optimizedDataUrl = canvas.toDataURL(
-        `image/${CONFIG.imageOptimization.format}`,
-        CONFIG.imageOptimization.quality
-      );
-      resolve(optimizedDataUrl);
-    };
-    img.onerror = () => resolve(CONFIG.fallbackImage);
-  });
-}
-
-// ===== NOUVELLE FONCTION DE GÉNÉRATION PDF =====
-// ===== FONCTION DE GÉNÉRATION PDF CORRIGÉE =====
+// ===== FONCTION DE GÉNÉRATION PDF CORRIGÉE ET OPTIMISÉE =====
 async function generatePDF() {
   if (appState.filteredArticles.length === 0) {
     alert('Aucun article à exporter');
@@ -1739,7 +1702,7 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-// ===== FONCTION DE DÉBOUNCE (à garder si pas déjà présente) =====
+// ===== FONCTION DE DÉBOUNCE =====
 function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
@@ -1751,5 +1714,9 @@ function debounce(func, wait) {
     timeout = setTimeout(later, wait);
   };
 }
+
+// ===== INITIALISATION =====
+document.addEventListener('DOMContentLoaded', initApp);
+</script>
 </body>
 </html>
