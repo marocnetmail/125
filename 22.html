@@ -1266,7 +1266,7 @@ function getMediaLogoUrl(source) {
 
 function createImageElement(imageUrl, title) {
   if (!imageUrl) return '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.7);">Image non disponible</div>';
-  return `<img src="${imageUrl}" alt="${title || 'Image de l\'article'}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.7);\'>Image non disponible</div>'">`;
+  return `<img src="${imageUrl}" alt="" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.7);\'>Image non disponible</div>'">`;
 }
 
 function createMediaLogoElement(source) {
