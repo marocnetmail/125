@@ -964,6 +964,7 @@ body {
           height="100%"
           style="border:none;"
           allow="fullscreen"
+          sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
          >
         </iframe>
       </div>
@@ -1035,6 +1036,7 @@ let pdfCancelRequested = false;
 let iframeLoadTimer = null;
 let currentArticleIsPdf = false;
 let currentArticleUrl = '';
+let iframeStartTime = 0;
 
 // ===== ELEMENTS =====
 const elements = {
@@ -1124,6 +1126,7 @@ function showIframeProgress() {
   elements.iframeLoading.style.display = 'block';
   elements.frameErrorMessage.style.display = 'none';
   updateIframeProgress(0, 'Préparation...');
+  iframeStartTime = Date.now();
 }
 
 function hideIframeProgress() {
@@ -1180,11 +1183,17 @@ window.retryWithProxy = function(url) {
 };
 
 function handleFrameLoad() {
+  const loadTime = (Date.now() - iframeStartTime) / 1000;
   clearInterval(iframeLoadTimer);
-  updateIframeProgress(100, 'Terminé');
-  setTimeout(hideIframeProgress, 300);
+  updateIframeProgress(100, `Chargé en ${loadTime.toFixed(1)}s`);
+  setTimeout(hideIframeProgress, 500);
   elements.frameErrorMessage.style.display = 'none';
   elements.articleFrame.style.display = 'block';
+  
+  // Optimisation mobile pour les fichiers HTML
+  if (!currentArticleIsPdf) {
+    setTimeout(() => injectMobileOptimization(elements.articleFrame), 300);
+  }
 }
 
 // Fonction pour injecter du CSS dans l'iframe pour mobile
@@ -1192,6 +1201,7 @@ function injectMobileOptimization(frame) {
   try {
     const iframeDoc = frame.contentDocument || frame.contentWindow.document;
     if (iframeDoc) {
+      // Vérifier si le document est accessible
       const style = iframeDoc.createElement('style');
       style.textContent = `
         body {
@@ -1201,6 +1211,7 @@ function injectMobileOptimization(frame) {
           overflow-x: hidden !important;
           margin: 0 !important;
           padding: 15px !important;
+          line-height: 1.5 !important;
         }
         img, video, iframe {
           max-width: 100% !important;
@@ -1213,13 +1224,19 @@ function injectMobileOptimization(frame) {
         }
         * {
           box-sizing: border-box !important;
+          word-wrap: break-word !important;
+        }
+        a {
+          word-break: break-all !important;
         }
       `;
       iframeDoc.head.appendChild(style);
       
       // Ajuster la viewport
       const viewport = iframeDoc.querySelector('meta[name="viewport"]');
-      if (!viewport) {
+      if (viewport) {
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes');
+      } else {
         const meta = iframeDoc.createElement('meta');
         meta.name = 'viewport';
         meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes';
@@ -1229,6 +1246,20 @@ function injectMobileOptimization(frame) {
   } catch (e) {
     console.log('Impossible d\'optimiser l\'iframe (restrictions cross-origin)');
   }
+}
+
+// Fonction pour charger rapidement un site HTML sans proxy
+function loadHtmlDirect(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(url);
+    img.onerror = () => {
+      // Si l'image ne charge pas, on essaie quand même l'URL directe
+      resolve(url);
+    };
+    img.src = url + '?favicon.ico'; // Test rapide avec favicon
+    setTimeout(() => resolve(url), 500); // Timeout après 500ms
+  });
 }
 
 // ===== INITIALIZATION =====
@@ -1368,11 +1399,7 @@ function setupEventListeners() {
  
   // Gestionnaires d'événements pour l'iframe
   elements.articleFrame.addEventListener('error', handleFrameError);
-  elements.articleFrame.addEventListener('load', function() {
-    handleFrameLoad();
-    // Essayer d'optimiser l'affichage mobile
-    setTimeout(() => injectMobileOptimization(elements.articleFrame), 500);
-  });
+  elements.articleFrame.addEventListener('load', handleFrameLoad);
  
   document.addEventListener('touchstart', function() {}, {passive: true});
 }
@@ -1620,7 +1647,7 @@ function truncateTitle(title, maxLength = 100) {
   return title.substring(0, maxLength) + '...';
 }
 
-// ===== NOUVELLE FONCTION OUVERTURE OVERLAY OPTIMISÉE =====
+// ===== FONCTION OUVERTURE OVERLAY OPTIMISÉE =====
 async function openArticleOverlay(article) {
   const articleUrl = article.url || '#';
   currentArticleUrl = articleUrl;
@@ -1646,9 +1673,38 @@ async function openArticleOverlay(article) {
   // Masquer les options PDF par défaut
   elements.pdfOptions.style.display = 'none';
 
-  // STRATÉGIE DIFFÉRENCIÉE : PDF vs HTML
-  if (isPdf) {
-    // Pour les PDF : utiliser Google Viewer (comme avant)
+  // STRATÉGIE RAPIDE POUR HTML
+  if (!isPdf) {
+    // Pour les fichiers HTML : chargement direct et rapide
+    updateIframeProgress(10, 'Connexion au site...');
+    
+    // Optimisation : pré-chargement DNS
+    const link = document.createElement('link');
+    link.rel = 'dns-prefetch';
+    link.href = new URL(articleUrl).origin;
+    document.head.appendChild(link);
+    
+    // Chargement direct de l'URL
+    elements.articleFrame.src = articleUrl;
+    
+    // Activation du sandbox pour plus de sécurité mais avec les permissions nécessaires
+    elements.articleFrame.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms allow-modals');
+    
+    // Message de progression optimiste
+    updateIframeProgress(30, 'Chargement en cours...');
+    
+    // Timer de progression plus rapide pour le HTML
+    let progress = 30;
+    if (iframeLoadTimer) clearInterval(iframeLoadTimer);
+    iframeLoadTimer = setInterval(() => {
+      if (progress < 90) {
+        progress += 15; // Progression plus rapide pour le HTML
+        updateIframeProgress(progress, `Chargement... ${progress}%`);
+      }
+    }, 150); // Intervalle plus court
+    
+  } else {
+    // Pour les PDF : utiliser Google Viewer
     const googleViewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(articleUrl)}&embedded=true`;
     elements.articleFrame.src = googleViewerUrl;
     
@@ -1659,52 +1715,17 @@ async function openArticleOverlay(article) {
     
     // Mise à jour du message de progression
     updateIframeProgress(30, 'Préparation du PDF...');
-  } else {
-    // Pour les fichiers HTML : utiliser une approche optimisée
-    updateIframeProgress(20, 'Préparation de l\'article...');
     
-    // Vérifier si le domaine est potentiellement bloqué
-    const isBlocked = CONFIG.blockedDomains.some(domain => articleUrl.includes(domain));
-    
-    if (isBlocked || isMobile) {
-      // Pour les sites bloqués ou mobile, utiliser un proxy pour éviter les problèmes CORS
-      updateIframeProgress(40, 'Utilisation d\'un proxy pour mobile...');
-      
-      // Choisir le proxy en fonction de la situation
-      // Pour mobile, on utilise un proxy qui optimise aussi l'affichage
-      const proxyUrl = CONFIG.htmlProxy + encodeURIComponent(articleUrl);
-      elements.articleFrame.src = proxyUrl;
-    } else {
-      // Pour les sites standards, charger directement
-      elements.articleFrame.src = articleUrl;
-    }
-    
-    // Optimisation supplémentaire pour mobile
-    if (isMobile) {
-      // Ajouter un message pour l'utilisateur
-      updateIframeProgress(50, 'Optimisation pour mobile...');
-      
-      // On va essayer d'injecter du CSS après le chargement
-      setTimeout(() => {
-        try {
-          injectMobileOptimization(elements.articleFrame);
-        } catch (e) {
-          console.log('Optimisation mobile non disponible');
-        }
-      }, 1000);
-    }
+    // Timer de progression plus lent pour les PDF
+    let progress = 30;
+    if (iframeLoadTimer) clearInterval(iframeLoadTimer);
+    iframeLoadTimer = setInterval(() => {
+      if (progress < 90) {
+        progress += 5;
+        updateIframeProgress(progress, `Chargement du PDF... ${progress}%`);
+      }
+    }, 300);
   }
-
-  // Gestion du timer de chargement
-  let progress = 0;
-  if (iframeLoadTimer) clearInterval(iframeLoadTimer);
-  iframeLoadTimer = setInterval(() => {
-    if (progress < 90) {
-      progress += 10;
-      let message = isPdf ? 'Chargement du PDF...' : 'Chargement de l\'article...';
-      updateIframeProgress(progress, `${message} ${progress}%`);
-    }
-  }, 200);
 
   elements.articleOverlay.style.display = 'block';
   document.body.style.overflow = 'hidden';
