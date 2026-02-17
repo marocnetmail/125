@@ -386,7 +386,7 @@ body {
 .article-image-container {
   position: relative;
   width: 100%;
-  height: 250;
+  height: 230;
   background: linear-gradient(45deg, #000428, #004e92);
   overflow: hidden;
 }
@@ -1009,12 +1009,7 @@ const CONFIG = {
   maxArticles: 1000,
   debounceDelay: 300,
   articlesPerPage: 50,
-  googleViewerUrl: 'https://docs.google.com/viewer?url={url}&embedded=true',
-  // Configuration des proxys pour les sites HTML
-  corsProxy: 'https://corsproxy.io/?',
-  htmlProxy: 'https://api.allorigins.win/raw?url=',
-  // Liste des domaines qui bloquent les iframes
-  blockedDomains: ['facebook.com', 'twitter.com', 'instagram.com', 'youtube.com', 'linkedin.com', 'tiktok.com']
+  googleViewerUrl: 'https://docs.google.com/viewer?url={url}&embedded=true'
 };
 
 // ===== STATE =====
@@ -1152,32 +1147,10 @@ function handleFrameError() {
     elements.frameErrorMessage.style.display = 'flex';
     elements.articleFrame.style.display = 'none';
   } else {
-    // Pour les sites HTML, proposer une alternative avec proxy
-    elements.frameErrorMessage.innerHTML = `
-      <p>❌ Impossible d'afficher ce site directement</p>
-      <p style="font-size:0.9rem; margin-bottom:15px;">Ce site peut bloquer l'affichage dans une iframe.</p>
-      <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
-        <a href="${currentArticleUrl}" target="_blank" class="open-external-btn" style="background:#1a73e8;">🔗 Ouvrir dans le navigateur</a>
-        <button onclick="retryWithProxy('${currentArticleUrl}')" class="open-external-btn" style="background:#4ECDC4;">🔄 Essayer avec proxy</button>
-      </div>
-    `;
     elements.frameErrorMessage.style.display = 'flex';
     elements.articleFrame.style.display = 'none';
   }
 }
-
-// Fonction pour réessayer avec un proxy
-window.retryWithProxy = function(url) {
-  currentArticleIsPdf = false;
-  elements.frameErrorMessage.style.display = 'none';
-  showIframeProgress();
-  updateIframeProgress(30, 'Connexion via proxy...');
-  
-  // Utiliser un proxy CORS
-  const proxyUrl = CONFIG.corsProxy + encodeURIComponent(url);
-  elements.articleFrame.src = proxyUrl;
-  elements.articleFrame.style.display = 'block';
-};
 
 function handleFrameLoad() {
   clearInterval(iframeLoadTimer);
@@ -1185,50 +1158,6 @@ function handleFrameLoad() {
   setTimeout(hideIframeProgress, 300);
   elements.frameErrorMessage.style.display = 'none';
   elements.articleFrame.style.display = 'block';
-}
-
-// Fonction pour injecter du CSS dans l'iframe pour mobile
-function injectMobileOptimization(frame) {
-  try {
-    const iframeDoc = frame.contentDocument || frame.contentWindow.document;
-    if (iframeDoc) {
-      const style = iframeDoc.createElement('style');
-      style.textContent = `
-        body {
-          font-size: 16px !important;
-          -webkit-text-size-adjust: 100% !important;
-          max-width: 100vw !important;
-          overflow-x: hidden !important;
-          margin: 0 !important;
-          padding: 15px !important;
-        }
-        img, video, iframe {
-          max-width: 100% !important;
-          height: auto !important;
-        }
-        table {
-          width: 100% !important;
-          overflow-x: auto !important;
-          display: block !important;
-        }
-        * {
-          box-sizing: border-box !important;
-        }
-      `;
-      iframeDoc.head.appendChild(style);
-      
-      // Ajuster la viewport
-      const viewport = iframeDoc.querySelector('meta[name="viewport"]');
-      if (!viewport) {
-        const meta = iframeDoc.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes';
-        iframeDoc.head.appendChild(meta);
-      }
-    }
-  } catch (e) {
-    console.log('Impossible d\'optimiser l\'iframe (restrictions cross-origin)');
-  }
 }
 
 // ===== INITIALIZATION =====
@@ -1368,11 +1297,7 @@ function setupEventListeners() {
  
   // Gestionnaires d'événements pour l'iframe
   elements.articleFrame.addEventListener('error', handleFrameError);
-  elements.articleFrame.addEventListener('load', function() {
-    handleFrameLoad();
-    // Essayer d'optimiser l'affichage mobile
-    setTimeout(() => injectMobileOptimization(elements.articleFrame), 500);
-  });
+  elements.articleFrame.addEventListener('load', handleFrameLoad);
  
   document.addEventListener('touchstart', function() {}, {passive: true});
 }
@@ -1635,64 +1560,26 @@ async function openArticleOverlay(article) {
   elements.frameErrorMessage.style.display = 'none';
   showIframeProgress();
   
-  // Détection du type de fichier
-  const isPdf = articleUrl.toLowerCase().includes('.pdf') || 
-                articleUrl.toLowerCase().includes('format=pdf') ||
-                articleUrl.toLowerCase().includes('type=pdf');
-  
+  // Détection si c'est un PDF ou un mobile
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  currentArticleIsPdf = isPdf;
+  const isPdf = articleUrl.toLowerCase().includes('.pdf') || articleUrl.toLowerCase().includes('format=pdf');
 
-  // Masquer les options PDF par défaut
-  elements.pdfOptions.style.display = 'none';
-
-  // STRATÉGIE DIFFÉRENCIÉE : PDF vs HTML
-  if (isPdf) {
-    // Pour les PDF : utiliser Google Viewer (comme avant)
+  // STRATÉGIE : Utilisation de Google Viewer pour PDF ou Mobile
+  // Cela permet de contourner les blocages X-Frame-Options et les redirections
+  if (isPdf || isMobile) {
+    // Google Viewer gère les redirections et l'affichage mobile nativement
     const googleViewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(articleUrl)}&embedded=true`;
     elements.articleFrame.src = googleViewerUrl;
     
-    // Afficher les boutons d'options PDF
-    elements.pdfOptions.style.display = 'flex';
-    elements.googleViewerLink.href = googleViewerUrl;
-    elements.directPdfLink.href = articleUrl;
-    
-    // Mise à jour du message de progression
-    updateIframeProgress(30, 'Préparation du PDF...');
+    // Afficher les boutons d'options PDF si nécessaire
+    if (isPdf) {
+      elements.pdfOptions.style.display = 'flex';
+      elements.googleViewerLink.href = googleViewerUrl;
+      elements.directPdfLink.href = articleUrl;
+    }
   } else {
-    // Pour les fichiers HTML : utiliser une approche optimisée
-    updateIframeProgress(20, 'Préparation de l\'article...');
-    
-    // Vérifier si le domaine est potentiellement bloqué
-    const isBlocked = CONFIG.blockedDomains.some(domain => articleUrl.includes(domain));
-    
-    if (isBlocked || isMobile) {
-      // Pour les sites bloqués ou mobile, utiliser un proxy pour éviter les problèmes CORS
-      updateIframeProgress(40, 'Utilisation d\'un proxy pour mobile...');
-      
-      // Choisir le proxy en fonction de la situation
-      // Pour mobile, on utilise un proxy qui optimise aussi l'affichage
-      const proxyUrl = CONFIG.htmlProxy + encodeURIComponent(articleUrl);
-      elements.articleFrame.src = proxyUrl;
-    } else {
-      // Pour les sites standards, charger directement
-      elements.articleFrame.src = articleUrl;
-    }
-    
-    // Optimisation supplémentaire pour mobile
-    if (isMobile) {
-      // Ajouter un message pour l'utilisateur
-      updateIframeProgress(50, 'Optimisation pour mobile...');
-      
-      // On va essayer d'injecter du CSS après le chargement
-      setTimeout(() => {
-        try {
-          injectMobileOptimization(elements.articleFrame);
-        } catch (e) {
-          console.log('Optimisation mobile non disponible');
-        }
-      }, 1000);
-    }
+    // Sur PC pour les sites web classiques
+    elements.articleFrame.src = articleUrl;
   }
 
   // Gestion du timer de chargement
@@ -1701,10 +1588,9 @@ async function openArticleOverlay(article) {
   iframeLoadTimer = setInterval(() => {
     if (progress < 90) {
       progress += 10;
-      let message = isPdf ? 'Chargement du PDF...' : 'Chargement de l\'article...';
-      updateIframeProgress(progress, `${message} ${progress}%`);
+      updateIframeProgress(progress, `Chargement via Google Viewer... ${progress}%`);
     }
-  }, 200);
+  }, 150);
 
   elements.articleOverlay.style.display = 'block';
   document.body.style.overflow = 'hidden';
