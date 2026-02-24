@@ -1132,5 +1132,23 @@
     "last_update": "",
     "": "",
     "status": ""
+  },
+  {
+    "index": "20260217171005032",
+    "date/heure": "2026-02-17 17:10:00",
+    "source": "GMS Veille",
+    "titre": "Lagune de Marchica : Tanger Med Engineering pilotera les futurs grands chantiers",
+    "thème": "Général",
+    "mots-clés": "Lagune, Marchica, Tanger",
+    "langue": "FR",
+    "sentiment": "Neutre",
+    "image_brute": "20260217171005032-image.jpg",
+    "numero_semaine": "2026-S08",
+    "url": "http://email.mg.gmsveille.com/c/eJwczjtywyAYBsDTSB0eXhKioEije_yGD8QEsAeQz5-J2602OKUtrXDCGKH0Ifm2Xk4I8l6afeciar2rI25WQEMqFfewmTU7fohwWAsP622E3IgM10ZzPKXcYRfNUx0f5FLw8K-6FnfN-R6L-lnkucizIGD8Piot8kR7xfhvlO4GFsAqdX9lT2xSS-isIjC0lBvQc0vsnctrohMrGCze8-6DpU4tDOYvajOjj0Wea3cUcqmdnpjme6Jcvp-Pk38BAAD__0BGUTU",
+    "lien_json": "datajson/02/2026-S08.json",
+    "visible": true,
+    "last_update": "",
+    "": "New",
+    "status": ""
   }
 ]
