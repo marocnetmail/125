@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>وزارة إعداد التراب · الهيكل التنظيمي والمهام</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Font Tajawal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --purple-900: #2d1b4e;
+      --purple-700: #5e3a9c;
+      --purple-500: #8a6ccf;
+      --purple-300: #c7b5f0;
+      --purple-100: #f0eaff;
+      --white: #ffffff;
+      --text-dark: #1f1435;
+      --shadow-card: 0 6px 22px rgba(94, 58, 156, 0.15);
+      --blue-primary: #1976D2;
+      --blue-light: #E3F2FD;
+    }
+
+    body {
+      font-family: 'Tajawal', system-ui, sans-serif;
+      background: var(--purple-100);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== HEADER avec logo à gauche, titre au milieu, menu à droite ===== */
+    .app-header {
+      background: var(--purple-900);
+      color: white;
+      padding: 12px 16px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      border-radius: 0 0 32px 32px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1 1 auto;
+    }
+
+    .logo-area i {
+      font-size: 1.8rem;
+      background: rgba(255,255,255,0.15);
+      padding: 10px;
+      border-radius: 50%;
+    }
+
+    .logo-area h1 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    /* Titre central en violet (sur fond blanc pour contraster) */
+    .header-title {
+      background: rgba(255,255,255,0.9);
+      padding: 8px 18px;
+      border-radius: 50px;
+      color: var(--purple-900);
+      font-size: 1.3rem;
+      font-weight: 900;
+      text-align: center;
+      flex: 2 1 auto;
+      margin: 0 5px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 400px;
+    }
+
+    .header-title i {
+      color: var(--purple-700);
+      margin: 0 5px;
+      font-size: 1.2rem;
+    }
+
+    .menu-toggle {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid var(--purple-300);
+      border-radius: 50px;
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      min-height: 48px;
+      transition: 0.15s;
+      flex: 1 1 auto;
+      justify-content: center;
+    }
+
+    .menu-toggle i {
+      font-size: 1.3rem;
+    }
+
+    .menu-toggle:active {
+      background: var(--purple-500);
+    }
+
+    /* Menu déroulant (contact) */
+    .contact-menu {
+      background: white;
+      border-radius: 38px 12px 38px 12px;
+      margin-top: 16px;
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.2s;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--purple-300);
+    }
+
+    .contact-menu.open {
+      max-height: 2000px;
+      padding: 18px 16px;
+    }
+
+    .contact-section {
+      margin-bottom: 28px;
+      background: var(--blue-light);
+      border-radius: 24px 12px 24px 12px;
+      padding: 16px 18px;
+      border: 2px solid var(--blue-primary);
+    }
+
+    .contact-section h3 {
+      color: var(--blue-primary);
+      font-weight: 800;
+      font-size: 1.5rem;
+      border-right: 6px solid var(--blue-primary);
+      padding-right: 12px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .contact-section h3 i {
+      color: var(--blue-primary);
+      font-size: 1.6rem;
+    }
+
+    /* Address blocks en VIOLET (purple) */
+    .address-block {
+      background: var(--purple-100);      /* fond violet clair */
+      border-radius: 20px 8px 20px 8px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      border: 2px solid var(--purple-700);  /* bordure violette */
+      font-size: 1.15rem;
+      color: var(--purple-900);
+    }
+
+    .address-block p {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+      font-size: 1.15rem;
+    }
+
+    .address-block i {
+      color: var(--purple-700);
+      width: 28px;
+      font-size: 1.4rem;
+    }
+
+    .contact-map {
+      margin-top: 16px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 2px solid var(--blue-primary);
+      height: 130px;
+      width: 100%;
+    }
+
+    .contact-map iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .copyright {
+      text-align: center;
+      font-size: 1rem;
+      color: var(--purple-900);
+      padding-top: 16px;
+      border-top: 2px dashed var(--purple-300);
+      margin-top: 16px;
+      font-weight: 500;
+    }
+
+    /* ===== RESTE DU STYLE ===== */
+    .org-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 12px 24px 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .minister-card {
+      background: linear-gradient(145deg, var(--purple-900), #452975);
+      border-radius: 48px 18px 48px 18px;
+      padding: 18px 20px;
+      margin: 20px auto 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 18px 26px -6px rgba(45, 27, 78, 0.4);
+      border: 1px solid #ad94e0;
+      width: 100%;
+      max-width: 440px;
+      color: white;
+    }
+
+    .minister-card i {
+      font-size: 2.6rem;
+      background: rgba(255,255,255,0.18);
+      padding: 14px;
+      border-radius: 40% 20% 40% 20%;
+    }
+
+    .minister-info strong {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: white;
+      display: block;
+      line-height: 1.2;
+    }
+
+    .org-level {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .node-card {
+      background: var(--white);
+      border-radius: 38px 12px 38px 12px;
+      border: 1.5px solid var(--purple-300);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .node-header {
+      background: var(--purple-700);
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      min-height: 70px;
+    }
+
+    .node-header i {
+      font-size: 1.8rem;
+      background: rgba(255,255,255,0.2);
+      padding: 12px;
+      border-radius: 24px 6px 24px 6px;
+      width: 48px;
+      text-align: center;
+    }
+
+    .node-header .title {
+      font-weight: 800;
+      font-size: 1.15rem;
+      flex: 1;
+    }
+
+    .chevron i {
+      font-size: 1.6rem;
+      opacity: 0.9;
+    }
+
+    .sub-items {
+      background: #fbfaff;
+      padding: 12px;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      border-top: 2px dashed var(--purple-300);
+    }
+
+    .sub-items.open {
+      display: flex;
+    }
+
+    .sub-item {
+      background: white;
+      border-radius: 40px 6px 40px 6px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 1px solid #dccdff;
+      min-height: 60px;
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+
+    .sub-item i {
+      font-size: 1.5rem;
+      color: var(--purple-700);
+      background: #efe3ff;
+      padding: 10px;
+      border-radius: 18px 4px 18px 4px;
+      min-width: 48px;
+      text-align: center;
+    }
+
+    .sub-item strong {
+      font-weight: 800;
+      color: var(--purple-900);
+    }
+
+    .info-panel {
+      background: var(--white);
+      border-radius: 38px 12px 38px 12px;
+      border: 2px solid var(--purple-500);
+      padding: 22px 18px;
+      margin: 20px auto 10px;
+      max-width: 440px;
+      display: none;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .info-panel.visible {
+      display: flex;
+    }
+
+    .info-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      border-bottom: 2px solid var(--purple-300);
+      padding-bottom: 12px;
+    }
+
+    .info-header i {
+      font-size: 2.2rem;
+      background: var(--purple-100);
+      padding: 12px;
+      border-radius: 30px 8px 30px 8px;
+      color: var(--purple-700);
+    }
+
+    .info-header h3 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--purple-900);
+    }
+
+    .info-detail {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .info-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #f6f0ff;
+      padding: 14px 18px;
+      border-radius: 60px 8px 60px 8px;
+      font-size: 1.1rem;
+    }
+
+    .info-row i {
+      font-size: 1.5rem;
+      color: var(--purple-700);
+      min-width: 36px;
+    }
+
+    .info-row a, .info-row span {
+      font-size: 1.1rem;
+      color: var(--text-dark);
+      text-decoration: none;
+      font-weight: 500;
+      word-break: break-word;
+    }
+
+    .info-row a {
+      color: var(--purple-900);
+      text-decoration: underline;
+      text-decoration-color: var(--purple-300);
+    }
+
+    .iframe-container {
+      margin-top: 10px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 2px solid var(--purple-300);
+      background: #eee;
+      height: 240px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .close-info {
+      background: var(--purple-700);
+      color: white;
+      border: none;
+      padding: 16px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      border-radius: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 8px;
+      cursor: pointer;
+      min-height: 56px;
+    }
+
+    .footer-info {
+      margin-top: 32px;
+      color: var(--purple-900);
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      padding: 16px 4px 24px;
+      border-top: 2px solid var(--purple-300);
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 700px) {
+      .header-title {
+        font-size: 1rem;
+        white-space: normal;
+      }
+      .logo-area h1 {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER avec logo à gauche, titre central violet, menu à droite -->
+<header class="app-header">
+  <div class="header-row">
+    <!-- Logo à gauche -->
+    <div class="logo-area">
+      <i class="fas fa-sitemap"></i>
+      <h1>وزارة إعداد التراب</h1>
+    </div>
+    
+    <!-- Titre central violet dans la header row -->
+    <div class="header-title">
+      <i class="fas fa-sitemap"></i>
+      الهيكل التنظيمي - المهام والاختصاصات
+      <i class="fas fa-tasks"></i>
+    </div>
+    
+    <!-- Menu à droite -->
+    <div class="menu-toggle" id="menuToggle">
+      <i class="fas fa-phone-alt"></i>
+      <span>تواصل معنا</span>
+      <i class="fas fa-chevron-down" id="menuChevron"></i>
+    </div>
+  </div>
+
+  <!-- MENU DÉROULANT (CONTACT) - Address blocks en VIOLET -->
+  <div class="contact-menu" id="contactMenu">
+    <!-- إعداد التراب الوطني والتعمير -->
+    <div class="contact-section">
+      <h3><i class="fas fa-map"></i> إعداد التراب الوطني والتعمير</h3>
+      <div class="address-block">  <!-- violet -->
+        <p><i class="fas fa-building"></i> <strong>المقر الرئيسي :</strong> زاوية مهدي بن بركة والأنخيل - حي الرياض، الرباط 10000 - المغرب</p>
+        <p><i class="fas fa-map-pin"></i> <strong>ملحق 1 :</strong> زاوية ميشليفن وبو إبلان، أكدال – 10000 – الرباط</p>
+        <p><i class="fas fa-map-pin"></i> <strong>ملحق 2 :</strong> حسان، الرباط، المغرب</p>
+      </div>
+      <div class="contact-map">
+        <iframe src="https://maps.google.com/maps?q=Angle+Mehdi+Benbarka+et+Annakhil+Hay+Riad+Rabat&output=embed" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <!-- الإسكان وسياسة المدينة -->
+    <div class="contact-section">
+      <h3><i class="fas fa-city"></i> الإسكان وسياسة المدينة</h3>
+      <div class="address-block">  <!-- violet -->
+        <p><i class="fas fa-building"></i> <strong>المقر الرئيسي :</strong> زنقة الجوزة والجميزة، الرباط 10000، المغرب</p>
+      </div>
+      <div class="contact-map">
+        <iframe src="https://maps.google.com/maps?q=Rues+Al+Jouaze+et+Al+Joumaize+Rabat&output=embed" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <!-- الإحداثيات -->
+    <div class="contact-section">
+      <h3><i class="fas fa-address-card"></i> الإحداثيات</h3>
+      <div class="address-block">  <!-- violet -->
+        <p><i class="fas fa-phone"></i> +212 537 68 00 00</p>
+        <p><i class="fas fa-fax"></i> +212 537 68 00 01</p>
+        <p><i class="fas fa-envelope"></i> contact@matnuhpv.gov.ma</p>
+      </div>
+      <div class="contact-map">
+        <iframe src="https://maps.google.com/maps?q=Ministère+Aménagement+Territoire+Rabat&output=embed" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <div class="copyright">
+      حقوق النشر © 2026، وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة
+    </div>
+  </div>
+</header>
+
+<main class="org-scroll" id="orgScroll">
+  <!-- الوزيرة -->
+  <div class="minister-card">
+    <i class="fas fa-user-tie"></i>
+    <div class="minister-info">
+      <strong>الوزيرة</strong>
+      <span>فاطمة الزهراء المنصوري</span>
+    </div>
+  </div>
+
+  <!-- حاوية المديريات (يتم توليدها بواسطة JavaScript) -->
+  <div id="orgContainer" class="org-level"></div>
+  <div id="infoPanel" class="info-panel"></div>
+
+  <div class="footer-info">
+    <span><i class="fas fa-clock"></i> 2025 · آخر تحديث</span>
+    <span><i class="fas fa-map-pin"></i> الخرائط متوفرة</span>
+  </div>
+</main>
+
+<script>
+  (function() {
+    // ========== البيانات الكاملة ==========
+    const orgData = {
+      head: { title: "الوزيرة", name: "فاطمة الزهراء المنصوري" },
+      structure: [
+        {
+          title: "الكتابة العامة",
+          icon: "fa-file-signature",
+          sub_entities: [
+            { title: "المفتشية العامة", icon: "fa-magnifying-glass", tel: "+212 537 68 12 30", adresse: "12 شارع محمد الخامس، الرباط", maps: "https://maps.google.com/?q=12+Avenue+Mohammed+V+Rabat" },
+            { title: "برنامج التثمين المستدام للقصور والقصبات", icon: "fa-kaaba", tel: "+212 537 68 13 31", adresse: "زاوية واد فاس، أكدال", maps: "https://maps.google.com/?q=Angle+rue+Oued+Fès+Agdal" },
+            { title: "كتابة المجلس الوطني للإسكان", icon: "fa-people-group", tel: "+212 537 21 45 67", adresse: "15 زنقة جبل لخضر، الرباط", maps: "https://maps.google.com/?q=15+Rue+Jbel+Lakhdar+Rabat" },
+            { title: "مجموعة العمران", icon: "fa-building", tel: "+212 537 72 41 10", adresse: "50 شارع الحسن الثاني، الدار البيضاء", maps: "https://maps.google.com/?q=50+Avenue+Hassan+II+Casablanca" },
+            { title: "الوكالة الوطنية للتجديد الحضري والمباني الآيلة للسقوط", icon: "fa-helmet-safety", tel: "+212 537 98 76 54", adresse: "23 زنقة وجدة، الرباط", maps: "https://maps.google.com/?q=23+Rue+Oujda+Rabat" }
+          ]
+        },
+        {
+          title: "مديرية الموارد البشرية والشؤون المالية",
+          icon: "fa-hand-holding-dollar",
+          sub_entities: [
+            { title: "مديرية نظم المعلومات والرصد", icon: "fa-database", tel: "+212 537 66 33 22", adresse: "مبنى 14، القطاع 12، حي الرياض", maps: "https://maps.google.com/?q=Immeuble+14+Secteur+12+Hay+Riad" },
+            { title: "مديرية الشؤون القانونية والمنازعات", icon: "fa-scale-balanced", tel: "+212 537 64 75 20", adresse: "8 زنقة المغرب العربي", maps: "https://maps.google.com/?q=8+Rue+Al+Maghrib+Al+Arabi+Rabat" },
+            { title: "مديرية التعاون والشراكة والتواصل", icon: "fa-handshake", tel: "+212 537 29 38 47", adresse: "المركب الإداري، أبراج حسان", maps: "https://maps.google.com/?q=Tours+Hassani+Rabat" }
+          ]
+        },
+        {
+          title: "المديرية العامة للإسكان وسياسة المدينة",
+          icon: "fa-city",
+          sub_entities: [
+            { title: "مديرية الإسكان والإنعاش العقاري", icon: "fa-chart-simple", tel: "+212 537 54 87 12", adresse: "17 زنقة الأنخيل، أكدال", maps: "https://maps.google.com/?q=17+Rue+Annakhil+Agdal" },
+            { title: "مديرية سياسة المدينة ودعم التنمية المجالية", icon: "fa-map-pin", tel: "+212 537 70 14 15", adresse: "5 زنقة الفضيلة، الرباط", maps: "https://maps.google.com/?q=5+Rue+Al+Fadila+Rabat" },
+            { title: "مديرية الشؤون التقنية والعلاقات مع المهنيين", icon: "fa-screwdriver-wrench", tel: "+212 537 63 24 86", adresse: "زاوية طانطان، الحي المحمدي", maps: "https://maps.google.com/?q=Angle+rue+Tantan+CYM" }
+          ]
+        },
+        {
+          title: "المديرية العامة لإعداد التراب والتعمير",
+          icon: "fa-map",
+          sub_entities: [
+            { title: "مديرية إعداد التراب الوطني", icon: "fa-earth-africa", tel: "+212 537 72 80 30", adresse: "44 شارع علال بن عبد الله", maps: "https://maps.google.com/?q=44+Avenue+Allal+Ben+Abdellah" },
+            { title: "مديرية التعمير", icon: "fa-compass", tel: "+212 537 20 45 67", adresse: "19 زنقة واد سبو", maps: "https://maps.google.com/?q=19+Rue+Oued+Sebou" },
+            { title: "مديرية الهندسة المعمارية", icon: "fa-pen-ruler", tel: "+212 537 67 89 12", adresse: "7 شارع الأطلس", maps: "https://maps.google.com/?q=7+Avenue+Al+Atlas" }
+          ]
+        },
+        {
+          title: "مديرية البرمجة والنجاعة وتتبع المؤسسات العمومية",
+          icon: "fa-chart-gantt",
+          sub_entities: [
+            { title: "قسم البرمجة", icon: "fa-calculator", tel: "+212 537 12 34 56", adresse: "مبنى الباتيو، حي الرياض", maps: "https://maps.google.com/?q=Immeuble+les+Patios+Hay+Riad" },
+            { title: "قسم النجاعة", icon: "fa-chart-line", tel: "+212 537 65 43 21", adresse: "زاوية شارع الحسن الثاني، الرباط", maps: "https://maps.google.com/?q=Angle+avenue+Hassan+II+Rabat" }
+          ]
+        },
+        {
+          title: "مديرية الاستراتيجية والتمويلات والتقييم",
+          icon: "fa-coins",
+          sub_entities: [
+            { title: "قسم الاستراتيجية", icon: "fa-chess-board", tel: "+212 537 98 76 12", adresse: "أبراج حسان، مكتب 403", maps: "https://maps.google.com/?q=Tours+Hassani+Rabat" },
+            { title: "قسم التمويلات", icon: "fa-sack-dollar", tel: "+212 537 34 12 78", adresse: "زنقة المغرب العربي، الرباط", maps: "https://maps.google.com/?q=Rue+Al+Maghrib+Al+Arabi+Rabat" }
+          ]
+        },
+        {
+          title: "مديرية الابتكار والتعليم والتكوين",
+          icon: "fa-graduation-cap",
+          sub_entities: [
+            { title: "قسم الابتكار", icon: "fa-lightbulb", tel: "+212 537 55 66 77", adresse: "القطب العلمي، الرباط تكنوبوليس", maps: "https://maps.google.com/?q=Rabat+Technopolis" },
+            { title: "قسم التكوين المستمر", icon: "fa-chalkboard-user", tel: "+212 537 44 33 22", adresse: "معهد التكوين، أكدال", maps: "https://maps.google.com/?q=Institut+de+formation+Agdal" }
+          ]
+        }
+      ]
+    };
+
+    const container = document.getElementById('orgContainer');
+    const infoPanel = document.getElementById('infoPanel');
+
+    function renderOrg() {
+      let html = '';
+      orgData.structure.forEach((dir, idx) => {
+        html += `<div class="node-card" data-index="${idx}">`;
+        html += `<div class="node-header" data-index="${idx}">`;
+        html += `<i class="fas ${dir.icon}"></i>`;
+        html += `<span class="title"><strong>${dir.title}</strong></span>`;
+        html += `<span class="chevron"><i class="fas fa-chevron-down"></i></span>`;
+        html += `</div>`;
+        if (dir.sub_entities.length > 0) {
+          html += `<div class="sub-items">`;
+          dir.sub_entities.forEach(sub => {
+            html += `<div class="sub-item" 
+              data-title="${sub.title}" 
+              data-icon="${sub.icon}" 
+              data-tel="${sub.tel || ''}" 
+              data-adresse="${sub.adresse || ''}" 
+              data-maps="${sub.maps || ''}">`;
+            html += `<i class="fas ${sub.icon}"></i>`;
+            html += `<span><strong>${sub.title}</strong></span>`;
+            html += `</div>`;
+          });
+          html += `</div>`;
+        }
+        html += `</div>`;
+      });
+      container.innerHTML = html;
+
+      // toggle sous-menus
+      document.querySelectorAll('.node-header').forEach(header => {
+        header.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const card = header.closest('.node-card');
+          const subItems = card.querySelector('.sub-items');
+          const chevron = header.querySelector('.chevron i');
+          if (subItems) {
+            subItems.classList.toggle('open');
+            chevron.className = subItems.classList.contains('open') ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+          }
+        });
+      });
+
+      // clic sur sous-entité
+      document.querySelectorAll('.sub-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const title = item.dataset.title || '';
+          const icon = item.dataset.icon || 'fa-building';
+          const tel = item.dataset.tel || 'رقم غير متوفر';
+          const adresse = item.dataset.adresse || 'العنوان غير متوفر';
+          const maps = item.dataset.maps || 'https://maps.google.com/';
+
+          const panelContent = `
+            <div class="info-header"><i class="fas ${icon}"></i><h3><strong>${title}</strong></h3></div>
+            <div class="info-detail">
+              <div class="info-row"><i class="fas fa-phone-alt"></i><span dir="ltr">${tel}</span></div>
+              <div class="info-row"><i class="fas fa-map-marker-alt"></i><span>${adresse}</span></div>
+              <div class="info-row"><i class="fas fa-map"></i><a href="${maps}" target="_blank">عرض على خرائط Google</a></div>
+              <div class="iframe-container"><iframe src="https://maps.google.com/maps?q=${encodeURIComponent(adresse)}&output=embed" loading="lazy"></iframe></div>
+            </div>
+            <div class="close-info" id="closeInfoBtn"><i class="fas fa-times"></i> إغلاق</div>
+          `;
+          infoPanel.innerHTML = panelContent;
+          infoPanel.classList.add('visible');
+          document.getElementById('closeInfoBtn').addEventListener('click', () => infoPanel.classList.remove('visible'));
+          infoPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+      });
+    }
+
+    renderOrg();
+
+    // ===== GESTION DU MENU CONTACT =====
+    const menuToggle = document.getElementById('menuToggle');
+    const contactMenu = document.getElementById('contactMenu');
+    const menuChevron = document.getElementById('menuChevron');
+
+    menuToggle.addEventListener('click', () => {
+      contactMenu.classList.toggle('open');
+      menuChevron.className = contactMenu.classList.contains('open') ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+    });
+  })();
+</script>
+</body>
+</html>
