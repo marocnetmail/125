@@ -1,3 +1,5 @@
+Voici le code HTML complet avec le titre parfaitement centré horizontalement et tous les éléments optimisés.
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -40,11 +42,11 @@
       flex-direction: column;
     }
 
-    /* ===== HEADER avec logo à gauche, titre au milieu, menu à droite ===== */
+    /* ===== HEADER avec logo à gauche, titre centré, menu à droite ===== */
     .app-header {
       background: var(--purple-900);
       color: white;
-      padding: 12px 16px;
+      padding: 8px 16px;
       box-shadow: 0 4px 14px rgba(0,0,0,0.12);
       border-radius: 0 0 32px 32px;
       position: sticky;
@@ -56,74 +58,78 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
     }
 
+    /* Logo à gauche avec largeur fixe pour équilibrer */
     .logo-area {
       display: flex;
       align-items: center;
-      gap: 10px;
-      flex: 1 1 auto;
+      gap: 8px;
+      width: 110px; /* largeur fixe pour équilibrer le centrage */
+      flex-shrink: 0;
     }
 
     .logo-area i {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       background: rgba(255,255,255,0.15);
-      padding: 10px;
+      padding: 8px;
       border-radius: 50%;
     }
 
     .logo-area h1 {
-      font-size: 1.2rem;
+      font-size: 1rem;
       font-weight: 800;
-      line-height: 1.3;
+      line-height: 1.2;
+      white-space: nowrap;
     }
 
-    /* Titre central en violet (sur fond blanc pour contraster) */
+    /* Titre parfaitement centré horizontalement */
     .header-title {
       background: rgba(255,255,255,0.9);
-      padding: 8px 18px;
-      border-radius: 50px;
+      padding: 6px 16px;
+      border-radius: 40px;
       color: var(--purple-900);
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: 900;
       text-align: center;
-      flex: 2 1 auto;
-      margin: 0 5px;
+      margin: 0 auto;  /* centrage automatique */
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 400px;
+      flex: 0 1 auto;
     }
 
     .header-title i {
       color: var(--purple-700);
-      margin: 0 5px;
-      font-size: 1.2rem;
+      margin: 0 4px;
+      font-size: 1.1rem;
     }
 
+    /* Menu à droite avec largeur fixe */
     .menu-toggle {
       background: rgba(255,255,255,0.1);
       border: 1px solid var(--purple-300);
-      border-radius: 50px;
-      padding: 8px 18px;
+      border-radius: 40px;
+      padding: 5px 12px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 1.1rem;
+      gap: 5px;
+      font-size: 0.95rem;
       font-weight: 700;
       color: white;
       cursor: pointer;
-      min-height: 48px;
+      min-height: 38px;
       transition: 0.15s;
-      flex: 1 1 auto;
+      width: 110px;  /* même largeur que le logo pour symétrie */
       justify-content: center;
+      flex-shrink: 0;
     }
 
     .menu-toggle i {
-      font-size: 1.3rem;
+      font-size: 1.1rem;
     }
 
     .menu-toggle:active {
@@ -134,7 +140,7 @@
     .contact-menu {
       background: white;
       border-radius: 38px 12px 38px 12px;
-      margin-top: 16px;
+      margin-top: 12px;
       padding: 0;
       max-height: 0;
       overflow: hidden;
@@ -145,65 +151,65 @@
 
     .contact-menu.open {
       max-height: 2000px;
-      padding: 18px 16px;
+      padding: 16px 14px;
     }
 
     .contact-section {
-      margin-bottom: 28px;
+      margin-bottom: 24px;
       background: var(--blue-light);
       border-radius: 24px 12px 24px 12px;
-      padding: 16px 18px;
+      padding: 14px 16px;
       border: 2px solid var(--blue-primary);
     }
 
     .contact-section h3 {
       color: var(--blue-primary);
       font-weight: 800;
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       border-right: 6px solid var(--blue-primary);
-      padding-right: 12px;
-      margin-bottom: 18px;
+      padding-right: 10px;
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .contact-section h3 i {
       color: var(--blue-primary);
-      font-size: 1.6rem;
+      font-size: 1.4rem;
     }
 
-    /* Address blocks en VIOLET (purple) */
+    /* Address blocks en VIOLET */
     .address-block {
-      background: var(--purple-100);      /* fond violet clair */
+      background: var(--purple-100);
       border-radius: 20px 8px 20px 8px;
-      padding: 16px 20px;
-      margin-bottom: 16px;
-      border: 2px solid var(--purple-700);  /* bordure violette */
-      font-size: 1.15rem;
+      padding: 14px 18px;
+      margin-bottom: 14px;
+      border: 2px solid var(--purple-700);
+      font-size: 1rem;
       color: var(--purple-900);
     }
 
     .address-block p {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 12px;
-      font-size: 1.15rem;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 1rem;
     }
 
     .address-block i {
       color: var(--purple-700);
-      width: 28px;
-      font-size: 1.4rem;
+      width: 24px;
+      font-size: 1.2rem;
     }
 
     .contact-map {
-      margin-top: 16px;
-      border-radius: 18px;
+      margin-top: 14px;
+      border-radius: 16px;
       overflow: hidden;
       border: 2px solid var(--blue-primary);
-      height: 130px;
+      height: 120px;
       width: 100%;
     }
 
@@ -215,11 +221,11 @@
 
     .copyright {
       text-align: center;
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: var(--purple-900);
-      padding-top: 16px;
+      padding-top: 14px;
       border-top: 2px dashed var(--purple-300);
-      margin-top: 16px;
+      margin-top: 14px;
       font-weight: 500;
     }
 
@@ -227,34 +233,34 @@
     .org-scroll {
       flex: 1;
       overflow-y: auto;
-      padding: 0 12px 24px 12px;
+      padding: 0 10px 20px 10px;
       -webkit-overflow-scrolling: touch;
     }
 
     .minister-card {
       background: linear-gradient(145deg, var(--purple-900), #452975);
       border-radius: 48px 18px 48px 18px;
-      padding: 18px 20px;
-      margin: 20px auto 22px;
+      padding: 16px 18px;
+      margin: 16px auto 20px;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
       box-shadow: 0 18px 26px -6px rgba(45, 27, 78, 0.4);
       border: 1px solid #ad94e0;
       width: 100%;
-      max-width: 440px;
+      max-width: 420px;
       color: white;
     }
 
     .minister-card i {
-      font-size: 2.6rem;
+      font-size: 2.2rem;
       background: rgba(255,255,255,0.18);
-      padding: 14px;
+      padding: 12px;
       border-radius: 40% 20% 40% 20%;
     }
 
     .minister-info strong {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 800;
       color: white;
       display: block;
@@ -264,8 +270,8 @@
     .org-level {
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      margin-bottom: 28px;
+      gap: 14px;
+      margin-bottom: 24px;
     }
 
     .node-card {
@@ -275,47 +281,47 @@
       overflow: hidden;
       box-shadow: var(--shadow-card);
       width: 100%;
-      max-width: 440px;
+      max-width: 420px;
       margin: 0 auto;
     }
 
     .node-header {
       background: var(--purple-700);
       color: white;
-      padding: 16px 20px;
+      padding: 14px 18px;
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       cursor: pointer;
-      min-height: 70px;
+      min-height: 60px;
     }
 
     .node-header i {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       background: rgba(255,255,255,0.2);
-      padding: 12px;
+      padding: 10px;
       border-radius: 24px 6px 24px 6px;
-      width: 48px;
+      width: 44px;
       text-align: center;
     }
 
     .node-header .title {
       font-weight: 800;
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       flex: 1;
     }
 
     .chevron i {
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       opacity: 0.9;
     }
 
     .sub-items {
       background: #fbfaff;
-      padding: 12px;
+      padding: 10px;
       display: none;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
       border-top: 2px dashed var(--purple-300);
     }
 
@@ -326,23 +332,23 @@
     .sub-item {
       background: white;
       border-radius: 40px 6px 40px 6px;
-      padding: 14px 16px;
+      padding: 12px 14px;
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       border: 1px solid #dccdff;
-      min-height: 60px;
+      min-height: 54px;
       cursor: pointer;
-      font-size: 1.05rem;
+      font-size: 1rem;
     }
 
     .sub-item i {
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       color: var(--purple-700);
       background: #efe3ff;
-      padding: 10px;
+      padding: 8px;
       border-radius: 18px 4px 18px 4px;
-      min-width: 48px;
+      min-width: 42px;
       text-align: center;
     }
 
@@ -355,12 +361,12 @@
       background: var(--white);
       border-radius: 38px 12px 38px 12px;
       border: 2px solid var(--purple-500);
-      padding: 22px 18px;
-      margin: 20px auto 10px;
-      max-width: 440px;
+      padding: 20px 16px;
+      margin: 18px auto 10px;
+      max-width: 420px;
       display: none;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
     }
 
     .info-panel.visible {
@@ -370,21 +376,21 @@
     .info-header {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 12px;
       border-bottom: 2px solid var(--purple-300);
-      padding-bottom: 12px;
+      padding-bottom: 10px;
     }
 
     .info-header i {
-      font-size: 2.2rem;
+      font-size: 2rem;
       background: var(--purple-100);
-      padding: 12px;
+      padding: 10px;
       border-radius: 30px 8px 30px 8px;
       color: var(--purple-700);
     }
 
     .info-header h3 {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 800;
       color: var(--purple-900);
     }
@@ -392,31 +398,30 @@
     .info-detail {
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 14px;
     }
 
     .info-row {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
       background: #f6f0ff;
-      padding: 14px 18px;
+      padding: 12px 16px;
       border-radius: 60px 8px 60px 8px;
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
 
     .info-row i {
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       color: var(--purple-700);
-      min-width: 36px;
+      min-width: 32px;
     }
 
     .info-row a, .info-row span {
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: var(--text-dark);
       text-decoration: none;
       font-weight: 500;
-      word-break: break-word;
     }
 
     .info-row a {
@@ -426,12 +431,12 @@
     }
 
     .iframe-container {
-      margin-top: 10px;
-      border-radius: 24px;
+      margin-top: 8px;
+      border-radius: 20px;
       overflow: hidden;
       border: 2px solid var(--purple-300);
       background: #eee;
-      height: 240px;
+      height: 200px;
     }
 
     iframe {
@@ -444,61 +449,81 @@
       background: var(--purple-700);
       color: white;
       border: none;
-      padding: 16px;
-      font-size: 1.2rem;
+      padding: 14px;
+      font-size: 1.1rem;
       font-weight: 700;
       border-radius: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      margin-top: 8px;
+      gap: 6px;
+      margin-top: 6px;
       cursor: pointer;
-      min-height: 56px;
+      min-height: 48px;
     }
 
     .footer-info {
-      margin-top: 32px;
+      margin-top: 28px;
       color: var(--purple-900);
       display: flex;
       justify-content: center;
-      gap: 24px;
-      padding: 16px 4px 24px;
+      gap: 20px;
+      padding: 14px 4px 20px;
       border-top: 2px solid var(--purple-300);
       font-weight: 500;
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
 
-    @media (max-width: 700px) {
-      .header-title {
-        font-size: 1rem;
-        white-space: normal;
+    @media (max-width: 600px) {
+      .logo-area {
+        width: 80px;
       }
       .logo-area h1 {
-        font-size: 1rem;
+        display: none; /* on cache le texte sur très petit pour gagner de la place */
+      }
+      .logo-area i {
+        font-size: 1.4rem;
+        padding: 6px;
+      }
+      .menu-toggle {
+        width: 80px;
+        padding: 4px 6px;
+        font-size: 0.8rem;
+      }
+      .menu-toggle span {
+        display: none; /* on cache le texte "تواصل معنا" pour ne garder que l'icône */
+      }
+      .menu-toggle i {
+        font-size: 1.2rem;
+        margin: 0;
+      }
+      .header-title {
+        font-size: 0.9rem;
+        padding: 4px 8px;
+        white-space: normal;
       }
     }
   </style>
 </head>
 <body>
 
-<!-- HEADER avec logo à gauche, titre central violet, menu à droite -->
+<!-- HEADER avec titre parfaitement centré -->
 <header class="app-header">
   <div class="header-row">
-    <!-- Logo à gauche -->
+    <!-- Logo à gauche (largeur fixe) -->
     <div class="logo-area">
       <i class="fas fa-sitemap"></i>
       <h1>وزارة إعداد التراب</h1>
     </div>
     
-    <!-- Titre central violet dans la header row -->
+    <!-- Titre central (automatiquement centré par margin: 0 auto) -->
     <div class="header-title">
       <i class="fas fa-sitemap"></i>
       الهيكل التنظيمي - المهام والاختصاصات
       <i class="fas fa-tasks"></i>
     </div>
     
-    <!-- Menu à droite -->
+    <!-- Menu à droite (largeur fixe) -->
     <div class="menu-toggle" id="menuToggle">
       <i class="fas fa-phone-alt"></i>
       <span>تواصل معنا</span>
@@ -511,7 +536,7 @@
     <!-- إعداد التراب الوطني والتعمير -->
     <div class="contact-section">
       <h3><i class="fas fa-map"></i> إعداد التراب الوطني والتعمير</h3>
-      <div class="address-block">  <!-- violet -->
+      <div class="address-block">
         <p><i class="fas fa-building"></i> <strong>المقر الرئيسي :</strong> زاوية مهدي بن بركة والأنخيل - حي الرياض، الرباط 10000 - المغرب</p>
         <p><i class="fas fa-map-pin"></i> <strong>ملحق 1 :</strong> زاوية ميشليفن وبو إبلان، أكدال – 10000 – الرباط</p>
         <p><i class="fas fa-map-pin"></i> <strong>ملحق 2 :</strong> حسان، الرباط، المغرب</p>
@@ -524,7 +549,7 @@
     <!-- الإسكان وسياسة المدينة -->
     <div class="contact-section">
       <h3><i class="fas fa-city"></i> الإسكان وسياسة المدينة</h3>
-      <div class="address-block">  <!-- violet -->
+      <div class="address-block">
         <p><i class="fas fa-building"></i> <strong>المقر الرئيسي :</strong> زنقة الجوزة والجميزة، الرباط 10000، المغرب</p>
       </div>
       <div class="contact-map">
@@ -535,7 +560,7 @@
     <!-- الإحداثيات -->
     <div class="contact-section">
       <h3><i class="fas fa-address-card"></i> الإحداثيات</h3>
-      <div class="address-block">  <!-- violet -->
+      <div class="address-block">
         <p><i class="fas fa-phone"></i> +212 537 68 00 00</p>
         <p><i class="fas fa-fax"></i> +212 537 68 00 01</p>
         <p><i class="fas fa-envelope"></i> contact@matnuhpv.gov.ma</p>
@@ -561,7 +586,7 @@
     </div>
   </div>
 
-  <!-- حاوية المديريات (يتم توليدها بواسطة JavaScript) -->
+  <!-- حاوية المديريات (générée par JS) -->
   <div id="orgContainer" class="org-level"></div>
   <div id="infoPanel" class="info-panel"></div>
 
@@ -573,7 +598,7 @@
 
 <script>
   (function() {
-    // ========== البيانات الكاملة ==========
+    // ========== données complètes ==========
     const orgData = {
       head: { title: "الوزيرة", name: "فاطمة الزهراء المنصوري" },
       structure: [
@@ -730,3 +755,4 @@
 </script>
 </body>
 </html>
+```
