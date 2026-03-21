@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -51,12 +50,12 @@
         }
         
         .search-box input:focus {
-            border-color: #4a1d6d;
-            box-shadow: 0 0 0 3px rgba(74,29,109,0.1);
+            border-color: #004d73;
+            box-shadow: 0 0 0 3px rgba(0,77,115,0.1);
         }
         
         .search-box button {
-            background: #4a1d6d;
+            background: #004d73;
             border: none;
             border-radius: 48px;
             padding: 0 24px;
@@ -67,7 +66,7 @@
         }
         
         .search-box button:active {
-            background: #35144f;
+            background: #003a57;
         }
         
         .stats-info {
@@ -81,7 +80,7 @@
         }
         
         .stats-info span {
-            background: #4a1d6d;
+            background: #004d73;
             color: white;
             padding: 4px 12px;
             border-radius: 30px;
@@ -97,41 +96,37 @@
         
         .agency-card {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border-radius: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
             overflow: hidden;
-            cursor: pointer;
-            transition: all 0.2s ease;
             border: 1px solid #eef2f8;
-        }
-        
-        .agency-card:active {
-            transform: scale(0.98);
-            background: #fafcff;
         }
         
         .card-content {
             display: flex;
-            padding: 14px;
-            gap: 14px;
+            padding: 16px;
+            gap: 20px;
             align-items: center;
         }
         
+        /* Colonne logo - largeur augmentée et centrage */
         .card-logo {
             flex-shrink: 0;
-            width: 70px;
-            height: 70px;
-            background: #fafbfd;
-            border-radius: 16px;
+            width: 110px;
+            height: 110px;
+            background: #f8fafc;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid #edf2f7;
+            border: 1px solid #eef2f8;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            overflow: hidden;
         }
         
         .card-logo img {
-            max-width: 55px;
-            max-height: 55px;
+            max-width: 85px;
+            max-height: 85px;
             object-fit: contain;
         }
         
@@ -139,11 +134,28 @@
             flex: 1;
         }
         
-        .agency-name {
+        /* Nom de l'agence sous forme de bouton */
+        .agency-name-btn {
+            background: linear-gradient(135deg, #004d73 0%, #006994 100%);
+            border: none;
+            color: white;
             font-weight: 700;
             font-size: 1rem;
-            margin-bottom: 6px;
-            color: #002f4a;
+            padding: 8px 16px;
+            border-radius: 40px;
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 12px;
+            font-family: inherit;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 6px rgba(0,77,115,0.2);
+        }
+        
+        .agency-name-btn:active {
+            transform: scale(0.97);
+            background: linear-gradient(135deg, #003a57 0%, #004d73 100%);
         }
         
         .agency-detail-row {
@@ -153,111 +165,151 @@
             font-size: 0.7rem;
             color: #5b6e8c;
             flex-wrap: wrap;
-            margin-top: 4px;
+            margin-top: 6px;
+            margin-bottom: 6px;
         }
         
         .agency-detail-row i {
             width: 16px;
-            color: #4a1d6d;
+            color: #004d73;
             font-size: 0.7rem;
         }
         
-        /* Bouton informations - violet foncé */
-        .btn-info-card {
-            background: #4a1d6d;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 40px;
+        .badge-pop {
+            background: #e6f0fa;
+            padding: 5px 12px;
+            border-radius: 30px;
             font-size: 0.7rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 6px;
+            margin-bottom: 10px;
+            color: #004d73;
+        }
+        
+        /* Section Contact complète avec icônes */
+        .card-contact-full {
             margin-top: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-            width: auto;
+            padding-top: 12px;
+            border-top: 1px solid #edf2f7;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: #fafcff;
+            border-radius: 16px;
         }
         
-        .btn-info-card i {
-            font-size: 0.7rem;
-            color: white;
-        }
-        
-        .btn-info-card:active {
-            background: #35144f;
-            transform: scale(0.96);
-        }
-        
-        /* Directeur avec police plus grande et violet foncé */
-        .director-name {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #4a1d6d;
-            margin-top: 4px;
+        .contact-item {
             display: flex;
             align-items: center;
-            gap: 6px;
-        }
-        
-        .director-name i {
-            color: #4a1d6d;
+            gap: 10px;
             font-size: 0.75rem;
+            color: #2c4c6e;
+            line-height: 1.4;
         }
         
-        /* Modal */
-        .modal-overlay {
+        .contact-item i {
+            width: 24px;
+            font-size: 0.85rem;
+            color: #004d73;
+            flex-shrink: 0;
+            text-align: center;
+        }
+        
+        .contact-item .contact-text {
+            flex: 1;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        .contact-item a {
+            color: #004d73;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Bouton Détails - réduit, gris, et cliquable pour iframe */
+        .details-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #eef2f5;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #5a6e8a;
+            border: none;
+            font-family: inherit;
+            margin-top: 10px;
+            margin-bottom: 4px;
+        }
+        
+        .details-link i {
+            font-size: 0.7rem;
+            color: #6c7f9c;
+        }
+        
+        .details-link:active {
+            background: #dee4ec;
+            transform: scale(0.97);
+        }
+        
+        /* Lien carte (supprimé car remplacé par le bouton Détails) */
+        .map-link {
+            display: none;
+        }
+        
+        /* Modal pour l'iframe */
+        .iframe-modal-overlay {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            align-items: flex-end;
-            justify-content: center;
-        }
-        
-        .modal-container {
-            background: white;
-            width: 100%;
-            max-height: 88vh;
-            border-radius: 28px 28px 0 0;
-            overflow-y: auto;
-            animation: slideUp 0.25s ease;
-        }
-        
-        .modal-header-custom {
-            background: #4a1d6d;
-            padding: 16px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            display: flex;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
+            backdrop-filter: blur(4px);
         }
         
-        .modal-header-custom img {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
+        .iframe-modal-container {
             background: white;
-            padding: 6px;
-            border-radius: 14px;
+            width: 90%;
+            max-width: 1000px;
+            height: 80%;
+            border-radius: 28px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.2s ease;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
         
-        .modal-header-custom h5 {
+        .iframe-modal-header {
+            background: #004d73;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             color: white;
-            margin: 0;
-            font-size: 1.1rem;
-            font-weight: 600;
-            flex: 1;
         }
         
-        .close-modal {
+        .iframe-modal-header h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .close-iframe-btn {
             background: none;
             border: none;
             color: white;
@@ -267,108 +319,15 @@
             padding: 0 8px;
         }
         
-        .modal-body-custom {
-            padding: 16px;
-            background: #ffffff;
-        }
-        
-        .tabs-mobile {
-            display: flex;
-            background: #f1f5f9;
-            border-radius: 40px;
-            padding: 4px;
-            margin-bottom: 20px;
-            gap: 4px;
-        }
-        
-        .tab-mob {
+        .iframe-content {
             flex: 1;
-            text-align: center;
-            background: transparent;
-            border: none;
-            padding: 10px 0;
-            font-size: 0.8rem;
-            font-weight: 600;
-            border-radius: 40px;
-            color: #4a5568;
-            transition: all 0.2s;
-            cursor: pointer;
-            font-family: inherit;
-        }
-        
-        .tab-mob.active {
-            background: #4a1d6d;
-            color: white;
-        }
-        
-        .info-table-mob {
             width: 100%;
-            border-collapse: collapse;
+            border: none;
         }
         
-        .info-table-mob tr {
-            border-bottom: 1px solid #eef2f6;
-        }
-        
-        .info-table-mob td {
-            padding: 12px 6px;
-            vertical-align: top;
-            font-size: 0.85rem;
-        }
-        
-        .info-table-mob td:first-child {
-            font-weight: 600;
-            width: 42%;
-            color: #4a1d6d;
-        }
-        
-        .projet-list-mob {
-            list-style: none;
-            padding-left: 0;
-        }
-        
-        .projet-list-mob li {
-            padding: 12px 0;
-            border-bottom: 1px solid #edf2f7;
-            display: flex;
-            gap: 12px;
-        }
-        
-        .projet-list-mob li i {
-            color: #4a1d6d;
-            font-size: 1rem;
-            margin-top: 3px;
-        }
-        
-        .projet-list-mob li div strong {
-            display: block;
-            font-size: 0.85rem;
-        }
-        
-        .contact-detail {
-            margin-bottom: 16px;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-        
-        .contact-detail i {
-            width: 28px;
-            color: #4a1d6d;
-            font-size: 1rem;
-            margin-top: 2px;
-        }
-        
-        .contact-detail .contact-text {
-            flex: 1;
-            word-break: break-word;
-            font-size: 0.85rem;
-        }
-        
-        .contact-detail .contact-text a {
-            color: #4a1d6d;
-            text-decoration: none;
-            font-weight: 500;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
         }
         
         .empty-message {
@@ -378,18 +337,32 @@
             font-size: 0.9rem;
         }
         
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-        
         @media (min-width: 640px) {
             body {
                 padding: 20px;
                 max-width: 800px;
                 margin: 0 auto;
             }
-            .agencies-grid {
+        }
+        
+        @media (max-width: 480px) {
+            .card-logo {
+                width: 85px;
+                height: 85px;
+            }
+            .card-logo img {
+                max-width: 65px;
+                max-height: 65px;
+            }
+            .contact-item {
+                font-size: 0.7rem;
+                gap: 8px;
+            }
+            .contact-item i {
+                width: 20px;
+                font-size: 0.75rem;
+            }
+            .card-content {
                 gap: 12px;
             }
         }
@@ -406,68 +379,87 @@
 
 <div class="stats-info">
     <span><i class="fas fa-building"></i> <span id="agencyCount">0</span> agences</span>
-    <span style="background: #eef2f5; color:#4a1d6d;"><i class="fas fa-hand-pointer"></i> Cliquez sur une carte</span>
+    <span style="background: #eef2f5; color:#1e4a6b;"><i class="fas fa-hand-pointer"></i> Cliquez sur le nom</span>
 </div>
 
 <div class="agencies-grid" id="agenciesGrid"></div>
 
-<div id="modalOverlay" class="modal-overlay" onclick="if(event.target===this) closeModal()">
-    <div class="modal-container">
-        <div class="modal-header-custom">
-            <img id="modalLogo" src="" alt="logo">
-            <h5 id="modalTitle">Agence</h5>
-            <button class="close-modal" onclick="closeModal()">&times;</button>
+<!-- Modal pour l'iframe (localisation) -->
+<div id="iframeModal" class="iframe-modal-overlay" onclick="if(event.target===this) closeIframeModal()">
+    <div class="iframe-modal-container">
+        <div class="iframe-modal-header">
+            <h4><i class="fas fa-map-marked-alt"></i> <span id="iframeModalTitle">Localisation</span></h4>
+            <button class="close-iframe-btn" onclick="closeIframeModal()">&times;</button>
         </div>
-        <div class="modal-body-custom">
-            <div class="tabs-mobile">
-                <button class="tab-mob active" data-tab="info">📋 Infos</button>
-                <button class="tab-mob" data-tab="contact">📞 Contact</button>
-                <button class="tab-mob" data-tab="projets">🏗️ Projets</button>
-            </div>
-            <div id="tabInfo"></div>
-            <div id="tabContact" style="display: none;"></div>
-            <div id="tabProjets" style="display: none;"></div>
-        </div>
+        <iframe id="mapIframe" class="iframe-content" frameborder="0" style="border:0" allowfullscreen></iframe>
     </div>
 </div>
 
 <script>
-// Données complètes des agences
+// Données complètes des 30 agences
 const agencies = [
-    { id: 1, name: "Skhirate-Témara", directeur: "Mme. Hafida AARAB", tel: "05 37 60 08 99", fax: "05 37 60 99 52", email: "contact@aust.ma", site: "http://www.aust.ma/", adresse: "Boulevard Moulay Ali Cherif, Immeuble 462, TEMARA", logo: "https://www.federation-majal.ma/sites/default/files/Skhirate_0.png", provinces: 1, communesUrb: 10, communesRur: 0, population: "574 543", densite: "527,00 / KM²", urbanisation: "90.00 %", effectif: 45, tauxEncadrement: "55.00 %", projets: [{ nom: "LA VILLE NOUVELLE DE Tamesna", lieu: "Sidi Yahia des ZAER" }, { nom: "El FIRDAOUS", lieu: "Ain Aouda" }, { nom: "La voie de contournement", lieu: "Oum AZZA" }, { nom: "La voie ferroviaire", lieu: "TEMARA-AIN ATTIQ" }] },
-    { id: 2, name: "Tanger", directeur: "M. Mohammed BELBACHIR", tel: "05 39 32 15 00", fax: "05 39 32 15 10", email: "aut@aut.gov.ma", site: "http://www.aut.gov.ma/", adresse: "53, Rue Abou Al Alaa Al Maari B.P. 1164 Tanger", logo: "https://www.federation-majal.ma/sites/default/files/AU-Tanger.png", provinces: 2, communesUrb: 3, communesRur: 16, population: "1 136 705", densite: "653,00 / KM²", urbanisation: "90.00 %", effectif: 65, tauxEncadrement: "73.84 %", projets: [{ nom: "Programme Grand Tanger", lieu: "Tanger" }, { nom: "Complexe portière Tanger Med", lieu: "FahsAnjra" }, { nom: "Usine Renault Nissan", lieu: "FahsAnjra" }, { nom: "Ligne ferroviaire grande vitesse", lieu: "Région" }] },
-    { id: 3, name: "Settat", directeur: "M.Mourad AMIL", tel: "05 23 40 17 16 / 23", fax: "05 23 72 22 34", email: "aus@menara.ma", site: "http://www.ausettat.org", adresse: "11, Avenue Hassan II Settat B.P: 532", logo: "https://www.federation-majal.ma/sites/default/files/Settat_0.png", provinces: 2, communesUrb: 10, communesRur: 67, population: "1 093 497", densite: "99,80 / KM²", urbanisation: "43.30 %", effectif: 60, tauxEncadrement: "75.00 %", projets: [{ nom: "Projet urbain vert Settat", lieu: "Settat" }, { nom: "Projet mine verte", lieu: "Khouribga" }, { nom: "Centre émergent Ouled Abdoune", lieu: "CR Ouled Abdoune" }] },
-    { id: 4, name: "Kénitra-Sidi Kacem", directeur: "Mme. Nahid HAMTAMI", tel: "05 37 37 85 10/03", fax: "05 37 37 84 97", email: "auks@menara.ma", site: "http://www.auks.ma", adresse: "Rue Lamhaned Kacem, Bir Rami Est, Kénitra", logo: "https://www.federation-majal.ma/sites/default/files/Kenitra_1.png", provinces: 3, communesUrb: 10, communesRur: 53, population: "1 904 112", densite: "238,00 / KM²", urbanisation: "47.60 %", effectif: 79, tauxEncadrement: "77.00 %", projets: [{ nom: "LGV et Nouveau pôle urbain", lieu: "Kénitra" }, { nom: "Usine PSA", lieu: "Ameur Seflia" }, { nom: "Station touristique Biladi", lieu: "Mehdiya" }] },
-    { id: 5, name: "Larache", directeur: "M. Abdennasser LHNAOUI", tel: "06 61 22 96 86", fax: "05 39 52 17 00", email: "aularache@gmail.com", site: "http://aularache.ma/", adresse: "190, lot MAGHREB JADID, Larache", logo: "https://www.federation-majal.ma/sites/default/files/Larache_0.png", provinces: 2, communesUrb: 3, communesRur: 33, population: "797 324", densite: "339,00 / KM²", urbanisation: "76.84 %", effectif: 28, tauxEncadrement: "71.00 %", projets: [{ nom: "Pole Urbain", lieu: "Larache" }, { nom: "Réhabilitation Médina", lieu: "Larache" }, { nom: "Aménagement Lac Bouderoua", lieu: "Ouezzane" }] },
-    { id: 6, name: "Meknès", directeur: "Mme. Aicha EL HAOUZALI", tel: "05 35 51 03 10/11", fax: "05 35 51 03 01", email: "", site: "http://www.aumk.ma", adresse: "13, Rue Pasteur, Meknès", logo: "https://www.federation-majal.ma/sites/default/files/Meknes_0.jpg", provinces: 3, communesUrb: 12, communesRur: 35, population: "1 237 932", densite: "168,00 / KM²", urbanisation: "67.00 %", effectif: 74, tauxEncadrement: "78.00 %", projets: [{ nom: "SDAU Grand Meknès", lieu: "Meknès" }, { nom: "AGROPOLIS", lieu: "Meknès" }] },
-    { id: 7, name: "El Kelâa des Sraghna", directeur: "Mme. Samira LAYADI", tel: "05 24 41 41 45", fax: "05 24 41 41 29", email: "administrateur@aueks.org.ma", site: "http://aueks.org.ma/", adresse: "Av. Imam Malek, El Kelaa", logo: "https://www.federation-majal.ma/sites/default/files/AU_elkelaa_sraghna.gif", provinces: 2, communesUrb: 6, communesRur: 62, population: "852 565", densite: "", urbanisation: "29.00 %", effectif: 36, tauxEncadrement: "72.00 %", projets: [{ nom: "Pôle urbain AL BADR", lieu: "El Kelâa" }, { nom: "Université Mohamed VI", lieu: "Ben Guérir" }] },
-    { id: 8, name: "Khénifra", directeur: "M. Said KABRA", tel: "05 35 58 89 73 / 74", fax: "05 35 38 57 39", email: "contact@aukh.ma", site: "http://www.aukh.ma", adresse: "B.d Zerktouni, Imm n°3", logo: "https://www.federation-majal.ma/sites/default/files/Khenifra_1.png", provinces: 2, communesUrb: 4, communesRur: 47, population: "660 482", densite: "33,00 / KM²", urbanisation: "53.70 %", effectif: 43, tauxEncadrement: "56.00 %", projets: [{ nom: "Pôle urbain Aguelmane", lieu: "Midelt" }, { nom: "Parc solaire NOOR MIDELT", lieu: "Midelt" }] },
-    { id: 9, name: "Marrakech", directeur: "M. Khalid OUAYA", tel: "05 24 43 83 90", fax: "05 24 43 83 96", email: "", site: "http://www.aumarrakech.ma/", adresse: "Rue Hassan Ben M Barek, Marrakech", logo: "https://www.federation-majal.ma/sites/default/files/Marrakech_0.png", provinces: 3, communesUrb: 7, communesRur: 83, population: "2 273 551", densite: "0,01 / KM²", urbanisation: "49.00 %", effectif: "", tauxEncadrement: "", projets: [] },
-    { id: 10, name: "Taza", directeur: "M. Mohammed TITA", tel: "05 35 28 50 41", fax: "05 35 28 51 13", email: "", site: "http://www.autaza.ma", adresse: "Avenue Hassan Bahtat BP 1211 Taza", logo: "https://www.federation-majal.ma/sites/default/files/Taza.gif", provinces: 3, communesUrb: 10, communesRur: 87, population: "1 408 539", densite: "214,10 / KM²", urbanisation: "75.80 %", effectif: 73, tauxEncadrement: "66.00 %", projets: [{ nom: "Pole urbain de Guercif", lieu: "Guercif" }, { nom: "Complexe culturel", lieu: "Taza" }] },
-    { id: 11, name: "Taroudannt", directeur: "M. Houcine Houdaygui", tel: "05 28 55 02 34", fax: "05 28 55 09 67", email: "", adresse: "Bab Zourgane, Taroudant", logo: "https://www.federation-majal.ma/sites/default/files/Taroudant.png", provinces: 3, communesUrb: 12, communesRur: 111, population: "1 161 878", densite: "44,60 / KM²", urbanisation: "31.00 %", effectif: 21, tauxEncadrement: "52.00 %", projets: [] },
-    { id: 12, name: "Fès", directeur: "M. El Hassan HIDDA", tel: "05 35 65 12 36/05 35 93 01 81", fax: "05 35 65 36 02", email: "", site: "http://www.aufes.org/", adresse: "Avenue de Palestine, BP 2448 Fès", logo: "https://www.federation-majal.ma/sites/default/files/AU-Fes.jpg", provinces: 4, communesUrb: 12, communesRur: 48, population: "1 570 000", densite: "78,00 / KM²", urbanisation: "75.00 %", effectif: 104, tauxEncadrement: "68.00 %", projets: [{ nom: "Université Euro-méditerranéen", lieu: "Fès" }, { nom: "Extension aéroport Fès-Sais", lieu: "Ouled Tayeb" }, { nom: "Station épuration", lieu: "Ain Kansara" }] },
-    { id: 13, name: "Berrechid", directeur: "M.Omar EL HASSOUNI", tel: "05 22 32 40 58", fax: "05 22 32 40 19", email: "au2b2013@gmail.com", site: "http://www.aub.ma/", adresse: "05, boulevard Mohammed V BERRECHID", logo: "https://www.federation-majal.ma/sites/default/files/Berrechid_0.png", provinces: 2, communesUrb: 8, communesRur: 28, population: "717 641", densite: "141,00 / KM²", urbanisation: "52.00 %", effectif: "", tauxEncadrement: "", projets: [{ nom: "Ville nouvelle Sahel-Lakhyayta", lieu: "Had Soualem" }, { nom: "ECOPARC", lieu: "Sidi El Mekki" }] },
-    { id: 14, name: "El Jadida", directeur: "M. Mustapha LAARAICH", tel: "05 23 37 00 61", fax: "05 23 37 00 63", email: "", site: "http://www.aujadida.ma", adresse: "Avenue Annakhil, El Jadida", logo: "https://www.federation-majal.ma/sites/default/files/AuEljadida.jpg", provinces: 2, communesUrb: 5, communesRur: 47, population: "1 239 164", densite: "177,00 / KM²", urbanisation: "32.00 %", effectif: 51, tauxEncadrement: "71.00 %", projets: [{ nom: "Zone industrielle jorf lasfar", lieu: "CR My abdellah" }, { nom: "Station Mazagan", lieu: "Haouzia" }] },
-    { id: 15, name: "Errachidia", directeur: "M. Mohammed OUBAHA", tel: "05 35 57 46 32", fax: "05 35 57 46 43", email: "Contact@auer.gov.ma", site: "http://www.auer.gov.ma/", adresse: "N°10, Rue Sidi Abou Abdi Allah, Errachidia", logo: "https://www.federation-majal.ma/sites/default/files/Errachidia.gif", provinces: 1, communesUrb: 7, communesRur: 22, population: "418 451", densite: "9,76 / KM²", urbanisation: "46.38 %", effectif: 44, tauxEncadrement: "68.00 %", projets: [{ nom: "Barrage Hassan Addakhil", lieu: "Lkhenfg" }, { nom: "Aéroport de My Ali cheris", lieu: "Errachidia" }] },
-    { id: 16, name: "Ouarzazate-Zagora", directeur: "M. Med. Oukhouya", tel: "05 24 88 74 09", fax: "05 24 88 68 52", email: "info@auozt.ma", site: "http://www.auozt.ma/", adresse: "26, lotissement du centre, Ouarzazate", logo: "https://www.federation-majal.ma/sites/default/files/Ouerzazate_0.png", provinces: 3, communesUrb: 7, communesRur: 60, population: "927 220", densite: "17,03 / KM²", urbanisation: "24.80 %", effectif: 43, tauxEncadrement: "61.00 %", projets: [{ nom: "Complexe Energie solaire", lieu: "Ouarzazate" }, { nom: "Studios de tournage", lieu: "Ouarzazate" }] },
-    { id: 17, name: "Oujda", directeur: "M. Said Lahbil", tel: "05 36 68 04 15", fax: "05 36 68 04 10", email: "", site: "http://www.auo.org.ma", adresse: "Bd Mohamed V, Oujda", logo: "https://www.federation-majal.ma/sites/default/files/AU-Oujda.png", provinces: 5, communesUrb: 15, communesRur: 51, population: "974 384", densite: "18,25 / KM²", urbanisation: "", effectif: 86, tauxEncadrement: "71.00 %", projets: [{ nom: "Urba pôle", lieu: "Oujda" }, { nom: "Technopole", lieu: "Oujda" }] },
-    { id: 18, name: "Guelmim Es-Smara", directeur: "M. Mohamed ENNAJJAR", tel: "05 28 77 31 79", fax: "05 28 87 26 35", email: "augs.augs01@yahoo.fr", site: "http://www.augs.org.ma/", adresse: "Complexe Administratif Salma, Guelmim", logo: "https://www.federation-majal.ma/sites/default/files/Guelmim_0.png", provinces: 5, communesUrb: 11, communesRur: 49, population: "462 410", densite: "3,20 / KM²", urbanisation: "62.00 %", effectif: 39, tauxEncadrement: "46.00 %", projets: [{ nom: "Oasis d'Or", lieu: "Guelmim" }, { nom: "Voie Expresse Tiznit-Laayoune", lieu: "Guelmim-Tantan" }] },
-    { id: 19, name: "Laâyoune", directeur: "Mme. ToufaEndour", tel: "05 28 89 25 55", fax: "05 28 89 19 99", email: "", site: "http://www.aulaayoune.ma", adresse: "palac de la résidence, Laâyoune", logo: "https://www.federation-majal.ma/sites/default/files/Au-laayoune.jpg", provinces: 3, communesUrb: 4, communesRur: 10, population: "367 758", densite: "2,63 / KM²", urbanisation: "96.00 %", effectif: 48, tauxEncadrement: "62.42 %", projets: [] },
-    { id: 20, name: "Khmisset", directeur: "M. Mounir Yahiyaoui", tel: "05 37 55 21 23", fax: "05 37 55 21 45", email: "", site: "http://www.aukhemi7.ma", adresse: "Avenue AbelHamid Ezzemouri 21, Khmisset", logo: "https://www.federation-majal.ma/sites/default/files/Khmisset_0.png", provinces: null, communesUrb: null, communesRur: null, population: "", densite: "", urbanisation: "", effectif: "", tauxEncadrement: "", projets: [] },
-    { id: 21, name: "Tétouan", directeur: "M. Hicham Khorasani", tel: "05 39 99 21 68/89", fax: "05 39 99 82 40", email: "autetouan@yahoo.fr", site: "http://www.autetouan.ma", adresse: "Résidence Florence F.A.R, Tétouan", logo: "https://www.federation-majal.ma/sites/default/files/Au-Tetouan.png", projets: [] },
-    { id: 22, name: "Nador", directeur: "M. Jamal HANAFI", tel: "05 36 60 19 19 / 05 36 60 19 16", fax: "05 36 33 20 65", email: "aunador2012@gmail.com", site: "http://www.aunador.ma/", adresse: "n° 5, Rue LARACHE, NADOR", logo: "https://www.federation-majal.ma/sites/default/files/Au-nador_0.gif", projets: [] },
-    { id: 23, name: "Agadir", directeur: "M. REDA CHERKAOUI", tel: "05 28 84 70 07 / 05 28 84 70 28", fax: "05 28 84 70 79", email: "", site: "http://www.aua.ma/", adresse: "Imm Ibn Toufail, Avenue Mly Abdellah, Agadir", logo: "https://www.federation-majal.ma/sites/default/files/logo-agence-urbaine-agadir.png", projets: [] },
-    { id: 24, name: "Essaouira", directeur: "M. Younes ELASSRI", tel: "05 24 47 40 37", fax: "05 24 47 58 85", email: "contact@auessaouira.ma", site: "https://auessaouira.ma/", adresse: "123, Lotissement Almoustaqbal, Essaouira", logo: "https://www.federation-majal.ma/sites/default/files/auesslogo.png", projets: [] },
-    { id: 25, name: "Safi", directeur: "Mme. Najat Kouhlani", tel: "05246-30745", fax: "", email: "", site: "http://www.ausafi.ma", adresse: "Boulevard Driss 1er, Safi", logo: "https://www.federation-majal.ma/sites/default/files/safi-logo.png", provinces: 2, communesUrb: 5, communesRur: 31, population: "943 926", densite: "148,70 / KM²", urbanisation: "45.50 %", projets: [] },
-    { id: 26, name: "Oued Ed-Dahab Aousserd", directeur: "M. Moulay Mohamed Hemmou", tel: "05 28 89 70 40 / 05 28 89 70 41", fax: "05 28 89 70 05", email: "contact@dakhla-lagouira.ma", site: "http://www.dakhla-lagouira.ma/", adresse: "Wilaya Oued Eddahab Lagouira, Dakhla", logo: "https://www.federation-majal.ma/sites/default/files/s5_logo.png", projets: [] },
-    { id: 27, name: "Casablanca", directeur: "M.Mohamed AOUZZAII", tel: "0522 29 57 07/04", fax: "0522 22 33 32", email: "", site: "http://www.auc.ma", adresse: "", logo: "https://www.federation-majal.ma/sites/default/files/aucasa.jpg", projets: [] },
-    { id: 28, name: "Rabat-Salé", directeur: "Mme. Khaddouj GUENOU", tel: "05 37 57 55 55", fax: "05 37 56 46 27", email: "aurs@aurs.org.ma", site: "http://www.aurs.org.ma", adresse: "Angle Avenue Al Araâr, Hay Ryad, Rabat", logo: "https://www.federation-majal.ma/sites/default/files/telechargement.jpg", projets: [] },
-    { id: 29, name: "Beni Mellal", directeur: "Mme. Amina Bourkia", tel: "(+212) 523 48 40 64 / +212 523 48 35 88", fax: "", email: "aubm@menara.ma", site: "http://www.aubm.ma/", adresse: "Boulevard Mohamed V, Béni Mellal", logo: "https://www.federation-majal.ma/sites/default/files/logo_new.jpg", projets: [] },
-    { id: 30, name: "Al Hoceima", directeur: "Abdelkader El Mourabit", tel: "05 39 98 38 95 / 05 39 84 13 15", fax: "05 39 98 14 15", email: "infoauah@gmail.com", site: "http://www.auah.ma", adresse: "N°80, Rue Mohamed V, Al Hoceima", logo: "https://www.federation-majal.ma/sites/default/files/logoalhoceima.png", provinces: 1, communesUrb: 5, communesRur: 31, population: "399 654", densite: "112,60 / KM²", urbanisation: "34.40 %", effectif: 44, tauxEncadrement: "57.00 %", projets: [{ nom: "Voie expresse Al Hoceima-Taza", lieu: "Al Hoceima" }, { nom: "Pôle Urbain Bades", lieu: "Al Hoceima" }, { nom: "Marina", lieu: "Al Hoceima" }] }
+    { id: 1, name: "Agence urbaine de Skhirate-Témara", directeur: "Mme. Hafida AARAB", tel: "05 37 60 08 99", fax: "05 37 60 99 52", email: "contact@aust.ma", site: "http://www.aust.ma/", adresse: "Boulevard Moulay Ali Cherif, Immeuble 462, TEMARA", logo: "https://www.federation-majal.ma/sites/default/files/Skhirate_0.png", provinces: 1, communesUrb: 10, communesRur: 0, population: "574 543", densite: "527,00 / KM²", urbanisation: "90.00 %", effectif: 45, tauxEncadrement: "55.00 %", projets: [{ nom: "LA VILLE NOUVELLE DE Tamesna", lieu: "Sidi Yahia des ZAER" }, { nom: "El FIRDAOUS", lieu: "Ain Aouda" }, { nom: "La voie de contournement", lieu: "Oum AZZA" }, { nom: "La voie ferroviaire", lieu: "TEMARA-AIN ATTIQ" }] },
+    { id: 2, name: "Agence urbaine de Tanger", directeur: "M. Mohammed BELBACHIR", tel: "05 39 32 15 00", fax: "05 39 32 15 10", email: "aut@aut.gov.ma", site: "http://www.aut.gov.ma/", adresse: "53, Rue Abou Al Alaa Al Maari B.P. 1164 Tanger", logo: "https://www.federation-majal.ma/sites/default/files/AU-Tanger.png", provinces: 2, communesUrb: 3, communesRur: 16, population: "1 136 705", densite: "653,00 / KM²", urbanisation: "90.00 %", effectif: 65, tauxEncadrement: "73.84 %", projets: [{ nom: "Programme Grand Tanger", lieu: "Tanger" }, { nom: "Complexe portière Tanger Med", lieu: "FahsAnjra" }, { nom: "Usine Renault Nissan", lieu: "FahsAnjra" }, { nom: "Ligne ferroviaire grande vitesse", lieu: "Région" }] },
+    { id: 3, name: "Agence urbaine de Settat", directeur: "M.Mourad AMIL", tel: "05 23 40 17 16 / 23", fax: "05 23 72 22 34", email: "aus@menara.ma", site: "http://www.ausettat.org", adresse: "11, Avenue Hassan II Settat B.P: 532", logo: "https://www.federation-majal.ma/sites/default/files/Settat_0.png", provinces: 2, communesUrb: 10, communesRur: 67, population: "1 093 497", densite: "99,80 / KM²", urbanisation: "43.30 %", effectif: 60, tauxEncadrement: "75.00 %", projets: [{ nom: "Projet urbain vert Settat", lieu: "Settat" }, { nom: "Projet mine verte", lieu: "Khouribga" }, { nom: "Centre émergent Ouled Abdoune", lieu: "CR Ouled Abdoune" }] },
+    { id: 4, name: "Agence urbaine de  Kénitra-Sidi Kacem", directeur: "Mme. Nahid HAMTAMI", tel: "05 37 37 85 10/03", fax: "05 37 37 84 97", email: "auks@menara.ma", site: "http://www.auks.ma", adresse: "Rue Lamhaned Kacem, Bir Rami Est, Kénitra", logo: "https://www.federation-majal.ma/sites/default/files/Kenitra_1.png", provinces: 3, communesUrb: 10, communesRur: 53, population: "1 904 112", densite: "238,00 / KM²", urbanisation: "47.60 %", effectif: 79, tauxEncadrement: "77.00 %", projets: [{ nom: "LGV et Nouveau pôle urbain", lieu: "Kénitra" }, { nom: "Usine PSA", lieu: "Ameur Seflia" }, { nom: "Station touristique Biladi", lieu: "Mehdiya" }] },
+    { id: 5, name: "Agence urbaine de Larache", directeur: "M. Abdennasser LHNAOUI", tel: "06 61 22 96 86", fax: "05 39 52 17 00", email: "aularache@gmail.com", site: "http://aularache.ma/", adresse: "190, lot MAGHREB JADID, Larache", logo: "https://www.federation-majal.ma/sites/default/files/Larache_0.png", provinces: 2, communesUrb: 3, communesRur: 33, population: "797 324", densite: "339,00 / KM²", urbanisation: "76.84 %", effectif: 28, tauxEncadrement: "71.00 %", projets: [{ nom: "Pole Urbain", lieu: "Larache" }, { nom: "Réhabilitation Médina", lieu: "Larache" }, { nom: "Aménagement Lac Bouderoua", lieu: "Ouezzane" }] },
+    { id: 6, name: "Agence urbaine de Meknès", directeur: "Mme. Aicha EL HAOUZALI", tel: "05 35 51 03 10/11", fax: "05 35 51 03 01", email: "", site: "http://www.aumk.ma", adresse: "13, Rue Pasteur, Meknès", logo: "https://www.federation-majal.ma/sites/default/files/Meknes_0.jpg", provinces: 3, communesUrb: 12, communesRur: 35, population: "1 237 932", densite: "168,00 / KM²", urbanisation: "67.00 %", effectif: 74, tauxEncadrement: "78.00 %", projets: [{ nom: "SDAU Grand Meknès", lieu: "Meknès" }, { nom: "AGROPOLIS", lieu: "Meknès" }] },
+    { id: 7, name: "Agence urbaine d'El Kelâa des Sraghna", directeur: "Mme. Samira LAYADI", tel: "05 24 41 41 45", fax: "05 24 41 41 29", email: "administrateur@aueks.org.ma", site: "http://aueks.org.ma/", adresse: "Av. Imam Malek, El Kelaa", logo: "https://www.federation-majal.ma/sites/default/files/AU_elkelaa_sraghna.gif", provinces: 2, communesUrb: 6, communesRur: 62, population: "852 565", densite: "", urbanisation: "29.00 %", effectif: 36, tauxEncadrement: "72.00 %", projets: [{ nom: "Pôle urbain AL BADR", lieu: "El Kelâa" }, { nom: "Université Mohamed VI", lieu: "Ben Guérir" }] },
+    { id: 8, name: "Agence urbaine de Khénifra", directeur: "M. Said KABRA", tel: "05 35 58 89 73 / 74", fax: "05 35 38 57 39", email: "contact@aukh.ma", site: "http://www.aukh.ma", adresse: "B.d Zerktouni, Imm n°3", logo: "https://www.federation-majal.ma/sites/default/files/Khenifra_1.png", provinces: 2, communesUrb: 4, communesRur: 47, population: "660 482", densite: "33,00 / KM²", urbanisation: "53.70 %", effectif: 43, tauxEncadrement: "56.00 %", projets: [{ nom: "Pôle urbain Aguelmane", lieu: "Midelt" }, { nom: "Parc solaire NOOR MIDELT", lieu: "Midelt" }] },
+    { id: 9, name: "Agence urbaine de  Marrakech", directeur: "M. Khalid OUAYA", tel: "05 24 43 83 90", fax: "05 24 43 83 96", email: "", site: "http://www.aumarrakech.ma/", adresse: "Rue Hassan Ben M Barek, Marrakech", logo: "https://www.federation-majal.ma/sites/default/files/Marrakech_0.png", provinces: 3, communesUrb: 7, communesRur: 83, population: "2 273 551", densite: "0,01 / KM²", urbanisation: "49.00 %", effectif: "", tauxEncadrement: "", projets: [] },
+    { id: 10, name: "Agence urbaine de  Taza", directeur: "M. Mohammed TITA", tel: "05 35 28 50 41", fax: "05 35 28 51 13", email: "", site: "http://www.autaza.ma", adresse: "Avenue Hassan Bahtat BP 1211 Taza", logo: "https://www.federation-majal.ma/sites/default/files/Taza.gif", provinces: 3, communesUrb: 10, communesRur: 87, population: "1 408 539", densite: "214,10 / KM²", urbanisation: "75.80 %", effectif: 73, tauxEncadrement: "66.00 %", projets: [{ nom: "Pole urbain de Guercif", lieu: "Guercif" }, { nom: "Complexe culturel", lieu: "Taza" }] },
+    { id: 11, name: "Agence urbaine de  Taroudannt", directeur: "M. Houcine Houdaygui", tel: "05 28 55 02 34", fax: "05 28 55 09 67", email: "", adresse: "Bab Zourgane, Taroudant", logo: "https://www.federation-majal.ma/sites/default/files/Taroudant.png", provinces: 3, communesUrb: 12, communesRur: 111, population: "1 161 878", densite: "44,60 / KM²", urbanisation: "31.00 %", effectif: 21, tauxEncadrement: "52.00 %", projets: [] },
+    { id: 12, name: "Agence urbaine de  Fès", directeur: "M. El Hassan HIDDA", tel: "05 35 65 12 36/05 35 93 01 81", fax: "05 35 65 36 02", email: "", site: "http://www.aufes.org/", adresse: "Avenue de Palestine, BP 2448 Fès", logo: "https://www.federation-majal.ma/sites/default/files/AU-Fes.jpg", provinces: 4, communesUrb: 12, communesRur: 48, population: "1 570 000", densite: "78,00 / KM²", urbanisation: "75.00 %", effectif: 104, tauxEncadrement: "68.00 %", projets: [{ nom: "Université Euro-méditerranéen", lieu: "Fès" }, { nom: "Extension aéroport Fès-Sais", lieu: "Ouled Tayeb" }, { nom: "Station épuration", lieu: "Ain Kansara" }] },
+    { id: 13, name: "Agence urbaine de Berrechid", directeur: "M.Omar EL HASSOUNI", tel: "05 22 32 40 58", fax: "05 22 32 40 19", email: "au2b2013@gmail.com", site: "http://www.aub.ma/", adresse: "05, boulevard Mohammed V BERRECHID", logo: "https://www.federation-majal.ma/sites/default/files/Berrechid_0.png", provinces: 2, communesUrb: 8, communesRur: 28, population: "717 641", densite: "141,00 / KM²", urbanisation: "52.00 %", effectif: "", tauxEncadrement: "", projets: [{ nom: "Ville nouvelle Sahel-Lakhyayta", lieu: "Had Soualem" }, { nom: "ECOPARC", lieu: "Sidi El Mekki" }] },
+    { id: 14, name: "Agence urbaine d'El Jadida", directeur: "M. Mustapha LAARAICH", tel: "05 23 37 00 61", fax: "05 23 37 00 63", email: "", site: "http://www.aujadida.ma", adresse: "Avenue Annakhil, El Jadida", logo: "https://www.federation-majal.ma/sites/default/files/AuEljadida.jpg", provinces: 2, communesUrb: 5, communesRur: 47, population: "1 239 164", densite: "177,00 / KM²", urbanisation: "32.00 %", effectif: 51, tauxEncadrement: "71.00 %", projets: [{ nom: "Zone industrielle jorf lasfar", lieu: "CR My abdellah" }, { nom: "Station Mazagan", lieu: "Haouzia" }] },
+    { id: 15, name: "Agence urbaine d'Errachidia", directeur: "M. Mohammed OUBAHA", tel: "05 35 57 46 32", fax: "05 35 57 46 43", email: "Contact@auer.gov.ma", site: "http://www.auer.gov.ma/", adresse: "N°10, Rue Sidi Abou Abdi Allah, Errachidia", logo: "https://www.federation-majal.ma/sites/default/files/Errachidia.gif", provinces: 1, communesUrb: 7, communesRur: 22, population: "418 451", densite: "9,76 / KM²", urbanisation: "46.38 %", effectif: 44, tauxEncadrement: "68.00 %", projets: [{ nom: "Barrage Hassan Addakhil", lieu: "Lkhenfg" }, { nom: "Aéroport de My Ali cheris", lieu: "Errachidia" }] },
+    { id: 16, name: "Agence urbaine d'Ouarzazate-Zagora", directeur: "M. Med. Oukhouya", tel: "05 24 88 74 09", fax: "05 24 88 68 52", email: "info@auozt.ma", site: "http://www.auozt.ma/", adresse: "26, lotissement du centre, Ouarzazate", logo: "https://www.federation-majal.ma/sites/default/files/Ouerzazate_0.png", provinces: 3, communesUrb: 7, communesRur: 60, population: "927 220", densite: "17,03 / KM²", urbanisation: "24.80 %", effectif: 43, tauxEncadrement: "61.00 %", projets: [{ nom: "Complexe Energie solaire", lieu: "Ouarzazate" }, { nom: "Studios de tournage", lieu: "Ouarzazate" }] },
+    { id: 17, name: "Agence urbaine d'Oujda", directeur: "M. Said Lahbil", tel: "05 36 68 04 15", fax: "05 36 68 04 10", email: "", site: "http://www.auo.org.ma", adresse: "Bd Mohamed V, Oujda", logo: "https://www.federation-majal.ma/sites/default/files/AU-Oujda.png", provinces: 5, communesUrb: 15, communesRur: 51, population: "974 384", densite: "18,25 / KM²", urbanisation: "", effectif: 86, tauxEncadrement: "71.00 %", projets: [{ nom: "Urba pôle", lieu: "Oujda" }, { nom: "Technopole", lieu: "Oujda" }] },
+    { id: 18, name: "Agence urbaine de Guelmim Es-Smara", directeur: "M. Mohamed ENNAJJAR", tel: "05 28 77 31 79", fax: "05 28 87 26 35", email: "augs.augs01@yahoo.fr", site: "http://www.augs.org.ma/", adresse: "Complexe Administratif Salma, Guelmim", logo: "https://www.federation-majal.ma/sites/default/files/Guelmim_0.png", provinces: 5, communesUrb: 11, communesRur: 49, population: "462 410", densite: "3,20 / KM²", urbanisation: "62.00 %", effectif: 39, tauxEncadrement: "46.00 %", projets: [{ nom: "Oasis d'Or", lieu: "Guelmim" }, { nom: "Voie Expresse Tiznit-Laayoune", lieu: "Guelmim-Tantan" }] },
+    { id: 19, name: "Agence urbaine de Laâyoune", directeur: "Mme. ToufaEndour", tel: "05 28 89 25 55", fax: "05 28 89 19 99", email: "", site: "http://www.aulaayoune.ma", adresse: "palac de la résidence, Laâyoune", logo: "https://www.federation-majal.ma/sites/default/files/Au-laayoune.jpg", provinces: 3, communesUrb: 4, communesRur: 10, population: "367 758", densite: "2,63 / KM²", urbanisation: "96.00 %", effectif: 48, tauxEncadrement: "62.42 %", projets: [] },
+    { id: 20, name: "Agence urbaine de  Khmisset", directeur: "M. Mounir Yahiyaoui", tel: "05 37 55 21 23", fax: "05 37 55 21 45", email: "", site: "http://www.aukhemi7.ma", adresse: "Avenue AbelHamid Ezzemouri 21, Khmisset", logo: "https://www.federation-majal.ma/sites/default/files/Khmisset_0.png", provinces: null, communesUrb: null, communesRur: null, population: "", densite: "", urbanisation: "", effectif: "", tauxEncadrement: "", projets: [] },
+    { id: 21, name: "Agence urbaine de  Tétouan", directeur: "M. Hicham Khorasani", tel: "05 39 99 21 68/89", fax: "05 39 99 82 40", email: "autetouan@yahoo.fr", site: "http://www.autetouan.ma", adresse: "Résidence Florence F.A.R, Tétouan", logo: "https://www.federation-majal.ma/sites/default/files/Au-Tetouan.png", projets: [] },
+    { id: 22, name: "Agence urbaine de Nador", directeur: "M. Jamal HANAFI", tel: "05 36 60 19 19 / 05 36 60 19 16", fax: "05 36 33 20 65", email: "aunador2012@gmail.com", site: "http://www.aunador.ma/", adresse: "n° 5, Rue LARACHE, NADOR", logo: "https://www.federation-majal.ma/sites/default/files/Au-nador_0.gif", projets: [] },
+    { id: 23, name: "Agence urbaine de Agadir", directeur: "M. REDA CHERKAOUI", tel: "05 28 84 70 07 / 05 28 84 70 28", fax: "05 28 84 70 79", email: "", site: "http://www.aua.ma/", adresse: "Imm Ibn Toufail, Avenue Mly Abdellah, Agadir", logo: "https://www.federation-majal.ma/sites/default/files/logo-agence-urbaine-agadir.png", projets: [] },
+    { id: 24, name: "Agence urbaine de Essaouira", directeur: "M. Younes ELASSRI", tel: "05 24 47 40 37", fax: "05 24 47 58 85", email: "contact@auessaouira.ma", site: "https://auessaouira.ma/", adresse: "123, Lotissement Almoustaqbal, Essaouira", logo: "https://www.federation-majal.ma/sites/default/files/auesslogo.png", projets: [] },
+    { id: 25, name: "Agence urbaine de Safi", directeur: "Mme. Najat Kouhlani", tel: "05246-30745", fax: "", email: "", site: "http://www.ausafi.ma", adresse: "Boulevard Driss 1er, Safi", logo: "https://www.federation-majal.ma/sites/default/files/safi-logo.png", provinces: 2, communesUrb: 5, communesRur: 31, population: "943 926", densite: "148,70 / KM²", urbanisation: "45.50 %", projets: [] },
+    { id: 26, name: "Agence urbaine de Oued Ed-Dahab Aousserd", directeur: "M. Moulay Mohamed Hemmou", tel: "05 28 89 70 40 / 05 28 89 70 41", fax: "05 28 89 70 05", email: "contact@dakhla-lagouira.ma", site: "http://www.dakhla-lagouira.ma/", adresse: "Wilaya Oued Eddahab Lagouira, Dakhla", logo: "https://www.federation-majal.ma/sites/default/files/s5_logo.png", projets: [] },
+    { id: 27, name: "Agence urbaine de Casablanca", directeur: "M.Mohamed AOUZZAII", tel: "0522 29 57 07/04", fax: "0522 22 33 32", email: "", site: "http://www.auc.ma", adresse: "", logo: "https://www.federation-majal.ma/sites/default/files/aucasa.jpg", projets: [] },
+    { id: 28, name: "Agence urbaine de  Rabat-Salé", directeur: "Mme. Khaddouj GUENOU", tel: "05 37 57 55 55", fax: "05 37 56 46 27", email: "aurs@aurs.org.ma", site: "http://www.aurs.org.ma", adresse: "Angle Avenue Al Araâr, Hay Ryad, Rabat", logo: "https://www.federation-majal.ma/sites/default/files/telechargement.jpg", projets: [] },
+    { id: 29, name: "Agence urbaine de Beni Mellal", directeur: "Mme. Amina Bourkia", tel: "(+212) 523 48 40 64 / +212 523 48 35 88", fax: "", email: "aubm@menara.ma", site: "http://www.aubm.ma/", adresse: "Boulevard Mohamed V, Béni Mellal", logo: "https://www.federation-majal.ma/sites/default/files/logo_new.jpg", projets: [] },
+    { id: 30, name: "Agence urbaine d'Al Hoceima", directeur: "Abdelkader El Mourabit", tel: "05 39 98 38 95 / 05 39 84 13 15", fax: "05 39 98 14 15", email: "infoauah@gmail.com", site: "http://www.auah.ma", adresse: "N°80, Rue Mohamed V, Al Hoceima", logo: "https://www.federation-majal.ma/sites/default/files/logoalhoceima.png", provinces: 1, communesUrb: 5, communesRur: 31, population: "399 654", densite: "112,60 / KM²", urbanisation: "34.40 %", effectif: 44, tauxEncadrement: "57.00 %", projets: [{ nom: "Voie expresse Al Hoceima-Taza", lieu: "Al Hoceima" }, { nom: "Pôle Urbain Bades", lieu: "Al Hoceima" }, { nom: "Marina", lieu: "Al Hoceima" }] }
 ];
 
 const grid = document.getElementById('agenciesGrid');
 const statsSpan = document.getElementById('agencyCount');
+
+// Fonction pour générer l'URL Google Maps en fonction de l'adresse
+function getGoogleMapsUrl(adresse) {
+    if (!adresse || adresse.trim() === "") return null;
+    const encodedAddress = encodeURIComponent(adresse + ", Maroc");
+    return `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodedAddress}&zoom=14&language=fr`;
+}
+
+function openIframeModal(agency) {
+    const mapUrl = getGoogleMapsUrl(agency.adresse);
+    const iframe = document.getElementById('mapIframe');
+    const titleSpan = document.getElementById('iframeModalTitle');
+    titleSpan.innerHTML = `<i class="fas fa-map-pin"></i> ${agency.name} - Localisation`;
+    
+    if (mapUrl && agency.adresse && agency.adresse !== "") {
+        iframe.src = mapUrl;
+    } else {
+        iframe.src = "about:blank";
+        iframe.srcdoc = `<html><body style='display:flex;align-items:center;justify-content:center;font-family:sans-serif;background:#f0f2f5;margin:0;'><div style='text-align:center;padding:20px;'><i class='fas fa-map-marker-alt' style='font-size:48px;color:#004d73;'></i><h3>Adresse non disponible</h3><p>${agency.adresse || "Aucune adresse renseignée"}</p></div></body></html>`;
+    }
+    document.getElementById('iframeModal').style.display = 'flex';
+}
+
+function closeIframeModal() {
+    document.getElementById('iframeModal').style.display = 'none';
+    const iframe = document.getElementById('mapIframe');
+    iframe.src = "about:blank";
+}
 
 function renderCards(filter = "") {
     const filtered = agencies.filter(a => 
@@ -486,70 +478,75 @@ function renderCards(filter = "") {
     filtered.forEach(agency => {
         const card = document.createElement('div');
         card.className = "agency-card";
+        
+        const telDisplay = agency.tel || "—";
+        const faxDisplay = agency.fax || "—";
+        const emailDisplay = agency.email || "—";
+        const siteDisplay = agency.site ? agency.site.replace('https://','').replace('http://','') : "—";
+        const adresseDisplay = agency.adresse || "—";
+        
         card.innerHTML = `
             <div class="card-content">
                 <div class="card-logo">
-                    <img src="${agency.logo}" alt="${agency.name}" onerror="this.src='https://via.placeholder.com/55?text=AU'">
+                    <img src="${agency.logo}" alt="${agency.name}" onerror="this.src='https://via.placeholder.com/85?text=AU'">
                 </div>
                 <div class="card-info">
-                    <div class="agency-name">${agency.name}</div>
-                    <div class="director-name">
-                        <i class="fas fa-user-circle"></i> ${agency.directeur ? agency.directeur : "—"}
+                    <button class="agency-name-btn" data-id="${agency.id}">🏢 ${agency.name}</button>
+                    
+                    <!-- Section Contact complète avec icônes -->
+                    <div class="card-contact-full">
+                        <div class="contact-item"><i class="fas fa-user-tie"></i><span class="contact-text"><strong>Directeur</strong> : ${agency.directeur || "—"}</span></div>
+                        <div class="contact-item"><i class="fas fa-phone-alt"></i><span class="contact-text"><strong>Tél</strong> : ${telDisplay}</span></div>
+                        <div class="contact-item"><i class="fas fa-fax"></i><span class="contact-text"><strong>Fax</strong> : ${faxDisplay}</span></div>
+                        <div class="contact-item"><i class="fas fa-envelope"></i><span class="contact-text"><strong>Email</strong> : ${emailDisplay !== "—" ? `<a href="mailto:${agency.email}">${agency.email}</a>` : "—"}</span></div>
+                        <div class="contact-item"><i class="fas fa-globe"></i><span class="contact-text"><strong>Site</strong> : ${agency.site ? `<a href="${agency.site}" target="_blank">${siteDisplay}</a>` : "—"}</span></div>
+                        <div class="contact-item"><i class="fas fa-map-marker-alt"></i><span class="contact-text"><strong>Adresse</strong> : ${adresseDisplay}</span></div>
                     </div>
-                    <div class="agency-detail-row">
-                        <span><i class="fas fa-phone"></i> ${agency.tel ? agency.tel.split('/')[0] : "—"}</span>
-                        <span><i class="fas fa-map-marker-alt"></i> ${agency.population ? agency.population + " hab" : "N/C"}</span>
-                    </div>
-                    <button class="btn-info-card" data-id="${agency.id}">
-                        <i class="fas fa-info-circle"></i> Voir les informations
+                    
+                    <!-- Bouton Détails - réduit, gris, cliquable pour afficher l'iframe -->
+                    <button class="details-link" data-agency-id="${agency.id}">
+                        <i class="fas fa-map-marked-alt"></i> Détails
                     </button>
                 </div>
             </div>
         `;
+        grid.appendChild(card);
         
-        const btn = card.querySelector('.btn-info-card');
-        btn.addEventListener('click', (e) => {
+        // Événement pour le bouton du nom (ouvre modal détaillé)
+        const nameBtn = card.querySelector('.agency-name-btn');
+        nameBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            openModal(agency);
+            openDetailsModal(agency);
         });
         
-        grid.appendChild(card);
+        // Événement pour le bouton Détails - ouvre l'iframe de localisation
+        const detailsBtn = card.querySelector('.details-link');
+        if (detailsBtn) {
+            detailsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openIframeModal(agency);
+            });
+        }
     });
 }
 
-renderCards();
-
-const searchInput = document.getElementById('searchInput');
-const searchBtn = document.getElementById('searchBtn');
-function handleSearch() { renderCards(searchInput.value); }
-searchInput.addEventListener('input', handleSearch);
-searchBtn.addEventListener('click', handleSearch);
-
-function openModal(agency) {
+// Modal détaillé avec onglets
+function openDetailsModal(agency) {
+    const modalOverlay = document.getElementById('modalOverlay');
     document.getElementById('modalLogo').src = agency.logo;
     document.getElementById('modalTitle').innerHTML = agency.name;
     
     let infoHtml = `<table class="info-table-mob">`;
-    infoHtml += `去库存<td><strong>🏙️ Provinces/Préfectures</strong>去库存<td>${agency.provinces || '-'}去库存</tr>`;
-    infoHtml += `<tr><td><strong>🏘️ Communes urbaines</strong></td><td>${agency.communesUrb || '-'}</td></tr>`;
-    infoHtml += `<tr><td><strong>🌾 Communes rurales</strong></td><td>${agency.communesRur || '-'}</td></tr>`;
-    infoHtml += `<tr><td><strong>👥 Population</strong></td><td>${agency.population || '-'}</td></tr>`;
-    infoHtml += `<tr><td><strong>📊 Densité</strong></td><td>${agency.densite || '-'}</td></tr>`;
-    infoHtml += `<tr><td><strong>🏙️ Taux urbanisation</strong></td><td>${agency.urbanisation || '-'}</td></tr>`;
-    infoHtml += `<tr><td><strong>🧑‍💼 Effectif global</strong></td><td>${agency.effectif || '-'}</td></tr>`;
-    infoHtml += `<tr><td><strong>📈 Taux encadrement</strong></td><td>${agency.tauxEncadrement || '-'}</td></tr>`;
+    infoHtml += `<tr><td>🏙️ Provinces/Préfectures</td><td>${agency.provinces || '-'}</td></tr>`;
+    infoHtml += `<tr><td>🏘️ Communes urbaines</td><td>${agency.communesUrb || '-'}</td></tr>`;
+    infoHtml += `<tr><td>🌾 Communes rurales</td><td>${agency.communesRur || '-'}</td></tr>`;
+    infoHtml += `<tr><td>👥 Population</td><td>${agency.population || '-'}</td></tr>`;
+    infoHtml += `<tr><td>📊 Densité</td><td>${agency.densite || '-'}</td></tr>`;
+    infoHtml += `<tr><td>🏙️ Taux urbanisation</td><td>${agency.urbanisation || '-'}</td></tr>`;
+    infoHtml += `<tr><td>🧑‍💼 Effectif global</td><td>${agency.effectif || '-'}</td></tr>`;
+    infoHtml += `<tr><td>📈 Taux encadrement</td><td>${agency.tauxEncadrement || '-'}</td></tr>`;
     infoHtml += `</table>`;
     document.getElementById('tabInfo').innerHTML = infoHtml;
-    
-    let contactHtml = `
-        <div class="contact-detail"><i class="fas fa-user-circle"></i><div class="contact-text"><strong>Directeur/Directrice</strong><br>${agency.directeur || 'Non renseigné'}</div></div>
-        <div class="contact-detail"><i class="fas fa-phone"></i><div class="contact-text"><strong>Téléphone</strong><br>${agency.tel || '-'}</div></div>
-        <div class="contact-detail"><i class="fas fa-fax"></i><div class="contact-text"><strong>Fax</strong><br>${agency.fax || '-'}</div></div>
-        <div class="contact-detail"><i class="fas fa-envelope"></i><div class="contact-text"><strong>Email</strong><br>${agency.email ? `<a href="mailto:${agency.email}">${agency.email}</a>` : '-'}</div></div>
-        <div class="contact-detail"><i class="fas fa-globe"></i><div class="contact-text"><strong>Site web</strong><br>${agency.site ? `<a href="${agency.site}" target="_blank">${agency.site.replace('https://','').replace('http://','')}</a>` : '-'}</div></div>
-        <div class="contact-detail"><i class="fas fa-map-marker-alt"></i><div class="contact-text"><strong>Adresse</strong><br>${agency.adresse || '-'}</div></div>
-    `;
-    document.getElementById('tabContact').innerHTML = contactHtml;
     
     let projetsHtml = `<ul class="projet-list-mob">`;
     if (agency.projets && agency.projets.length > 0) {
@@ -562,37 +559,193 @@ function openModal(agency) {
     }
     document.getElementById('tabProjets').innerHTML = projetsHtml;
     
-    const tabs = document.querySelectorAll('.tab-mob');
+    // Cacher l'onglet contact car déjà présent dans la carte principale
+    const contactTab = document.querySelector('.tab-mob[data-tab="contact"]');
+    if (contactTab) contactTab.style.display = 'none';
+    document.getElementById('tabContact').style.display = 'none';
+    
+    const tabs = document.querySelectorAll('.tab-mob:not([data-tab="contact"])');
     const panes = {
         info: document.getElementById('tabInfo'),
-        contact: document.getElementById('tabContact'),
         projets: document.getElementById('tabProjets')
     };
+    
     tabs.forEach(btn => {
         btn.onclick = () => {
             tabs.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             const target = btn.getAttribute('data-tab');
-            Object.keys(panes).forEach(k => panes[k].style.display = 'none');
-            if (target === 'info') panes.info.style.display = 'block';
-            if (target === 'contact') panes.contact.style.display = 'block';
-            if (target === 'projets') panes.projets.style.display = 'block';
+            if (target === 'info') {
+                panes.info.style.display = 'block';
+                panes.projets.style.display = 'none';
+            } else if (target === 'projets') {
+                panes.info.style.display = 'none';
+                panes.projets.style.display = 'block';
+            }
         };
     });
     panes.info.style.display = 'block';
-    panes.contact.style.display = 'none';
     panes.projets.style.display = 'none';
     
-    document.getElementById('modalOverlay').style.display = 'flex';
+    modalOverlay.style.display = 'flex';
 }
 
 function closeModal() {
     document.getElementById('modalOverlay').style.display = 'none';
+    const contactTab = document.querySelector('.tab-mob[data-tab="contact"]');
+    if (contactTab) contactTab.style.display = 'flex';
 }
 
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeModal();
-});
+// Gestionnaires de recherche
+document.getElementById('searchInput').addEventListener('input', (e) => renderCards(e.target.value));
+document.getElementById('searchBtn').addEventListener('click', () => renderCards(document.getElementById('searchInput').value));
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+renderCards();
 </script>
+
+<!-- Overlay pour le modal d'infos détaillées -->
+<div id="modalOverlay" class="modal-overlay" style="display: none;" onclick="if(event.target===this) closeModal()">
+    <div class="modal-container">
+        <div class="modal-header-custom">
+            <img id="modalLogo" src="" alt="logo">
+            <h5 id="modalTitle">Agence</h5>
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body-custom">
+            <div class="tabs-mobile">
+                <button class="tab-mob active" data-tab="info">📋 Infos</button>
+                <button class="tab-mob" data-tab="contact" style="display: none;">📞 Contact</button>
+                <button class="tab-mob" data-tab="projets">🏗️ Projets</button>
+            </div>
+            <div id="tabInfo"></div>
+            <div id="tabContact" style="display: none;"></div>
+            <div id="tabProjets" style="display: none;"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.75);
+        z-index: 1000;
+        align-items: flex-end;
+        justify-content: center;
+    }
+    .modal-container {
+        background: white;
+        width: 100%;
+        max-height: 88vh;
+        border-radius: 28px 28px 0 0;
+        overflow-y: auto;
+        animation: slideUp 0.25s ease;
+    }
+    .modal-header-custom {
+        background: #004d73;
+        padding: 16px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .modal-header-custom img {
+        width: 54px;
+        height: 54px;
+        object-fit: contain;
+        background: white;
+        padding: 6px;
+        border-radius: 16px;
+    }
+    .modal-header-custom h5 {
+        color: white;
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        flex: 1;
+    }
+    .close-modal {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 28px;
+        cursor: pointer;
+        line-height: 1;
+        padding: 0 8px;
+    }
+    .modal-body-custom {
+        padding: 16px;
+        background: #ffffff;
+    }
+    .tabs-mobile {
+        display: flex;
+        background: #f1f5f9;
+        border-radius: 40px;
+        padding: 4px;
+        margin-bottom: 20px;
+        gap: 4px;
+    }
+    .tab-mob {
+        flex: 1;
+        text-align: center;
+        background: transparent;
+        border: none;
+        padding: 10px 0;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border-radius: 40px;
+        color: #4a5568;
+        transition: all 0.2s;
+        cursor: pointer;
+        font-family: inherit;
+    }
+    .tab-mob.active {
+        background: #004d73;
+        color: white;
+    }
+    .info-table-mob {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .info-table-mob tr {
+        border-bottom: 1px solid #eef2f6;
+    }
+    .info-table-mob td {
+        padding: 12px 6px;
+        vertical-align: top;
+        font-size: 0.85rem;
+    }
+    .info-table-mob td:first-child {
+        font-weight: 600;
+        width: 42%;
+        color: #1e4a6b;
+    }
+    .projet-list-mob {
+        list-style: none;
+        padding-left: 0;
+    }
+    .projet-list-mob li {
+        padding: 12px 0;
+        border-bottom: 1px solid #edf2f7;
+        display: flex;
+        gap: 12px;
+    }
+    .projet-list-mob li i {
+        color: #2c7a4d;
+        font-size: 1rem;
+        margin-top: 3px;
+    }
+    @keyframes slideUp {
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
+    }
+</style>
 </body>
 </html>
