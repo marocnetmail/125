@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Agences Urbaines du Maroc</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f4fa;
+            color: #1a2c3e;
+            line-height: 1.5;
+            padding: 20px;
+        }
+        
+        .search-wrapper {
+            margin-bottom: 24px;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            background: #f0f4fa;
+            padding: 8px 0;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 16px 22px;
+            border: 1px solid #e2e8f0;
+            border-radius: 56px;
+            font-size: 1rem;
+            background: white;
+            outline: none;
+            font-family: inherit;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .search-box input:focus {
+            border-color: #004d73;
+            box-shadow: 0 0 0 3px rgba(0,77,115,0.15);
+        }
+        
+        .search-box button {
+            background: #004d73;
+            border: none;
+            border-radius: 56px;
+            padding: 0 28px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .search-box button:active {
+            background: #003a57;
+        }
+        
+        .agencies-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .agency-card {
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            overflow: hidden;
+            border: 1px solid #eef2f8;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .agency-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 32px rgba(0,0,0,0.12);
+        }
+        
+        .card-content {
+            display: flex;
+            padding: 28px;
+            gap: 28px;
+            align-items: flex-start;
+        }
+        
+        .card-logo {
+            flex-shrink: 0;
+            width: 140px;
+            height: 140px;
+            background: #ffffff;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #eef2f8;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            overflow: hidden;
+            background: #fafcff;
+        }
+        
+        .card-logo img {
+            max-width: 110px;
+            max-height: 110px;
+            object-fit: contain;
+        }
+        
+        .card-info {
+            flex: 1;
+        }
+        
+        .agency-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .agency-badge {
+            background: linear-gradient(135deg, #004d73 0%, #006994 100%);
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 40px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        
+        .agency-name-btn {
+            background: none;
+            border: none;
+            color: #004d73;
+            font-weight: 800;
+            font-size: 1.4rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            padding: 0;
+            flex: 1;
+        }
+        
+        .agency-name-btn:hover {
+            color: #002f47;
+            text-decoration: underline;
+        }
+        
+        .director-large {
+            background: #f0f7fc;
+            padding: 14px 18px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 5px solid #004d73;
+        }
+        
+        .director-large i {
+            font-size: 1.8rem;
+            color: #004d73;
+        }
+        
+        .director-large .director-text {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #1a2c3e;
+        }
+        
+        .director-large .director-label {
+            font-weight: 600;
+            color: #004d73;
+            font-size: 1rem;
+            margin-right: 8px;
+        }
+        
+        .card-contact-full {
+            margin-top: 8px;
+            padding-top: 16px;
+            border-top: 2px solid #eef2f8;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            background: #ffffff;
+            border-radius: 20px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            font-size: 1rem;
+            color: #2c4c6e;
+            line-height: 1.5;
+        }
+        
+        .contact-item i {
+            width: 32px;
+            font-size: 1.2rem;
+            color: #004d73;
+            flex-shrink: 0;
+            text-align: center;
+            margin-top: 2px;
+        }
+        
+        .contact-item .contact-text {
+            flex: 1;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            font-size: 1rem;
+        }
+        
+        .contact-item strong {
+            font-weight: 700;
+            color: #1a2c3e;
+        }
+        
+        .contact-item a {
+            color: #004d73;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .details-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #eef2f8;
+            padding: 12px 28px;
+            border-radius: 48px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #2c4a6e;
+            border: none;
+            font-family: inherit;
+        }
+        
+        .details-btn i {
+            font-size: 1rem;
+            color: #5a6e8c;
+        }
+        
+        .details-btn:active {
+            background: #dee4ec;
+            transform: scale(0.97);
+        }
+        
+        .location-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #10b981;
+            padding: 12px 28px;
+            border-radius: 48px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+            border: none;
+            font-family: inherit;
+            box-shadow: 0 2px 8px rgba(16,185,129,0.3);
+        }
+        
+        .location-btn i {
+            font-size: 1rem;
+            color: white;
+        }
+        
+        .location-btn:active {
+            background: #059669;
+            transform: scale(0.97);
+        }
+        
+        .iframe-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        
+        .iframe-modal-container {
+            background: white;
+            width: 90%;
+            max-width: 1200px;
+            height: 85%;
+            border-radius: 32px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.2s ease;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .iframe-modal-header {
+            background: #004d73;
+            padding: 20px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        
+        .iframe-modal-header h4 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .close-iframe-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 36px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0 12px;
+        }
+        
+        .iframe-content {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+            font-size: 1.1rem;
+            background: white;
+            border-radius: 32px;
+        }
+        
+        @media (min-width: 768px) {
+            body {
+                padding: 28px;
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+        }
+        
+        @media (max-width: 680px) {
+            .card-content {
+                flex-direction: column;
+                padding: 20px;
+            }
+            .card-logo {
+                width: 100px;
+                height: 100px;
+                align-self: center;
+            }
+            .agency-name-btn {
+                font-size: 1.2rem;
+            }
+            .director-large .director-text {
+                font-size: 1rem;
+            }
+            .contact-item {
+                font-size: 0.9rem;
+            }
+            .button-group {
+                gap: 12px;
+            }
+            .details-btn, .location-btn {
+                padding: 10px 20px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="search-wrapper">
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 Rechercher une agence (nom, ville, directeur...)">
+        <button id="searchBtn"><i class="fas fa-search"></i></button>
+    </div>
+</div>
+
+<div class="agencies-grid" id="agenciesGrid"></div>
+
+<!-- Modal pour l'iframe -->
+<div id="iframeModal" class="iframe-modal-overlay" onclick="if(event.target===this) closeIframeModal()">
+    <div class="iframe-modal-container">
+        <div class="iframe-modal-header">
+            <h4><i class="fas fa-map-marked-alt"></i> <span id="iframeModalTitle">Localisation</span></h4>
+            <button class="close-iframe-btn" onclick="closeIframeModal()">&times;</button>
+        </div>
+        <iframe id="mapIframe" class="iframe-content" frameborder="0" style="border:0" allowfullscreen></iframe>
+    </div>
+</div>
+
+<script>
+// Données complètes des 30 agences avec coordonnées GPS précises
+const agencies = [
+    { id: 1, name: "Skhirate-Témara", directeur: "Mme. Hafida AARAB", tel: "05 37 60 08 99", fax: "05 37 60 99 52", email: "contact@aust.ma", site: "http://www.aust.ma/", adresse: "Boulevard Moulay Ali Cherif, Immeuble 462, TEMARA", lat: 33.9286, lng: -6.9065, logo: "https://www.federation-majal.ma/sites/default/files/Skhirate_0.png", provinces: 1, communesUrb: 10, communesRur: 0, population: "574 543", densite: "527,00 / KM²", urbanisation: "90.00 %", effectif: 45, tauxEncadrement: "55.00 %", projets: [{ nom: "LA VILLE NOUVELLE DE Tamesna", lieu: "Sidi Yahia des ZAER" }, { nom: "El FIRDAOUS", lieu: "Ain Aouda" }, { nom: "La voie de contournement", lieu: "Oum AZZA" }, { nom: "La voie ferroviaire", lieu: "TEMARA-AIN ATTIQ" }] },
+    { id: 2, name: "Tanger", directeur: "M. Mohammed BELBACHIR", tel: "05 39 32 15 00", fax: "05 39 32 15 10", email: "aut@aut.gov.ma", site: "http://www.aut.gov.ma/", adresse: "53, Rue Abou Al Alaa Al Maari B.P. 1164 Tanger", lat: 35.7595, lng: -5.8340, logo: "https://www.federation-majal.ma/sites/default/files/AU-Tanger.png", provinces: 2, communesUrb: 3, communesRur: 16, population: "1 136 705", densite: "653,00 / KM²", urbanisation: "90.00 %", effectif: 65, tauxEncadrement: "73.84 %", projets: [{ nom: "Programme Grand Tanger", lieu: "Tanger" }, { nom: "Complexe portière Tanger Med", lieu: "FahsAnjra" }, { nom: "Usine Renault Nissan", lieu: "FahsAnjra" }, { nom: "Ligne ferroviaire grande vitesse", lieu: "Région" }] },
+    { id: 3, name: "Settat", directeur: "M.Mourad AMIL", tel: "05 23 40 17 16 / 23", fax: "05 23 72 22 34", email: "aus@menara.ma", site: "http://www.ausettat.org", adresse: "11, Avenue Hassan II Settat B.P: 532", lat: 33.0014, lng: -7.6167, logo: "https://www.federation-majal.ma/sites/default/files/Settat_0.png", provinces: 2, communesUrb: 10, communesRur: 67, population: "1 093 497", densite: "99,80 / KM²", urbanisation: "43.30 %", effectif: 60, tauxEncadrement: "75.00 %", projets: [{ nom: "Projet urbain vert Settat", lieu: "Settat" }, { nom: "Projet mine verte", lieu: "Khouribga" }, { nom: "Centre émergent Ouled Abdoune", lieu: "CR Ouled Abdoune" }] },
+    { id: 4, name: "Kénitra-Sidi Kacem", directeur: "Mme. Nahid HAMTAMI", tel: "05 37 37 85 10/03", fax: "05 37 37 84 97", email: "auks@menara.ma", site: "http://www.auks.ma", adresse: "Rue Lamhaned Kacem, Bir Rami Est, Kénitra", lat: 34.2610, lng: -6.5801, logo: "https://www.federation-majal.ma/sites/default/files/Kenitra_1.png", provinces: 3, communesUrb: 10, communesRur: 53, population: "1 904 112", densite: "238,00 / KM²", urbanisation: "47.60 %", effectif: 79, tauxEncadrement: "77.00 %", projets: [{ nom: "LGV et Nouveau pôle urbain", lieu: "Kénitra" }, { nom: "Usine PSA", lieu: "Ameur Seflia" }, { nom: "Station touristique Biladi", lieu: "Mehdiya" }] },
+    { id: 5, name: "Larache", directeur: "M. Abdennasser LHNAOUI", tel: "06 61 22 96 86", fax: "05 39 52 17 00", email: "aularache@gmail.com", site: "http://aularache.ma/", adresse: "190, lot MAGHREB JADID, Larache", lat: 35.1930, lng: -6.1570, logo: "https://www.federation-majal.ma/sites/default/files/Larache_0.png", provinces: 2, communesUrb: 3, communesRur: 33, population: "797 324", densite: "339,00 / KM²", urbanisation: "76.84 %", effectif: 28, tauxEncadrement: "71.00 %", projets: [{ nom: "Pole Urbain", lieu: "Larache" }, { nom: "Réhabilitation Médina", lieu: "Larache" }, { nom: "Aménagement Lac Bouderoua", lieu: "Ouezzane" }] },
+    { id: 6, name: "Meknès", directeur: "Mme. Aicha EL HAOUZALI", tel: "05 35 51 03 10/11", fax: "05 35 51 03 01", email: "", site: "http://www.aumk.ma", adresse: "13, Rue Pasteur, Meknès", lat: 33.8950, lng: -5.5547, logo: "https://www.federation-majal.ma/sites/default/files/Meknes_0.jpg", provinces: 3, communesUrb: 12, communesRur: 35, population: "1 237 932", densite: "168,00 / KM²", urbanisation: "67.00 %", effectif: 74, tauxEncadrement: "78.00 %", projets: [{ nom: "SDAU Grand Meknès", lieu: "Meknès" }, { nom: "AGROPOLIS", lieu: "Meknès" }] },
+    { id: 7, name: "El Kelâa des Sraghna", directeur: "Mme. Samira LAYADI", tel: "05 24 41 41 45", fax: "05 24 41 41 29", email: "administrateur@aueks.org.ma", site: "http://aueks.org.ma/", adresse: "Av. Imam Malek, El Kelaa", lat: 32.0500, lng: -7.4000, logo: "https://www.federation-majal.ma/sites/default/files/AU_elkelaa_sraghna.gif", provinces: 2, communesUrb: 6, communesRur: 62, population: "852 565", densite: "", urbanisation: "29.00 %", effectif: 36, tauxEncadrement: "72.00 %", projets: [{ nom: "Pôle urbain AL BADR", lieu: "El Kelâa" }, { nom: "Université Mohamed VI", lieu: "Ben Guérir" }] },
+    { id: 8, name: "Khénifra", directeur: "M. Said KABRA", tel: "05 35 58 89 73 / 74", fax: "05 35 38 57 39", email: "contact@aukh.ma", site: "http://www.aukh.ma", adresse: "B.d Zerktouni, Imm n°3", lat: 32.9399, lng: -5.6675, logo: "https://www.federation-majal.ma/sites/default/files/Khenifra_1.png", provinces: 2, communesUrb: 4, communesRur: 47, population: "660 482", densite: "33,00 / KM²", urbanisation: "53.70 %", effectif: 43, tauxEncadrement: "56.00 %", projets: [{ nom: "Pôle urbain Aguelmane", lieu: "Midelt" }, { nom: "Parc solaire NOOR MIDELT", lieu: "Midelt" }] },
+    { id: 9, name: "Marrakech", directeur: "M. Khalid OUAYA", tel: "05 24 43 83 90", fax: "05 24 43 83 96", email: "", site: "http://www.aumarrakech.ma/", adresse: "Rue Hassan Ben M Barek, Marrakech", lat: 31.6295, lng: -7.9811, logo: "https://www.federation-majal.ma/sites/default/files/Marrakech_0.png", provinces: 3, communesUrb: 7, communesRur: 83, population: "2 273 551", densite: "0,01 / KM²", urbanisation: "49.00 %", effectif: "", tauxEncadrement: "", projets: [] },
+    { id: 10, name: "Taza", directeur: "M. Mohammed TITA", tel: "05 35 28 50 41", fax: "05 35 28 51 13", email: "", site: "http://www.autaza.ma", adresse: "Avenue Hassan Bahtat BP 1211 Taza", lat: 34.2167, lng: -4.0167, logo: "https://www.federation-majal.ma/sites/default/files/Taza.gif", provinces: 3, communesUrb: 10, communesRur: 87, population: "1 408 539", densite: "214,10 / KM²", urbanisation: "75.80 %", effectif: 73, tauxEncadrement: "66.00 %", projets: [{ nom: "Pole urbain de Guercif", lieu: "Guercif" }, { nom: "Complexe culturel", lieu: "Taza" }] },
+    { id: 11, name: "Taroudannt", directeur: "M. Houcine Houdaygui", tel: "05 28 55 02 34", fax: "05 28 55 09 67", email: "", adresse: "Bab Zourgane, Taroudant", lat: 30.4727, lng: -8.8744, logo: "https://www.federation-majal.ma/sites/default/files/Taroudant.png", provinces: 3, communesUrb: 12, communesRur: 111, population: "1 161 878", densite: "44,60 / KM²", urbanisation: "31.00 %", effectif: 21, tauxEncadrement: "52.00 %", projets: [] },
+    { id: 12, name: "Fès", directeur: "M. El Hassan HIDDA", tel: "05 35 65 12 36/05 35 93 01 81", fax: "05 35 65 36 02", email: "", site: "http://www.aufes.org/", adresse: "Avenue de Palestine, BP 2448 Fès", lat: 34.0333, lng: -5.0000, logo: "https://www.federation-majal.ma/sites/default/files/AU-Fes.jpg", provinces: 4, communesUrb: 12, communesRur: 48, population: "1 570 000", densite: "78,00 / KM²", urbanisation: "75.00 %", effectif: 104, tauxEncadrement: "68.00 %", projets: [{ nom: "Université Euro-méditerranéen", lieu: "Fès" }, { nom: "Extension aéroport Fès-Sais", lieu: "Ouled Tayeb" }, { nom: "Station épuration", lieu: "Ain Kansara" }] },
+    { id: 13, name: "Berrechid", directeur: "M.Omar EL HASSOUNI", tel: "05 22 32 40 58", fax: "05 22 32 40 19", email: "au2b2013@gmail.com", site: "http://www.aub.ma/", adresse: "05, boulevard Mohammed V BERRECHID", lat: 33.2667, lng: -7.5833, logo: "https://www.federation-majal.ma/sites/default/files/Berrechid_0.png", provinces: 2, communesUrb: 8, communesRur: 28, population: "717 641", densite: "141,00 / KM²", urbanisation: "52.00 %", effectif: "", tauxEncadrement: "", projets: [{ nom: "Ville nouvelle Sahel-Lakhyayta", lieu: "Had Soualem" }, { nom: "ECOPARC", lieu: "Sidi El Mekki" }] },
+    { id: 14, name: "El Jadida", directeur: "M. Mustapha LAARAICH", tel: "05 23 37 00 61", fax: "05 23 37 00 63", email: "", site: "http://www.aujadida.ma", adresse: "Avenue Annakhil, El Jadida", lat: 33.2333, lng: -8.5000, logo: "https://www.federation-majal.ma/sites/default/files/AuEljadida.jpg", provinces: 2, communesUrb: 5, communesRur: 47, population: "1 239 164", densite: "177,00 / KM²", urbanisation: "32.00 %", effectif: 51, tauxEncadrement: "71.00 %", projets: [{ nom: "Zone industrielle jorf lasfar", lieu: "CR My abdellah" }, { nom: "Station Mazagan", lieu: "Haouzia" }] },
+    { id: 15, name: "Errachidia", directeur: "M. Mohammed OUBAHA", tel: "05 35 57 46 32", fax: "05 35 57 46 43", email: "Contact@auer.gov.ma", site: "http://www.auer.gov.ma/", adresse: "N°10, Rue Sidi Abou Abdi Allah, Errachidia", lat: 31.9315, lng: -4.4245, logo: "https://www.federation-majal.ma/sites/default/files/Errachidia.gif", provinces: 1, communesUrb: 7, communesRur: 22, population: "418 451", densite: "9,76 / KM²", urbanisation: "46.38 %", effectif: 44, tauxEncadrement: "68.00 %", projets: [{ nom: "Barrage Hassan Addakhil", lieu: "Lkhenfg" }, { nom: "Aéroport de My Ali cheris", lieu: "Errachidia" }] },
+    { id: 16, name: "Ouarzazate-Zagora", directeur: "M. Med. Oukhouya", tel: "05 24 88 74 09", fax: "05 24 88 68 52", email: "info@auozt.ma", site: "http://www.auozt.ma/", adresse: "26, lotissement du centre, Ouarzazate", lat: 30.9190, lng: -6.8930, logo: "https://www.federation-majal.ma/sites/default/files/Ouerzazate_0.png", provinces: 3, communesUrb: 7, communesRur: 60, population: "927 220", densite: "17,03 / KM²", urbanisation: "24.80 %", effectif: 43, tauxEncadrement: "61.00 %", projets: [{ nom: "Complexe Energie solaire", lieu: "Ouarzazate" }, { nom: "Studios de tournage", lieu: "Ouarzazate" }] },
+    { id: 17, name: "Oujda", directeur: "M. Said Lahbil", tel: "05 36 68 04 15", fax: "05 36 68 04 10", email: "", site: "http://www.auo.org.ma", adresse: "Bd Mohamed V, Oujda", lat: 34.6869, lng: -1.9114, logo: "https://www.federation-majal.ma/sites/default/files/AU-Oujda.png", provinces: 5, communesUrb: 15, communesRur: 51, population: "974 384", densite: "18,25 / KM²", urbanisation: "", effectif: 86, tauxEncadrement: "71.00 %", projets: [{ nom: "Urba pôle", lieu: "Oujda" }, { nom: "Technopole", lieu: "Oujda" }] },
+    { id: 18, name: "Guelmim Es-Smara", directeur: "M. Mohamed ENNAJJAR", tel: "05 28 77 31 79", fax: "05 28 87 26 35", email: "augs.augs01@yahoo.fr", site: "http://www.augs.org.ma/", adresse: "Complexe Administratif Salma, Guelmim", lat: 28.9883, lng: -10.0575, logo: "https://www.federation-majal.ma/sites/default/files/Guelmim_0.png", provinces: 5, communesUrb: 11, communesRur: 49, population: "462 410", densite: "3,20 / KM²", urbanisation: "62.00 %", effectif: 39, tauxEncadrement: "46.00 %", projets: [{ nom: "Oasis d'Or", lieu: "Guelmim" }, { nom: "Voie Expresse Tiznit-Laayoune", lieu: "Guelmim-Tantan" }] },
+    { id: 19, name: "Laâyoune", directeur: "Mme. ToufaEndour", tel: "05 28 89 25 55", fax: "05 28 89 19 99", email: "", site: "http://www.aulaayoune.ma", adresse: "palac de la résidence, Laâyoune", lat: 27.1536, lng: -13.2033, logo: "https://www.federation-majal.ma/sites/default/files/Au-laayoune.jpg", provinces: 3, communesUrb: 4, communesRur: 10, population: "367 758", densite: "2,63 / KM²", urbanisation: "96.00 %", effectif: 48, tauxEncadrement: "62.42 %", projets: [] },
+    { id: 20, name: "Khmisset", directeur: "M. Mounir Yahiyaoui", tel: "05 37 55 21 23", fax: "05 37 55 21 45", email: "", site: "http://www.aukhemi7.ma", adresse: "Avenue AbelHamid Ezzemouri 21, Khmisset", lat: 33.8148, lng: -6.0579, logo: "https://www.federation-majal.ma/sites/default/files/Khmisset_0.png", provinces: null, communesUrb: null, communesRur: null, population: "", densite: "", urbanisation: "", effectif: "", tauxEncadrement: "", projets: [] },
+    { id: 21, name: "Tétouan", directeur: "M. Hicham Khorasani", tel: "05 39 99 21 68/89", fax: "05 39 99 82 40", email: "autetouan@yahoo.fr", site: "http://www.autetouan.ma", adresse: "Résidence Florence F.A.R, Tétouan", lat: 35.5789, lng: -5.3744, logo: "https://www.federation-majal.ma/sites/default/files/Au-Tetouan.png", projets: [] },
+    { id: 22, name: "Nador", directeur: "M. Jamal HANAFI", tel: "05 36 60 19 19 / 05 36 60 19 16", fax: "05 36 33 20 65", email: "aunador2012@gmail.com", site: "http://www.aunador.ma/", adresse: "n° 5, Rue LARACHE, NADOR", lat: 35.1681, lng: -2.9336, logo: "https://www.federation-majal.ma/sites/default/files/Au-nador_0.gif", projets: [] },
+    { id: 23, name: "Agadir", directeur: "M. REDA CHERKAOUI", tel: "05 28 84 70 07 / 05 28 84 70 28", fax: "05 28 84 70 79", email: "", site: "http://www.aua.ma/", adresse: "Imm Ibn Toufail, Avenue Mly Abdellah, Agadir", lat: 30.4278, lng: -9.5981, logo: "https://www.federation-majal.ma/sites/default/files/logo-agence-urbaine-agadir.png", projets: [] },
+    { id: 24, name: "Essaouira", directeur: "M. Younes ELASSRI", tel: "05 24 47 40 37", fax: "05 24 47 58 85", email: "contact@auessaouira.ma", site: "https://auessaouira.ma/", adresse: "123, Lotissement Almoustaqbal, Essaouira", lat: 31.5125, lng: -9.7699, logo: "https://www.federation-majal.ma/sites/default/files/auesslogo.png", projets: [] },
+    { id: 25, name: "Safi", directeur: "Mme. Najat Kouhlani", tel: "05246-30745", fax: "", email: "", site: "http://www.ausafi.ma", adresse: "Boulevard Driss 1er, Safi", lat: 32.2994, lng: -9.2372, logo: "https://www.federation-majal.ma/sites/default/files/safi-logo.png", provinces: 2, communesUrb: 5, communesRur: 31, population: "943 926", densite: "148,70 / KM²", urbanisation: "45.50 %", projets: [] },
+    { id: 26, name: "Oued Ed-Dahab Aousserd", directeur: "M. Moulay Mohamed Hemmou", tel: "05 28 89 70 40 / 05 28 89 70 41", fax: "05 28 89 70 05", email: "contact@dakhla-lagouira.ma", site: "http://www.dakhla-lagouira.ma/", adresse: "Wilaya Oued Eddahab Lagouira, Dakhla", lat: 23.7146, lng: -15.9355, logo: "https://www.federation-majal.ma/sites/default/files/s5_logo.png", projets: [] },
+    { id: 27, name: "Casablanca", directeur: "M.Mohamed AOUZZAII", tel: "0522 29 57 07/04", fax: "0522 22 33 32", email: "", site: "http://www.auc.ma", adresse: "Angle Bd Moulay Youssef et Rue El Imara, Casablanca", lat: 33.5731, lng: -7.5898, logo: "https://www.federation-majal.ma/sites/default/files/aucasa.jpg", projets: [] },
+    { id: 28, name: "Rabat-Salé", directeur: "Mme. Khaddouj GUENOU", tel: "05 37 57 55 55", fax: "05 37 56 46 27", email: "aurs@aurs.org.ma", site: "http://www.aurs.org.ma", adresse: "Angle Avenue Al Araâr, Hay Ryad, Rabat", lat: 33.9716, lng: -6.8498, logo: "https://www.federation-majal.ma/sites/default/files/telechargement.jpg", projets: [] },
+    { id: 29, name: "Beni Mellal", directeur: "Mme. Amina Bourkia", tel: "(+212) 523 48 40 64 / +212 523 48 35 88", fax: "", email: "aubm@menara.ma", site: "http://www.aubm.ma/", adresse: "Boulevard Mohamed V, Béni Mellal", lat: 32.3395, lng: -6.3609, logo: "https://www.federation-majal.ma/sites/default/files/logo_new.jpg", projets: [] },
+    { id: 30, name: "Al Hoceima", directeur: "Abdelkader El Mourabit", tel: "05 39 98 38 95 / 05 39 84 13 15", fax: "05 39 98 14 15", email: "infoauah@gmail.com", site: "http://www.auah.ma", adresse: "N°80, Rue Mohamed V, Al Hoceima", lat: 35.2448, lng: -3.9318, logo: "https://www.federation-majal.ma/sites/default/files/logoalhoceima.png", provinces: 1, communesUrb: 5, communesRur: 31, population: "399 654", densite: "112,60 / KM²", urbanisation: "34.40 %", effectif: 44, tauxEncadrement: "57.00 %", projets: [{ nom: "Voie expresse Al Hoceima-Taza", lieu: "Al Hoceima" }, { nom: "Pôle Urbain Bades", lieu: "Al Hoceima" }, { nom: "Marina", lieu: "Al Hoceima" }] }
+];
+
+const grid = document.getElementById('agenciesGrid');
+
+// Fonction pour générer l'URL Google Maps avec coordonnées GPS précises
+function getGoogleMapsUrlWithCoordinates(lat, lng, adresse, agencyName) {
+    if (lat && lng) {
+        // Utilisation des coordonnées GPS pour une localisation précise
+        return `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${lat},${lng}&zoom=17&language=fr&maptype=roadmap`;
+    } else if (adresse && adresse.trim() !== "") {
+        const encodedAddress = encodeURIComponent(adresse + ", Maroc");
+        return `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodedAddress}&zoom=16&language=fr`;
+    }
+    return null;
+}
+
+// Afficher la localisation de l'agence sur la carte
+function showAgencyLocation(agency) {
+    const mapUrl = getGoogleMapsUrlWithCoordinates(agency.lat, agency.lng, agency.adresse, agency.name);
+    const iframe = document.getElementById('mapIframe');
+    const titleSpan = document.getElementById('iframeModalTitle');
+    titleSpan.innerHTML = `<i class="fas fa-building"></i> ${agency.name} - Siège de l'Agence Urbaine`;
+    
+    if (mapUrl) {
+        iframe.src = mapUrl;
+    } else {
+        iframe.src = "about:blank";
+        iframe.srcdoc = `
+            <html>
+            <head>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+                <style>
+                    body { font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: linear-gradient(135deg, #f5f7fc 0%, #eef2f8 100%); }
+                    .message { text-align: center; padding: 40px; background: white; border-radius: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 400px; }
+                    i { font-size: 64px; color: #004d73; margin-bottom: 20px; }
+                    h3 { color: #1e2a3e; margin-bottom: 12px; }
+                    p { color: #5a6e8c; }
+                </style>
+            </head>
+            <body>
+                <div class="message">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>📍 Adresse non disponible</h3>
+                    <p>${agency.adresse || "Aucune adresse renseignée pour cette agence"}</p>
+                    <p style="margin-top: 16px; font-size: 0.9rem;"><i class="fas fa-info-circle"></i> L'agence n'a pas de coordonnées GPS disponibles</p>
+                </div>
+            </body>
+            </html>
+        `;
+    }
+    document.getElementById('iframeModal').style.display = 'flex';
+}
+
+// Afficher les informations détaillées de l'agence
+function showAgencyInfoInIframe(agency) {
+    const iframe = document.getElementById('mapIframe');
+    const titleSpan = document.getElementById('iframeModalTitle');
+    titleSpan.innerHTML = `<i class="fas fa-building"></i> ${agency.name} - Agence Urbaine - Fiche d'information`;
+    
+    const infoHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>${agency.name} - Agence Urbaine</title>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { 
+                    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+                    background: linear-gradient(135deg, #f5f7fc 0%, #eef2f8 100%);
+                    padding: 32px;
+                    min-height: 100vh;
+                }
+                .info-container {
+                    max-width: 900px;
+                    margin: 0 auto;
+                    background: white;
+                    border-radius: 40px;
+                    overflow: hidden;
+                    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                }
+                .header-section {
+                    background: linear-gradient(135deg, #004d73 0%, #006994 100%);
+                    padding: 32px;
+                    color: white;
+                    text-align: center;
+                }
+                .header-section h1 {
+                    font-size: 1.8rem;
+                    margin-bottom: 12px;
+                    font-weight: 700;
+                }
+                .badge-agence {
+                    display: inline-block;
+                    background: rgba(255,255,255,0.2);
+                    padding: 6px 20px;
+                    border-radius: 40px;
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                }
+                .content-section {
+                    padding: 32px;
+                }
+                .info-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                    gap: 20px;
+                    margin-bottom: 32px;
+                }
+                .info-card {
+                    background: #f8fafc;
+                    border-radius: 24px;
+                    padding: 20px;
+                    border: 1px solid #eef2f8;
+                }
+                .info-card h3 {
+                    color: #004d73;
+                    font-size: 1.1rem;
+                    margin-bottom: 16px;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    border-bottom: 2px solid #e2e8f0;
+                    padding-bottom: 10px;
+                }
+                .info-item {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 12px;
+                    padding: 10px 0;
+                    border-bottom: 1px solid #eef2f8;
+                }
+                .info-item i {
+                    width: 28px;
+                    color: #004d73;
+                    font-size: 1rem;
+                    margin-top: 2px;
+                }
+                .info-item .label {
+                    font-weight: 700;
+                    min-width: 100px;
+                    color: #2c4a6e;
+                }
+                .info-item .value {
+                    flex: 1;
+                    color: #1e2a3e;
+                }
+                .projets-section {
+                    margin-top: 24px;
+                }
+                .projets-section h3 {
+                    color: #004d73;
+                    font-size: 1.2rem;
+                    margin-bottom: 16px;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+                .projet-item {
+                    background: #f1f5f9;
+                    padding: 14px 18px;
+                    border-radius: 16px;
+                    margin-bottom: 10px;
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                }
+                .projet-item i {
+                    color: #10b981;
+                    font-size: 1.1rem;
+                }
+                .projet-item strong {
+                    display: block;
+                    color: #1e2a3e;
+                }
+                .projet-item span {
+                    font-size: 0.85rem;
+                    color: #5a6e8c;
+                }
+                @media (max-width: 600px) {
+                    body { padding: 16px; }
+                    .content-section { padding: 20px; }
+                    .info-item .label { min-width: 80px; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="info-container">
+                <div class="header-section">
+                    <div class="badge-agence"><i class="fas fa-city"></i> Agence Urbaine</div>
+                    <h1><i class="fas fa-building"></i> ${agency.name}</h1>
+                </div>
+                <div class="content-section">
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <h3><i class="fas fa-user-tie"></i> Direction</h3>
+                            <div class="info-item"><i class="fas fa-user"></i><span class="label">Directeur:</span><span class="value">${agency.directeur || '—'}</span></div>
+                        </div>
+                        <div class="info-card">
+                            <h3><i class="fas fa-phone-alt"></i> Contact</h3>
+                            <div class="info-item"><i class="fas fa-phone"></i><span class="label">Téléphone:</span><span class="value">${agency.tel || '—'}</span></div>
+                            <div class="info-item"><i class="fas fa-fax"></i><span class="label">Fax:</span><span class="value">${agency.fax || '—'}</span></div>
+                            <div class="info-item"><i class="fas fa-envelope"></i><span class="label">Email:</span><span class="value">${agency.email ? `<a href="mailto:${agency.email}" style="color:#004d73;">${agency.email}</a>` : '—'}</span></div>
+                            <div class="info-item"><i class="fas fa-globe"></i><span class="label">Site web:</span><span class="value">${agency.site ? `<a href="${agency.site}" target="_blank" style="color:#004d73;">${agency.site.replace('https://','').replace('http://','')}</a>` : '—'}</span></div>
+                        </div>
+                        <div class="info-card">
+                            <h3><i class="fas fa-map-marker-alt"></i> Localisation</h3>
+                            <div class="info-item"><i class="fas fa-location-dot"></i><span class="label">Adresse:</span><span class="value">${agency.adresse || '—'}</span></div>
+                            ${agency.lat && agency.lng ? `<div class="info-item"><i class="fas fa-map-pin"></i><span class="label">Coordonnées:</span><span class="value">${agency.lat}, ${agency.lng}</span></div>` : ''}
+                        </div>
+                        <div class="info-card">
+                            <h3><i class="fas fa-chart-line"></i> Statistiques</h3>
+                            <div class="info-item"><i class="fas fa-building"></i><span class="label">Provinces:</span><span class="value">${agency.provinces || '—'}</span></div>
+                            <div class="info-item"><i class="fas fa-city"></i><span class="label">Communes urbaines:</span><span class="value">${agency.communesUrb || '—'}</span></div>
+                            <div class="info-item"><i class="fas fa-tree"></i><span class="label">Communes rurales:</span><span class="value">${agency.communesRur || '—'}</span></div>
+                            <div class="info-item"><i class="fas fa-users"></i><span class="label">Population:</span><span class="value">${agency.population || '—'}</span></div>
+                            <div class="info-item"><i class="fas fa-chart-simple"></i><span class="label">Taux urbanisation:</span><span class="value">${agency.urbanisation || '—'}</span></div>
+                            <div class="info-item"><i class="fas fa-user-group"></i><span class="label">Effectif:</span><span class="value">${agency.effectif || '—'}</span></div>
+                        </div>
+                    </div>
+                    ${agency.projets && agency.projets.length > 0 ? `
+                    <div class="projets-section">
+                        <h3><i class="fas fa-hard-hat"></i> Projets Structurants</h3>
+                        ${agency.projets.map(p => `
+                            <div class="projet-item">
+                                <i class="fas fa-map-pin"></i>
+                                <div>
+                                    <strong>${p.nom}</strong><br>
+                                    <span><i class="fas fa-location-dot"></i> ${p.lieu}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ` : '<div style="text-align:center; padding:20px; color:#6c757d;"><i class="fas fa-chart-line"></i> Aucun projet structurant répertorié</div>'}
+                </div>
+            </div>
+        </body>
+        </html>
+    `;
+    
+    iframe.src = "about:blank";
+    iframe.srcdoc = infoHtml;
+    document.getElementById('iframeModal').style.display = 'flex';
+}
+
+function closeIframeModal() {
+    document.getElementById('iframeModal').style.display = 'none';
+    const iframe = document.getElementById('mapIframe');
+    iframe.src = "about:blank";
+}
+
+function renderCards(filter = "") {
+    const filtered = agencies.filter(a => 
+        a.name.toLowerCase().includes(filter.toLowerCase()) ||
+        (a.directeur && a.directeur.toLowerCase().includes(filter.toLowerCase())) ||
+        (a.adresse && a.adresse.toLowerCase().includes(filter.toLowerCase()))
+    );
+    
+    if (filtered.length === 0) {
+        grid.innerHTML = `<div class="empty-message"><i class="fas fa-search"></i> Aucune agence trouvée</div>`;
+        return;
+    }
+    
+    grid.innerHTML = "";
+    filtered.forEach(agency => {
+        const card = document.createElement('div');
+        card.className = "agency-card";
+        
+        const telDisplay = agency.tel || "—";
+        const faxDisplay = agency.fax || "—";
+        const emailDisplay = agency.email || "—";
+        const siteDisplay = agency.site ? agency.site.replace('https://','').replace('http://','') : "—";
+        const adresseDisplay = agency.adresse || "—";
+        
+        card.innerHTML = `
+            <div class="card-content">
+                <div class="card-logo">
+                    <img src="${agency.logo}" alt="${agency.name}" onerror="this.src='https://via.placeholder.com/110?text=AU'">
+                </div>
+                <div class="card-info">
+                    <div class="agency-header">
+                        <span class="agency-badge"><i class="fas fa-city"></i> Agence Urbaine</span>
+                        <button class="agency-name-btn" data-id="${agency.id}">${agency.name}</button>
+                    </div>
+                    
+                    <div class="director-large">
+                        <i class="fas fa-user-tie"></i>
+                        <div class="director-text">
+                            <span class="director-label">DIRECTEUR :</span> ${agency.directeur || "—"}
+                        </div>
+                    </div>
+                    
+                    <div class="card-contact-full">
+                        <div class="contact-item"><i class="fas fa-phone-alt"></i><span class="contact-text"><strong>Téléphone</strong> : ${telDisplay}</span></div>
+                        <div class="contact-item"><i class="fas fa-fax"></i><span class="contact-text"><strong>Fax</strong> : ${faxDisplay}</span></div>
+                        <div class="contact-item"><i class="fas fa-envelope"></i><span class="contact-text"><strong>Email</strong> : ${emailDisplay !== "—" ? `<a href="mailto:${agency.email}">${agency.email}</a>` : "—"}</span></div>
+                        <div class="contact-item"><i class="fas fa-globe"></i><span class="contact-text"><strong>Site web</strong> : ${agency.site ? `<a href="${agency.site}" target="_blank">${siteDisplay}</a>` : "—"}</span></div>
+                        <div class="contact-item"><i class="fas fa-map-marker-alt"></i><span class="contact-text"><strong>Adresse</strong> : ${adresseDisplay}</span></div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="details-btn" data-details-id="${agency.id}">
+                            <i class="fas fa-info-circle"></i> Détails
+                        </button>
+                        <button class="location-btn" data-location-id="${agency.id}">
+                            <i class="fas fa-map-marker-alt"></i> Localisation
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        grid.appendChild(card);
+        
+        const nameBtn = card.querySelector('.agency-name-btn');
+        nameBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showAgencyInfoInIframe(agency);
+        });
+        
+        const detailsBtn = card.querySelector('.details-btn');
+        if (detailsBtn) {
+            detailsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showAgencyInfoInIframe(agency);
+            });
+        }
+        
+        const locationBtn = card.querySelector('.location-btn');
+        if (locationBtn) {
+            locationBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showAgencyLocation(agency);
+            });
+        }
+    });
+}
+
+document.getElementById('searchInput').addEventListener('input', (e) => renderCards(e.target.value));
+document.getElementById('searchBtn').addEventListener('click', () => renderCards(document.getElementById('searchInput').value));
+
+renderCards();
+</script>
+</body>
+</html>
