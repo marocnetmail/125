@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#5b21b6">
+    <meta name="description" content="Annuaire officiel des Agences Urbaines du Maroc - Regroupées par régions - Directeurs actualisés">
+    <title>Agences Urbaines du Maroc | Annuaire par Régions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f7fc;
+            color: #1a2c3e;
+            line-height: 1.45;
+            padding: 12px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Search */
+        .search-wrapper {
+            margin-bottom: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(245, 247, 252, 0.96);
+            backdrop-filter: blur(8px);
+            padding: 8px 0 12px 0;
+            width: 100%;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 1px solid #e2e8f0;
+            border-radius: 48px;
+            font-size: 0.95rem;
+            background: white;
+            outline: none;
+            font-family: inherit;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .search-box input:focus {
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+        }
+
+        .search-box button {
+            background: #7c3aed;
+            border: none;
+            border-radius: 48px;
+            padding: 0 22px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .search-box button:active {
+            background: #6d28d9;
+            transform: scale(0.97);
+        }
+
+        /* Regions */
+        .region-section {
+            margin-bottom: 20px;
+            width: 100%;
+            border-radius: 28px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .region-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            background: #5b21b6; /* violet foncé */
+            background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 100%);
+        }
+
+        .region-header:active {
+            opacity: 0.9;
+            transform: scale(0.99);
+        }
+
+        .region-icon-large {
+            width: 52px;
+            height: 52px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+            backdrop-filter: blur(2px);
+        }
+
+        .region-info {
+            flex: 1;
+        }
+
+        .region-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            color: white;
+            line-height: 1.2;
+        }
+
+        @media (min-width: 640px) {
+            .region-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        .region-sub {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .region-toggle-icon {
+            font-size: 1.3rem;
+            color: white;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: transform 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .region-content {
+            display: none;
+            padding: 16px;
+            background: white;
+        }
+
+        .region-content.open {
+            display: block;
+            animation: fadeSlide 0.25s ease-out;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .agencies-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* Agency card */
+        .tree-node {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid #eef2f8;
+            transition: all 0.2s;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .node-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            cursor: pointer;
+            background: white;
+            transition: background 0.2s;
+        }
+
+        .node-header:active {
+            background: #fafcff;
+        }
+
+        .node-logo {
+            flex-shrink: 0;
+            width: 52px;
+            height: 52px;
+            background: #ffffff;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #eef2f8;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+        }
+
+        .node-logo img {
+            max-width: 44px;
+            max-height: 44px;
+            object-fit: contain;
+        }
+
+        .director-photo {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #7c3aed;
+            background: #f3f0ff;
+            flex-shrink: 0;
+        }
+
+        .node-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .node-title {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .agency-badge {
+            background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 30px;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+        }
+
+        .confidence-badge {
+            background: #10b981;
+            color: white;
+            font-size: 0.55rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 30px;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .agency-name-header {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #1e293b;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #f8f4ff 0%, #f0e9ff 100%);
+            padding: 4px 12px;
+            border-radius: 40px;
+            display: inline-block;
+            box-shadow: 0 2px 6px rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+        }
+
+        @media (min-width: 640px) {
+            .agency-name-header {
+                font-size: 1.25rem;
+                padding: 6px 14px;
+            }
+        }
+
+        /* Directeur taille augmentée */
+        .director-mini {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+
+        .director-mini i {
+            color: #7c3aed;
+            font-size: 0.85rem;
+        }
+
+        .source-info {
+            font-size: 0.6rem;
+            background: #eef2ff;
+            padding: 3px 10px;
+            border-radius: 20px;
+            color: #5b21b6;
+            font-weight: 500;
+        }
+
+        .toggle-icon {
+            font-size: 1rem;
+            color: #7c3aed;
+            background: #f3f0ff;
+            width: 36px;
+            height: 36px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .node-details {
+            display: none;
+            border-top: 1px solid #edf2f7;
+            background: #fefefe;
+            padding: 16px;
+        }
+
+        .node-details.open {
+            display: block;
+        }
+
+        /* Directeur large avec photo plus grande */
+        .director-large {
+            background: #f5f3ff;
+            padding: 16px;
+            border-radius: 24px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-left: 5px solid #7c3aed;
+            flex-wrap: wrap;
+        }
+
+        .director-large .director-photo-large {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #7c3aed;
+            background: white;
+        }
+
+        .director-large .director-text {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a2c3e;
+            flex: 1;
+        }
+
+        .director-large .director-label {
+            font-weight: 800;
+            color: #7c3aed;
+            font-size: 0.8rem;
+            margin-right: 6px;
+            display: inline-block;
+        }
+
+        .director-large .director-name {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #1e293b;
+        }
+
+        /* Contact grid */
+        .contact-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 0.85rem;
+            color: #2c4c6e;
+            background: #f8fafd;
+            padding: 12px;
+            border-radius: 18px;
+        }
+
+        .contact-item i {
+            width: 26px;
+            font-size: 1.1rem;
+            color: #7c3aed;
+            flex-shrink: 0;
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        .contact-text {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        .contact-label {
+            font-weight: 700;
+            color: #1e2f3f;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            background: #e9eef5;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-right: 8px;
+            margin-bottom: 4px;
+            display: inline-block;
+        }
+
+        .contact-value {
+            font-weight: 500;
+        }
+
+        .contact-item a {
+            color: #7c3aed;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+
+        .location-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 48px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            flex: 1;
+            background: #10b981;
+            color: white;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+        }
+
+        .location-btn:active {
+            background: #059669;
+            transform: scale(0.97);
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+            background: white;
+            border-radius: 28px;
+            width: 100%;
+        }
+
+        /* Modal carte */
+        .iframe-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .iframe-modal-container {
+            background: white;
+            width: 94%;
+            max-width: 900px;
+            height: 85%;
+            border-radius: 32px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .iframe-modal-header {
+            background: #5b21b6;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .close-iframe-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .iframe-content {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
+
+        .stats-footer {
+            margin-top: 24px;
+            padding: 12px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #8a9bb0;
+        }
+
+        @media (min-width: 640px) {
+            body {
+                padding: 20px;
+            }
+            .contact-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            .node-header {
+                padding: 14px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="main-container">
+    <div class="search-wrapper">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Rechercher par région, agence, directeur...">
+            <button id="searchBtn"><i class="fas fa-search"></i> OK</button>
+        </div>
+    </div>
+
+    <div id="regionsContainer"></div>
+    
+    <div class="stats-footer">
+        <i class="fas fa-building"></i> 30 Agences Urbaines | <i class="fas fa-check-circle" style="color:#10b981;"></i> Données actualisées
+    </div>
+</div>
+
+<div id="iframeModal" class="iframe-modal-overlay" onclick="if(event.target===this) closeIframeModal()">
+    <div class="iframe-modal-container">
+        <div class="iframe-modal-header">
+            <h4><i class="fas fa-map-marked-alt"></i> <span id="iframeModalTitle">Carte de localisation</span></h4>
+            <button class="close-iframe-btn" onclick="closeIframeModal()">&times;</button>
+        </div>
+        <iframe id="mapIframe" class="iframe-content" frameborder="0" allowfullscreen></iframe>
+    </div>
+</div>
+
+<script>
+    // Données complètes avec photos enrichies
+    const agenciesData = [
+        { id: 1, name: "Skhirate-Témara", region: "Rabat-Salé-Kénitra", directeur: "Hicham EL KHOURASSANI", tel: "05 37 60 08 99", fax: "05 37 60 99 52", email: "contact@aust.ma", site: "https://aust.ma/", adresse: "Boulevard Moulay Ali Cherif, TEMARA", lat: 33.9286, lng: -6.9065, logo: "https://www.federation-majal.ma/sites/default/files/Skhirate_0.png", photo: "https://aukh.gov.ma/s/a/library/2023-03-01/0d7a5351-e724-41ad-a819-78d43a8e4d7c.jpg", confidence: "haute", source: "Site officiel" },
+        { id: 2, name: "Tanger", region: "Tanger-Tétouan-Al Hoceima", directeur: "Mahassine BARACA", tel: "05 39 32 15 00", fax: "05 39 32 15 10", email: "aut@aut.gov.ma", site: "https://www.autt.ma/", adresse: "53, Rue Abou Al Alaa Al Maari, Tanger", lat: 35.7595, lng: -5.8340, logo: "https://www.federation-majal.ma/sites/default/files/AU-Tanger.png", photo: "https://www.autt.ma/sites/default/files/styles/directeur/public/directeur.jpg", confidence: "haute", source: "CA 22ème session 2025" },
+        { id: 3, name: "Settat", region: "Casablanca-Settat", directeur: "Monsieur SAID LOQMANE", tel: "05 23 40 17 16", fax: "05 23 72 22 34", email: "aus@menara.ma", site: "http://www.ausettat.org/", adresse: "11, Avenue Hassan II, Settat", lat: 33.0014, lng: -7.6167, logo: "https://www.federation-majal.ma/sites/default/files/Settat_0.png", photo: "https://kimi-web-img.moonshot.cn/img/ausettat.org/b58b8e3e416827994e2e476868d4b7fdebde9e16.png", confidence: "haute", source: "Nomination officielle" },
+        { id: 4, name: "Kénitra-Sidi Kacem", region: "Rabat-Salé-Kénitra", directeur: "Nahid HAMTAMI", tel: "05 37 37 85 10", fax: "05 37 37 84 97", email: "auks@menara.ma", site: "http://www.auks.ma/", adresse: "Rue Lamhaned Kacem, Kénitra", lat: 34.2610, lng: -6.5801, logo: "https://www.federation-majal.ma/sites/default/files/Kenitra_1.png", photo: null, confidence: "moyenne", source: "Site officiel" },
+        { id: 5, name: "Larache", region: "Tanger-Tétouan-Al Hoceima", directeur: "Abdennasser LAHNAOUI", tel: "06 61 22 96 86", fax: "05 39 52 17 00", email: "aularache@gmail.com", site: "http://aularache.ma/", adresse: "190, lot MAGHREB JADID, Larache", lat: 35.1930, lng: -6.1570, logo: "https://www.federation-majal.ma/sites/default/files/Larache_0.png", photo: null, confidence: "moyenne", source: "Site officiel" },
+        { id: 6, name: "Meknès", region: "Fès-Meknès", directeur: "Aicha EL HAOUZALI", tel: "05 35 51 03 10", fax: "05 35 51 03 01", email: "", site: "http://www.aumk.ma/", adresse: "13, Rue Pasteur, Meknès", lat: 33.8950, lng: -5.5547, logo: "https://www.federation-majal.ma/sites/default/files/Meknes_0.jpg", photo: null, confidence: "moyenne", source: "Site officiel" },
+        { id: 7, name: "El Kelâa des Sraghna", region: "Marrakech-Safi", directeur: "Samira LAYADI", tel: "05 24 41 41 45", fax: "05 24 41 41 29", email: "administrateur@aueks.org.ma", site: "http://aueks.org.ma/", adresse: "Av. Imam Malek, El Kelaa", lat: 32.0500, lng: -7.4000, logo: "https://www.federation-majal.ma/sites/default/files/AU_elkelaa_sraghna.gif", photo: null, confidence: "moyenne", source: "Site officiel" },
+        { id: 8, name: "Khénifra", region: "Béni Mellal-Khénifra", directeur: "Mohamed BOUTAHRI", tel: "05 35 58 89 73", fax: "05 35 38 57 39", email: "contact@aukh.ma", site: "http://www.aukh.ma/", adresse: "B.d Zerktouni, Imm n°3", lat: 32.9399, lng: -5.6675, logo: "https://www.federation-majal.ma/sites/default/files/Khenifra_1.png", photo: null, confidence: "moyenne", source: "Site officiel" },
+        { id: 9, name: "Marrakech", region: "Marrakech-Safi", directeur: "Amine IDRISSI BELKASMI", tel: "05 24 43 83 90", fax: "05 24 43 83 96", email: "", site: "http://www.aumarrakech.ma/", adresse: "Rue Hassan Ben M Barek, Marrakech", lat: 31.6295, lng: -7.9811, logo: "https://www.federation-majal.ma/sites/default/files/Marrakech_0.png", photo: "https://kimi-web-img.moonshot.cn/img/afrimag.net/1a59518495edaa3a7f8f674b26b0208d06ab7977.jpg", confidence: "haute", source: "Médias24 nov.2024" },
+        { id: 10, name: "Taza", region: "Fès-Meknès", directeur: "Hassan HAIDA", tel: "05 35 28 50 41", fax: "05 35 28 51 13", email: "", site: "http://www.autaza.ma/", adresse: "Avenue Hassan Bahtat, Taza", lat: 34.2167, lng: -4.0167, logo: "https://www.federation-majal.ma/sites/default/files/Taza.gif", photo: null, confidence: "haute", source: "CA 2022/2023" },
+        { id: 11, name: "Taroudannt", region: "Souss-Massa", directeur: "Houcine Houdaygui", tel: "05 28 55 02 34", fax: "05 28 55 09 67", email: "", adresse: "Bab Zourgane, Taroudant", lat: 30.4727, lng: -8.8744, logo: "https://www.federation-majal.ma/sites/default/files/Taroudant.png", photo: null, confidence: "faible", source: "Base initiale" },
+        { id: 12, name: "Fès", region: "Fès-Meknès", directeur: "Hassan HAIDA", tel: "05 35 65 12 36", fax: "05 35 65 36 02", email: "", site: "http://www.aufes.org/", adresse: "Avenue de Palestine, Fès", lat: 34.0333, lng: -5.0000, logo: "https://www.federation-majal.ma/sites/default/files/AU-Fes.jpg", photo: "https://kimi-web-img.moonshot.cn/img/fr.le360.ma/d1beb2d7ef81c4c6ce962405b28c6c6ca101a2ec.jpg", confidence: "haute", source: "CA 2022/2023" },
+        { id: 13, name: "Berrechid", region: "Casablanca-Settat", directeur: "Najat KOUHLANI", tel: "05 22 32 40 58", fax: "05 22 32 40 19", email: "au2b2013@gmail.com", site: "http://www.aub.ma/", adresse: "05, boulevard Mohammed V, Berrechid", lat: 33.2667, lng: -7.5833, logo: "https://www.federation-majal.ma/sites/default/files/Berrechid_0.png", photo: null, confidence: "haute", source: "Site AUBB 2025" },
+        { id: 14, name: "El Jadida", region: "Casablanca-Settat", directeur: "Mustapha LAARAICH", tel: "05 23 37 00 61", fax: "05 23 37 00 63", email: "", site: "http://www.aujadida.ma/", adresse: "Avenue Annakhil, El Jadida", lat: 33.2333, lng: -8.5000, logo: "https://www.federation-majal.ma/sites/default/files/AuEljadida.jpg", photo: null, confidence: "haute", source: "Site officiel" },
+        { id: 15, name: "Errachidia", region: "Drâa-Tafilalet", directeur: "Mohammed OUBAHA", tel: "05 35 57 46 32", fax: "05 35 57 46 43", email: "Contact@auer.gov.ma", site: "http://www.auer.gov.ma/", adresse: "N°10, Rue Sidi Abou Abdi Allah, Errachidia", lat: 31.9315, lng: -4.4245, logo: "https://www.federation-majal.ma/sites/default/files/Errachidia.gif", photo: null, confidence: "moyenne", source: "Site officiel" },
+        { id: 16, name: "Ouarzazate-Zagora", region: "Drâa-Tafilalet", directeur: "Med OUAKHOYA", tel: "05 24 88 74 09", fax: "05 24 88 68 52", email: "info@auozt.ma", site: "http://www.auozt.ma/", adresse: "26, lotissement du centre, Ouarzazate", lat: 30.9190, lng: -6.8930, logo: "https://www.federation-majal.ma/sites/default/files/Ouerzazate_0.png", photo: null, confidence: "moyenne", source: "Site officiel" },
+        { id: 17, name: "Oujda", region: "Oriental", directeur: "Said LAHBIL", tel: "05 36 68 04 15", fax: "05 36 68 04 10", email: "", site: "http://www.auo.org.ma/", adresse: "Bd Mohamed V, Oujda", lat: 34.6869, lng: -1.9114, logo: "https://www.federation-majal.ma/sites/default/files/AU-Oujda.png", photo: null, confidence: "moyenne", source: "Site officiel" },
+        { id: 18, name: "Guelmim Es-Smara", region: "Guelmim-Oued Noun", directeur: "Mohamed ENNAJJAR", tel: "05 28 77 31 79", fax: "05 28 87 26 35", email: "augs.augs01@yahoo.fr", site: "http://www.augs.org.ma/", adresse: "Complexe Administratif Salma, Guelmim", lat: 28.9883, lng: -10.0575, logo: "https://www.federation-majal.ma/sites/default/files/Guelmim_0.png", photo: null, confidence: "moyenne", source: "Site officiel" },
+        { id: 19, name: "Laâyoune", region: "Laâyoune-Sakia El Hamra", directeur: "Toufa ENDOUR", tel: "05 28 89 25 55", fax: "05 28 89 19 99", email: "", site: "http://www.aulaayoune.ma/", adresse: "palac de la résidence, Laâyoune", lat: 27.1536, lng: -13.2033, logo: "https://www.federation-majal.ma/sites/default/files/Au-laayoune.jpg", photo: null, confidence: "moyenne", source: "Site officiel" },
+        { id: 20, name: "Khmisset", region: "Rabat-Salé-Kénitra", directeur: "Khadija SAKAM", tel: "05 37 55 21 23", fax: "05 37 55 21 45", email: "", site: "http://www.aukhemi7.ma/", adresse: "Avenue AbelHamid Ezzemouri 21, Khmisset", lat: 33.8148, lng: -6.0579, logo: "https://www.federation-majal.ma/sites/default/files/Khmisset_0.png", photo: "https://kimi-web-img.moonshot.cn/img/newsplus.ma/37967d3ca7ab1410040dffc3b45c320309dd9b0a.jpg", confidence: "haute", source: "Conseil gouvernement janv.2026" },
+        { id: 21, name: "Tétouan", region: "Tanger-Tétouan-Al Hoceima", directeur: "Hicham Khorasani", tel: "05 39 99 21 68", fax: "05 39 99 82 40", email: "autetouan@yahoo.fr", site: "http://www.autetouan.ma/", adresse: "Résidence Florence F.A.R, Tétouan", lat: 35.5789, lng: -5.3744, logo: "https://www.federation-majal.ma/sites/default/files/Au-Tetouan.png", photo: null, confidence: "faible", source: "Site officiel" },
+        { id: 22, name: "Nador", region: "Oriental", directeur: "Jamal HANAFI", tel: "05 36 60 19 19", fax: "05 36 33 20 65", email: "aunador2012@gmail.com", site: "http://www.aunador.ma/", adresse: "n° 5, Rue LARACHE, NADOR", lat: 35.1681, lng: -2.9336, logo: "https://www.federation-majal.ma/sites/default/files/Au-nador_0.gif", photo: null, confidence: "moyenne", source: "Site officiel" },
+        { id: 23, name: "Agadir", region: "Souss-Massa", directeur: "Ibtissam EL HAMMOUMI", tel: "05 28 84 70 07", fax: "05 28 84 70 79", email: "", site: "http://www.aua.ma/", adresse: "Imm Ibn Toufail, Avenue Mly Abdellah, Agadir", lat: 30.4278, lng: -9.5981, logo: "https://www.federation-majal.ma/sites/default/files/logo-agence-urbaine-agadir.png", photo: "https://www.aua.ma/wp-content/uploads/directrice.jpg", confidence: "haute", source: "Site officiel fév.2024" },
+        { id: 24, name: "Essaouira", region: "Marrakech-Safi", directeur: "Younes ELASSRI", tel: "05 24 47 40 37", fax: "05 24 47 58 85", email: "contact@auessaouira.ma", site: "https://auessaouira.ma/", adresse: "123, Lotissement Almoustaqbal, Essaouira", lat: 31.5125, lng: -9.7699, logo: "https://www.federation-majal.ma/sites/default/files/auesslogo.png", photo: null, confidence: "moyenne", source: "Site officiel" },
+        { id: 25, name: "Safi", region: "Marrakech-Safi", directeur: "À confirmer", tel: "05246-30745", fax: "", email: "", site: "http://www.ausafi.ma/", adresse: "Boulevard Driss 1er, Safi", lat: 32.2994, lng: -9.2372, logo: "https://www.federation-majal.ma/sites/default/files/safi-logo.png", photo: null, confidence: "faible", source: "Mutation" },
+        { id: 26, name: "Oued Ed-Dahab Aousserd", region: "Dakhla-Oued Ed-Dahab", directeur: "Moulay Mohamed HEMMOU", tel: "05 28 89 70 40", fax: "05 28 89 70 05", email: "contact@dakhla-lagouira.ma", site: "http://www.dakhla-lagouira.ma/", adresse: "Wilaya Oued Eddahab Lagouira, Dakhla", lat: 23.7146, lng: -15.9355, logo: "https://www.federation-majal.ma/sites/default/files/s5_logo.png", photo: null, confidence: "moyenne", source: "Site officiel" },
+        { id: 27, name: "Casablanca", region: "Casablanca-Settat", directeur: "Taoufiq BENALI", tel: "0522 29 57 07", fax: "0522 22 33 32", email: "", site: "http://www.auc.ma/", adresse: "Angle Bd Moulay Youssef et Rue El Imara, Casablanca", lat: 33.5731, lng: -7.5898, logo: "https://www.federation-majal.ma/sites/default/files/aucasa.jpg", photo: "https://kimi-web-img.moonshot.cn/img/archive.challenge.ma/ef12efc7f49bbd8594cd4f35df17a5b1d75b1f98.jpg", confidence: "haute", source: "Nomination 2018" },
+        { id: 28, name: "Rabat-Salé", region: "Rabat-Salé-Kénitra", directeur: "Khaddouj GUENOU", tel: "05 37 57 55 55", fax: "05 37 56 46 27", email: "aurs@aurs.org.ma", site: "http://www.aurs.org.ma/", adresse: "Angle Avenue Al Araâr, Hay Ryad, Rabat", lat: 33.9716, lng: -6.8498, logo: "https://www.federation-majal.ma/sites/default/files/telechargement.jpg", photo: "https://aurs.org.ma/wp-content/uploads/2018/04/IMG-1-1-1-640x640.jpg", confidence: "haute", source: "Site officiel" },
+        { id: 29, name: "Beni Mellal", region: "Béni Mellal-Khénifra", directeur: "Amina BOURKIA", tel: "0523 48 40 64", fax: "", email: "aubm@menara.ma", site: "http://www.aubm.ma/", adresse: "Boulevard Mohamed V, Béni Mellal", lat: 32.3395, lng: -6.3609, logo: "https://www.federation-majal.ma/sites/default/files/logo_new.jpg", photo: null, confidence: "moyenne", source: "Site officiel" },
+        { id: 30, name: "Al Hoceima", region: "Tanger-Tétouan-Al Hoceima", directeur: "Abdelkader EL MOURABIT", tel: "05 39 98 38 95", fax: "05 39 98 14 15", email: "infoauah@gmail.com", site: "https://www.auah.ma/", adresse: "N°80, Rue Mohamed V, Al Hoceima", lat: 35.2448, lng: -3.9318, logo: "https://www.federation-majal.ma/sites/default/files/logoalhoceima.png", photo: "https://www.auah.ma/sites/default/files/2023-02/photo-directeur-auah_0.jpg", confidence: "haute", source: "Site officiel" }
+    ];
+
+    // Icônes administratives par région
+    const regionIcons = {
+        "Rabat-Salé-Kénitra": "fas fa-landmark",
+        "Tanger-Tétouan-Al Hoceima": "fas fa-ship",
+        "Fès-Meknès": "fas fa-university",
+        "Oriental": "fas fa-sun",
+        "Casablanca-Settat": "fas fa-city",
+        "Marrakech-Safi": "fas fa-palace",
+        "Drâa-Tafilalet": "fas fa-mountain",
+        "Souss-Massa": "fas fa-umbrella-beach",
+        "Guelmim-Oued Noun": "fas fa-cactus",
+        "Laâyoune-Sakia El Hamra": "fas fa-dune",
+        "Dakhla-Oued Ed-Dahab": "fas fa-water",
+        "Béni Mellal-Khénifra": "fas fa-tree"
+    };
+
+    function getGoogleMapsUrl(lat, lng, adresse, agencyName) {
+        if (lat && lng) return `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${lat},${lng}&zoom=14&language=fr`;
+        if (adresse && adresse.trim()) return `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(adresse + ", Maroc")}&zoom=14&language=fr`;
+        return `https://www.google.com/maps/embed/v1/search?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(agencyName + ", Maroc")}&zoom=12&language=fr`;
+    }
+
+    function showLocation(agency) {
+        const url = getGoogleMapsUrl(agency.lat, agency.lng, agency.adresse, agency.name);
+        document.getElementById('iframeModalTitle').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${agency.name} - Localisation`;
+        document.getElementById('mapIframe').src = url;
+        document.getElementById('iframeModal').style.display = 'flex';
+    }
+
+    function closeIframeModal() {
+        document.getElementById('iframeModal').style.display = 'none';
+        document.getElementById('mapIframe').src = "about:blank";
+    }
+
+    function renderRegions(filter = "") {
+        const filtered = agenciesData.filter(a =>
+            a.name.toLowerCase().includes(filter.toLowerCase()) ||
+            (a.directeur && a.directeur.toLowerCase().includes(filter.toLowerCase())) ||
+            a.region.toLowerCase().includes(filter.toLowerCase())
+        );
+
+        const grouped = {};
+        filtered.forEach(agency => {
+            if (!grouped[agency.region]) grouped[agency.region] = [];
+            grouped[agency.region].push(agency);
+        });
+
+        const regionsOrder = ["Rabat-Salé-Kénitra", "Tanger-Tétouan-Al Hoceima", "Fès-Meknès", "Oriental", "Casablanca-Settat", "Marrakech-Safi", "Drâa-Tafilalet", "Souss-Massa", "Guelmim-Oued Noun", "Laâyoune-Sakia El Hamra", "Dakhla-Oued Ed-Dahab", "Béni Mellal-Khénifra"];
+        
+        const container = document.getElementById('regionsContainer');
+        if (Object.keys(grouped).length === 0) {
+            container.innerHTML = `<div class="empty-message"><i class="fas fa-search"></i> Aucune agence trouvée</div>`;
+            return;
+        }
+
+        let html = "";
+        for (const region of regionsOrder) {
+            if (!grouped[region] || grouped[region].length === 0) continue;
+            const icon = regionIcons[region] || "fas fa-map-marker-alt";
+            
+            html += `<div class="region-section" data-region="${region}">
+                        <div class="region-header">
+                            <div class="region-icon-large"><i class="${icon}"></i></div>
+                            <div class="region-info">
+                                <div class="region-title">${region}</div>
+                                <div class="region-sub"><i class="fas fa-building"></i> ${grouped[region].length} agence(s) urbaine(s)</div>
+                            </div>
+                            <div class="region-toggle-icon"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                        <div class="region-content">
+                            <div class="agencies-grid">`;
+            
+            for (const agency of grouped[region]) {
+                const confidenceClass = agency.confidence === "haute" ? '<span class="confidence-badge"><i class="fas fa-check-circle"></i> Haute confiance</span>' : (agency.confidence === "moyenne" ? '<span class="confidence-badge" style="background:#f59e0b;"><i class="fas fa-chart-line"></i> Confiance moyenne</span>' : '<span class="confidence-badge" style="background:#94a3b8;"><i class="fas fa-question-circle"></i> À confirmer</span>');
+                const directorPhotoHtml = agency.photo ? `<img src="${agency.photo}" class="director-photo" alt="Directeur" onerror="this.src='https://via.placeholder.com/52?text=?'">` : `<div class="director-photo" style="display:flex; align-items:center; justify-content:center; background:#f0eef9;"><i class="fas fa-user-tie" style="font-size:1.5rem; color:#7c3aed;"></i></div>`;
+                
+                html += `<div class="tree-node">
+                            <div class="node-header">
+                                <div class="node-logo"><img src="${agency.logo}" alt="${agency.name}" onerror="this.src='https://via.placeholder.com/50?text=AU'"></div>
+                                ${directorPhotoHtml}
+                                <div class="node-info">
+                                    <div class="node-title"><span class="agency-badge"><i class="fas fa-city"></i> AU</span><span class="agency-name-header">${agency.name}</span>${confidenceClass}</div>
+                                    <div class="director-mini"><i class="fas fa-user-tie"></i> <strong>${agency.directeur || "—"}</strong> <span class="source-info">${agency.source || ""}</span></div>
+                                </div>
+                                <div class="toggle-icon"><i class="fas fa-chevron-down"></i></div>
+                            </div>
+                            <div class="node-details">
+                                <div class="director-large">
+                                    ${agency.photo ? `<img src="${agency.photo}" class="director-photo-large" alt="Directeur" onerror="this.src='https://via.placeholder.com/70?text=?'">` : `<i class="fas fa-user-tie" style="font-size:2.8rem; color:#7c3aed;"></i>`}
+                                    <div class="director-text">
+                                        <span class="director-label">DIRECTEUR / DIRECTRICE</span><br>
+                                        <span class="director-name">${agency.directeur || "Non communiqué"}</span><br>
+                                        <small style="font-weight:normal;">Source: ${agency.source || "Base officielle"}</small>
+                                    </div>
+                                </div>
+                                <div class="contact-grid">
+                                    <div class="contact-item"><i class="fas fa-phone-alt"></i><div class="contact-text"><span class="contact-label">TÉLÉPHONE</span><br>${agency.tel || 'Non communiqué'}</div></div>
+                                    <div class="contact-item"><i class="fas fa-fax"></i><div class="contact-text"><span class="contact-label">FAX</span><br>${agency.fax || 'Non communiqué'}</div></div>
+                                    <div class="contact-item"><i class="fas fa-envelope"></i><div class="contact-text"><span class="contact-label">EMAIL</span><br>${agency.email ? `<a href="mailto:${agency.email}">${agency.email}</a>` : '—'}</div></div>
+                                    <div class="contact-item"><i class="fas fa-globe"></i><div class="contact-text"><span class="contact-label">SITE WEB</span><br>${agency.site ? `<a href="${agency.site}" target="_blank">${agency.site.replace('https://','').replace('http://','')}</a>` : '—'}</div></div>
+                                    <div class="contact-item"><i class="fas fa-map-marker-alt"></i><div class="contact-text"><span class="contact-label">ADRESSE</span><br>${agency.adresse || '—'}</div></div>
+                                </div>
+                                <div class="button-group"><button class="location-btn" data-id="${agency.id}"><i class="fas fa-map-marker-alt"></i> Voir la carte</button></div>
+                            </div>
+                        </div>`;
+            }
+            html += `</div></div></div>`;
+        }
+        container.innerHTML = html;
+        
+        // Region toggle events
+        document.querySelectorAll('.region-header').forEach(header => {
+            const regionSection = header.closest('.region-section');
+            const content = regionSection.querySelector('.region-content');
+            const icon = header.querySelector('.region-toggle-icon i');
+            header.addEventListener('click', (e) => {
+                if (e.target.closest('.location-btn')) return;
+                const isOpen = content.classList.contains('open');
+                if (isOpen) {
+                    content.classList.remove('open');
+                    icon.className = "fas fa-chevron-down";
+                } else {
+                    content.classList.add('open');
+                    icon.className = "fas fa-chevron-up";
+                }
+            });
+        });
+        
+        // Agency toggle events
+        document.querySelectorAll('.tree-node .node-header').forEach(header => {
+            const node = header.closest('.tree-node');
+            const details = node.querySelector('.node-details');
+            const icon = header.querySelector('.toggle-icon i');
+            header.addEventListener('click', (e) => {
+                if (e.target.closest('.location-btn')) return;
+                const isOpen = details.classList.contains('open');
+                if (isOpen) {
+                    details.classList.remove('open');
+                    icon.className = "fas fa-chevron-down";
+                } else {
+                    details.classList.add('open');
+                    icon.className = "fas fa-chevron-up";
+                }
+            });
+        });
+        
+        // Location buttons
+        document.querySelectorAll('.location-btn').forEach(btn => {
+            const id = parseInt(btn.getAttribute('data-id'));
+            const agency = agenciesData.find(a => a.id === id);
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (agency) showLocation(agency);
+            });
+        });
+    }
+
+    document.getElementById('searchInput').addEventListener('input', (e) => renderRegions(e.target.value));
+    document.getElementById('searchBtn').addEventListener('click', () => renderRegions(document.getElementById('searchInput').value));
+    renderRegions();
+    window.closeIframeModal = closeIframeModal;
+</script>
+</body>
+</html>
