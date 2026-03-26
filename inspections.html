@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Inspection Régionale de l'Habitat - Maroc</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #f0f4fa 0%, #e9eef5 100%);
+            color: #1e2a3e;
+            line-height: 1.5;
+            padding: 16px 12px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Conteneur principal centré avec max-width smartphone */
+        .app-container {
+            max-width: 550px;
+            width: 100%;
+            margin: 0 auto;
+            background: transparent;
+        }
+        
+        /* Header principal avec logo et titre */
+        .main-header {
+            background: linear-gradient(135deg, #004d73 0%, #006994 100%);
+            border-radius: 32px;
+            padding: 24px 20px;
+            margin-bottom: 20px;
+            color: white;
+            box-shadow: 0 12px 24px rgba(0,77,115,0.25);
+            text-align: center;
+        }
+        
+        .main-header h1 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .main-header h1 i {
+            font-size: 1.6rem;
+            background: rgba(255,255,255,0.2);
+            padding: 8px;
+            border-radius: 50px;
+        }
+        
+        .main-header .subtitle {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            margin-top: 8px;
+            background: rgba(255,255,255,0.12);
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 40px;
+        }
+        
+        .ministry-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.65rem;
+            font-weight: 500;
+            margin-top: 12px;
+        }
+        
+        /* Carte siège central */
+        .siege-card {
+            background: white;
+            border-radius: 28px;
+            padding: 16px 18px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0,77,115,0.08);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.03);
+        }
+        
+        .siege-card h3 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #004d73;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 3px solid #ffc107;
+            padding-left: 12px;
+        }
+        
+        .siege-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .siege-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.7rem;
+            color: #2c4c6e;
+            background: #f8fafd;
+            padding: 8px 14px;
+            border-radius: 40px;
+            flex: 1 1 auto;
+            word-break: break-word;
+        }
+        
+        .siege-item i {
+            width: 22px;
+            color: #004d73;
+            font-size: 0.85rem;
+        }
+        
+        .siege-item a {
+            color: #004d73;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        /* Barre de recherche */
+        .search-wrapper {
+            margin-bottom: 18px;
+            position: sticky;
+            top: 8px;
+            z-index: 120;
+            background: transparent;
+            padding: 4px 0;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 1px solid #e2e8f0;
+            border-radius: 48px;
+            font-size: 0.9rem;
+            background: white;
+            outline: none;
+            font-family: inherit;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        
+        .search-box input:focus {
+            border-color: #004d73;
+            box-shadow: 0 0 0 3px rgba(0,77,115,0.15);
+        }
+        
+        .search-box button {
+            background: #004d73;
+            border: none;
+            border-radius: 48px;
+            padding: 0 20px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,77,115,0.3);
+        }
+        
+        .search-box button:active {
+            transform: scale(0.96);
+            background: #003a57;
+        }
+        
+        .stats-info {
+            margin-bottom: 16px;
+            font-size: 0.75rem;
+            color: #4a627a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(4px);
+            padding: 8px 14px;
+            border-radius: 60px;
+        }
+        
+        .stats-info span {
+            background: #004d73;
+            color: white;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.7rem;
+        }
+        
+        /* ACCORDÉON (collapsible) */
+        .accordion-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .accordion-item {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: all 0.2s;
+            border: 1px solid rgba(0,77,115,0.1);
+        }
+        
+        /* GRAND TITRE DES ENTITÉS EN VIOLET GRAS ET POLICE BLANCHE */
+        .accordion-header {
+            background: linear-gradient(135deg, #6a1b9a 0%, #8e24aa 100%);
+            padding: 18px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        
+        .accordion-header:active {
+            background: linear-gradient(135deg, #5e1488 0%, #7b1fa3 100%);
+            transform: scale(0.99);
+        }
+        
+        .region-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex: 1;
+        }
+        
+        .region-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            backdrop-filter: blur(2px);
+        }
+        
+        .region-name {
+            font-weight: 800;
+            font-size: 1rem;
+            color: white;
+            line-height: 1.3;
+            flex: 1;
+            letter-spacing: 0.3px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .chevron-icon {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+            background: rgba(0,0,0,0.1);
+            padding: 6px;
+            border-radius: 30px;
+        }
+        
+        .accordion-item.open .chevron-icon {
+            transform: rotate(180deg);
+        }
+        
+        /* Contenu détaillé (arborescence) */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #fefefe;
+            border-top: 1px solid transparent;
+        }
+        
+        .accordion-item.open .accordion-content {
+            max-height: 650px;
+            border-top-color: rgba(106, 27, 154, 0.15);
+        }
+        
+        .content-inner {
+            padding: 20px 18px 22px;
+            background: #fafcff;
+        }
+        
+        /* Style arborescence / hiérarchie */
+        .arbo-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .info-node {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            font-size: 0.8rem;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f4fa;
+        }
+        
+        .info-node:last-child {
+            border-bottom: none;
+        }
+        
+        .node-icon {
+            width: 34px;
+            color: #6a1b9a;
+            font-size: 1rem;
+            text-align: center;
+            margin-top: 2px;
+        }
+        
+        .node-content {
+            flex: 1;
+            word-break: break-word;
+        }
+        
+        .node-label {
+            font-weight: 700;
+            color: #6a1b9a;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 5px;
+        }
+        
+        .node-value {
+            font-weight: 500;
+            color: #1e2a3e;
+            font-size: 0.85rem;
+        }
+        
+        .node-value a {
+            color: #6a1b9a;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .node-value a:hover {
+            text-decoration: underline;
+        }
+        
+        .badge-region {
+            background: #f3e5f5;
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #6a1b9a;
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 50px 20px;
+            color: #6c757d;
+            font-size: 0.85rem;
+            background: white;
+            border-radius: 32px;
+        }
+        
+        /* Animation */
+        @keyframes gentleFade {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .accordion-item {
+            animation: gentleFade 0.2s ease;
+        }
+        
+        /* Optimisation smartphone */
+        @media (max-width: 480px) {
+            body {
+                padding: 12px 10px;
+            }
+            .region-name {
+                font-size: 0.9rem;
+                font-weight: 800;
+            }
+            .region-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 1rem;
+            }
+            .accordion-header {
+                padding: 14px 16px;
+            }
+            .info-node {
+                gap: 12px;
+            }
+            .node-icon {
+                width: 30px;
+                font-size: 0.9rem;
+            }
+            .content-inner {
+                padding: 16px;
+            }
+        }
+        
+        /* Footer */
+        .footer-note {
+            margin-top: 28px;
+            text-align: center;
+            font-size: 0.6rem;
+            color: #7c8faa;
+            padding: 16px 10px;
+            border-top: 1px solid rgba(106,27,154,0.15);
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <!-- En-tête principal -->
+    <div class="main-header">
+        <h1>
+            <i class="fas fa-building"></i> 
+            INSPECTION RÉGIONALE<br>DE L'HABITAT
+        </h1>
+     </div>
+
+    <!-- Carte siège central -->
+  
+    <!-- Recherche -->
+    <div class="search-wrapper">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Rechercher région, responsable, téléphone...">
+            <button id="searchBtn"><i class="fas fa-search"></i></button>
+        </div>
+    </div>
+
+    <div class="stats-info">
+        <span><i class="fas fa-flag-checkered"></i> <span id="agencyCount">0</span> inspections régionales</span>
+        <span style="background: #eef2f5; color:#6a1b9a;"><i class="fas fa-hand-pointer"></i> Appuyez pour déplier</span>
+    </div>
+
+    <!-- Zone accordéon (collapsible) -->
+    <div class="accordion-list" id="accordionList"></div>
+    
+    <div class="footer-note">
+        <i class="fas fa-city"></i> Inspections Régionales de l'Habitat – Données officielles<br>
+        Cliquez sur chaque région violette pour afficher les détails
+    </div>
+</div>
+
+<script>
+// Données des 16 inspections régionales (données fournies)
+const regionsData = [
+    { region: "Oued Eddahab-Lagouira", responsable: "Mohamed TITA", telephone: "05 28 89 89 25", fax: "05 28 89 89 26", email: "tita@mhuae.gov.ma" },
+    { region: "Laâyoune-Sakia Hamra", responsable: "Maarouf RAHHAL", telephone: "05 28 89 38 58", fax: "05 28 89 39 02", email: "maarouf@mhuae.gov.ma" },
+    { region: "Guelmim-Essmara", responsable: "Mostafa SDIRA", telephone: "05 28 87 22 23", fax: "05 28 87 20 00", email: "msdira@mhuae.gov.ma" },
+    { region: "Souss-Massa-Draâ", responsable: "Mustapha BRAHMA", telephone: "05 28 22 62 24", fax: "05 28 22 61 84", email: "brahma@mhuae.gov.ma" },
+    { region: "Gharb-Chrarda-Beni Hssen", responsable: "Leila HAMMOUCHI", telephone: "05 37 36 13 44", fax: "05 37 36 13 44", email: "hammouchi@mhuae.gov.ma" },
+    { region: "Chaouia-Ouardigha", responsable: "Tamim BENEGHMOUCH", telephone: "05 23 72 17 22", fax: "05 23 40 31 07", email: "bennaghmouch@mhuae.gov.ma" },
+    { region: "Meknès-Tafilalet", responsable: "Mounia AMIRA", telephone: "05 35 52 24 79", fax: "05 35 51 00 64", email: "amira@mhuae.gov.ma" },
+    { region: "Fès-Boulemane", responsable: "Abdelkader BENBASSOU", telephone: "05 35 62 35 23", fax: "05 35 65 01 98", email: "benbassou@mhuae.gov.ma" },
+    { region: "Marrakech-Tensift", responsable: "Ghita KOUTEIBA", telephone: "05 24 43 16 50", fax: "05 24 44 84 35", email: "kouteiba@mhuae.gov.ma" },
+    { region: "L’Oriental (Oujda)", responsable: "Abdelhay AZNOUD", telephone: "05 36 68 29 54", fax: "05 36 68 65 55", email: "aaznoud@mhuae.gov.ma" },
+    { region: "Grand Casablanca", responsable: "Mourad AMIL", telephone: "05 22 27 59 93", fax: "05 22 27 59 91", email: "amil@mhuae.gov.ma" },
+    { region: "Rabat-Salé-Zemmour-Zaer", responsable: "Abelkader KEOUA", telephone: "05 37 76 13 29", fax: "05 37 76 12 94", email: "keoua@mhuae.gov.ma" },
+    { region: "Doukkala-Abda (Safi)", responsable: "Majida OUARDIRHI", telephone: "05 24 62 42 14", fax: "05 24 62 10 01", email: "melouardirhi@mhuae.gov.ma" },
+    { region: "Tadla-Azilal", responsable: "Amina BOURKIA", telephone: "05 23 42 47 40", fax: "05 23 42 46 35", email: "bourkia@mhuae.gov.ma" },
+    { region: "Taza-Al Hoceima-Taounate", responsable: "Jamal MOHAMER", telephone: "05 39 84 15 53", fax: "05 39 84 15 51", email: "mohamer@mhuae.gov.ma" },
+    { region: "Tanger", responsable: "Fouad EL HAIK", telephone: "05 39 94 68 19", fax: "05 39 94 68 71", email: "felhayek@mhuae.gov.ma" }
+];
+
+const accordionContainer = document.getElementById('accordionList');
+const statsSpan = document.getElementById('agencyCount');
+const searchInput = document.getElementById('searchInput');
+const searchBtn = document.getElementById('searchBtn');
+
+// Construire l'arborescence détaillée pour chaque région
+function buildArborescence(region) {
+    return `
+        <div class="arbo-detail">
+ <div class="info-node">
+                <div class="node-icon"><i class="fas fa-building"></i></div>
+                <div class="node-content">
+                    <div class="node-label">DÉLÉGATION TERRITORIALE</div>
+                    <div class="node-value">Inspection Régionale de l'Habitat – ${region.region}</div>
+                </div>
+            </div>           
+
+
+		   <div class="info-node">
+                <div class="node-icon"><i class="fas fa-user-tie"></i></div>
+                <div class="node-content">
+                    <div class="node-label">RESPONSABLE INSPECTION</div>
+                    <div class="node-value"><strong>${region.responsable || "—"}</strong></div>
+                </div>
+            </div>
+            <div class="info-node">
+                <div class="node-icon"><i class="fas fa-phone-alt"></i></div>
+                <div class="node-content">
+                    <div class="node-label">LIGNE DIRECTE</div>
+                    <div class="node-value"><a href="tel:${region.telephone.replace(/\s/g, '')}">${region.telephone || "—"}</a></div>
+                </div>
+            </div>
+            <div class="info-node">
+                <div class="node-icon"><i class="fas fa-fax"></i></div>
+                <div class="node-content">
+                    <div class="node-label">TÉLÉCOPIE</div>
+                    <div class="node-value">${region.fax || "—"}</div>
+                </div>
+            </div>
+            <div class="info-node">
+                <div class="node-icon"><i class="fas fa-envelope"></i></div>
+                <div class="node-content">
+                    <div class="node-label">COURRIEL OFFICIEL</div>
+                    <div class="node-value"><a href="mailto:${region.email}">${region.email}</a></div>
+                </div>
+            </div>
+           
+            <div class="info-node">
+                 <div class="info-node">
+               
+        </div>
+    `;
+}
+
+// Générer tous les éléments accordéon avec filtre
+function renderAccordion(filter = "") {
+    const filtered = regionsData.filter(region => 
+        region.region.toLowerCase().includes(filter.toLowerCase()) ||
+        (region.responsable && region.responsable.toLowerCase().includes(filter.toLowerCase())) ||
+        (region.telephone && region.telephone.includes(filter)) ||
+        (region.email && region.email.toLowerCase().includes(filter.toLowerCase()))
+    );
+    
+    statsSpan.textContent = filtered.length;
+    
+    if (filtered.length === 0) {
+        accordionContainer.innerHTML = `<div class="empty-message"><i class="fas fa-search-minus"></i> Aucune inspection régionale trouvée<br><span style="font-size:0.7rem;">Essayez un autre terme</span></div>`;
+        return;
+    }
+    
+    accordionContainer.innerHTML = "";
+    filtered.forEach((region, idx) => {
+        const accordionItem = document.createElement('div');
+        accordionItem.className = 'accordion-item';
+        accordionItem.setAttribute('data-region-id', idx);
+        
+        // Header avec fond violet, texte blanc, gras
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'accordion-header';
+        
+        headerDiv.innerHTML = `
+            <div class="region-title">
+                <div class="region-icon"><i class="fas fa-building"></i></div>
+                <div class="region-name">${region.region}</div>
+                <i class="fas fa-chevron-down chevron-icon"></i>
+            </div>
+        `;
+        
+        // Contenu (arborescence détaillée)
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'accordion-content';
+        contentDiv.innerHTML = `<div class="content-inner">${buildArborescence(region)}</div>`;
+        
+        accordionItem.appendChild(headerDiv);
+        accordionItem.appendChild(contentDiv);
+        
+        // Gestion du clic pour ouvrir/fermer (comportement accordéon exclusif)
+        headerDiv.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Ferme tous les autres accordéons
+            const allItems = document.querySelectorAll('.accordion-item');
+            allItems.forEach(item => {
+                if (item !== accordionItem && item.classList.contains('open')) {
+                    item.classList.remove('open');
+                }
+            });
+            // Toggle celui-ci
+            accordionItem.classList.toggle('open');
+        });
+        
+        accordionContainer.appendChild(accordionItem);
+    });
+    
+    // S'assurer que tous sont fermés par défaut
+    document.querySelectorAll('.accordion-item').forEach(item => {
+        item.classList.remove('open');
+    });
+}
+
+// Fonction de recherche avec debounce
+let debounceTimer;
+function handleSearch() {
+    const searchTerm = searchInput.value;
+    renderAccordion(searchTerm);
+}
+
+searchInput.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+        handleSearch();
+    }, 250);
+});
+
+searchBtn.addEventListener('click', () => {
+    clearTimeout(debounceTimer);
+    handleSearch();
+});
+
+// Initialisation
+renderAccordion("");
+</script>
+</body>
+</html>
