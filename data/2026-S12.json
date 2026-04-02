@@ -10,11 +10,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260322211345179-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260322165154180",
@@ -27,11 +28,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260322165154180-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Lien inaccessible",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Lien inaccessible"
   },
   {
     "index": "20260322165154181",
@@ -44,11 +46,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260322165154181-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Lien inaccessible",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Lien inaccessible"
   },
   {
     "index": "20260322165154182",
@@ -61,11 +64,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260322165154182-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260322165154183",
@@ -78,11 +82,12 @@
     "sentiment": "Positif",
     "image_brute": "20260322165154183-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Lien inaccessible",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Lien inaccessible"
   },
   {
     "index": "20260322165154184",
@@ -95,11 +100,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260322165154184-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Lien inaccessible",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Lien inaccessible"
   },
   {
     "index": "20260319211919187",
@@ -112,11 +118,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260319211919187-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260319211919188",
@@ -129,11 +136,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260319211919188-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260319211919189",
@@ -146,11 +154,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260319211919189-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260319160034192",
@@ -163,11 +172,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260319160034192-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260319160034194",
@@ -180,11 +190,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260319160034194-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260319160034195",
@@ -197,11 +208,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260319160034195-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Lien inaccessible",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Lien inaccessible"
   },
   {
     "index": "20260319115233196",
@@ -214,11 +226,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260319115233196-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260319081037197",
@@ -231,11 +244,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260319081037197-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260319081037198",
@@ -248,11 +262,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260319081037198-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260319081037199",
@@ -265,11 +280,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260319081037199-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": 20260319081037200,
@@ -282,11 +298,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260319081037200-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260319081037201",
@@ -299,11 +316,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260319081037201-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260319013427203",
@@ -316,11 +334,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260319013427203-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260319013427204",
@@ -333,11 +352,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260319013427204-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260318155853205",
@@ -350,11 +370,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260318155853205-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260318155853206",
@@ -367,11 +388,12 @@
     "sentiment": "Positif",
     "image_brute": "20260318155853206-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260318155853207",
@@ -384,11 +406,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260318155853207-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Lien inaccessible",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Lien inaccessible"
   },
   {
     "index": "20260318155853208",
@@ -401,11 +424,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260318155853208-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260318155853209",
@@ -418,11 +442,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260318155853209-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Lien inaccessible",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Lien inaccessible"
   },
   {
     "index": "20260318155853210",
@@ -435,11 +460,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260318155853210-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260318155853211",
@@ -452,11 +478,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260318155853211-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260318155853212",
@@ -469,11 +496,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260318155853212-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260318155853215",
@@ -486,11 +514,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260318155853215-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260318155853216",
@@ -503,11 +532,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260318155853216-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260318081302217",
@@ -520,11 +550,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260318081302217-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260318081302218",
@@ -537,11 +568,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260318081302218-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260317195953219",
@@ -554,11 +586,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260317195953219-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260317160448221",
@@ -571,11 +604,12 @@
     "sentiment": "Positif",
     "image_brute": "20260317160448221-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260317160448222",
@@ -588,11 +622,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260317160448222-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260317160448228",
@@ -605,11 +640,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260317160448228-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Lien inaccessible",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Lien inaccessible"
   },
   {
     "index": "20260317080139231",
@@ -622,11 +658,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260317080139231-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260317080139233",
@@ -639,11 +676,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260317080139233-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260316163548235",
@@ -656,11 +694,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260316163548235-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260316163548236",
@@ -673,11 +712,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260316163548236-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260316163548237",
@@ -690,11 +730,12 @@
     "sentiment": "Positif",
     "image_brute": "20260316163548237-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260316163548238",
@@ -707,11 +748,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260316163548238-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260316163548239",
@@ -724,11 +766,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260316163548239-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260316163548240",
@@ -741,11 +784,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260316163548240-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260316163548241",
@@ -758,11 +802,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260316163548241-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260316163548242",
@@ -775,11 +820,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260316163548242-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260316163548244",
@@ -792,11 +838,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260316163548244-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260316163548245",
@@ -809,11 +856,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260316163548245-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260316163548246",
@@ -826,11 +874,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260316163548246-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260316163548247",
@@ -843,11 +892,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260316163548247-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Lien inaccessible",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Lien inaccessible"
   },
   {
     "index": "20260316163548248",
@@ -860,11 +910,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260316163548248-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Erreur site",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Erreur site"
   },
   {
     "index": "20260316163548249",
@@ -877,11 +928,12 @@
     "sentiment": "Positif",
     "image_brute": "20260316163548249-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "https://www.hibazoom.com/wp-content/uploads/2024/01/777-2.jpg",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "https://www.hibazoom.com/wp-content/uploads/2024/01/777-2.jpg"
   },
   {
     "index": "20260316163548250",
@@ -894,11 +946,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260316163548250-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Lien inaccessible",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Lien inaccessible"
   },
   {
     "index": "20260316163548251",
@@ -911,11 +964,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260316163548251-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260316163548252",
@@ -928,11 +982,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260316163548252-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Lien inaccessible",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Lien inaccessible"
   },
   {
     "index": "20260316163548255",
@@ -945,11 +1000,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260316163548255-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   },
   {
     "index": "20260316163548256",
@@ -962,11 +1018,12 @@
     "sentiment": "Neutre",
     "image_brute": "20260316163548256-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "https://www.bladi.net/img/cache-vignettes/L1008xH630/bataille-juridique-terrain-non-bati-maroc-6e941.webp?1773649173",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "https://www.bladi.net/img/cache-vignettes/L1008xH630/bataille-juridique-terrain-non-bati-maroc-6e941.webp?1773649173"
   },
   {
     "index": "20260316083357257",
@@ -979,10 +1036,11 @@
     "sentiment": "Neutre",
     "image_brute": "20260316083357257-image.jpg",
     "numero_semaine": "2026-S12",
-    "": "Pas d'image trouv?e",
+    "": "New",
     "lien_json": "datajson/03/2026-S12.json",
     "visible": true,
     "last_update": "",
-    "status": ""
+    "status": "",
+    "url_images": "Pas d'image trouv?e"
   }
 ]
