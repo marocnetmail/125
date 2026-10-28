@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>Galerie Reels Facebook</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { darkMode: 'class' };</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  html { -webkit-text-size-adjust: 100%; }
+  body { -webkit-tap-highlight-color: transparent; }
+  .reel-card { position: relative; }
+  
+  /* Contraintes de date : une seule ligne */
+  .date-display {
+    display: inline-block;
+    white-space: nowrap;
+    direction: rtl;
+    unicode-bidi: isolate;
+    max-width: 100%;
+  }
+
+  /* Contraintes de titre */
+  .video-title {
+    display: block;
+    width: 100%;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    line-height: 1.3;
+  }
+
+  /* --- Styles pour l'Arborescence --- */
+  .tree-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .tree-list .tree-list {
+    padding-left: 1.5rem;
+    border-left: 2px dashed #334155;
+    margin-left: 0.75rem;
+  }
+  .tree-item {
+    position: relative;
+    padding: 0.4rem 0;
+  }
+  .tree-list .tree-list .tree-item::before {
+    content: '';
+    position: absolute;
+    left: -1.5rem;
+    top: 1rem;
+    width: 1rem;
+    border-top: 2px dashed #334155;
+  }
+  .tree-toggle {
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .tree-toggle.open {
+    transform: rotate(90deg);
+  }
+  .tree-children.hidden {
+    display: none;
+  }
+
+  #detailsContent::-webkit-scrollbar { width: 6px; }
+  #detailsContent::-webkit-scrollbar-track { background: transparent; }
+  #detailsContent::-webkit-scrollbar-thumb { background: rgba(100,116,139,.4); border-radius: 3px; }
+  @supports (padding: max(0px)) {
+    .safe-bottom { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+  }
+  
+  /* Tooltip CSS personnalisé pour le thème */
+  .theme-tooltip .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    max-width: 150px;
+    background-color: #1e293b;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 6px 10px;
+    position: absolute;
+    z-index: 50;
+    top: 120%;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+    border: 1px solid #334155;
+    font-size: 11px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+  }
+  .theme-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+</style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col">
+
+<!-- ============ HEADER ============ -->
+<header class="sticky top-0 z-40 bg-slate-800/95 backdrop-blur border-b border-slate-700 shadow-lg">
+  <div class="max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4">
+    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <div class="p-1.5 sm:p-2 bg-blue-600 rounded-lg shadow">
+          <i class="fa-solid fa-video text-white text-sm sm:text-xl"></i>
+        </div>
+        <h1 class="text-sm sm:text-xl font-bold bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent whitespace-nowrap">
+          Galerie<span class="hidden sm:inline"> Reels</span>
+        </h1>
+      </div>
+
+      <div class="flex-1 min-w-[180px]">
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none"></i>
+          <input type="text" id="searchInput" inputmode="search" placeholder="Rechercher…"
+                 class="w-full bg-slate-900 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 sm:py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500 placeholder-slate-500">
+        </div>
+      </div>
+
+      <!-- Sélecteur de Mode d'affichage -->
+      <div class="flex items-center gap-1.5">
+        <i class="fa-solid fa-layer-group text-slate-400 text-xs hidden sm:inline"></i>
+        <select id="viewModeSelect" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-blue-500 cursor-pointer">
+          <option value="gallery">Galerie</option>
+          <option value="themes">Par thèmes</option>
+          <option value="tree">Arborescence</option>
+        </select>
+      </div>
+
+      <div class="flex items-center gap-1.5">
+        <i class="fa-solid fa-sort text-slate-400 text-xs hidden sm:inline"></i>
+        <select id="sortSelect" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-blue-500 cursor-pointer">
+          <option value="recent">Plus récents</option>
+          <option value="views">Plus vues</option>
+          <option value="reactions">Plus réagies / commentées</option>
+        </select>
+      </div>
+
+      <label class="cursor-pointer bg-slate-700 hover:bg-slate-600 active:bg-slate-500 border border-slate-600 text-sm font-medium px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-colors flex items-center gap-1.5 flex-shrink-0 touch-manipulation">
+        <i class="fa-solid fa-file-import text-blue-400"></i>
+        <span class="hidden sm:inline">JSON</span>
+        <input type="file" id="jsonFileInput" accept=".json" class="hidden">
+      </label>
+
+      <div class="hidden lg:block text-xs bg-slate-900/60 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-400 whitespace-nowrap">
+        Total : <span id="totalCount" class="font-bold text-white">0</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ MAIN ============ -->
+<main class="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-6 flex-1 w-full relative">
+  
+  <!-- Bouton Retour (utilisé dans le mode "Par thèmes") -->
+  <div id="backNavigation" class="hidden mb-4">
+    <button id="backToThemesBtn" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-slate-700">
+      <i class="fa-solid fa-arrow-left"></i> Retour aux thèmes
+    </button>
+  </div>
+
+  <!-- Conteneur pour le mode "Par thèmes" (Grille de thèmes) -->
+  <div id="themesView" class="hidden"></div>
+
+  <!-- Conteneur pour le mode "Arborescence" -->
+  <div id="treeView" class="hidden bg-slate-800/50 p-4 sm:p-6 rounded-2xl border border-slate-700"></div>
+
+  <!-- Grille des vidéos (Mode Galerie / Vidéos d'un thème) -->
+  <div id="reelsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 w-full"></div>
+  
+  <div id="emptyState" class="hidden text-center py-16 bg-slate-800/30 rounded-2xl border border-dashed border-slate-700 mt-4">
+    <i class="fa-regular fa-folder-open text-5xl text-slate-600 mb-4"></i>
+    <h3 class="text-lg font-medium text-slate-300">Aucune vidéo trouvée</h3>
+  </div>
+  <nav id="pagination" class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-6 safe-bottom" aria-label="Pagination"></nav>
+</main>
+
+<!-- ============ MODAL DÉTAILS & LECTEUR VIDEO ============ -->
+<div id="detailsModal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" data-close-details></div>
+  <div class="relative z-10 w-full h-full flex items-center justify-center p-2 sm:p-4">
+    <div class="relative w-full max-w-5xl h-[92vh] bg-slate-800 overflow-hidden shadow-2xl border border-slate-700 rounded-2xl flex flex-col lg:flex-row">
+      
+      <!-- Bouton Fermer -->
+      <button type="button" data-close-details
+              class="absolute top-3 right-3 z-50 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-red-600 border border-slate-700 text-white flex items-center justify-center transition-colors shadow-lg touch-manipulation"
+              aria-label="Fermer">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <!-- Zone Lecteur Vidéo -->
+      <div class="relative bg-black w-full h-[50vh] lg:h-full lg:w-[450px] flex-shrink-0 flex items-center justify-center overflow-hidden">
+        
+        <!-- Poster avec bouton Play et infos -->
+        <div id="detailsPoster" class="absolute inset-0 z-10 transition-opacity duration-300">
+          <img id="detailsPosterImg" src="" alt="" class="absolute inset-0 w-full h-full object-cover" onerror="this.style.display='none';">
+          
+          <!-- Dégradé sombre pour le texte -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none"></div>
+
+          <!-- Loader (caché par défaut) -->
+          <div id="videoLoader" class="hidden absolute inset-0 z-30 flex items-center justify-center bg-black/40">
+            <div class="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
+          </div>
+          
+          <!-- Contenu en bas (Stats, Play, Titre) -->
+          <div class="absolute bottom-0 inset-x-0 p-4 sm:p-6 flex flex-col z-20">
+            
+            <!-- Statistiques -->
+            <div class="flex items-center gap-4 mb-4 text-white text-sm font-bold drop-shadow-md">
+              <div class="flex items-center gap-1.5">
+                <i class="fa-solid fa-eye text-amber-400"></i>
+                <span id="playerViewsVal">0</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <i class="fa-solid fa-heart text-rose-400"></i>
+                <span id="playerReactionsVal">0</span>
+              </div>
+            </div>
+
+            <div class="flex items-end justify-between gap-4">
+              <!-- Bouton Play -->
+              <button id="detailsPlayBtn" type="button" class="w-[70px] h-[70px] sm:w-[85px] sm:h-[85px] rounded-full border-[4px] border-white flex items-center justify-center hover:bg-white/20 transition-all active:scale-95 cursor-pointer flex-shrink-0 backdrop-blur-sm bg-black/10 shadow-lg">
+                <i class="fa-solid fa-play text-white text-2xl sm:text-3xl ml-1 drop-shadow-md"></i>
+              </button>
+              
+              <!-- Infos Date + Titre -->
+              <div class="text-right flex flex-col items-end flex-1 min-w-0">
+                <span id="detailsDisplayDate" class="date-display text-white/90 text-xs sm:text-sm font-medium mb-1.5 drop-shadow-md tracking-wide"></span>
+                <h3 id="detailsDisplayTitle" class="video-title text-white text-lg sm:text-xl md:text-2xl font-bold drop-shadow-lg" dir="auto"></h3>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Iframe Vidéo -->
+        <iframe id="detailsFrame" class="w-full h-full aspect-[9/16] border-0 opacity-0 transition-opacity duration-500 absolute inset-0 z-0"
+                allowfullscreen allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                scrolling="no" frameborder="0"></iframe>
+      </div>
+
+      <!-- Informations sur la vidéo (Panneau de droite) -->
+      <div id="detailsContent" class="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6 space-y-5 bg-slate-800 safe-bottom"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DONNÉES JSON ============ -->
+<script type="application/json" id="reelsData">
+[
+{"fbid":"1038260595886727","type":"video","url":"https://www.facebook.com/reel/1038260595886727/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A3%D8%A8%D8%B1%D8%B2-%D9%84%D8%AD%D8%B8%D8%A7%D8%AA-%D9%85%D8%B1%D8%A7%D8%B3%D9%85-%D8%AA%D8%B3%D9%84%D9%8A%D9%85-%D8%A7%D9%84%D8%B3%D9%84%D8%B7-%D9%85%D8%B3%D8%A7%D8%A1-%D8%A7%D9%84%D9%8A%D9%88%D9%85-%D8%A8%D9%88%D8%B2%D8%A7%D8%B1%D8%A9-%D8%A5%D8%B9%D8%AF%D8%A7%D8%AF-%D8%A7%D9%84%D8%AA%D8%B1%D8%A7%D8%A8-%D8%A7%D9%84%D9%88%D8%B7%D9%86%D9%8A-%D9%88%D8%A7%D9%84%D8%AA%D8%B9%D9%85%D9%8A%D8%B1-%D9%88%D8%A7%D9%84%D8%A5/1038260595886727/","titre":"أبرز لحظات مراسم تسليم السلط مساء اليوم بوزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة.","description":"أبرز لحظات مراسم تسليم السلط مساء اليوم بوزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة.","vues":1400,"reactions":176,"date":"17/10/2026","date_iso":"2026-10-17","annee":2026,"miniature":"https://scontent.frba4-2.fna.fbcdn.net/v/t51.82787-15/852414904_18042367079833798_2787469280026091581_n.jpg?_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=a27664&_nc_ohc=y_zNLdfxZSgQ7kNvwEyN0G2&_nc_oc=AdrVZiMsp8M6F1LXy8ccOOeF7LA-gZGILaHBFwWygxOLXj9QrPVLBwRptJGcnM7G-IA&_nc_zt=23&_nc_ht=scontent.frba4-2.fna&_nc_gid=TUOC5b4N4CX24fAyDXf1Vg&_nc_ss=78289&oh=00_AQOh1r7Ql1_kcERKbz3l8zxg9sS4jxfOgohgqikaISJx7g&oe=6AE5A2B4","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"AMÉNAGEMENT DU TERRITOIRE","theme_ar":"إعداد التراب الوطني"},
+{"fbid":"1681352509630433","type":"video","url":"https://www.facebook.com/reel/1681352509630433/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%81%D9%8A-%D8%AC%D9%87%D8%A9-%D9%83%D9%84%D9%85%D9%8A%D9%85-%D9%88%D8%A7%D8%AF-%D9%86%D9%88%D9%86-%D8%AA%D8%AA%D9%88%D8%A7%D8%B5%D9%84-%D8%AF%D9%8A%D9%86%D8%A7%D9%85%D9%8A%D8%A9-%D8%B3%D9%8A%D8%A7%D8%B3%D8%A9-%D8%A7%D9%84%D9%85%D8%AF%D9%8A%D9%86%D8%A9-%D9%85%D9%86-%D8%AE%D9%84%D8%A7%D9%84-%D9%85%D8%B4%D8%A7%D8%B1%D9%8A%D8%B9-%D9%85%D9%84%D9%85%D9%88%D8%B3%D8%A9-%D8%AA%D8%B4%D9%85%D9%84-%D9%85%D8%AE%D8%AA/1681352509630433/","titre":"في جهة كلميم واد نون، تتواصل دينامية سياسة المدينة من خلال مشاريع ملموسة تشمل مختلف الجماعات الترابية، بالمدن والمجال القروي، بهدف تحسين ظروف العيش وتعزيز جاذبية المجالات.","description":"في جهة كلميم واد نون، تتواصل دينامية سياسة المدينة من خلال مشاريع ملموسة تشمل مختلف الجماعات الترابية، بالمدن والمجال القروي، بهدف تحسين ظروف العيش وتعزيز جاذبية المجالات.","vues":2000,"reactions":25,"date":"01/09/2026","date_iso":"2026-09-01","annee":2026,"miniature":"https://scontent.frba4-3.fna.fbcdn.net/v/t51.82787-15/792224110_18036005135833798_7129079889703440292_n.jpg?_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=a27664&_nc_ohc=Jq6W0JYX9BkQ7kNvwGkDg_W&_nc_oc=AdrtztD30zOnA2rUVVQaaxJq4YXTowGxZI0EZVbEA4MHoHLt11QtFUpIG7qCnRA8OG0&_nc_zt=23&_nc_ht=scontent.frba4-3.fna&_nc_gid=P0qdq8BK5OV7tEnA3URsbQ&_nc_ss=78289&oh=00_AQPJG_3Yh5MH7XiVpZlD-XLVnKXmd5z-gMvfoSQDb9iTTA&oe=6AE5BEF0","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Politique de la ville","theme_ar":"سياسة المدينة"},
+{"fbid":"1000652549665382","type":"video","url":"https://www.facebook.com/reel/1000652549665382/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A8%D8%AC%D9%87%D8%A9-%D8%AF%D8%B1%D8%B9%D8%A9-%D8%AA%D8%A7%D9%81%D9%8A%D9%84%D8%A7%D9%84%D8%AA-%D8%B3%D9%8A%D8%A7%D8%B3%D8%A9-%D8%A7%D9%84%D9%85%D8%AF%D9%8A%D9%86%D8%A9-%D9%83%D8%AA%D8%AC%D9%85%D8%B9-%D8%A8%D9%8A%D9%86-%D8%A7%D9%84%D8%AD%D9%81%D8%A7%D8%B8-%D8%B9%D9%84%D9%89-%D8%A7%D9%84%D9%85%D9%88%D8%B1%D9%88%D8%AB-%D9%88%D8%AA%D8%B9%D8%B2%D9%8A%D8%B2-%D8%A7%D9%84%D8%AA%D9%86%D9%85%D9%8A%D8%A9-%D8%A7%D9%84%D9%85/1000652549665382/","titre":"بجهة درعة تافيلالت، سياسة المدينة كتجمع بين الحفاظ على الموروث وتعزيز التنمية المحلية، من خلال إعادة تأهيل الأنسجة العتيقة، الارتقاء بالمراكز القروية، وتحسين الفضاءات وظروف العيش.\n\nمشاريع كتثمن الهوية المحلية، وكتعطي نفس جديد للمدن والمجالات، وتخلي التنمية أقرب للساكنة.","description":"بجهة درعة تافيلالت، سياسة المدينة كتجمع بين الحفاظ على الموروث وتعزيز التنمية المحلية، من خلال إعادة تأهيل الأنسجة العتيقة، الارتقاء بالمراكز القروية، وتحسين الفضاءات وظروف العيش.","vues":749,"reactions":11,"date":"30/08/2026","date_iso":"2026-08-30","annee":2026,"miniature":"https://scontent.frba4-2.fna.fbcdn.net/v/t15.5256-10/789488956_1548216333172849_242458857912459802_n.jpg?_nc_cat=102&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=wXnzM9b-fwgQ7kNvwEy4N7W&_nc_oc=Adp3hSF2quU4GvEGO7kJs6GLY4QFIkCJdF3RfzBRcWz1Yv_OhUpWkH7ZSfpFJCbTVl4&_nc_zt=23&_nc_ht=scontent.frba4-2.fna&_nc_gid=VD4TasNsvri4zluKSOeJbQ&_nc_ss=78289&oh=00_AQP69uTxMmgIlevyuu0wvu4D-9tONJEbjdY444R-3oR90w&oe=6AE597DD","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Politique de la ville","theme_ar":"سياسة المدينة"},
+{"fbid":"2319487655464480","type":"video","url":"https://www.facebook.com/reel/2319487655464480/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A7%D9%84%D8%B3%D9%83%D9%86-%D8%A7%D9%84%D9%84%D8%A7%D8%A6%D9%82-%D8%B1%D9%83%D9%8A%D8%B2%D8%A9-%D8%A3%D8%B3%D8%A7%D8%B3%D9%8A%D8%A9-%D9%84%D8%AA%D8%AD%D8%B3%D9%8A%D9%86-%D8%B8%D8%B1%D9%88%D9%81-%D8%A7%D9%84%D8%B9%D9%8A%D8%B4-%D9%88%D8%AA%D8%B9%D8%B2%D9%8A%D8%B2-%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%82%D8%B1%D8%A7%D8%B1-%D8%A7%D9%84%D8%A7%D8%AC%D8%AA%D9%85%D8%A7%D8%B9%D9%8A%D8%B9%D8%B2%D9%8A%D8%B2-%D8%A3%D8%AD%D8%AF-%D8%A7/2319487655464480/","titre":"السكن اللائق، ركيزة أساسية لتحسين ظروف العيش وتعزيز الاستقرار الاجتماعي.\n\nعزيز، أحد المستفيدين، يشاركنا شهادته حول الأثر الملموس لبرنامج «دعم سكن» على حياته اليومية، وكيف ساهم في تحسين ظروف عيشه وتوفير محيط أكثر راحة وأماناً.","description":"السكن اللائق، ركيزة أساسية لتحسين ظروف العيش وتعزيز الاستقرار الاجتماعي.\n\nعزيز، أحد المستفيدين، يشاركنا شهادته حول الأثر الملموس لبرنامج «دعم سكن» على حياته اليومية.","vues":1700,"reactions":0,"date":"30/08/2026","date_iso":"2026-08-30","annee":2026,"miniature":"https://scontent.frba4-3.fna.fbcdn.net/v/t15.5256-10/789617520_2082580099021307_6986476546465780448_n.jpg?_nc_cat=110&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=a27664&_nc_ohc=A8KoGq37WpsQ7kNvwFdrGHY&_nc_oc=Adr29La57M577RAqj-LeY8RLZp9LzEJjLqMBJ1UNQcopXehB3h1vKFIVcCz0G3lw1Pk&_nc_zt=23&_nc_ht=scontent.frba4-3.fna&_nc_gid=0jbObgGlH3I50_IsjLkn1Q&_nc_ss=78289&oh=00_AQOIOaJE1OiK-ygUb_osOu_NmHsOgCExt7caXyZ2eoVqbw&oe=6AE5A8FD","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Habitat et Promotion Immobilière","theme_ar":"الإسكان والنهوض العقاري"},
+{"fbid":"1055143560618190","type":"video","url":"https://www.facebook.com/reel/1055143560618190/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%81%D9%8A-%D8%AC%D9%87%D8%A9-%D8%A7%D9%84%D8%B4%D8%B1%D9%82-%D8%AA%D9%88%D8%A7%D8%B5%D9%84-%D8%B3%D9%8A%D8%A7%D8%B3%D8%A9-%D8%A7%D9%84%D9%85%D8%AF%D9%8A%D9%86%D8%A9-%D9%85%D8%B3%D8%A7%D8%B1-%D8%A7%D9%84%D8%AA%D9%86%D9%85%D9%8A%D8%A9-%D9%85%D9%86-%D8%AE%D9%84%D8%A7%D9%84-%D9%85%D8%B4%D8%A7%D8%B1%D9%8A%D8%B9-%D8%AA%D8%B1%D8%A7%D8%A8%D9%8A%D8%A9-%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%D8%A9-%D8%AA%D8%AC%D9%85%D8%B9/1055143560618190/","titre":"في جهة الشرق، تواصل سياسة المدينة مسار التنمية من خلال مشاريع ترابية متكاملة، تجمع بين تأهيل المدن، تثمين الموروث العمراني، وتحسين ظروف العيش، بما يضمن تنمية أكثر توازناً واستدامة.","description":"في جهة الشرق، تواصل سياسة المدينة مسار التنمية من خلال مشاريع ترابية متكاملة، تجمع بين تأهيل المدن، تثمين الموروث العمراني، وتحسين ظروف العيش.","vues":775,"reactions":11,"date":"29/08/2026","date_iso":"2026-08-29","annee":2026,"miniature":"https://scontent.frba4-3.fna.fbcdn.net/v/t15.5256-10/788689214_1540469907380239_1369012725550692720_n.jpg?_nc_cat=103&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=YndJFPFnSPgQ7kNvwFE8HYi&_nc_oc=Adr-8llRE4FWUH7JScV7PPN6PMPfC_qaCQRKmIidKtm54PsjW3c6ep6q-W1Rwi2yWX0&_nc_zt=23&_nc_ht=scontent.frba4-3.fna&_nc_gid=l5GB4vV6LG48adoVhbDllA&_nc_ss=78289&oh=00_AQMKKc9IoXg8vQNRxWqIsZZoru2S08eNuiFYiVDaxBP-Lg&oe=6AE5ADAD","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Politique de la ville","theme_ar":"سياسة المدينة"},
+{"fbid":"1754396432557016","type":"video","url":"https://www.facebook.com/reel/1754396432557016/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%81%D9%8A-%D8%AC%D9%87%D8%A9-%D8%B7%D9%86%D8%AC%D8%A9-%D8%AA%D8%B7%D9%88%D8%A7%D9%86-%D8%A7%D9%84%D8%AD%D8%B3%D9%8A%D9%85%D8%A9-%D8%AA%D8%AA%D8%AC%D8%B3%D8%AF-%D8%AF%D9%8A%D9%86%D8%A7%D9%85%D9%8A%D8%A9-%D8%B3%D9%8A%D8%A7%D8%B3%D8%A9-%D8%A7%D9%84%D9%85%D8%AF%D9%8A%D9%86%D8%A9-%D9%81%D9%8A-%D9%85%D8%B4%D8%A7%D8%B1%D9%8A%D8%B9-%D8%AA%D9%86%D9%85%D9%88%D9%8A%D8%A9-%D8%AA%D8%B9%D9%8A%D8%AF-%D8%AA%D8%A3%D9%87%D9%8A/1754396432557016/","titre":"في جهة طنجة-تطوان-الحسيمة، تتجسد دينامية سياسة المدينة في مشاريع تنموية تعيد تأهيل المدن والمجالات، وتحافظ على هويتها، وترتقي بجودة الفضاءات وظروف العيش.","description":"في جهة طنجة-تطوان-الحسيمة، تتجسد دينامية سياسة المدينة في مشاريع تنموية تعيد تأهيل المدن والمجالات، وتحافظ على هويتها.","vues":966,"reactions":11,"date":"28/08/2026","date_iso":"2026-08-28","annee":2026,"miniature":"https://scontent.frba4-1.fna.fbcdn.net/v/t15.5256-10/788371035_1424686652806728_3176432315550998425_n.jpg?_nc_cat=100&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=GwDJ0RSEbnsQ7kNvwESXSQf&_nc_oc=AdoekUQJcf19FMFc0yUry0QAN80FpmLqMwrTYw3OzDxlQCSy0wsNXXparRjUNPiw_WY&_nc_zt=23&_nc_ht=scontent.frba4-1.fna&_nc_gid=A9jNS9wwcvi7dUVIJ82p6Q&_nc_ss=78289&oh=00_AQPMLQZnDaw6gzj36fYSJjKFQ8Atahdu1Rlcq8fkF3nfEQ&oe=6AE59B27","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Politique de la ville","theme_ar":"سياسة المدينة"},
+{"fbid":"1559145942357312","type":"video","url":"https://www.facebook.com/reel/1559145942357312/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%8A%D9%85%D8%AB%D9%84-%D8%B5%D8%AF%D9%88%D8%B1-%D8%A7%D9%84%D9%82%D8%A7%D9%86%D9%88%D9%86-%D8%B1%D9%82%D9%85-6423-%D8%A7%D9%84%D9%85%D8%AA%D8%B9%D9%84%D9%82-%D8%A8%D8%A5%D8%AD%D8%AF%D8%A7%D8%AB-%D8%A7%D9%84%D9%88%D9%83%D8%A7%D9%84%D8%A7%D8%AA-%D8%A7%D9%84%D8%AC%D9%87%D9%88%D9%8A%D8%A9-%D9%84%D9%84%D8%AA%D8%B9%D9%85%D9%8A%D8%B1-%D9%88%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D8%A7%D9%86-%D9%81%D9%8A-%D8%A7/1559145942357312/","titre":"يمثل صدور القانون رقم 64.23 المتعلق بإحداث الوكالات الجهوية للتعمير والإسكان في الجريدة الرسمية خطوة جديدة في مسار إصلاح منظومة التعمير والإسكان.","description":"يمثل صدور القانون رقم 64.23 المتعلق بإحداث الوكالات الجهوية للتعمير والإسكان في الجريدة الرسمية خطوة جديدة في مسار إصلاح منظومة التعمير والإسكان.","vues":2100,"reactions":32,"date":"27/08/2026","date_iso":"2026-08-27","annee":2026,"miniature":"https://scontent.frba4-1.fna.fbcdn.net/v/t15.5256-10/788666225_1785883852440439_460579063298407189_n.jpg?_nc_cat=109&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=TW23iVc9oBMQ7kNvwFrUASR&_nc_oc=Adrq2zKYWfPZ4A1vgkuWCbDSPIEzElGqP_Op9TK-h4vPwravg5aUtlEac-hdroR0bRA&_nc_zt=23&_nc_ht=scontent.frba4-1.fna&_nc_gid=5vLFV5yNJktUdkALDtdkng&_nc_ss=78289&oh=00_AQMvVQzM0RaXh0R7y0l5_fvfPg9NrLF2DTR_VWQmlbK-bg&oe=6AE5A0B0","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Encadrement Juridique","theme_ar":"التأطير القانوني"},
+{"fbid":"1392196272338442","type":"video","url":"https://www.facebook.com/reel/1392196272338442/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%85%D9%86%D8%B0-%D8%A3%D9%83%D8%AB%D8%B1-%D9%85%D9%86-%D8%AB%D9%84%D8%A7%D8%AB%D8%A9-%D8%B9%D9%82%D9%88%D8%AF-%D8%B9%D8%B1%D9%81-%D8%A7%D9%84%D9%88%D8%A7%D9%82%D8%B9-%D8%A7%D9%84%D8%B9%D9%85%D8%B1%D8%A7%D9%86%D9%8A-%D8%A8%D8%A7%D9%84%D9%85%D8%BA%D8%B1%D8%A8-%D8%AA%D8%AD%D9%88%D9%84%D8%A7%D8%AA-%D9%85%D8%AA%D8%B3%D8%A7%D8%B1%D8%B9%D8%A9-%D9%85%D9%85%D8%A7-%D8%A7%D8%B3%D8%AA%D8%AF%D8%B9%D9%89-%D8%AA%D8%AD%D8%AF/1392196272338442/","titre":"منذ أكثر من ثلاثة عقود، عرف الواقع العمراني بالمغرب تحولات متسارعة، مما استدعى تحديث الإطار القانوني لمواكبة هذه الدينامية.","description":"منذ أكثر من ثلاثة عقود، عرف الواقع العمراني بالمغرب تحولات متسارعة، مما استدعى تحديث الإطار القانوني لمواكبة هذه الدينامية.","vues":12000,"reactions":38,"date":"24/08/2026","date_iso":"2026-08-24","annee":2026,"miniature":"https://scontent.frba4-2.fna.fbcdn.net/v/t15.5256-10/784030386_1536843134319728_843225836036548265_n.jpg?_nc_cat=107&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=PgEtTyKJaB4Q7kNvwHZrapV&_nc_oc=AdqqH4SZjqUJsP9PKSwNC-BdYwH5-4_P6S3vnsxAl9lgIEE7PoBrrLwPlhTABwbOLeI&_nc_zt=23&_nc_ht=scontent.frba4-2.fna&_nc_gid=Pqr-UDC7FqAAErSJFiGbjw&_nc_ss=78289&oh=00_AQO-qEJv_cFNAhs5N-rT6Y9zCC1kO8bRyE6pU54wvvib-g&oe=6AE5B346","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Encadrement Juridique","theme_ar":"التأطير القانوني"},
+{"fbid":"1387013619552510","type":"video","url":"https://www.facebook.com/reel/1387013619552510/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%8A%D8%B4%D9%83%D9%91%D9%84-%D8%A7%D9%84%D8%B3%D9%83%D9%86-%D8%A7%D9%84%D9%84%D8%A7%D8%A6%D9%82-%D8%AE%D8%B7%D9%88%D8%A9-%D8%A3%D8%B3%D8%A7%D8%B3%D9%8A%D8%A9-%D9%86%D8%AD%D9%88-%D8%AD%D9%8A%D8%A7%D8%A9-%D8%A3%D9%83%D8%AB%D8%B1-%D8%A7%D8%B3%D8%AA%D9%82%D8%B1%D8%A7%D8%B1%D8%A7%D9%8B-%D9%88%D8%A3%D9%85%D8%A7%D9%86%D8%A7%D9%84%D8%B3%D9%8A%D8%AF-%D8%B9%D8%A8%D8%AF-%D8%A7%D9%84%D8%B9%D8%B2%D9%8A%D8%B2-%D8%A3%D8%AD%D8%AF/1387013619552510/","titre":"يشكّل السكن اللائق خطوة أساسية نحو حياة أكثر استقراراً وأمان.\n\nالسيد عبد العزيز، أحد المستفيدين من برنامج الدعم المباشر للسكن، يشاركنا تجربته بعد امتلاك سكنه الخاص.","description":"يشكّل السكن اللائق خطوة أساسية نحو حياة أكثر استقراراً وأمان.","vues":1200,"reactions":0,"date":"21/08/2026","date_iso":"2026-08-21","annee":2026,"miniature":"https://scontent.frba4-3.fna.fbcdn.net/v/t15.5256-10/782056398_1387215379532334_533031659312762132_n.jpg?_nc_cat=109&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=d_6Tzffv8u8Q7kNvwG4cTpD&_nc_oc=Ado8jerhuWNzX3U2gDMjO4DZeS1qUoartd16e9EQm3dM82_la5TrqsbxBf0AyIIa6NM&_nc_zt=23&_nc_ht=scontent.frba4-3.fna&_nc_gid=NUu1is6VmuUJ7BBRkPoBTg&_nc_ss=78289&oh=00_AQPsGg2KwODciJY43IIG5e06SIIoTbSPH2-6s0P64scCSQ&oe=6AE59BA3","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Habitat et Promotion Immobilière","theme_ar":"الإسكان والنهوض العقاري"},
+{"fbid":"1038014889142879","type":"video","url":"https://www.facebook.com/reel/1038014889142879/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%AD%D9%8A%D9%86-%D9%8A%D8%AA%D8%AD%D9%88%D9%91%D9%84-%D8%AD%D9%84%D9%85-%D8%A7%D9%85%D8%AA%D9%84%D8%A7%D9%83-%D8%A7%D9%84%D8%B3%D9%83%D9%86-%D8%A5%D9%84%D9%89-%D9%88%D8%A7%D9%82%D8%B9-%D8%AA%D8%A8%D8%AF%D8%A3-%D8%AD%D9%83%D8%A7%D9%8A%D8%A9-%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9-%D8%B9%D9%86%D9%88%D8%A7%D9%86%D9%87%D8%A7-%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%82%D8%B1%D8%A7%D8%B1%D8%B3%D8%B9%D9%8A%D8%AF-%D8%A3%D8%A8%D9%8C-/1038014889142879/","titre":"حين يتحوّل حلم امتلاك السكن إلى واقع، تبدأ حكاية جديدة عنوانها الاستقرار.\n\nسعيد، أبٌ لابنتين، يروي تجربته مع برنامج «دعم سكن».","description":"حين يتحوّل حلم امتلاك السكن إلى واقع، تبدأ حكاية جديدة عنوانها الاستقرار.","vues":1000,"reactions":0,"date":"16/08/2026","date_iso":"2026-08-16","annee":2026,"miniature":"https://scontent.frba4-3.fna.fbcdn.net/v/t15.5256-10/770750831_1527646178625425_8120056615657155975_n.jpg?_nc_cat=107&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=D1sjFpC_B8EQ7kNvwE2myLl&_nc_oc=AdoZCZDJlKOtTejVn0RyM3BdPsHwB1vxNFpSD_30HxVL4ph5tBlbv39Rc1yNMYjhsHo&_nc_zt=23&_nc_ht=scontent.frba4-3.fna&_nc_gid=sH3wEhYuStxhAhXyC_LUdQ&_nc_ss=78289&oh=00_AQMTdkUtZlB6a_4V2Ewy2oTlQVafXVyi74gRKcmLmywqEA&oe=6AE5BADD","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Habitat et Promotion Immobilière","theme_ar":"الإسكان والنهوض العقاري"},
+{"fbid":"1984471075605927","type":"video","url":"https://www.facebook.com/reel/1984471075605927/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%84%D9%85%D8%AD%D8%A9-%D8%B9%D9%8BD-%D8%A3%D8%A8%D8%B1%D8%B2-%D9%85%D8%B4%D8%A7%D8%B1%D9%8A%D8%B9-%D8%B3%D9%8A%D8%A7%D8%B3%D8%A9-%D8%A7%D9%84%D9%85%D8%AF%D9%8A%D9%86%D8%A9-%D8%A8%D8%AC%D9%87%D8%A9-%D8%A7%D9%84%D8%B4%D8%B1%D9%82-%D8%A7%D9%84%D8%AA%D9%8A-%D8%AA%D9%8BD%D8%B1%D8%AC-%D9%81%D9%8A-%D8%A5%D8%B7%D8%A7%D8%B1-%D8%B1%D8%A4%D9%8A%D8%A9-%D8%AA%D9%86%D9%85%D9%88%D9%8A%D8%A9-%D8%AA%D9%87%D8%AF%D9%81/1984471075605927/","titre":"لمحة عن أبرز مشاريع سياسة المدينة بجهة الشرق، التي تندرج في إطار رؤية تنموية تهدف إلى تحسين إطار العيش، وتأهيل المجالات الحضرية.","description":"لمحة عن أبرز مشاريع سياسة المدينة بجهة الشرق، التي تندرج في إطار رؤية تنموية تهدف إلى تحسين إطار العيش.","vues":3100,"reactions":30,"date":"02/08/2026","date_iso":"2026-08-02","annee":2026,"miniature":"https://scontent.frba4-3.fna.fbcdn.net/v/t15.5256-10/762107705_1984475932272108_8622208261545070243_n.jpg?_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=ILXmENY7UEUQ7kNvwFyQipc&_nc_oc=Adrz0dgb-h1kpgTg6taBC_TXLguUbgy4R8mYCE2tzhITNK7c3yeGrImpTiLuzpfFldc&_nc_zt=23&_nc_ht=scontent.frba4-3.fna&_nc_gid=SSfeXiEUj7GIbJy1zTRLNw&_nc_ss=78289&oh=00_AQNaITUJRWhsIf0mDzF6irJpKR_l62zZ37g21nE7YLhMBg&oe=6AE5BAF1","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Politique de la ville","theme_ar":"سياسة المدينة"},
+{"fbid":"2194836677724524","type":"video","url":"https://www.facebook.com/reel/2194836677724524/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%81%D9%8A-%D8%AE%D8%AA%D8%A7%D9%85-%D9%85%D8%AD%D8%B7%D8%A7%D8%AA%D9%86%D8%A7-%D8%A8%D8%AC%D9%87%D8%A9-%D8%B7%D9%86%D8%AC%D8%A9-%D8%AA%D8%B7%D9%88%D8%A7%D9%86-%D8%A7%D9%84%D8%AD%D8%B3%D9%8A%D9%85%D8%A9-%D9%86%D8%B3%D8%AA%D8%B9%D8%B1%D8%B6-%D9%85%D8%B9%D9%83%D9%85-%D8%A3%D8%A8%D8%B1%D8%B2-%D9%85%D8%B4%D8%A7%D8%B1%D9%8A%D8%B9-%D8%B3%D9%8A%D8%A7%D8%B3%D8%A9-%D8%A7%D9%84%D9%85%D8%AF%D9%8A%D9%86%D8%A9-%D8%A7%D9%84/2194836677724524/","titre":"في ختام محطاتنا بجهة طنجة تطوان الحسيمة، نستعرض معكم أبرز مشاريع سياسة المدينة التي شهدتها مختلف مدن وأقاليم الجهة.","description":"في ختام محطاتنا بجهة طنجة تطوان الحسيمة، نستعرض معكم أبرز مشاريع سياسة المدينة.","vues":30000,"reactions":109,"date":"17/07/2026","date_iso":"2026-07-17","annee":2026,"miniature":"https://scontent.frba4-2.fna.fbcdn.net/v/t51.82787-15/750922018_18029309303833798_4322067522129210180_n.jpg?_nc_cat=102&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=a27664&_nc_ohc=XPuN8AFrfIcQ7kNvwEKhFwR&_nc_oc=AdoaKazOtOn_Ey7f0N6ZCjTd8U3m9gj68Q1BGORNK2rD_1MWgY3wB_zGEfU_DysUC6w&_nc_zt=23&_nc_ht=scontent.frba4-2.fna&_nc_gid=WmyzQX31ciR7raUEasOYMQ&_nc_ss=78289&oh=00_AQNtyuL7VNImR10rMv4dTd4SWcyS_AIZhUdy0g1qMLh5IQ&oe=6AE5A187","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Politique de la ville","theme_ar":"سياسة المدينة"},
+{"fbid":"3427805740714095","type":"video","url":"https://www.facebook.com/reel/3427805740714095/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A3%D8%A8%D8%B1%D8%B2-%D9%84%D8%AD%D8%B8%D8%A7%D8%AA-%D8%A5%D8%B4%D8%B1%D8%A7%D9%81-%D8%A7%D9%84%D8%B3%D9%8A%D8%AF%D8%A9-%D9%81%D8%A7%D8%B7%D9%85%D8%A9-%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1-%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D9%8A-%D8%B9%D9%84%D9%89-%D8%AD%D9%81%D9%84-%D8%AA%D9%88%D8%B2%D9%8A%D8%B9-%D8%A7%D9%84%D8%A3%D9%88%D8%B3%D9%85%D8%A9-%D8%A7%D9%84%D9%85%D9%84%D9%83%D9%8A%D8%A9-%D8%A7%D9%84%D8%AA/3427805740714095/","titre":"أبرز لحظات إشراف السيدة فاطمة الزهراء المنصوري على حفل توزيع الأوسمة الملكية، التي أنعم بها صاحب الجلالة الملك محمد السادس.","description":"أبرز لحظات إشراف السيدة فاطمة الزهراء المنصوري على حفل توزيع الأوسمة الملكية.","vues":39000,"reactions":139,"date":"16/07/2026","date_iso":"2026-07-16","annee":2026,"miniature":"https://scontent.frba4-1.fna.fbcdn.net/v/t15.5256-10/750665586_1508178643838034_3809123172906516398_n.jpg?_nc_cat=104&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=nD1KMof179AQ7kNvwFk2joO&_nc_oc=Adoedgim7ZeX4CMvM1MNgzMd-HWn4F7WSTAv2M6COe7fgkwhHkSXtp2Si3nbIwCImfE&_nc_zt=23&_nc_ht=scontent.frba4-1.fna&_nc_gid=ClM74bLbzfkR0EhmaHqOQQ&_nc_ss=78289&oh=00_AQMs3CmeaxoYriafIClgh_qirgzWeglS6LWC2FNlOll6pw&oe=6AE5C14F","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"AMÉNAGEMENT DU TERRITOIRE","theme_ar":"إعداد التراب الوطني"},
+{"fbid":"1741636113677979","type":"video","url":"https://www.facebook.com/reel/1741636113677979/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A3%D8%A8%D8%B1%D8%B2-%D9%84%D8%AD%D8%B8%D8%A7%D8%AA-%D8%B2%D9%8A%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%B3%D9%8A%D8%AF%D8%A9-%D9%81%D8%A7%D8%B7%D9%85%D8%A9-%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1-%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D9%8A-%D9%84%D8%B9%D8%AF%D8%AF-%D9%85%D9%86-%D8%A7%D9%84%D9%85%D8%B1%D8%A7%D9%81%D9%82-%D8%A7%D9%84%D8%A7%D8%AC%D8%AA%D9%85%D8%A7%D8%B9%D9%8A%D8%A9-%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF/1741636113677979/","titre":"أبرز لحظات زيارة السيدة فاطمة الزهراء المنصوري لعدد من المرافق الاجتماعية الجديدة بمقر الوزارة، والتي شملت المقر المخصص للتطبيب، وروض الأطفال، وفضاء التغذية.","description":"أبرز لحظات زيارة السيدة فاطمة الزهراء المنصوري لعدد من المرافق الاجتماعية الجديدة بمقر الوزارة.","vues":17000,"reactions":69,"date":"14/07/2026","date_iso":"2026-07-14","annee":2026,"miniature":"https://scontent.frba4-3.fna.fbcdn.net/v/t15.5256-10/742631629_1412742134003552_8481405723408499852_n.jpg?_nc_cat=108&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=v-tVRx0vyvgQ7kNvwHDAxhX&_nc_oc=AdpRAXoXM-NyouAxsNPpXVtid02ymoVFmthvjWoRGNO9qzGpql2DsJdSVWjBvP5YQg8&_nc_zt=23&_nc_ht=scontent.frba4-3.fna&_nc_gid=emCAzi26wkjaktKeoIDAFQ&_nc_ss=78289&oh=00_AQMqoTi4Va8vIh_8FdegTGzbMwR4xQztEq_LEmLsqsLzSg&oe=6AE590C4","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"AMÉNAGEMENT DU TERRITOIRE","theme_ar":"إعداد التراب الوطني"},
+{"fbid":"1490434226172696","type":"video","url":"https://www.facebook.com/reel/1490434226172696/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A3%D8%A8%D8%B1%D8%B2-%D9%84%D8%AD%D8%B8%D8%A7%D8%AA-%D8%AA%D8%B1%D8%A3%D8%B3-%D8%A7%D9%84%D8%B3%D9%8A%D8%AF%D8%A9-%D9%81%D8%A7%D8%B7%D9%85%D8%A9-%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1-%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D9%8A-%D8%A3%D8%B4%D8%BA%D8%A7%D9%84-%D8%A7%D9%84%D8%AF%D9%88%D8%B1%D8%A9-%D8%A7%D9%84%D8%B3%D8%A7%D8%AF%D8%B3%D8%A9-%D9%84%D9%84%D9%85%D8%AC%D9%84%D8%B3-%D8%A7%D9%84%D8%A5%D8%AF%D8%A7%D8%B1/1490434226172696/","titre":"أبرز لحظات ترؤس السيدة فاطمة الزهراء المنصوري أشغال الدورة السادسة للمجلس الإداري لمؤسسة الأعمال الاجتماعية للوزارة.","description":"أبرز لحظات ترؤس السيدة فاطمة الزهراء المنصوري أشغال الدورة السادسة للمجلس الإداري.","vues":20000,"reactions":134,"date":"14/07/2026","date_iso":"2026-07-14","annee":2026,"miniature":"https://scontent.frba4-1.fna.fbcdn.net/v/t15.5256-10/748631234_1047751727752702_7925942976207921847_n.jpg?_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=1ZrmCUa9n1QQ7kNvwGowPQ2&_nc_oc=AdoZafvzmYNhyOLaSqvg-U4wg32JMBT3f3TONYDhhfMeN814rKT64b20hKpv7S10kg8&_nc_zt=23&_nc_ht=scontent.frba4-1.fna&_nc_gid=_sUEqeU6Gngz-oB16ITvFw&_nc_ss=78289&oh=00_AQNucOOkTRgo7BxW0ZmEohlozc5X6EXWgIk81D_QBlCLVA&oe=6AE59A3B","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"AMÉNAGEMENT DU TERRITOIRE","theme_ar":"إعداد التراب الوطني"},
+{"fbid":"1726176838415079","type":"video","url":"https://www.facebook.com/reel/1726176838415079/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A3%D8%A8%D8%B1%D8%B2-%D9%84%D8%AD%D8%B8%D8%A7%D8%AA-%D8%A7%D9%84%D8%AF%D9%88%D8%B1%D8%A9-%D8%A7%D9%84%D8%B9%D8%A7%D8%B4%D8%B1%D8%A9-%D9%84%D9%85%D8%B9%D8%B1%D8%B6-%D8%A7%D9%84%D8%B9%D9%85%D8%B1%D8%A7%D9%86-%D8%A5%D9%83%D8%B3%D8%A8%D9%88-2026-%D8%A7%D9%84%D8%B0%D9%8A-%D8%A7%D8%AD%D8%AA%D8%B6%D9%86%D8%AA%D9%87-%D9%85%D8%AF%D9%8A%D9%86%D8%A9-%D8%A7%D9%84%D8%AF%D8%A7%D8%B1-%D8%A7%D9%84%D8%A8%D9%8A/1726176838415079/","titre":"أبرز لحظات الدورة العاشرة لمعرض العمران إكسبو 2026، الذي احتضنته مدينة الدار البيضاء تحت شعار «دعم السكن، ركيزة الدينامية الجديدة لقطاع السكن بالمغرب».","description":"أبرز لحظات الدورة العاشرة لمعرض العمران إكسبو 2026 بالدار البيضاء.","vues":23000,"reactions":119,"date":"07/07/2026","date_iso":"2026-07-07","annee":2026,"miniature":"https://scontent.frba4-1.fna.fbcdn.net/v/t51.82787-15/733565234_18027907811833798_7785400546297528916_n.jpg?_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=a27664&_nc_ohc=sRRoPKBwF1kQ7kNvwGjQxsA&_nc_oc=AdqRk29zXIiZLVFDv99ONil2CEKTkBsze2D7SpHTNXMuqOJZBS3zAQ2kWIeAYMF7VwU&_nc_zt=23&_nc_ht=scontent.frba4-1.fna&_nc_gid=zTh4jYCduQAkySgAQcbP2w&_nc_ss=78289&oh=00_AQN2g-ZzxQIpwU3RuXsg0qiRaQzfWZSE0NxX3kXKYTzIbw&oe=6AE59939","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Habitat et Promotion Immobilière","theme_ar":"الإسكان والنهوض العقاري"},
+{"fbid":"1727589698435832","type":"video","url":"https://www.facebook.com/reel/1727589698435832/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A8%D8%B9%D8%AF-%D9%85%D8%A7-%D8%AA%D8%B9%D8%B1%D9%81%D9%86%D8%A7-%D8%B9%D9%84%D9%89-%D8%A5%D8%B9%D8%AF%D8%A7%D8%AF-%D8%A7%D9%84%D8%AA%D8%B1%D8%A7%D8%A8-%D8%A7%D9%84%D9%88%D8%B7%D9%86%D9%8A-%D9%88%D8%A7%D9%84%D8%AA%D8%B9%D9%85%D9%8A%D8%B1-%D9%86%D8%AE%D8%AA%D9%85-%D8%B1%D8%AD%D9%84%D8%AA%D9%86%D8%A7-%D8%A8%D8%A7%D9%84%D8%AA%D8%B9%D8%B1%D9%81-%D8%B9%D9%84%D9%89-%D9%85%D9%87%D8%A7%D9%85-%D8%A7%D9%84%D8%A5%D8%B3/1727589698435832/","titre":"بعد ما تعرفنا على إعداد التراب الوطني والتعمير، نختم رحلتنا بالتعرف على مهام الإسكان وسياسة المدينة، باعتبارهما ركيزتين أساسيتين لتحسين إطار عيش المواطن.","description":"بعد ما تعرفنا على إعداد التراب الوطني والتعمير، نختم رحلتنا بالتعرف على مهام الإسكان وسياسة المدينة.","vues":4700,"reactions":36,"date":"02/07/2026","date_iso":"2026-07-02","annee":2026,"miniature":"https://scontent.frba4-3.fna.fbcdn.net/v/t15.5256-10/738866452_1677503161049306_3058961721538051229_n.jpg?_nc_cat=109&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=qWT0mEvATHsQ7kNvwH9Hlc6&_nc_oc=AdoS8IsuFkyFsrphpIMb8yRhGYFkZTzr9wIcxZClSiLFJwQ3VxQa-NgjRd0-VNtyN0o&_nc_zt=23&_nc_ht=scontent.frba4-3.fna&_nc_gid=VDmHngvHpgptsuYuPNVMZg&_nc_ss=78289&oh=00_AQMaV83HPyV-GhpsBRcvEFbhEJ-SuvHQmvm-ytMgk1lINQ&oe=6AE59F1E","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Habitat et Promotion Immobilière","theme_ar":"الإسكان والنهوض العقاري"},
+{"fbid":"1516116136881795","type":"video","url":"https://www.facebook.com/reel/1516116136881795/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A5%D8%B9%D8%AF%D8%A7%D8%AF-%D8%A7%D9%84%D8%AA%D8%B1%D8%A7%D8%A8-%D8%A7%D9%84%D9%88%D8%B7%D9%86%D9%8A-%D9%88%D8%A7%D9%84%D8%AA%D8%B9%D9%85%D9%8A%D8%B1-%D8%B1%D9%83%D9%8A%D8%B2%D8%AA%D8%A7%D9%86-%D8%A3%D8%B3%D8%A7%D8%B3%D9%8A%D8%AA%D8%A7%D9%86-%D9%84%D8%A8%D9%86%D8%A7%D8%A1-%D9%85%D8%AC%D8%A7%D9%84-%D9%85%D9%86%D8%B8%D9%85-%D9%88%D9%85%D8%AA%D9%88%D8%A7%D8%B2%D9%86-%D9%8A%D9%88%D8%A7%D9%83%D8%A8-%D8%AD%D8%A7%D8%AC%D9%8A/1516116136881795/","titre":"إعداد التراب الوطني والتعمير ركيزتان أساسيتان لبناء مجال منظم ومتوازن، يواكب حاجيات المواطنات والمواطنين، يعزز التنمية المستدامة.","description":"إعداد التراب الوطني والتعمير ركيزتان أساسيتان لبناء مجال منظم ومتوازن.","vues":3900,"reactions":54,"date":"25/06/2026","date_iso":"2026-06-25","annee":2026,"miniature":"https://scontent.frba4-3.fna.fbcdn.net/v/t15.5256-10/732091958_1538095457772580_5994157436627587401_n.jpg?_nc_cat=109&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=TjzEukvsgxoQ7kNvwHeg09S&_nc_oc=Adp6R8YBfSPoM1PXadOhVwUK7n_JMekrw_P2-KgexB7_loZ01PJIPId-HKFl7Vs7g4w&_nc_zt=23&_nc_ht=scontent.frba4-3.fna&_nc_gid=APNGVFRVmxKW7vRZB55s6Q&_nc_ss=78289&oh=00_AQPi9UwyV5sAyQUdFX8RPJh_WOmod41seqdKsrvgZypxYA&oe=6AE59BB5","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"AMÉNAGEMENT DU TERRITOIRE","theme_ar":"إعداد التراب الوطني"},
+{"fbid":"1703999450932986","type":"video","url":"https://www.facebook.com/reel/1703999450932986/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A3%D9%83%D8%AF%D8%AA-%D8%A7%D9%84%D8%B3%D9%8A%D8%AF%D8%A9-%D8%A7%D9%84%D9%88%D8%B2%D9%8A%D8%B1%D8%A9-%D9%81%D8%A7%D8%B7%D9%85%D8%A9-%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1-%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D9%8A-%D8%A3%D9%86-%D8%A7%D9%84%D8%AF%D9%88%D8%B1%D9%8A%D8%A9-%D8%A7%D9%84%D9%85%D8%B4%D8%AA%D8%B1%D9%83%D8%A9-%D8%A7%D9%84%D8%AE%D8%A7%D8%B5%D8%A9-%D8%A8%D8%A7%D9%84%D8%AA%D8%B9%D9%85%D9%8A%D8%B1-%D8%A8/1703999450932986/","titre":"أكدت السيدة الوزيرة فاطمة الزهراء المنصوري، أن الدورية المشتركة الخاصة بالتعمير بالعالم القروي حققت نتائج ملموسة، ورفع عدد الدواوير المحددة إلى 4698 دواراً.","description":"أكدت السيدة الوزيرة أن الدورية المشتركة الخاصة بالتعمير بالعالم القروي حققت نتائج ملموسة.","vues":3500,"reactions":57,"date":"24/06/2026","date_iso":"2026-06-24","annee":2026,"miniature":"https://scontent.frba4-1.fna.fbcdn.net/v/t15.5256-10/729988326_1708815637097184_2342385542890013536_n.jpg?_nc_cat=107&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=0Qt1PKo9Ob8Q7kNvwEPTaWN&_nc_oc=AdpI6tk2F8eG6XNO1ujIrDEedap-Tq_yZOkBhchT_bna8O_Q4Rt7kfpM6xM68020c-8&_nc_zt=23&_nc_ht=scontent.frba4-1.fna&_nc_gid=5A47zn7giWZ0c80TgIDIKQ&_nc_ss=78289&oh=00_AQOthNhP70DbpojKvRByCcgTGw8Az7RBrLR31JJdStSdVw&oe=6AE5B617","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Urbanisme","theme_ar":"التعمير"},
+{"fbid":"4516244051943163","type":"video","url":"https://www.facebook.com/reel/4516244051943163/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%81%D9%8A-%D8%A5%D8%B7%D8%A7%D8%B1-%D9%85%D9%88%D8%A7%D8%B5%D9%84%D8%A9-%D8%A5%D8%B5%D9%84%D8%A7%D8%AD-%D9%82%D8%B7%D8%A7%D8%B9-%D8%A7%D9%84%D8%AA%D8%B9%D9%85%D9%8A%D8%B1-%D8%A8%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85-%D8%A7%D9%84%D9%82%D8%B1%D9%88%D9%8A-%D8%A3%D9%88%D8%B6%D8%AD%D8%AA-%D8%A7%D9%84%D8%B3%D9%8A%D8%AF%D8%A9-%D9%81%D8%A7%D8%B7%D9%85%D8%A9-%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1-%D8%A7%D9%84%D9%85%D9%86/4516244051943163/","titre":"في إطار مواصلة إصلاح قطاع التعمير بالعالم القروي، أوضحت السيدة فاطمة الزهراء المنصوري أن مشروع القانون رقم 64.23 سيمكن من تعزيز الإطار القانوني والمؤسساتي للقطاع.","description":"في إطار مواصلة إصلاح قطاع التعمير بالعالم القروي.","vues":5700,"reactions":58,"date":"23/06/2026","date_iso":"2026-06-23","annee":2026,"miniature":"https://scontent.frba4-2.fna.fbcdn.net/v/t15.5256-10/729003940_1003663689061822_104934843050243954_n.jpg?_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=HJbyNDpSMPAQ7kNvwFOoRe_&_nc_oc=AdoQDwB0xEhrd4KHtfSYPXw-M_8uGcXTkX39iI_tRR_R-DWMX4ENftCatjnskNAgsSs&_nc_zt=23&_nc_ht=scontent.frba4-2.fna&_nc_gid=LK-b5KzS0889zr6z4cv9_w&_nc_ss=78289&oh=00_AQNLo4rJtGok3yaeUVHWyktIQZWcftauKVUskMDyKyOUeg&oe=6AE59CCE","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Encadrement Juridique","theme_ar":"التأطير القانوني"},
+{"fbid":"1305065715167434","type":"video","url":"https://www.facebook.com/reel/1305065715167434/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%AE%D9%84%D8%A7%D9%84-%D9%87%D8%B0%D9%87-%D8%A7%D9%84%D9%88%D9%84%D8%A7%D9%8A%D8%A9-90-%D9%85%D9%86-%D8%A7%D9%84%D8%AC%D9%85%D8%A7%D8%B9%D8%A7%D8%AA-%D8%A3%D8%B5%D8%A8%D8%AD%D8%AA-%D9%85%D8%BA%D8%B7%D8%A7%D8%A9-%D8%A8%D9%88%D8%AB%D8%A7%D8%A6%D9%82-%D8%A7%D9%84%D8%AA%D8%B9%D9%85%D9%8A%D8%B1-%D9%83%D9%85%D8%AA-%D8%AA%D9%85%D8%AA-%D8%A7%D9%84%D9%85%D8%B5%D8%A7%D8%AF%D9%82%D8%A9-%D8%B9%D9%84%D9%89-/1305065715167434/","titre":"خلال هذه الولاية، 90% من الجماعات أصبحت مغطاة بوثائق التعمير، كما تمت المصادقة على 447 وثيقة تعميرية.","description":"خلال هذه الولاية، 90% من الجماعات أصبحت مغطاة بوثائق التعمير.","vues":2400,"reactions":31,"date":"23/06/2026","date_iso":"2026-06-23","annee":2026,"miniature":"https://scontent.frba4-3.fna.fbcdn.net/v/t15.5256-10/727884572_2774592542924714_1780612336471389752_n.jpg?_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=xhf9qmz3a-MQ7kNvwF01Fm0&_nc_oc=AdrizZfT7WgHm7CqxqmBpCBYOFNU5ktHJgiJv7wVuQzxarw-OyeYDefFzjgB3sTeG9g&_nc_zt=23&_nc_ht=scontent.frba4-3.fna&_nc_gid=flnQqM9X-9qdpevtbiqj-Q&_nc_ss=78289&oh=00_AQPeysyru7SbXgnRLwTgAwNa5TrkFKmJ9i6p4oez1ixMAQ&oe=6AE5AF5F","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Urbanisme","theme_ar":"التعمير"},
+{"fbid":"1022127963522341","type":"video","url":"https://www.facebook.com/reel/1022127963522341/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%81%D9%8A-%D8%A5%D8%B7%D8%A7%D8%B1-%D8%A7%D9%84%D9%BD%D9%82%D8%A7%D8%B4%D8%A7%D8%AA-%D8%A7%D9%84%D8%AF%D9%88%D9%84%D9%8A%D8%A9-%D8%AD%D9%88%D9%84-%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%B3%D8%A7%D8%AA-%D8%A7%D9%84%D8%B3%D9%83%D9%86%D9%8A%D8%A9-%D8%A7%D9%84%D8%AD%D8%AF%D9%8A%D8%AB%D8%A9-%D9%88%D8%AE%D9%84%D8%A7%D9%84-%D8%A7%D9%84%D8%AF%D9%88%D8%B1%D8%A9-%D8%A7%D9%84%D8%AB%D8%A7%D9%85%D9%86%D8%A9-%D9%88%D8%A7%D9%84%D8%AE%D9%85/1022127963522341/","titre":"في إطار النقاشات الدولية حول السياسات السكنية الحديثة، استقطب البرنامج المغربي للدعم المباشر للسكن اهتمام عدد من الخبراء والمسؤولين الدوليين.","description":"في إطار النقاشات الدولية حول السياسات السكنية الحديثة.","vues":87000,"reactions":261,"date":"20/06/2026","date_iso":"2026-06-20","annee":2026,"miniature":"https://scontent.frba4-1.fna.fbcdn.net/v/t51.82787-15/726621034_18025454765833798_8710109409402189021_n.jpg?_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=a27664&_nc_ohc=5D-GZyPoBe0Q7kNvwEh7euu&_nc_oc=AdrLWvk0Vu0dv3hENxYZLGsIh3MV-NGZ_lh2u07TLm_6W_uHPNvMBidvWUg7v0BrYsQ&_nc_zt=23&_nc_ht=scontent.frba4-1.fna&_nc_gid=ssWL3sWkqqOj6SHfTzIVXQ&_nc_ss=78289&oh=00_AQPLlN-WwyryJLw8LZCl966rSI-yvQYL2ejJ2L7uzNAuDw&oe=6AE5C060","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Habitat et Promotion Immobilière","theme_ar":"الإسكان والنهوض العقاري"},
+{"fbid":"977839411915034","type":"video","url":"https://www.facebook.com/reel/977839411915034/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%81%D9%8A-%D8%A5%D8%B7%D8%A7%D8%B1-%D8%A3%D8%B4%D8%BA%D8%A7%D9%84-%D8%A7%D9%84%D8%AF%D9%88%D8%B1%D8%A9-%D8%A7%D9%84%D8%AB%D8%A7%D9%85%D9%86%D8%A9-%D9%88%D8%A7%D9%84%D8%AE%D9%85%D8%B3%D9%8A%D9%86-%D9%84%D8%B4%D8%A8%D9%83%D8%A9-%D8%A7%D9%84%D8%B3%D9%83%D9%86-%D9%88%D8%A7%D9%84%D9%81%D8%B1%D9%86%D9%83%D9%88%D9%81%D9%88%D9%86%D9%8A%D8%A9-%D9%88%D9%81%D9%8A-%D8%B3%D9%8A%D8%A7%D9%82-%D8%AA%D8%A8%D8%A7%D8%AF%D9%84-%D8%A7/977839411915034/","titre":"برودانس أدجانون، الأمين العام لشبكة الإسكان والفرنكوفونية، يعتبر أن برنامج دعم سكن يمثل مبادرة مبتكرة في مجال الولوج إلى السكن.","description":"برودانس أدجانون يعتبر أن برنامج دعم سكن يمثل مبادرة مبتكرة.","vues":76000,"reactions":139,"date":"18/06/2026","date_iso":"2026-06-18","annee":2026,"miniature":"https://scontent.frba4-3.fna.fbcdn.net/v/t51.82787-15/726689778_18025142210833798_4762243932731125018_n.jpg?_nc_cat=108&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=a27664&_nc_ohc=1FBd1N0NR8wQ7kNvwGffDJs&_nc_oc=Adr5HgyFuacQmQkW-NRxMetZMSxVzri47i0wwwrCIN2nBEWH4IUuX7seJ4fgjUo3NLg&_nc_zt=23&_nc_ht=scontent.frba4-3.fna&_nc_gid=BH4nk4GLa_xAknmvxqdsIw&_nc_ss=78289&oh=00_AQOF2oKEzvfFNeqecirRO0jLM-99X5OR4oPvKIlGuzapUA&oe=6AE599D2","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Habitat et Promotion Immobilière","theme_ar":"الإسكان والنهوض العقاري"},
+{"fbid":"2168853083948668","type":"video","url":"https://www.facebook.com/reel/2168853083948668/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A3%D9%8A-%D8%AD%D8%A7%D8%AC%D8%A9-%D8%B9%D9%86%D8%AF%D9%86%D8%A7-%D9%85%D9%86%D9%87%D8%A7-%D8%A7%D9%84%D8%AE%D9%88%D9%81-%D8%AD%D8%AA%D9%89-%D8%A7%D9%84%D8%A5%D8%B3%D8%B9%D8%A7%D9%81-%D9%85%D8%A7-%D9%83%D8%A7%D9%86%D8%AA%D8%B4-%D9%83%D8%AA%D9%84%D9%82%D9%89-%D8%A7%D9%84%D8%B9%D9%86%D9%88%D8%A7%D9%86-%D8%A8%D8%A7%D8%B4-%D8%AA%D9%88%D8%B5%D9%84-%D9%84%D9%8A%D9%86%D8%A7%D8%A8%D9%87%D8%B0%D9%87-%D8%A7/2168853083948668/","titre":"\"أي حاجة عندنا منها الخوف، حتى الإسعاف ما كانتش كتلقى العنوان باش توصل لينا…\" بهذه الكلمات تختصر السيدة ميلودة واقعاً صعباً أصبح من الماضي بفضل برنامج \"مدن بدون صفيح\".","description":"قصة السيدة ميلودة، مستفيدة من برنامج \"مدن بدون صفيح\" بالدار البيضاء.","vues":371000,"reactions":414,"date":"17/06/2026","date_iso":"2026-06-17","annee":2026,"miniature":"https://scontent.frba4-1.fna.fbcdn.net/v/t15.5256-10/724539656_3961514980808975_3333318824446460177_n.jpg?_nc_cat=102&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=jHE4hWj2TcUQ7kNvwFedHek&_nc_oc=AdqfCUA3xedXvG3vISuJUtr5F_utE-Noocc_PGK8-CWYR7pX0sUpBYObkAG9KN96H40&_nc_zt=23&_nc_ht=scontent.frba4-1.fna&_nc_gid=khOcB5oeYZeTnKajGX1JuA&_nc_ss=78289&oh=00_AQOdiOW23Sb4gGvV1vsdG8uJl9S-WulSCUtslDQcWGF_rA&oe=6AE5B179","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Politique de la ville","theme_ar":"سياسة المدينة"},
+{"fbid":"1664272431522081","type":"video","url":"https://www.facebook.com/reel/1664272431522081/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%81%D9%8A-%D8%A5%D8%B7%D8%A7%D8%B1-%D8%A3%D8%B4%D8%BA%D8%A7%D9%84-%D8%A7%D9%84%D8%AF%D9%88%D8%B1%D8%A9-%D8%A7%D9%84%D8%AB%D8%A7%D9%85%D9%86%D8%A9-%D9%88%D8%A7%D9%84%D8%AE%D9%85%D8%B3%D9%8A%D9%86-%D9%84%D8%B4%D8%A8%D9%83%D8%A9-%D8%A7%D9%84%D8%B3%D9%83%D9%86-%D9%88%D8%A7%D9%84%D9%81%D8%B1%D9%86%D9%83%D9%88%D9%81%D9%88%D9%8BD%D9%8A%D8%A9-%D8%A7%D8%B3%D8%AA%D9%88%D9%82%D9%81%D8%AA-%D8%AA%D8%AC%D8%B1%D8%A8%D8%A9-%D8%A7/1664272431522081/","titre":"في إطار الدورة 58 لشبكة السكن والفرنكوفونية، استوقفت تجربة الدعم المباشر للسكن بالمغرب اهتمام عدد من الخبراء والمسؤولين الدوليين.","description":"تجربة الدعم المباشر للسكن بالمغرب تستوقف الخبراء الدوليين.","vues":272000,"reactions":872,"date":"16/06/2026","date_iso":"2026-06-16","annee":2026,"miniature":"https://scontent.frba4-1.fna.fbcdn.net/v/t15.5256-10/723791235_1617174090012913_7210320193271866816_n.jpg?_nc_cat=108&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=PCmq36vhiyAQ7kNvwGsC3xf&_nc_oc=Adq3Pv1sztacSduPcGGAsZ2UZ9ipAZZV9GKwSaEJibWH8DQDkS88Y9IKCWV3J7Ylw_g&_nc_zt=23&_nc_ht=scontent.frba4-1.fna&_nc_gid=I3_xZBj67pqcADj19SZJIw&_nc_ss=78289&oh=00_AQNK5-qfFROoNjumCfq4eG-Gw24HFLhnFVGDsLxP6YjjOA&oe=6AE5C068","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Habitat et Promotion Immobilière","theme_ar":"الإسكان والنهوض العقاري"},
+{"fbid":"992039776895198","type":"video","url":"https://www.facebook.com/reel/992039776895198/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%81%D9%8A-%D9%87%D8%B0%D8%A7-%D8%A7%D9%84%D9%85%D9%82%D8%AA%D8%B7%D9%81-%D9%85%D9%86-%D9%85%D8%AF%D8%A7%D8%AE%D9%84%D8%A9-%D8%A7%D9%84%D8%B3%D9%8A%D8%AF%D8%A9-%D8%A7%D9%84%D9%88%D8%B2%D9%8A%D8%B1%D8%A9-%D9%81%D8%A7%D8%B7%D9%85%D8%A9-%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1-%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D9%8A-%D8%A8%D8%A8%D9%88%D8%AF%D9%83%D8%A7%D8%B3%D8%AA-touil-ta/992039776895198/","titre":"في هذا المقتطف من مداخلة السيدة الوزيرة فاطمة الزهراء المنصوري ببودكاست TOUIL TALKS، أكدَت على أهمية النهوض بالعالم القروي من خلال تقريب الخدمات الأساسية.","description":"مداخلة السيدة الوزيرة في بودكاست TOUIL TALKS حول النهوض بالعالم القروي.","vues":428000,"reactions":1400,"date":"13/06/2026","date_iso":"2026-06-13","annee":2026,"miniature":"https://scontent.frba4-3.fna.fbcdn.net/v/t15.5256-10/721950302_2486054411916459_191958902833737683_n.jpg?_nc_cat=110&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=RSa2PYlz6C4Q7kNvwF_q7Ks&_nc_oc=AdoEK8eZfNIgytZjQXifY4cj7ZeSD_yvit-O5pAffEWM0_u3d_Rfg-Haj2YOCJEsZEs&_nc_zt=23&_nc_ht=scontent.frba4-3.fna&_nc_gid=cR_GYKQK4QQMtWhh-1JJhA&_nc_ss=78289&oh=00_AQNLa4PWIa2L8Uiy8Dbiv-yJvSMYy537tXJrVmv1Qy_VDw&oe=6AE5C087","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"APPUI AU DÉVELOPPEMENT TERRITORIAL","theme_ar":"دعم التنمية الترابية"},
+{"fbid":"994879163241531","type":"video","url":"https://www.facebook.com/reel/994879163241531/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%85%D9%82%D8%AA%D8%B7%D9%81-%D9%85%D9%86-%D9%85%D8%AF%D8%A7%D8%AE%D9%84%D8%A9-%D8%A7%D9%84%D8%B3%D9%8A%D8%AF%D8%A9-%D8%A7%D9%84%D9%88%D8%B2%D9%8A%D8%B1%D8%A9-%D9%81%D8%A7%D8%B7%D9%85%D8%A9-%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1-%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D9%8A-%D9%81%D9%8A-%D8%A8%D9%88%D8%AF%D9%83%D8%A7%D8%B3%D8%AA-touil-talks-%D8%AA%D8%AD%D8%AF/994879163241531/","titre":"مقتطف من مداخلة السيدة الوزيرة فاطمة الزهراء المنصوري في بودكاست TOUIL TALKS تحدثت فيه عن برنامج الدعم المباشر للسكن، الذي انتقل من دعم العرض إلى دعم الطلب.","description":"مداخلة السيدة الوزيرة في بودكاست TOUIL TALKS حول برنامج الدعم المباشر للسكن.","vues":211000,"reactions":617,"date":"12/06/2026","date_iso":"2026-06-12","annee":2026,"miniature":"https://scontent.frba4-2.fna.fbcdn.net/v/t15.5256-10/721757213_1667496911143875_2989290135634638532_n.jpg?_nc_cat=100&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=nxI4rwFMu_wQ7kNvwFNpNCK&_nc_oc=AdobfSW-EL8Sb2Z34wyP7pzajF9ANZryHkhFp8_376GvII4gN-UmPCi17m6RcKvxstA&_nc_zt=23&_nc_ht=scontent.frba4-2.fna&_nc_gid=_hULjUEf5RyXt6dqtZRhNQ&_nc_ss=78289&oh=00_AQMQwjKGs4jZcICEoCorgkGjOg1csG9nQEFvGS41klPMZg&oe=6AE5C2D7","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Habitat et Promotion Immobilière","theme_ar":"الإسكان والنهوض العقاري"},
+{"fbid":"1004520775514951","type":"video","url":"https://www.facebook.com/reel/1004520775514951/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%85%D9%82%D8%AA%D8%B7%D9%81-%D9%85%D9%86-%D9%85%D8%AF%D8%A7%D8%AE%D9%84%D8%A9-%D8%A7%D9%84%D8%B3%D9%8A%D8%AF%D8%A9-%D8%A7%D9%84%D9%88%D8%B2%D9%8A%D8%B1%D8%A9-%D9%81%D8%A7%D8%B7%D9%85%D8%A9-%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1-%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D9%8A-%D9%81%D9%8A-%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC-touil-talks-%D8%AA%D8%B7%D8%B1%D9%82/1004520775514951/","titre":"مقتطف من مداخلة السيدة الوزيرة فاطمة الزهراء المنصوري في برنامج TOUIL TALKS، تطرقت فيه إلى الوضعية الإيجابية التي يعرفها قطاع التعمير اليوم.","description":"مداخلة السيدة الوزيرة في TOUIL TALKS حول قطاع التعمير.","vues":182000,"reactions":353,"date":"12/06/2026","date_iso":"2026-06-12","annee":2026,"miniature":"https://scontent.frba4-1.fna.fbcdn.net/v/t15.5256-10/721778416_1487256165926392_5313428613543024717_n.jpg?_nc_cat=109&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=VWTV5kAt3CwQ7kNvwHATbgt&_nc_oc=Adr1Er7rLG70_ia4fgrQ4pckH_eERwSumCpGz_QiCSe3sBxDRz_tyvMBL_3_LBtMCl8&_nc_zt=23&_nc_ht=scontent.frba4-1.fna&_nc_gid=5nYF0_qvcbZZzR2XzzM-HA&_nc_ss=78289&oh=00_AQMipFx1dGbPMKIiAd1B9Aw5kuQ4J8hsTKm0-aWMSggVcw&oe=6AE5B6A8","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Urbanisme","theme_ar":"التعمير"},
+{"fbid":"1518420679667870","type":"video","url":"https://www.facebook.com/reel/1518420679667870/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%85%D9%82%D8%AA%D8%B7%D9%81-%D9%85%D9%86-%D9%85%D8%AF%D8%A7%D8%AE%D9%84%D8%A9-%D8%A7%D9%84%D8%B3%D9%8A%D8%AF%D8%A9-%D8%A7%D9%84%D9%88%D8%B2%D9%8A%D8%B1%D8%A9-%D9%81%D8%A7%D8%B7%D9%85%D8%A9-%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1-%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D9%8A-%D9%81%D9%8A-%D8%A8%D9%88%D8%AF%D9%83%D8%A7%D8%B3%D8%AA-touil-talks-%D8%AA%D8%B3%D8%AA/1518420679667870/","titre":"مقتطف من مداخلة السيدة الوزيرة فاطمة الزهراء المنصوري في بودكاست TOUIL TALKS، تستعرض فيه الجهود المبذولة لتعميم وثائق التعمير بالمدن الكبرى.","description":"مداخلة السيدة الوزيرة حول تعميم وثائق التعمير بالمدن الكبرى.","vues":177000,"reactions":555,"date":"10/06/2026","date_iso":"2026-06-10","annee":2026,"miniature":"https://scontent.frba4-2.fna.fbcdn.net/v/t15.5256-10/721377111_1017639104289166_4750398240127093283_n.jpg?_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=ptptAZNZct0Q7kNvwErHt8q&_nc_oc=AdpKwfVWcLQxvdzkTcli86ldB5b6DeL1BVTCXtYuClVfSYDFZCWd7B54wAA7qkM8S8E&_nc_zt=23&_nc_ht=scontent.frba4-2.fna&_nc_gid=gMlMrfdNmsXSuJcfN7dI3Q&_nc_ss=78289&oh=00_AQPz7oCy3afCVxW9aFgawuVa2O7qp9DLAzeoVM4h8WQC0Q&oe=6AE5B5A1","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Urbanisme","theme_ar":"التعمير"},
+{"fbid":"947711704957137","type":"video","url":"https://www.facebook.com/reel/947711704957137/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%8A%D9%8F%D8%B9%D8%AF%D9%91-%D8%A7%D9%84%D9%88%D9%84%D9%88%D8%AC-%D8%A5%D9%84%D9%89-%D8%B3%D9%83%D9%86-%D9%84%D8%A7%D8%A6%D9%82-%D9%85%D9%86-%D8%A8%D9%8A%D9%86-%D8%A7%D9%84%D8%A3%D9%88%D9%84%D9%88%D9%8A%D8%A7%D8%AA-%D8%A7%D9%84%D8%A3%D8%B3%D8%A7%D8%B3%D9%8A%D8%A9-%D8%A7%D9%84%D8%AA%D9%8A-%D8%AA%D8%B3%D8%A7%D9%87%D9%85-%D9%81%D9%8A-%D8%AA%D8%B9%D8%B2%D9%8A%D8%B2-%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%82%D8%B1%D8%A7/947711704957137/","titre":"يُعدّ الولوج إلى سكن لائق من بين الأولويات الأساسية التي تساهم في تعزيز الاستقرار الاجتماعي، خاصة لدى فئة الشباب.","description":"الولوج إلى سكن لائق أولوية أساسية لتعزيز الاستقرار الاجتماعي.","vues":1600,"reactions":11,"date":"04/06/2026","date_iso":"2026-06-04","annee":2026,"miniature":"https://scontent.frba4-1.fna.fbcdn.net/v/t15.5256-10/717665234_1795540518519806_2680877044103724350_n.jpg?_nc_cat=107&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=rxdYcOuxMb8Q7kNvwH8Ju75&_nc_oc=AdrgMmbr_qjjxnuezAEMehZkLGyTD1BY__0a20OgmsHYH5SN--njQYwuC3PlYMBrWZA&_nc_zt=23&_nc_ht=scontent.frba4-1.fna&_nc_gid=-YTIzMSQyLQZMMGxrOt-iw&_nc_ss=78289&oh=00_AQNeQk18b5smKWv82cDDGQyo1IbDZWdLuLGD0djk_NyfEw&oe=6AE5A66E","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Habitat et Promotion Immobilière","theme_ar":"الإسكان والنهوض العقاري"},
+{"fbid":"1913206496051517","type":"video","url":"https://www.facebook.com/reel/1913206496051517/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A3%D8%AF%D9%8A%D8%A8-%D8%A8%D9%86%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85-28-%D8%A3%D9%84%D9%81-%D8%A8%D9%86%D8%A7%D9%8A%D8%A9-%D8%A2%D9%8A%D9%84%D8%A9-%D9%84%D9%84%D8%B3%D9%82%D9%88%D8%B7-%D8%B4%D9%85%D9%84%D8%AA%D9%87%D8%A7-%D8%A7%D9%84%D8%AE%D8%A8%D8%B1%D8%A9-%D8%A7%D9%84%D8%AA%D9%82%D9%86%D9%8A%D8%A9-%D9%88%D8%A5%D8%AD%D8%A7%D9%84%D8%A9-%D8%A7%D9%84%D8%AD%D8%A7%D9%84%D8%A7%D8%AA-%D8%A7%D9%84%D9%85%D8%B3/1913206496051517/","titre":"أديب بنبراهيم: 28 ألف بناية آيلة للسقوط شملتها الخبرة التقنية، وإحالة الحالات المستعجلة على الجهات المعنية.","description":"أديب بنبراهيم: 28 ألف بناية آيلة للسقوط شملتها الخبرة التقنية.","vues":10000,"reactions":133,"date":"02/06/2026","date_iso":"2026-06-02","annee":2026,"miniature":"https://scontent.frba4-2.fna.fbcdn.net/v/t51.82787-15/714223706_18023114579833798_4214111342900302703_n.jpg?_nc_cat=100&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=a27664&_nc_ohc=_VveN1jcJHkQ7kNvwELIm4W&_nc_oc=Adpu-HJ6eG07TLCnq6euzRetNVsDaSS2H3aDHOy3RwoshWbD0F_OHPAnmWBsKGNVZ_8&_nc_zt=23&_nc_ht=scontent.frba4-2.fna&_nc_gid=CeCUtn09Pnn56tLeciDINw&_nc_ss=78289&oh=00_AQNeZ8FGHIXGNgStwwnITCzvJeEVNXD4zatYMW8tqCDJtw&oe=6AE5AD44","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Encadrement Technique","theme_ar":"التأطير التقني"},
+{"fbid":"987299400343666","type":"video","url":"https://www.facebook.com/reel/987299400343666/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%B4%D9%87%D8%A7%D8%AF%D8%A7%D8%AA-%D8%A7%D9%84%D9%8A%D9%88%D9%85-%D9%84%D9%8A%D8%B3%D8%AA-%D9%81%D9%82%D8%B7-%D8%AD%D9%83%D8%A7%D9%8A%D8%A7%D8%AA-%D8%B9%D9%86-%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D9%82%D8%A7%D9%84-%D9%85%D9%86-%D8%A7%D9%84%D8%B3%D9%83%D9%86-%D8%A7%D9%84%D8%B9%D8%B4%D9%88%D8%A7%D8%A6%D9%8A-%D8%A5%D9%84%D9%89-%D8%A7%D9%84%D8%B3%D9%83%D9%86-%D8%A7%D9%84%D9%85%D9%87%D9%8A%D9%83%D9%84-%D8%A8%D9%84-/987299400343666/","titre":"شهادات اليوم ليست فقط حكايات عن الانتقال من السكن العشوائي إلى السكن المهيكل، بل هي حكايات أسرٍ استعادت حقها في العيش بكرامة.","description":"شهادات أسر استعادت حقها في العيش بكرامة.","vues":11000,"reactions":33,"date":"22/05/2026","date_iso":"2026-05-22","annee":2026,"miniature":"https://scontent.frba4-2.fna.fbcdn.net/v/t15.5256-10/705698743_1003962495439944_3897754719420669678_n.jpg?_nc_cat=107&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=7aUc8oTZ9m0Q7kNvwHIjSXk&_nc_oc=Adp7-f1FEhgqCZTsUHktniqWURQmd_P3f7WdR168HO5Fz3LPcVEgFOipawIO8YC0gRk&_nc_zt=23&_nc_ht=scontent.frba4-2.fna&_nc_gid=OPrViPr_jT9qQjkRj1wlKg&_nc_ss=78289&oh=00_AQOI8EB1gxoJ8PI1I0eVa2YG02GhexokU86wMiwRqOOR_w&oe=6AE5BEAE","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Politique de la ville","theme_ar":"سياسة المدينة"},
+{"fbid":"957260627204768","type":"video","url":"https://www.facebook.com/reel/957260627204768/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A3%D8%A8%D8%B1%D8%B2-%D9%84%D8%AD%D8%B8%D8%A7%D8%AA-%D8%A7%D9%84%D9%8A%D9%88%D9%85-%D8%A7%D9%84%D8%A3%D9%88%D9%84-%D9%85%D9%86-%D9%81%D8%B9%D8%A7%D9%84%D9%8A%D8%A7%D8%AA-%D8%A7%D9%84%D9%85%D9%86%D8%AA%D8%AF%D9%89-%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85%D9%8A-%D8%A7%D9%84%D8%AB%D8%A7%D9%84%D8%AB-%D8%B9%D8%B4%D8%B1-%D8%A8%D8%A8%D8%A7%D9%83%D9%88-%D9%85%D8%B4%D8%A7%D8%B1%D9%83%D8%A9-%D9%85%D8%AA%D9%85%D9%8A%D8%B2%D8%A9/957260627204768/","titre":"أبرز لحظات اليوم الأول من فعاليات المنتدى العالمي الثالث عشر بباكو. مشاركة متميزة للمملكة المغربية عبر وفد رسمي يتأرسه السيد أديب إبن ابراهيم.","description":"مشاركة المملكة المغربية في المنتدى العالمي الثالث عشر بباكو.","vues":20000,"reactions":70,"date":"18/05/2026","date_iso":"2026-05-18","annee":2026,"miniature":"https://scontent.frba4-1.fna.fbcdn.net/v/t15.5256-10/701663693_2757978707909770_7080284050555854243_n.jpg?_nc_cat=100&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=4hGrkcdi0cMQ7kNvwFFVlLT&_nc_oc=AdpeMscWhRRTOPNNeC24znN1AcubienW5vN2D7h_0CY2j5EVHhFnUDgySiHtCik7Trc&_nc_zt=23&_nc_ht=scontent.frba4-1.fna&_nc_gid=WkpIMkyp2JIp28j17HEZyA&_nc_ss=78289&oh=00_AQMfqgHDEHDNK9XGaadRIQswYFlm1ks7IyzeCSJZqL0itA&oe=6AE5A0CB","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"AMÉNAGEMENT DU TERRITOIRE","theme_ar":"إعداد التراب الوطني"},
+{"fbid":"873120169135556","type":"video","url":"https://www.facebook.com/reel/873120169135556/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A3%D8%A8%D8%B1%D8%B2-%D9%84%D8%AD%D8%B8%D8%A7%D8%AA-%D9%85%D8%B4%D8%A7%D8%B1%D9%83%D8%A9-%D9%88%D8%B2%D8%A7%D8%B1%D8%A9-%D8%A5%D8%B9%D8%AF%D8%A7%D8%AF-%D8%A7%D9%84%D8%AA%D8%B1%D8%A7%D8%A8-%D8%A7%D9%84%D9%88%D8%B7%D9%86%D9%8A-%D9%88%D8%A7%D9%84%D8%AA%D8%B9%D9%85%D9%8A%D8%B1-%D9%88%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D8%A7%D9%86-%D9%88%D8%B3%D9%8A%D8%A7%D8%B3%D8%A9-%D8%A7%D9%84%D9%85%D8%AF%D9%8A%D9%86%D8%A9-%D9%81%D9%8A-/873120169135556/","titre":"أبرز لحظات مشاركة وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة في الدورة الـ31 للمعرض الدولي للنشر والكتاب.","description":"مشاركة الوزارة في الدورة الـ31 للمعرض الدولي للنشر والكتاب.","vues":10000,"reactions":29,"date":"14/05/2026","date_iso":"2026-05-14","annee":2026,"miniature":"https://scontent.frba4-3.fna.fbcdn.net/v/t15.5256-10/697841059_814410284783055_8183082867709208648_n.jpg?_nc_cat=109&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=9D_GVm2rmM4Q7kNvwFu6qjL&_nc_oc=AdqHBohWBXLfOsqOuQXd2eBRHgptRgoNBRNo3Jbbs1W-FXUHVl80gKjS26f9mLR-24M&_nc_zt=23&_nc_ht=scontent.frba4-3.fna&_nc_gid=K620qNx3DT4kJ7dfJBWWFQ&_nc_ss=78289&oh=00_AQMr3GKz1BEmYG9OMBLJu1ujS_471M4-zFpjp4oHoFLqAw&oe=6AE58EE2","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"AMÉNAGEMENT DU TERRITOIRE","theme_ar":"إعداد التراب الوطني"},
+{"fbid":"27283496607914232","type":"video","url":"https://www.facebook.com/reel/27283496607914232/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%AC%D9%88%D8%A7%D8%A8-%D8%A7%D9%84%D8%B3%D9%8A%D8%AF-%D8%A3%D8%AF%D9%8A%D8%A8-%D8%A8%D9%86%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85-%D9%83%D8%A7%D8%AA%D8%A8-%D8%A7%D9%84%D8%AF%D9%88%D9%84%D8%A9-%D8%A7%D9%84%D9%85%D9%83%D9%84%D9%81-%D8%A8%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D8%A7%D9%86-%D9%86%D9%8A%D8%A7%D8%A8%D8%A9%D9%8B-%D8%B9%D9%8BD-%D8%A7%D9%84%D8%B3%D9%8A%D8%AF%D8%A9-%D9%81%D8%A7%D8%B7%D9%85%D8%A9-%D8%A7%D9%84%D8%B2%D9%87/27283496607914232/","titre":"جواب السيد أديب بنبراهيم، كاتب الدولة المكلف بالإسكان، نيابةً عن السيدة فاطمة الزهراء المنصوري، حول الحوار الوطني للتعمير والإسكان.","description":"جواب السيد أديب بنبراهيم حول الحوار الوطني للتعمير والإسكان.","vues":24000,"reactions":76,"date":"12/05/2026","date_iso":"2026-05-12","annee":2026,"miniature":"https://scontent.frba4-2.fna.fbcdn.net/v/t15.5256-10/699110854_1272089238238360_6648994758771594455_n.jpg?_nc_cat=102&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=vilF3LhUqpcQ7kNvwFBFTUe&_nc_oc=AdqXLg2QE84DhF-c1_od-vY0xjrvGjSfJHFMfG18zcS_ZreG-4Itaqw47Pb8MfjWOTI&_nc_zt=23&_nc_ht=scontent.frba4-2.fna&_nc_gid=mV0kwG80vQQk6_kIw_woUw&_nc_ss=78289&oh=00_AQOIA9-_9Bm6DUScDnAqDUrIR-fN55hDCGeU6bsUFox0-A&oe=6AE5A90A","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Urbanisme","theme_ar":"التعمير"},
+{"fbid":"987556696993378","type":"video","url":"https://www.facebook.com/reel/987556696993378/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%AC%D9%88%D8%A7%D8%A8-%D8%A7%D9%84%D8%B3%D9%8A%D8%AF-%D8%A3%D8%AF%D9%8A%D8%A8-%D8%A8%D9%86%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85-%D9%83%D8%A7%D8%AA%D8%A8-%D8%A7%D9%84%D8%AF%D9%88%D9%84%D8%A9-%D8%A7%D9%84%D9%85%D9%83%D9%84%D9%81-%D8%A8%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D8%A7%D9%86-%D9%86%D9%8A%D8%A7%D8%A8%D8%A9%D9%8B-%D8%B9%D9%8BD-%D8%A7%D9%84%D8%B3%D9%8A%D8%AF%D8%A9-%D9%81%D8%A7%D8%B7%D9%85%D8%A9-%D8%A7%D9%84%D8%B2%D9%87/987556696993378/","titre":"جواب السيد أديب بنبراهيم، كاتب الدولة المكلف بالإسكان، نيابةً عن السيدة فاطمة الزهراء المنصوري، حول مجموعة العمران.","description":"جواب السيد أديب بنبراهيم حول مجموعة العمران.","vues":25000,"reactions":85,"date":"12/05/2026","date_iso":"2026-05-12","annee":2026,"miniature":"https://scontent.frba4-2.fna.fbcdn.net/v/t15.5256-10/693078076_4599959890239669_8026673718248060451_n.jpg?_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=LYZWkTUTV9MQ7kNvwFo-Kh1&_nc_oc=Ado48fMkqESqPaW2INacCVcOiIb3O3fBmG7Ck0taf1vhkDlbmWVNQUU2jHqMrrT1u-A&_nc_zt=23&_nc_ht=scontent.frba4-2.fna&_nc_gid=Jw8a7vf86tMNQTbh0fMLBA&_nc_ss=78289&oh=00_AQPCKeRLzeEKsm9l5zXUpE_V57jyybbbbVIiPsY3kTNoyw&oe=6AE5A382","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Habitat et Promotion Immobilière","theme_ar":"الإسكان والنهوض العقاري"},
+{"fbid":"2063773647820033","type":"video","url":"https://www.facebook.com/reel/2063773647820033/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A3%D8%A8%D8%B1%D8%B2-%D9%84%D8%AD%D8%B8%D8%A7%D8%AA-%D9%85%D8%B4%D8%A7%D8%B1%D9%83%D8%A9-%D9%88%D8%B2%D8%A7%D8%B1%D8%A9-%D8%A5%D8%B9%D8%AF%D8%A7%D8%AF-%D8%A7%D9%84%D8%AA%D8%B1%D8%A7%D8%A8-%D8%A7%D9%84%D9%88%D8%B7%D9%86%D9%8A-%D9%88%D8%A7%D9%84%D8%AA%D8%B9%D9%85%D9%8A%D8%B1-%D9%88%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D8%A7%D9%86-%D9%88%D8%B3%D9%8A%D8%A7%D8%B3%D8%A9-%D8%A7%D9%84%D9%85%D8%AF%D9%8A%D9%86%D8%A9-%D9%81%D9%8A-/2063773647820033/","titre":"أبرز لحظات مشاركة وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة في فعاليات الدورة 58 لشبكة السكن والفرنكوفونية.","description":"مشاركة الوزارة في فعاليات الدورة 58 لشبكة السكن والفرنكوفونية.","vues":17000,"reactions":66,"date":"10/05/2026","date_iso":"2026-05-10","annee":2026,"miniature":"https://scontent.frba4-1.fna.fbcdn.net/v/t15.5256-10/696038053_1410301384467038_8346140589786630429_n.jpg?_nc_cat=110&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=lh70eE2UcnUQ7kNvwEFAe_a&_nc_oc=Adq-tFkMRA7V85B9XQnOvcN1UOZQ2LcIQKsV1vyTwoJVB_yoPI2CzNWNqg7q7QZwYTA&_nc_zt=23&_nc_ht=scontent.frba4-1.fna&_nc_gid=3Fwn9algGTbLWsHUDMWREA&_nc_ss=78289&oh=00_AQMRDietZqW-AqAgSSZRjQ4ttUJ_dzxxZfwD1-GVU3ukRg&oe=6AE5BD21","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Habitat et Promotion Immobilière","theme_ar":"الإسكان والنهوض العقاري"},
+{"fbid":"1526504562426533","type":"video","url":"https://www.facebook.com/reel/1526504562426533/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%AF%D8%A7%D8%B1-%D9%85%D8%A7%D8%B4%D9%8A-%D8%BA%D9%8A%D8%B1-%D8%AD%D9%8A%D8%B7-%D9%88%D8%B3%D9%82%D9%81%D9%87%D9%8A-%D8%A7%D9%84%D8%A3%D9%85%D8%A7%D9%86-%D9%88%D8%A7%D9%84%D9%83%D8%B1%D8%A7%D9%85%D8%A9-%D9%88%D8%A3%D8%B3%D8%A7%D8%B3-%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%82%D8%B1%D8%A7%D8%B1%D8%A7%D9%84%D9%8A%D9%88%D9%85-%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC-%D8%AF%D8%B9%D9%85-%D8%B3%D9%83%D9%86-%D9%83%D9%8A%D8%AA%D8%B1/1526504562426533/","titre":"دار… ماشي غير حيط وسقف، هي الأمان، والكرامة، وأساس الاستقرار. اليوم، برنامج دعم سكن كيترجم هاد الحق لواقع ملموس.","description":"دار… ماشي غير حيط وسقف، هي الأمان، والكرامة، وأساس الاستقرار.","vues":15000,"reactions":42,"date":"05/05/2026","date_iso":"2026-05-05","annee":2026,"miniature":"https://scontent.frba4-2.fna.fbcdn.net/v/t15.5256-10/687941883_3904283396547837_2114956253295731888_n.jpg?_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=fX_ZxpDlQzgQ7kNvwGIhiuU&_nc_oc=Adqms9O1WIgwCL6g6xe4v-0Yk8fl04E1PMdtFvI95gqu8PnwYP0ZNH_9DF1sgg7Iw4A&_nc_zt=23&_nc_ht=scontent.frba4-2.fna&_nc_gid=2eQl8zxwd1g5aAIYYmBb6g&_nc_ss=78289&oh=00_AQO958wxCwi9-tgMgqeDjU1lpz4_dnh0_GvRTOjfPwE7Mg&oe=6AE5A613","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Habitat et Promotion Immobilière","theme_ar":"الإسكان والنهوض العقاري"},
+{"fbid":"2079220693003819","type":"video","url":"https://www.facebook.com/reel/2079220693003819/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%88%D8%A7%D8%B4-%D8%B9%D9%85%D8%B1%D9%83%D9%85-%D8%AA%D8%B3%D8%A7%D8%A1%D9%84%D8%AA%D9%88-%D8%B4%D9%83%D9%88%D9%86-%D9%83%D9%8A%D8%B3%D9%87%D8%B1-%D8%B9%D9%84%D9%89-%D8%AA%D9%86%D8%B8%D9%8A%D9%85-%D8%A7%D9%84%D9%85%D8%AF%D9%8A%D9%86%D8%A9-%D9%88%D8%AA%D9%88%D9%81%D9%8A%D8%B1-%D8%A7%D9%84%D8%B3%D9%83%D9%86-%D9%88%D8%AA%D8%AD%D8%B3%D9%8A%D9%8BD-%D8%A5%D8%B7%D8%A7%D8%B1-%D8%A7%D9%84%D8%B9%D9%8A%D8%B4-%D8%AF%D9%8A%D8%A7%D9%84/2079220693003819/","titre":"واش عمركم تساءلتو شكون كيسهر على تنظيم المدن وتوفير السكن وتحسين إطار العيش ديالنا؟","description":"واش عمركم تساءلتو شكون كيسهر على تنظيم المدن وتوفير السكن؟","vues":12000,"reactions":80,"date":"24/04/2026","date_iso":"2026-04-24","annee":2026,"miniature":"https://scontent.frba4-1.fna.fbcdn.net/v/t15.5256-10/679020637_1516422389829684_7943018918919154216_n.jpg?_nc_cat=111&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=Tu05UeZwBW4Q7kNvwF6fUSv&_nc_oc=Adon_CuDYOt2EqVlj8pMofzHTgUx7-ZDXUfws76NNMxlporT_9eHMRDX7-z_82MCqng&_nc_zt=23&_nc_ht=scontent.frba4-1.fna&_nc_gid=QWCBnqbg7jFT-5834VDihg&_nc_ss=78289&oh=00_AQO8sJIjJDsRI1EnfkxuEjkmsgUjwRlqlXYrEvBOzZtjFg&oe=6AE5C2A6","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"AMÉNAGEMENT DU TERRITOIRE","theme_ar":"إعداد التراب الوطني"},
+{"fbid":"1115823654055289","type":"video","url":"https://www.facebook.com/reel/1115823654055289/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC-%D9%85%D8%AF%D9%86-%D8%A8%D8%AF%D9%88%D9%86-%D8%B5%D9%81%D9%8A%D8%AD-%D8%AE%D9%84%D8%A7%D9%84-%D8%A7%D9%84%D9%88%D9%84%D8%A7%D9%8A%D8%A9-%D8%A7%D9%84%D8%AD%D9%83%D9%88%D9%85%D9%8A%D8%A9-%D8%A7%D9%84%D8%AD%D8%A7%D9%84%D9%8A%D8%A9-%D8%AA%D9%85-%D8%AA%D8%AD%D8%B3%D9%8A%D9%86-%D8%B8%D8%B1%D9%88%D9%81-%D8%B3%D9%83%D9%86-%D8%A3%D8%B2%D9%8A%D8%AF-%D9%85%D9%86-81-/1115823654055289/","titre":"برنامج مدن بدون صفيح: خلال الولاية الحكومية الحالية، تم تحسين ظروف سكن أزيد من 81 ألف أسرة","description":"برنامج مدن بدون صفيح: تحسين ظروف سكن أزيد من 81 ألف أسرة.","vues":29000,"reactions":96,"date":"15/04/2026","date_iso":"2026-04-15","annee":2026,"miniature":"https://scontent.frba4-3.fna.fbcdn.net/v/t15.5256-10/670536119_931750859708226_8593606861912665983_n.jpg?_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=-wFn7paRHMsQ7kNvwER9ihd&_nc_oc=AdobfBKsNX5_KqCf-qN4lcswezynKoP3F3Ijoff0lFbkn7EDgFpdPB6HsxPnI7UzY14&_nc_zt=23&_nc_ht=scontent.frba4-3.fna&_nc_gid=QOUhnzAZZLM3ZBw0uu9kog&_nc_ss=78289&oh=00_AQMRYi9rSVi57z8gyrTWbWaS7X16cvpMMrqPFpBdsfws9Q&oe=6AE59C15","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Politique de la ville","theme_ar":"سياسة المدينة"},
+{"fbid":"26652519037676553","type":"video","url":"https://www.facebook.com/reel/26652519037676553/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC-%D8%A7%D9%84%D8%AF%D8%B9%D9%85-%D8%A7%D9%84%D9%85%D8%A8%D8%A7%D8%B4%D8%B1-%D9%84%D9%84%D8%B3%D9%83%D9%86-200-%D8%A3%D9%84%D9%81-%D9%85%D9%88%D8%A7%D8%B7%D9%86-%D8%AA%D9%82%D8%AF%D9%91%D9%85%D9%88%D8%A7-%D8%A8%D8%B7%D9%84%D8%A8%D8%A7%D8%AA%D9%87%D9%85-%D9%85%D9%86-%D8%A8%D9%8A%D9%86%D9%87%D9%85-96948-%D8%AA%D9%85%D9%83%D9%91%D9%86%D9%88%D8%A7/26652519037676553/","titre":"برنامج الدعم المباشر للسكن: 200 ألف مواطن تقدّموا بطلباتهم، من بينهم 96.948 تمكّنوا من اقتناء سكنهم","description":"برنامج الدعم المباشر للسكن: 200 ألف مواطن تقدّموا بطلباتهم.","vues":30000,"reactions":117,"date":"13/04/2026","date_iso":"2026-04-13","annee":2026,"miniature":"https://scontent.frba4-3.fna.fbcdn.net/v/t15.5256-10/671842610_4419533511707632_3579054922562451667_n.jpg?_nc_cat=107&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=fatiBl2vozEQ7kNvwGEB0jB&_nc_oc=Adrn_kAWtQ5haYQ4ftBogVFTLW0zqU11f5YBkk1krwlVU_5xJWFC77ifFltlGjlmaxg&_nc_zt=23&_nc_ht=scontent.frba4-3.fna&_nc_gid=XsaV-EFCH4yUsLq7-dZGCA&_nc_ss=78289&oh=00_AQPLq4dDZ2m1w2VWtGvrXvBnLtZL7GYPFRq2xwITcNC48A&oe=6AE5A6FE","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Habitat et Promotion Immobilière","theme_ar":"الإسكان والنهوض العقاري"},
+{"fbid":"1630167805209053","type":"video","url":"https://www.facebook.com/reel/1630167805209053/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%81%D9%8A-%D8%A5%D8%B7%D8%A7%D8%B1-%D9%85%D8%B4%D8%A7%D8%B1%D9%83%D8%AA%D9%87%D8%A7-%D9%81%D9%8A-%D9%81%D8%B9%D8%A7%D9%84%D9%8A%D8%A7%D8%AA-gitex-africa-morocco-2026-%D8%AD%D8%B1%D8%B5%D8%AA-%D9%88%D8%B2%D8%A7%D8%B1%D8%A9-%D8%A5%D8%B9%D8%AF%D8%A7%D8%AF-%D8%A7%D9%84%D8%AA%D8%B1%D8%A7%D8%A8-%D8%A7%D9%84/1630167805209053/","titre":"في إطار مشاركتها في فعاليات GITEX Africa Morocco 2026، حرصت وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة على استعراض انجازاتها الاستراتيجية في مجال رقمنة الخدمات العمومية.","description":"مشاركة الوزارة في GITEX Africa Morocco 2026 حول رقمنة الخدمات.","vues":13000,"reactions":50,"date":"08/04/2026","date_iso":"2026-04-08","annee":2026,"miniature":"https://scontent.frba4-3.fna.fbcdn.net/v/t15.5256-10/664164914_2480659675716965_182514968214737155_n.jpg?_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=xUdVae1-6GUQ7kNvwEsoHzC&_nc_oc=Adp0_X4gQCIImF3hDLT4Bz2tB0wnNou0Mpu9LrV2wI3HJLBTfoZQL8TqE19bLwSGS84&_nc_zt=23&_nc_ht=scontent.frba4-3.fna&_nc_gid=0oN2Ax6iJyNr7RWbIHNrRQ&_nc_ss=78289&oh=00_AQObkA41If7Kdo0tE-udGUg5lr5fqYhucJeuJK-ej035Tg&oe=6AE5954C","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Habitat et Promotion Immobilière","theme_ar":"الإسكان والنهوض العقاري"},
+{"fbid":"928722310054770","type":"video","url":"https://www.facebook.com/reel/928722310054770/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D9%84%D8%AD%D8%B8%D8%A7%D8%AA-%D9%85%D9%86-%D8%AA%D9%88%D9%82%D9%8A%D8%B9-%D8%A7%D9%84%D8%B3%D9%8A%D8%AF%D8%A9-%D9%81%D8%A7%D8%B7%D9%85%D8%A9-%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1-%D8%A7%D9%84%D9%85%D9%86%D8%B5%D9%88%D8%B1%D9%8A-%D9%88%D8%B2%D9%8A%D8%B1%D8%A9-%D8%A5%D8%B9%D8%AF%D8%A7%D8%AF-%D8%A7%D9%84%D8%AA%D8%B1%D8%A7%D8%A8-%D8%A7%D9%84%D9%88%D8%B7%D9%86%D9%8A-%D9%88%D8%A7%D9%84%D8%AA%D8%B9%D9%85%D9%8A%D8%B1-/928722310054770/","titre":"لحظات من توقيع السيدة فاطمة الزهراء المنصوري اتفاقية إطلاق العلامة الوطنية ASL (Advanced Sustainable Living).","description":"توقيع اتفاقية إطلاق العلامة الوطنية ASL.","vues":16000,"reactions":31,"date":"02/04/2026","date_iso":"2026-04-02","annee":2026,"miniature":"https://scontent.frba4-2.fna.fbcdn.net/v/t15.5256-10/664619742_2683199292052725_5005189826960615567_n.jpg?_nc_cat=109&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=3Vd1Y7W8IhYQ7kNvwFfUe_q&_nc_oc=AdoREp7uJbjWou5Lz3EkNeFcU8x7Lp5Gzmp-1v9t4kLqlVGtnyrzwFkIWN9sR0UGdD4&_nc_zt=23&_nc_ht=scontent.frba4-2.fna&_nc_gid=hlrQrZge-w1pWhQZy-TrBA&_nc_ss=78289&oh=00_AQPvZWgboqHDbL5Ay6prBOXmurUa2qQ9RJfeV6IB5OT-FQ&oe=6AE597FC","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Encadrement Technique","theme_ar":"التأطير التقني"},
+{"fbid":"1646189696373178","type":"video","url":"https://www.facebook.com/reel/1646189696373178/","url_canonique":"https://www.facebook.com/MATUHPV/videos/%D8%A3%D8%A8%D8%B1%D8%B2-%D9%84%D8%AD%D8%B8%D8%A7%D8%AA-%D8%A7%D8%AC%D8%AA%D9%85%D8%A7%D8%B9-%D9%85%D8%AC%D9%84%D8%B3-%D8%A7%D9%84%D8%B1%D9%82%D8%A7%D8%A8%D8%A9-%D9%82%D9%85%D8%AC%D9%85%D9%88%D8%B9%D8%A9-%D8%A7%D9%84%D8%B9%D9%85%D8%B1%D8%A7%D9%86-%D8%A7%D9%84%D8%B0%D9%8A-%D8%AA%D8%B1%D8%A3%D8%B3%D8%AA%D9%87-%D8%A7%D9%84%D8%B3%D9%8A%D8%AF%D8%A9-%D9%81%D8%A7%D8%B7%D9%85%D8%A9-%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D8%A1-/1646189696373178/","titre":"أبرز لحظات اجتماع مجلس الرقابة لمجموعة العمران الذي ترأسته السيدة فاطمة الزهراء المنصوري، في إطار تتبع حصيلة سنة 2025 والمصادقة على برنامج العمل برسم سنة 2026.","description":"اجتماع مجلس الرقابة لمجموعة العمران برئاسة السيدة الوزيرة.","vues":21000,"reactions":50,"date":"26/03/2026","date_iso":"2026-03-26","annee":2026,"miniature":"https://scontent.frba4-3.fna.fbcdn.net/v/t15.5256-10/660493093_1436128477520103_4834387026807008495_n.jpg?_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=596eb7&_nc_ohc=YiXgo4Dr33QQ7kNvwEesMEt&_nc_oc=Ado59JbYF9ji4ABJzA3Z1F-WuEDAoAUQe2c1Q1xbCXdzZmM_eWdzbdKconutXxUTUY0&_nc_zt=23&_nc_ht=scontent.frba4-3.fna&_nc_gid=Zd6YvGMp5AZcj3JCLiZDPw&_nc_ss=78289&oh=00_AQOFZSU_U-EPcDglESdvOB4S6VmfSfyKWIXLAt-TWF36gQ&oe=6AE5BE29","video_mp4":null,"video_largeur":null,"video_hauteur":null,"theme_fr":"Habitat et Promotion Immobilière","theme_ar":"الإسكان والنهوض العقاري"}
+]
+</script>
+
+<script>
+(function () {
+  'use strict';
+
+  const PLACEHOLDER = 'https://placehold.co/400x700/1e293b/94a3b8?text=Miniature+Indisponible';
+  const PAGE_SIZE = 20;
+
+  const $ = (id) => document.getElementById(id);
+  const els = {
+    grid: $('reelsGrid'), empty: $('emptyState'), pagination: $('pagination'),
+    search: $('searchInput'), sort: $('sortSelect'), total: $('totalCount'),
+    fileInput: $('jsonFileInput'),
+    detailsModal: $('detailsModal'), detailsFrame: $('detailsFrame'),
+    detailsPoster: $('detailsPoster'), detailsPosterImg: $('detailsPosterImg'),
+    detailsContent: $('detailsContent'),
+    
+    // Éléments de la modale
+    detailsDisplayTitle: $('detailsDisplayTitle'),
+    detailsDisplayDate: $('detailsDisplayDate'),
+    playerViewsVal: $('playerViewsVal'),
+    playerReactionsVal: $('playerReactionsVal'),
+    videoLoader: $('videoLoader'),
+
+    // Nouveaux éléments pour les modes
+    viewModeSelect: $('viewModeSelect'),
+    themesView: $('themesView'),
+    treeView: $('treeView'),
+    backNavigation: $('backNavigation'),
+    backToThemesBtn: $('backToThemesBtn')
+  };
+
+  let reels = [];
+  let byId = new Map();
+  let searchTimer = null;
+  let currentQuery = '';
+  let currentSort = 'recent';
+  let currentPage = 1;
+  let currentReel = null;
+
+  // État des vues
+  let currentViewMode = 'gallery'; // 'gallery' | 'themes' | 'tree'
+  let activeTheme = null; // Utilisé dans le mode 'themes'
+
+  const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+
+  const getViews = (r) => Number((r && (r.vues ?? r.nbre_vue)) ?? 0);
+  const getReactions = (r) => Number((r && r.reactions) ?? 0);
+
+  const formatViews = (v) => {
+    if (v == null || v === '' || isNaN(v)) return '—';
+    const n = Number(v);
+    if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + ' M';
+    if (n >= 1_000) return (n / 1_000).toFixed(1).replace(/\.0$/, '') + ' K';
+    return String(n);
+  };
+
+  // Fonction de formatage de la date en arabe stricte
+  function formatDateArabicExact(dateStr, dateIso) {
+    if (!dateIso) return dateStr || 'Date invalide';
+    try {
+      const parts = dateIso.split('-');
+      if (parts.length !== 3) return dateStr || 'Date invalide';
+      const y = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10) - 1;
+      const d = parseInt(parts[2], 10);
+
+      const date = new Date(y, m, d);
+      if (isNaN(date.getTime())) return dateStr || 'Date invalide';
+
+      const daysAr = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+      const monthsAr = ['يناير', 'فبراير', 'مارس', 'أبريل', 'ماي', 'يونيو', 'يوليوز', 'غشت', 'شتنبر', 'أكتوبر', 'نونبر', 'دجنبر'];
+
+      const dayName = daysAr[date.getDay()];
+      const dayNum = String(date.getDate()).padStart(2, '0');
+      const monthName = monthsAr[date.getMonth()];
+      const year = date.getFullYear();
+
+      return `${dayName} ${dayNum} ${monthName} ${year}`;
+    } catch (e) {
+      return dateStr || 'Date invalide';
+    }
+  }
+
+  // ============ RENDU CARTE GALERIE (avec stats) ============
+  const galleryCardHTML = (r) => {
+    const rawTitle = r.titre || 'Titre indisponible';
+    const truncatedTitle = rawTitle.length > 40 ? rawTitle.substring(0, 40) + '...' : rawTitle;
+    
+    const dateFormatted = formatDateArabicExact(r.date, r.date_iso);
+    const views = formatViews(getViews(r));
+    const reactions = r.reactions != null ? String(r.reactions) : '0';
+    const theme = r.theme_fr || 'Général';
+    const themeAr = r.theme_ar || '';
+
+    return `
+    <article class="reel-card group relative aspect-[9/16] w-full bg-slate-900 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300 active:scale-[0.98] touch-manipulation border border-slate-700/80 hover:border-blue-500/80" data-fbid="${escapeHtml(r.fbid)}">
+      <img src="${escapeHtml(r.miniature || PLACEHOLDER)}" alt="Reel" loading="lazy" decoding="async" referrerpolicy="no-referrer"
+           class="w-full h-full object-cover brightness-[0.85] group-hover:brightness-100 group-hover:scale-105 transition-all duration-500" onerror="this.onerror=null;this.src='${PLACEHOLDER}';">
+
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none z-[1]"></div>
+
+      <!-- Badge Thème -->
+      <div class="absolute top-2 left-2 z-[3] theme-tooltip">
+        <span class="bg-black/60 backdrop-blur-md text-white text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full border border-slate-600 truncate max-w-[100px] inline-block shadow-sm font-semibold">
+          ${escapeHtml(theme)}
+        </span>
+        <div class="tooltip-text" dir="auto"><strong>${escapeHtml(theme)}</strong><br>${themeAr ? escapeHtml(themeAr) : ''}</div>
+      </div>
+
+      <div class="absolute bottom-0 inset-x-0 p-2 sm:p-3 flex flex-col z-[2] pt-8">
+        <div class="flex items-end justify-between gap-2 w-full mb-1">
+          <div class="flex flex-col items-start gap-1.5 flex-shrink-0">
+            <div class="flex items-center gap-1 text-[9px] sm:text-[10px] text-white/90 font-bold drop-shadow-md">
+              <span class="flex items-center gap-0.5 bg-black/50 px-1.5 py-0.5 rounded backdrop-blur-sm border border-white/10"><i class="fa-solid fa-eye text-amber-400"></i> ${views}</span>
+              <span class="flex items-center gap-0.5 bg-black/50 px-1.5 py-0.5 rounded backdrop-blur-sm border border-white/10"><i class="fa-solid fa-heart text-rose-400"></i> ${reactions}</span>
+            </div>
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white flex items-center justify-center bg-black/30 backdrop-blur-sm group-hover:bg-white/20 transition-all">
+              <i class="fa-solid fa-play text-white text-[10px] sm:text-xs ml-0.5 drop-shadow-md"></i>
+            </div>
+          </div>
+          <div class="text-right flex-shrink-0 pb-0.5">
+            <span class="date-display text-white/80 text-[9px] font-medium drop-shadow-md tracking-wide">${dateFormatted}</span>
+          </div>
+        </div>
+        <div class="w-full">
+          <h3 class="video-title text-white text-xs sm:text-sm font-bold drop-shadow-md leading-snug break-words" dir="auto" title="${escapeHtml(rawTitle)}">${escapeHtml(truncatedTitle)}</h3>
+        </div>
+      </div>
+    </article>`;
+  };
+
+  // ============ RENDU CARTE THEMES (SANS STATS) ============
+  const themeVideoCardHTML = (r) => {
+    const rawTitle = r.titre || 'Titre indisponible';
+    const truncatedTitle = rawTitle.length > 40 ? rawTitle.substring(0, 40) + '...' : rawTitle;
+    const dateFormatted = formatDateArabicExact(r.date, r.date_iso);
+
+    return `
+    <article class="reel-card group relative aspect-[9/16] w-full bg-slate-900 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300 active:scale-[0.98] touch-manipulation border border-slate-700/80 hover:border-blue-500/80" data-fbid="${escapeHtml(r.fbid)}">
+      <img src="${escapeHtml(r.miniature || PLACEHOLDER)}" alt="Reel" loading="lazy" decoding="async" referrerpolicy="no-referrer"
+           class="w-full h-full object-cover brightness-[0.85] group-hover:brightness-100 group-hover:scale-105 transition-all duration-500" onerror="this.onerror=null;this.src='${PLACEHOLDER}';">
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none z-[1]"></div>
+      
+      <div class="absolute bottom-0 inset-x-0 p-2 sm:p-3 flex flex-col z-[2] pt-8">
+        <!-- Juste le bouton play et la date -->
+        <div class="flex items-end justify-between gap-2 w-full mb-1">
+          <div class="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white bg-black/30 backdrop-blur-sm group-hover:bg-white/20 transition-all flex-shrink-0">
+            <i class="fa-solid fa-play text-white text-[10px] sm:text-xs ml-0.5 drop-shadow-md"></i>
+          </div>
+          <div class="text-right flex-shrink-0 pb-0.5">
+            <span class="date-display text-white/80 text-[9px] font-medium drop-shadow-md tracking-wide">${dateFormatted}</span>
+          </div>
+        </div>
+        <!-- Titre -->
+        <div class="w-full">
+          <h3 class="video-title text-white text-xs sm:text-sm font-bold drop-shadow-md leading-snug break-words" dir="auto" title="${escapeHtml(rawTitle)}">${escapeHtml(truncatedTitle)}</h3>
+        </div>
+      </div>
+    </article>`;
+  };
+
+  // ============ LOGIQUE DE RENDU ============
+  function getFilteredAndSorted() {
+    const q = currentQuery.toLowerCase().trim();
+    let result = reels;
+    if (q) {
+      result = reels.filter((r) => {
+        const hay = [r.titre, r.description, r.theme_fr, r.theme_ar].filter(Boolean).join(' ').toLowerCase();
+        return hay.includes(q);
+      });
+    }
+    result = [...result];
+    if (currentSort === 'views') result.sort((a, b) => getViews(b) - getViews(a));
+    else if (currentSort === 'reactions') result.sort((a, b) => getReactions(b) - getReactions(a));
+    else result.sort((a, b) => String(b.date_iso || '').localeCompare(String(a.date_iso || '')));
+    return result;
+  }
+
+  function render() {
+    // Masquer tous les conteneurs
+    els.grid.classList.add('hidden');
+    els.themesView.classList.add('hidden');
+    els.treeView.classList.add('hidden');
+    els.pagination.classList.add('hidden');
+    els.backNavigation.classList.add('hidden');
+    els.empty.classList.add('hidden');
+
+    const items = getFilteredAndSorted();
+    els.total.textContent = items.length;
+
+    if (items.length === 0) {
+      els.empty.classList.remove('hidden');
+      return;
+    }
+
+    if (currentViewMode === 'gallery') {
+      renderGallery(items);
+    } else if (currentViewMode === 'themes') {
+      renderThemes(items);
+    } else if (currentViewMode === 'tree') {
+      renderTree(items);
+    }
+  }
+
+  // --- Mode Galerie ---
+  function renderGallery(items) {
+    els.grid.classList.remove('hidden');
+    els.pagination.classList.remove('hidden');
+
+    const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const pageItems = items.slice(start, start + PAGE_SIZE);
+
+    els.grid.innerHTML = pageItems.map(galleryCardHTML).join('');
+    renderPagination(items.length, totalPages);
+  }
+
+  // --- Mode Thèmes ---
+  function renderThemes(items) {
+    if (activeTheme) {
+      // Afficher les vidéos du thème sélectionné
+      els.backNavigation.classList.remove('hidden');
+      els.grid.classList.remove('hidden');
+      els.pagination.classList.remove('hidden');
+      
+      const themeItems = items.filter(r => (r.theme_fr || 'Non classé') === activeTheme);
+      
+      const totalPages = Math.max(1, Math.ceil(themeItems.length / PAGE_SIZE));
+      if (currentPage > totalPages) currentPage = totalPages;
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const pageItems = themeItems.slice(start, start + PAGE_SIZE);
+
+      els.grid.innerHTML = pageItems.map(themeVideoCardHTML).join('');
+      renderPagination(themeItems.length, totalPages);
+    } else {
+      // Afficher la grille des thèmes
+      els.themesView.classList.remove('hidden');
+      
+      const themesMap = new Map();
+      items.forEach(r => {
+        const t = r.theme_fr || 'Non classé';
+        themesMap.set(t, (themesMap.get(t) || 0) + 1);
+      });
+
+      const themeArray = Array.from(themesMap.entries()).sort((a, b) => b[1] - a[1]);
+
+      let html = '<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 w-full">';
+      themeArray.forEach(([themeName, count]) => {
+        html += `
+          <div class="theme-card bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl p-4 cursor-pointer transition-all duration-300 flex flex-col items-center justify-center text-center gap-2 active:scale-95 shadow-sm" data-theme="${escapeHtml(themeName)}">
+            <div class="w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center mb-2">
+              <i class="fa-solid fa-folder-open text-xl"></i>
+            </div>
+            <h3 class="text-white font-bold text-sm sm:text-base leading-tight">${escapeHtml(themeName)}</h3>
+            <span class="text-xs text-slate-400 bg-slate-900 px-2 py-0.5 rounded-full mt-1">${count} vidéo${count > 1 ? 's' : ''}</span>
+          </div>`;
+      });
+      html += '</div>';
+      els.themesView.innerHTML = html;
+    }
+  }
+
+  // --- Mode Arborescence ---
+  function renderTree(items) {
+    els.treeView.classList.remove('hidden');
+    
+    const themesMap = new Map();
+    items.forEach(r => {
+      const t = r.theme_fr || 'Non classé';
+      if (!themesMap.has(t)) themesMap.set(t, []);
+      themesMap.get(t).push(r);
+    });
+
+    let html = '<ul class="tree-list">';
+    
+    themesMap.forEach((videos, themeName) => {
+      html += `
+        <li class="tree-item">
+          <div class="flex items-center gap-2 cursor-pointer select-none hover:bg-slate-700/50 p-1.5 rounded-lg transition-colors tree-toggle-btn">
+            <i class="fa-solid fa-chevron-right tree-toggle text-xs text-slate-400"></i>
+            <i class="fa-solid fa-folder text-amber-400"></i>
+            <span class="font-bold text-slate-200">${escapeHtml(themeName)}</span>
+            <span class="text-xs text-slate-500 ml-2 bg-slate-900 px-2 rounded-full">${videos.length}</span>
+          </div>
+          <ul class="tree-list tree-children hidden mt-1">
+            ${videos.map(v => `
+              <li class="tree-item">
+                <div class="flex items-center gap-2 cursor-pointer hover:bg-slate-700/50 p-1.5 rounded-lg transition-colors text-slate-300" data-fbid="${escapeHtml(v.fbid)}">
+                  <i class="fa-solid fa-video text-blue-400 text-xs"></i>
+                  <span class="text-sm truncate" title="${escapeHtml(v.titre)}">${escapeHtml(v.titre)}</span>
+                  <span class="text-[10px] text-slate-500 ml-auto hidden sm:inline-block">${formatDateArabicExact(v.date, v.date_iso)}</span>
+                </div>
+              </li>
+            `).join('')}
+          </ul>
+        </li>`;
+    });
+
+    html += '</ul>';
+    els.treeView.innerHTML = html;
+  }
+
+  // ============ PAGINATION ============
+  function getPageNumbers(current, total) {
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    if (current <= 4) return [1, 2, 3, 4, 5, '…', total];
+    if (current >= total - 3) return [1, '…', total - 4, total - 3, total - 2, total - 1, total];
+    return [1, '…', current - 1, current, current + 1, '…', total];
+  }
+
+  function renderPagination(totalItems, totalPages) {
+    if (totalPages <= 1) { els.pagination.innerHTML = ''; return; }
+    const base = 'min-w-[2.5rem] h-10 px-3 rounded-lg font-semibold text-sm transition-colors touch-manipulation inline-flex items-center justify-center';
+    const active = 'bg-blue-600 text-white shadow-lg';
+    const inactive = 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 active:bg-slate-600';
+    const disabled = 'bg-slate-800 text-slate-600 border border-slate-700 cursor-not-allowed';
+
+    let html = '';
+    html += `<button data-page="${currentPage - 1}" class="${base} ${currentPage === 1 ? disabled : inactive}" ${currentPage === 1 ? 'disabled' : ''}><i class="fa-solid fa-chevron-left text-xs"></i></button>`;
+    getPageNumbers(currentPage, totalPages).forEach((p) => {
+      if (p === '…') html += `<span class="${base} ${inactive} select-none">…</span>`;
+      else html += `<button data-page="${p}" class="${base} ${p === currentPage ? active : inactive}">${p}</button>`;
+    });
+    html += `<button data-page="${currentPage + 1}" class="${base} ${currentPage === totalPages ? disabled : inactive}" ${currentPage === totalPages ? 'disabled' : ''}><i class="fa-solid fa-chevron-right text-xs"></i></button>`;
+    els.pagination.innerHTML = html;
+  }
+
+  // ============ GESTION MODALE ============
+  function openDetails(reel) {
+    currentReel = reel;
+    els.detailsContent.innerHTML = renderDetails(reel);
+    els.detailsContent.scrollTop = 0;
+    els.detailsDisplayTitle.textContent = reel.titre || 'Titre indisponible';
+    els.detailsDisplayDate.textContent = formatDateArabicExact(reel.date, reel.date_iso);
+    els.playerViewsVal.textContent = formatViews(getViews(reel));
+    els.playerReactionsVal.textContent = reel.reactions != null ? String(reel.reactions) : '—';
+    els.detailsPosterImg.style.display = '';
+    els.detailsPosterImg.src = reel.miniature || PLACEHOLDER;
+    els.detailsPoster.classList.remove('opacity-0', 'pointer-events-none');
+    els.detailsPoster.classList.add('opacity-100');
+
+    const shareUrl = reel.url_canonique || reel.url;
+    const src = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(shareUrl)}&show_text=false&width=500&height=889&autoplay=false`;
+    els.detailsFrame.classList.remove('opacity-100');
+    els.detailsFrame.classList.add('opacity-0');
+    els.videoLoader.classList.remove('hidden');
+    els.detailsModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    els.detailsFrame.src = src;
+  }
+
+  function closeDetails() {
+    els.detailsModal.classList.add('hidden');
+    els.detailsFrame.src = 'about:blank';
+    els.detailsFrame.classList.remove('opacity-100');
+    els.detailsFrame.classList.add('opacity-0');
+    els.detailsPoster.classList.add('opacity-0', 'pointer-events-none');
+    els.detailsPosterImg.removeAttribute('src');
+    els.detailsContent.innerHTML = '';
+    document.body.style.overflow = '';
+    currentReel = null;
+  }
+
+  function playVideo() {
+    if (!currentReel) return;
+    const shareUrl = currentReel.url_canonique || currentReel.url;
+    const src = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(shareUrl)}&show_text=false&width=500&height=889&autoplay=true`;
+    els.detailsPoster.classList.add('opacity-0', 'pointer-events-none');
+    els.detailsPoster.classList.remove('opacity-100');
+    els.detailsFrame.classList.remove('opacity-0');
+    els.detailsFrame.classList.add('opacity-100');
+    els.detailsFrame.src = src;
+  }
+
+  // --- Rendu détails (modale) ---
+  function renderDetails(reel) {
+    const views = getViews(reel);
+    const reactions = reel.reactions ?? null;
+    const themeFr = reel.theme_fr || null;
+    const themeAr = reel.theme_ar || null;
+    const reelUrl = reel.url || '';
+    const description = reel.description || null;
+
+    const statHTML = (label, value, icon, colorClasses) => `
+      <div class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3">
+        <div class="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
+          <i class="fa-solid ${icon} ${colorClasses.icon}"></i><span>${label}</span>
+        </div>
+        <div class="text-base font-bold ${colorClasses.text} truncate">${escapeHtml(String(value))}</div>
+      </div>`;
+
+    return `
+      ${(themeFr || themeAr) ? `<div class="flex flex-wrap gap-2">
+        ${themeFr ? `<span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-blue-500/15 text-blue-300 border border-blue-500/30"><i class="fa-solid fa-tag text-[10px]"></i>${escapeHtml(themeFr)}</span>` : ''}
+        ${themeAr ? `<span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30" dir="rtl">${escapeHtml(themeAr)}</span>` : ''}
+      </div>` : ''}
+      <h2 class="text-base sm:text-lg font-bold text-white leading-relaxed" dir="auto">${reel.titre ? escapeHtml(reel.titre) : 'Vidéo Reel'}</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+        ${statHTML('Vues', formatViews(views), 'fa-eye', { icon: 'text-amber-400', text: 'text-amber-300' })}
+        ${statHTML('Réactions', reactions != null ? String(reactions) : '—', 'fa-heart', { icon: 'text-rose-400', text: 'text-rose-300' })}
+        ${statHTML('Date', reel.date || '—', 'fa-calendar', { icon: 'text-slate-400', text: 'text-slate-200' })}
+      </div>
+      ${description ? `<div class="pt-1"><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Description</div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-slate-900/40 p-3 rounded-lg border border-slate-700/50" dir="auto">${escapeHtml(description)}</p></div>` : ''}
+      <div class="flex flex-col sm:flex-row gap-2 pt-3">
+        ${reelUrl ? `<a href="${escapeHtml(reelUrl)}" target="_blank" rel="noopener" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors"><i class="fa-brands fa-facebook"></i> Voir sur Facebook</a>` : ''}
+      </div>`;
+  }
+
+  // ============ INITIALISATION & ÉVÉNEMENTS ============
+  function init(data) {
+    reels = Array.isArray(data) ? data : [];
+    byId = new Map(reels.map((r) => [String(r.fbid), r]));
+    currentPage = 1;
+    render();
+  }
+
+  function copyText(text, btn) {
+    const done = () => {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Copié !';
+      setTimeout(() => { btn.innerHTML = orig; }, 1500);
+    };
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done).catch(() => {});
+  }
+
+  // Changement de mode
+  els.viewModeSelect.addEventListener('change', (e) => {
+    currentViewMode = e.target.value;
+    activeTheme = null;
+    currentPage = 1;
+    render();
+  });
+
+  // Retour aux thèmes
+  els.backToThemesBtn.addEventListener('click', () => {
+    activeTheme = null;
+    currentPage = 1;
+    render();
+  });
+
+  // Clic sur la grille (Galerie ou Thèmes)
+  els.grid.addEventListener('click', (e) => {
+    const card = e.target.closest('[data-fbid]');
+    if (!card) return;
+    const reel = byId.get(card.dataset.fbid);
+    if (reel) openDetails(reel);
+  });
+
+  // Clic sur les cartes de Thèmes
+  els.themesView.addEventListener('click', (e) => {
+    const themeCard = e.target.closest('[data-theme]');
+    if (themeCard) {
+      activeTheme = themeCard.dataset.theme;
+      currentPage = 1;
+      render();
+    }
+  });
+
+  // Clic sur l'Arborescence
+  els.treeView.addEventListener('click', (e) => {
+    // Toggle dossier
+    const toggleBtn = e.target.closest('.tree-toggle-btn');
+    if (toggleBtn) {
+      const toggleIcon = toggleBtn.querySelector('.tree-toggle');
+      const children = toggleBtn.nextElementSibling;
+      if (children && children.classList.contains('tree-children')) {
+        children.classList.toggle('hidden');
+        toggleIcon.classList.toggle('open');
+      }
+      return;
+    }
+    // Ouvrir vidéo
+    const videoNode = e.target.closest('[data-fbid]');
+    if (videoNode) {
+      const reel = byId.get(videoNode.dataset.fbid);
+      if (reel) openDetails(reel);
+    }
+  });
+
+  // Pagination
+  els.pagination.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-page]');
+    if (!btn || btn.disabled) return;
+    const p = parseInt(btn.dataset.page, 10);
+    if (!p || p === currentPage) return;
+    currentPage = p;
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Tri & Recherche
+  els.sort.addEventListener('change', (e) => {
+    currentSort = e.target.value;
+    currentPage = 1;
+    render();
+  });
+
+  els.search.addEventListener('input', (e) => {
+    clearTimeout(searchTimer);
+    const val = e.target.value;
+    searchTimer = setTimeout(() => {
+      currentQuery = val;
+      currentPage = 1;
+      render();
+    }, 200);
+  });
+
+  // Modale
+  els.detailsModal.addEventListener('click', (e) => {
+    if (e.target.closest('[data-close-details]')) { closeDetails(); return; }
+  });
+
+  const playBtn = document.getElementById('detailsPlayBtn');
+  if (playBtn) playBtn.addEventListener('click', playVideo);
+
+  els.detailsFrame.addEventListener('load', () => {
+    if (els.detailsModal.classList.contains('hidden')) return;
+    els.videoLoader.classList.add('hidden');
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !els.detailsModal.classList.contains('hidden')) closeDetails();
+  });
+
+  // Import JSON
+  els.fileInput.addEventListener('change', (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const parsed = JSON.parse(evt.target.result);
+        if (!Array.isArray(parsed)) throw new Error('Tableau attendu.');
+        init(parsed);
+        els.fileInput.value = '';
+      } catch (err) { alert('Erreur: ' + err.message); }
+    };
+    reader.readAsText(file);
+  });
+
+  // Démarrage
+  try {
+    const rawData = document.getElementById('reelsData').textContent || '[]';
+    const parsedData = JSON.parse(rawData);
+    if (Array.isArray(parsedData)) init(parsedData);
+  } catch (err) {
+    console.error('Erreur de chargement initial:', err);
+  }
+
+})();
+</script>
+</body>
+</html>
