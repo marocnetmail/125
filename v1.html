@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr" class="dark">
+<html lang="ar" dir="rtl" class="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
-<title>Vidéothèque institutionnelle</title>
+<title>الفيديوتيكة المؤسساتية</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config = { darkMode: 'class' };</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -97,7 +97,7 @@
     visibility: hidden; width: max-content; max-width: 180px;
     background-color: #1e293b; color: #fff; text-align: center;
     border-radius: 6px; padding: 6px 10px; position: absolute; z-index: 50;
-    top: 130%; left: 0; opacity: 0; transition: opacity 0.2s;
+    top: 130%; right: 0; opacity: 0; transition: opacity 0.2s;
     border: 1px solid #334155; font-size: 11px;
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); pointer-events: none;
   }
@@ -130,28 +130,177 @@
     border-bottom-left-radius: 8px; letter-spacing: 0.03em;
   }
 
-  /* En-tête institutionnel : logo pleine largeur, sans marges */
+  /* En-tête institutionnel */
   .institutional-banner {
-    width: 100%;
-    margin: 0;
-    padding: 0;
+    width: 100%; margin: 0; padding: 0;
     background: #ffffff;
     border-bottom: 1px solid #dbe3ed;
-    overflow: hidden;
-    display: block;
-    line-height: 0;
+    overflow: hidden; display: block; line-height: 0;
   }
   .institutional-banner img {
-    display: block;
+    display: block; width: 100%; height: auto;
+    max-width: none; max-height: none;
+    object-fit: cover; object-position: center;
+    margin: 0; padding: 0; border: 0;
+  }
+
+  /* ==================== MENU PRINCIPAL ==================== */
+  .main-menu-bar {
+    background-color: #092c4c;
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 18px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    background: transparent;
+    cursor: pointer;
+    line-height: 1.2;
+    font-family: inherit;
+    border-left: none; border-right: none; border-top: none;
+  }
+  .menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    color: #93c5fd;
+  }
+  .menu-item.active,
+  .menu-item[aria-expanded="true"] {
+    border-bottom-color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.14);
+    color: #bfdbfe;
+  }
+  .menu-divider {
+    width: 1px; height: 24px;
+    background-color: rgba(255, 255, 255, 0.25);
+    margin: 0 4px;
+  }
+  .menu-search {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 9999px;
+    color: white;
+    font-size: 14px;
     width: 100%;
-    height: auto;
-    max-width: none;
-    max-height: none;
-    object-fit: cover;
-    object-position: center;
-    margin: 0;
-    padding: 0;
-    border: 0;
+    max-width: 320px;
+    outline: none;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .menu-search::placeholder { color: rgba(255, 255, 255, 0.6); }
+  .menu-search:focus {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* ==================== DROPDOWNS (RTL natif) ==================== */
+  .menu-dropdown { position: relative; display: flex; }
+  .menu-dropdown > .menu-item { width: 100%; }
+  .menu-dropdown-content {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: auto;
+    min-width: 240px;
+    background: #0b3559;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.5);
+    z-index: 60;
+    padding: 6px 0;
+    overflow: hidden;
+    animation: dropdownFade 0.15s ease-out;
+  }
+  @keyframes dropdownFade {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .menu-dropdown.align-right .menu-dropdown-content { right: auto; left: 0; }
+  .menu-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 18px;
+    color: #e2e8f0;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: right;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+    font-family: inherit;
+    direction: rtl;
+  }
+  .menu-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.09);
+    color: #ffffff;
+  }
+  .menu-dropdown-item.active {
+    background: rgba(59, 130, 246, 0.24);
+    color: #93c5fd;
+    font-weight: 700;
+  }
+  .menu-dropdown-item i {
+    width: 16px;
+    text-align: center;
+    font-size: 12px;
+    flex-shrink: 0;
+    opacity: 0.88;
+  }
+  .menu-dropdown-item .dd-check {
+    margin-right: auto;
+    margin-left: 0;
+    font-size: 11px;
+    color: #60a5fa;
+    opacity: 0;
+  }
+  .menu-dropdown-item.active .dd-check { opacity: 1; }
+
+  .menu-badge {
+    display: inline-block;
+    background: rgba(59, 130, 246, 0.3);
+    color: #bfdbfe;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 9999px;
+    border: 1px solid rgba(59, 130, 246, 0.5);
+    line-height: 1.5;
+    flex-shrink: 0;
+    letter-spacing: 0.02em;
+  }
+
+  /* Ajustements mobiles */
+  @media (max-width: 639px) {
+    .menu-item { padding: 11px 10px; font-size: 13px; gap: 6px; justify-content: flex-start; }
+    .menu-search { max-width: none; font-size: 13px; }
+    .menu-dropdown-content {
+      min-width: 210px;
+      max-width: calc(100vw - 16px);
+      right: 0; left: auto;
+    }
+    .menu-dropdown.align-right .menu-dropdown-content {
+      right: auto; left: 0;
+    }
+    .menu-badge { font-size: 9px; padding: 0 5px; }
+    .menu-dropdown-item { padding: 10px 14px; font-size: 13px; }
+  }
+
+  /* Sous-menu de filtrage */
+  .sub-menu-bar {
+    background-color: #1e293b;
+    border-bottom: 1px solid #334155;
   }
 
   header.sticky {
@@ -159,6 +308,7 @@
     border-top:3px solid #c59b45;
   }
 </style>
+<base target="_blank">
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col">
 
@@ -169,8 +319,8 @@
       <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/20 mb-4">
         <i class="fa-solid fa-images text-3xl text-blue-400 animate-pulse"></i>
       </div>
-      <h2 class="text-lg sm:text-xl font-bold text-white mb-1">Chargement des miniatures en cours…</h2>
-      <p id="progressCount" class="text-xs text-slate-400">Préparation…</p>
+      <h2 class="text-lg sm:text-xl font-bold text-white mb-1">جارٍ تحميل الصور المصغرة…</h2>
+      <p id="progressCount" class="text-xs text-slate-400">جارٍ التحضير…</p>
     </div>
     <div class="h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
       <div id="progressBar" class="h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-300 rounded-full" style="width:0%"></div>
@@ -179,73 +329,111 @@
   </div>
 </div>
 
-<!-- ============ EN-TÊTE INSTITUTIONNEL (LOGO PLEINE LARGEUR) ============ -->
-<div class="institutional-banner" role="banner" aria-label="En-tête institutionnel de la vidéothèque du ministère">
-  <img src="https://marocnetmail.github.io/125/images/logo2.png" alt="Logo institutionnel" loading="eager">
+<!-- ============ EN-TÊTE INSTITUTIONNEL ============ -->
+<div class="institutional-banner" role="banner" aria-label="الشعار المؤسساتي للفيديوتيكة">
+  <img src="https://marocnetmail.github.io/125/images/logo2.png" alt="الشعار المؤسساتي" loading="eager">
 </div>
 
-<!-- ============ HEADER (MENU ORIGINAL) ============ -->
-<header class="sticky top-0 z-40 bg-slate-800/95 backdrop-blur border-b border-slate-700 shadow-lg">
-  <div class="max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-3">
-    <!-- Mobile : grille 2 colonnes / Desktop : flex row -->
-    <div class="grid grid-cols-2 gap-2 md:flex md:flex-row md:items-center md:gap-3 md:flex-wrap">
+<!-- ============ MENU PRINCIPAL ============ -->
+<nav class="main-menu-bar w-full sticky top-0 z-40 shadow-lg" dir="rtl" aria-label="القائمة الرئيسية">
+  <div class="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-8">
+    <div class="flex flex-col sm:flex-row sm:items-stretch gap-1 sm:gap-3">
 
-      <!-- 1. Titre -->
-      <div class="col-span-2 md:order-1 md:flex-shrink-0 flex items-center gap-2">
-        <div class="p-1.5 sm:p-2 bg-blue-600 rounded-lg shadow">
-          <i class="fa-solid fa-video text-white text-sm sm:text-xl"></i>
+      <div class="grid grid-cols-2 sm:flex sm:flex-row sm:items-stretch sm:flex-1 w-full">
+
+        <!-- 1) الرئيسية -->
+        <button type="button" class="menu-item" data-cat="home" id="menuHome" aria-label="الرئيسية">
+          <i class="fa-solid fa-house"></i>
+          <span>الرئيسية</span>
+        </button>
+
+        <!-- 2) معرض الفيديوهات -->
+        <div class="menu-dropdown" data-dropdown="gallery">
+          <button type="button" class="menu-item" data-cat="gallery" id="menuGalerie"
+                  aria-haspopup="true" aria-expanded="false" aria-controls="galleryDropdown">
+            <i class="fa-solid fa-table-cells-large"></i>
+            <span>معرض الفيديوهات</span>
+            <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-70 dd-chevron"></i>
+          </button>
+          <div class="menu-dropdown-content hidden" id="galleryDropdown" role="menu" aria-label="أوضاع العرض">
+            <button type="button" class="menu-dropdown-item" data-view="themes" role="menuitem">
+              <i class="fa-solid fa-folder-open"></i>
+              <span>المحاور الموضوعاتية</span>
+              <i class="fa-solid fa-check dd-check"></i>
+            </button>
+            <button type="button" class="menu-dropdown-item" data-view="tree" role="menuitem">
+              <i class="fa-solid fa-sitemap"></i>
+              <span>التنظيم الهيكلي</span>
+              <i class="fa-solid fa-check dd-check"></i>
+            </button>
+          </div>
         </div>
-        <h1 class="text-sm sm:text-xl font-bold bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent whitespace-nowrap">
-          Galerie<span class="hidden sm:inline"> Reels</span>
-        </h1>
-      </div>
 
-      <!-- 2. Recherche -->
-      <div class="col-span-2 md:order-2 md:flex-1 md:min-w-[180px]">
-        <div class="relative">
-          <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none"></i>
-          <input type="text" id="searchInput" inputmode="search" placeholder="Rechercher dans le contenu…"
-                 class="w-full bg-slate-900 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 sm:py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500 placeholder-slate-500">
+        <!-- 3) الأحدث -->
+        <div class="menu-dropdown" data-dropdown="sort">
+          <button type="button" class="menu-item" data-cat="sort" id="menuSort"
+                  aria-haspopup="true" aria-expanded="false" aria-controls="sortDropdown">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>الأحدث</span>
+            <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-70 dd-chevron"></i>
+          </button>
+          <div class="menu-dropdown-content hidden" id="sortDropdown" role="menu" aria-label="خيارات الفرز">
+            <button type="button" class="menu-dropdown-item" data-sort="recent" role="menuitem">
+              <i class="fa-solid fa-clock"></i>
+              <span>الأحدث</span>
+              <i class="fa-solid fa-check dd-check"></i>
+            </button>
+            <button type="button" class="menu-dropdown-item" data-sort="views" role="menuitem">
+              <i class="fa-solid fa-eye"></i>
+              <span>الأكثر مشاهدة</span>
+              <i class="fa-solid fa-check dd-check"></i>
+            </button>
+            <button type="button" class="menu-dropdown-item" data-sort="reactions" role="menuitem">
+              <i class="fa-solid fa-heart"></i>
+              <span>الأكثر تفاعلاً وتعليقاً</span>
+              <i class="fa-solid fa-check dd-check"></i>
+            </button>
+          </div>
         </div>
+
+        <!-- 4) السنوات -->
+        <div class="menu-dropdown align-right" data-dropdown="year">
+          <button type="button" class="menu-item" data-cat="year" id="menuYear"
+                  aria-haspopup="true" aria-expanded="false" aria-controls="yearDropdownContent">
+            <i class="fa-solid fa-calendar"></i>
+            <span>السنوات</span>
+            <span class="menu-badge" id="yearBadge">2026</span>
+            <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-70 dd-chevron"></i>
+          </button>
+          <div class="menu-dropdown-content hidden" id="yearDropdownContent" role="menu" aria-label="فلتر حسب السنة">
+            <!-- Rempli dynamiquement par JS -->
+          </div>
+        </div>
+
       </div>
 
-      <!-- 3. Mode d'affichage -->
-      <div class="col-span-1 md:order-3 md:flex-shrink-0 flex items-center gap-1.5">
-        <i class="fa-solid fa-layer-group text-slate-400 text-xs hidden sm:inline"></i>
-        <select id="viewModeSelect" class="w-full md:w-auto bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-blue-500 cursor-pointer">
-          <option value="gallery">Galerie</option>
-          <option value="themes">Axes thématiques</option>
-          <option value="tree">Organisation hiérarchique</option>
-        </select>
-      </div>
-
-      <!-- 4. Tri -->
-      <div class="col-span-1 md:order-4 md:flex-shrink-0 flex items-center gap-1.5">
-        <i class="fa-solid fa-sort text-slate-400 text-xs hidden sm:inline"></i>
-        <select id="sortSelect" class="w-full md:w-auto bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-blue-500 cursor-pointer">
-          <option value="recent">Plus récents</option>
-          <option value="views">Plus vues</option>
-          <option value="reactions">Plus réagies / commentées</option>
-        </select>
-      </div>
-
-      <!-- 5. Année -->
-      <div class="col-span-2 md:order-5 md:flex-shrink-0 flex items-center gap-1.5">
-        <i class="fa-solid fa-calendar text-slate-400 text-xs hidden sm:inline"></i>
-        <select id="yearFilterSelect" class="w-full md:w-auto bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-blue-500 cursor-pointer">
-          <option value="all">Toutes les années</option>
-        </select>
+      <!-- Barre de recherche (icône à droite) -->
+      <div class="flex items-center w-full sm:w-auto pb-2 sm:pb-0">
+        <div class="relative w-full sm:w-auto">
+          <i class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-white/60 text-sm pointer-events-none"></i>
+          <input type="text" id="searchInput" inputmode="search" placeholder="البحث في المحتوى…"
+                 aria-label="البحث في المحتوى"
+                 class="menu-search py-2 pr-9 pl-4" dir="rtl">
+        </div>
       </div>
 
     </div>
   </div>
-</header>
+</nav>
+
+  </div>
+</div>
 
 <!-- ============ MAIN ============ -->
 <main class="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-8 py-3 sm:py-6 flex-1 w-full relative">
   <div id="backNavigation" class="hidden mb-3">
-    <button id="backToThemesBtn" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-slate-700">
-      <i class="fa-solid fa-arrow-left"></i> Retour aux axes thématiques
+    <button id="backToThemesBtn" type="button" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-slate-700" dir="rtl">
+      <i class="fa-solid fa-arrow-right"></i> العودة إلى المحاور الموضوعاتية
     </button>
   </div>
   <div id="themesView" class="hidden"></div>
@@ -254,12 +442,12 @@
       <h2 class="text-slate-200 font-bold text-base sm:text-lg flex items-center gap-2">
         <i class="fa-solid fa-sitemap text-blue-400"></i>
         <span>الشجرة الموضوعية</span>
-        <span class="text-xs font-normal text-slate-400">(Organisation hiérarchique)</span>
+        <span class="text-xs font-normal text-slate-400">(التنظيم الهيكلي)</span>
       </h2>
       <button id="exportExcelBtn" type="button"
               class="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors border border-emerald-500 shadow-sm touch-manipulation">
         <i class="fa-solid fa-file-excel"></i>
-        <span>Exporter en Excel (.xlsx)</span>
+        <span>تصدير إلى Excel (.xlsx)</span>
       </button>
     </div>
     <div id="treeContent"></div>
@@ -267,18 +455,18 @@
   <div id="reelsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 w-full"></div>
   <div id="emptyState" class="hidden text-center py-16 bg-slate-800/30 rounded-2xl border border-dashed border-slate-700 mt-4">
     <i class="fa-regular fa-folder-open text-5xl text-slate-600 mb-4"></i>
-    <h3 class="text-lg font-medium text-slate-300">Aucune vidéo trouvée</h3>
+    <h3 class="text-lg font-medium text-slate-300">لا توجد فيديوهات</h3>
   </div>
-  <nav id="pagination" class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-6 safe-bottom" aria-label="Pagination"></nav>
+  <nav id="pagination" class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-6 safe-bottom" aria-label="ترقيم الصفحات"></nav>
 </main>
 
-<!-- ============ FOOTER — RUBRIQUE REMARQUES (EN BAS DE PAGE) ============ -->
+<!-- ============ FOOTER ============ -->
 <footer class="w-full max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 pt-2 pb-6 safe-bottom">
   <div class="flex justify-center">
     <button id="openRemarksBtn" type="button"
             class="cursor-pointer bg-slate-700 hover:bg-slate-600 active:bg-slate-500 border border-slate-600 text-sm font-medium px-5 sm:px-6 py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 touch-manipulation shadow-md">
       <i class="fa-solid fa-comment-dots text-amber-400"></i>
-      <span>Remarques</span>
+      <span>الملاحظات</span>
     </button>
   </div>
 </footer>
@@ -290,14 +478,14 @@
     <div class="relative w-full max-w-5xl h-[92vh] bg-slate-800 overflow-hidden shadow-2xl border border-slate-700 rounded-2xl flex flex-col lg:flex-row">
       <button type="button" data-close-details
               class="absolute top-3 right-3 z-50 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-red-600 border border-slate-700 text-white flex items-center justify-center transition-colors shadow-lg touch-manipulation"
-              aria-label="Fermer">
+              aria-label="إغلاق">
         <i class="fa-solid fa-xmark text-lg"></i>
       </button>
       <div id="playerZone" class="relative bg-black w-full h-[50vh] lg:h-full lg:w-[450px] flex-shrink-0 flex items-center justify-center overflow-hidden">
         <div id="detailsPoster" class="absolute inset-0 z-10 transition-opacity duration-300">
           <div class="thumb-wrap absolute inset-0">
             <img id="detailsPosterImg" src="" alt="" onerror="this.parentElement.classList.add('thumb-error');" onload="this.parentElement.classList.remove('thumb-error');">
-            <div class="thumb-fallback"><i class="fa-regular fa-image"></i><span>Aperçu indisponible</span></div>
+            <div class="thumb-fallback"><i class="fa-regular fa-image"></i><span>الصورة المصغرة غير متوفرة</span></div>
           </div>
           <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none"></div>
           <div id="videoLoader" class="hidden absolute inset-0 z-30 flex items-center justify-center bg-black/40">
@@ -324,7 +512,7 @@
                 scrolling="no" frameborder="0"></iframe>
         <button id="fullscreenBtn" type="button"
                 class="absolute top-3 left-3 z-40 w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-black/60 hover:bg-black/80 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center transition-colors shadow-lg touch-manipulation"
-                aria-label="Plein écran">
+                aria-label="ملء الشاشة">
           <i class="fa-solid fa-expand text-sm"></i>
         </button>
       </div>
@@ -333,7 +521,7 @@
   </div>
 </div>
 
-<!-- ============ MODAL REMARQUES (email uniquement) ============ -->
+<!-- ============ MODAL REMARQUES ============ -->
 <div id="remarksModal" class="fixed inset-0 z-50 hidden">
   <div class="absolute inset-0 bg-black/85 backdrop-blur-sm" data-close-remarks></div>
   <div class="relative z-10 w-full h-full flex items-center justify-center p-3 sm:p-4">
@@ -341,11 +529,11 @@
       <div class="flex items-center justify-between p-3 sm:p-4 border-b border-slate-700" dir="rtl">
         <h2 class="text-white font-bold text-base sm:text-lg flex items-center gap-2">
           <i class="fa-solid fa-comment-dots text-amber-400"></i>
-          <span>الملاحظات — Remarques</span>
+          <span>الملاحظات</span>
         </h2>
         <button type="button" data-close-remarks
                 class="w-9 h-9 rounded-full bg-slate-900 hover:bg-red-600 border border-slate-700 text-white flex items-center justify-center transition-colors touch-manipulation"
-                aria-label="Fermer">
+                aria-label="إغلاق">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -354,20 +542,20 @@
           <div>
             <label for="emailRemarkText" class="block text-xs font-semibold text-slate-300 mb-1.5">
               <i class="fa-solid fa-pen-to-square ml-1 text-slate-400"></i>
-              Votre remarque / ملاحظتك <span class="text-rose-400">*</span>
+              ملاحظتك <span class="text-rose-400">*</span>
             </label>
             <textarea id="emailRemarkText" name="monTexte" rows="5" required
-              placeholder="اكتب ملاحظتك هنا... / Écrivez votre remarque ici..."
-              aria-label="Votre remarque"
+              placeholder="اكتب ملاحظتك هنا…"
+              aria-label="ملاحظتك"
               class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500 placeholder-slate-500 resize-y" dir="auto"></textarea>
           </div>
           <div id="emailRemarkStatus" class="hidden rounded-lg px-3 py-2 text-sm" role="status" aria-live="polite"></div>
           <button type="submit" id="emailRemarkBtn"
                   class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-colors touch-manipulation disabled:opacity-60 disabled:cursor-not-allowed">
             <i class="fa-solid fa-paper-plane"></i>
-            <span>Envoyer par e-mail</span>
+            <span>إرسال بالبريد الإلكتروني</span>
           </button>
-          <p class="text-[10px] text-slate-500 text-center pt-1">Votre remarque sera transmise directement au service concerné.</p>
+          <p class="text-[10px] text-slate-500 text-center pt-1">سيتم إرسال ملاحظتك مباشرة إلى المصلحة المختصة.</p>
         </form>
       </div>
     </div>
@@ -384,26 +572,26 @@
           <i class="fa-solid fa-building-columns text-amber-400 text-sm"></i>
         </div>
         <div class="flex-1 min-w-0">
-          <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Ministère</p>
-          <p class="text-xs text-slate-300 truncate">Galerie vidéo institutionnelle</p>
+          <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">الوزارة</p>
+          <p class="text-xs text-slate-300 truncate">الفيديوتيكة المؤسساتية</p>
         </div>
       </div>
       <div class="p-5 sm:p-6 text-center">
         <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-500/15 mb-4">
           <i class="fa-solid fa-right-from-bracket text-2xl text-amber-400"></i>
         </div>
-        <h2 class="text-lg font-bold text-white mb-2">Quitter la galerie ?</h2>
-        <p class="text-sm text-slate-300 leading-relaxed">Voulez-vous vraiment quitter la galerie vidéo du Ministère ?</p>
-        <p class="text-xs text-slate-400 mt-2">Votre contexte de navigation (thème, recherche, filtres) sera perdu.</p>
+        <h2 class="text-lg font-bold text-white mb-2">مغادرة المعرض؟</h2>
+        <p class="text-sm text-slate-300 leading-relaxed">هل تريد فعلاً مغادرة معرض الفيديوهات التابع للوزارة؟</p>
+        <p class="text-xs text-slate-400 mt-2">سيتم فقدان سياق التصفح (الموضوع، البحث، الفلاتر).</p>
       </div>
       <div class="flex flex-col sm:flex-row gap-2 p-4 bg-slate-900/40 border-t border-slate-700">
         <button type="button" data-exit-cancel
                 class="flex-1 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 active:bg-slate-500 text-white text-sm font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 touch-manipulation order-2 sm:order-1">
-          <i class="fa-solid fa-arrow-left"></i><span>Rester dans la galerie</span>
+          <i class="fa-solid fa-arrow-right"></i><span>البقاء في المعرض</span>
         </button>
         <button type="button" data-exit-confirm
                 class="flex-1 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-sm font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 touch-manipulation order-1 sm:order-2">
-          <i class="fa-solid fa-right-from-bracket"></i><span>Quitter la galerie</span>
+          <i class="fa-solid fa-right-from-bracket"></i><span>مغادرة المعرض</span>
         </button>
       </div>
     </div>
@@ -448,6 +636,23 @@
 ]
 </script>
 
+<!-- ============ ALIGNEMENT DYNAMIQUE DU SOUS-MENU ============ -->
+<script>
+(function syncStickySubMenu() {
+  var nav = document.querySelector('.main-menu-bar');
+  var sub = document.getElementById('subMenuBar');
+  if (!nav || !sub) return;
+  var apply = function () { sub.style.top = nav.offsetHeight + 'px'; };
+  apply();
+  window.addEventListener('load', apply);
+  window.addEventListener('resize', apply);
+  window.addEventListener('orientationchange', apply);
+  if (window.ResizeObserver) {
+    try { new ResizeObserver(apply).observe(nav); } catch (e) {}
+  }
+})();
+</script>
+
 <script>
 (function () {
   'use strict';
@@ -456,17 +661,17 @@
   // TABLEAU INDÉPENDANT tabeleau_url_content
   // ============================================================
   const tabeleau_url_content = [
-  {
-    "fbid": "1038260595886727",
-    "url": "https://www.facebook.com/reel/1038260595886727/",
-    "contenu": "شكراكم على هذه السنوات رأي عاليد وستمعها كفاءة راقت من مستوى عالي جدا نساء ورجل لنجاجم انتزام عدلتكم انتزام على القطاع جرأة كفاءة ويالي ممكنتني متقط المواطنات والمواطنين واتقديل صحيح الجلالة لعيني رئيسة الحكومة سيدة رئيسة الحكومة ويالي سادة فطيما زرار المصوري ويالي سهمتك بشكل كبير انا كان عارف الانسانة في السياسية والفائلة هذا القطاع سهمتك بشكل كبير للدفاع على المساواة سنشكرك وستنعطر فيك ساعد سيدنا الله يصرو ساعد كده ليك توجد بعد ان كو!!!!Taemin شكرا لكم يزع겨 للدفاع والمتاك Regard للمستوى Бزعاج ليك رidjan والاموج لدينا دراع ناسا ناسا وعرف أن النساء لي كتقلد المسؤولية كي قوموا بها على أحسن وجه نشكركم بصدق وبابي مفتوح وشريف ونمفتوح دائم من هذا الوزارة وهذا القطاع وقد رجل النساء من قيمة عالية شكرا"
-  },
-  {
-    "fbid": "1681352509630433",
-    "url": "https://www.facebook.com/reel/1681352509630433/",
-    "contenu": "شهدت جهة كلميم واد نون دينامية تنموية جديدة، من خلال مشاريع تُحدث أثراً ملموساً على أرض الواقع، وتسهم في تنمية المدن والمجالات القروية. وقد تجسدت هذه الدينامية في إبرام 53 اتفاقية، مع تحقيق تغطية ترابية بنسبة 100%، بعد استفادة جميع الجماعات الترابية بالجهة من برامج سياسة المدينة. وحظي المجال القروي باهتمام خاص، حيث تم استهداف 45 جماعة قروية عبر مشاريع تهم تأهيل الطرق، وتحسين البنية التحتية، وإنجاز الفضاءات الخضراء وملاعب القرب، بعدد من الجماعات، من بينها البويرات، وتويزكي، والمحبس، وعوينة إيغمان، وعوينات لهنا، وميرلفت، وغيرها. كما أولت سياسة المدينة بجهة كلميم واد نون أهمية خاصة للمراكز القروية الصاعدة، مثل مركز ميرلفت وأباينو، بهدف تعزيز جاذبيتها، والارتقاء بالتجهيزات والخدمات الأساسية، وتقريب الخدمات من الساكنة. أما على مستوى المدن، فقد ركزت مشاريع سياسة المدينة على إعادة هيكلة الأحياء، وسد الخصاص في التجهيزات، وتهيئة الطرق والشوارع، وإحداث الفضاءات الخضراء والساحات العمومية، وذلك بالعديد من المناطق، من بينها كلميم، وسيدي إفني، وطانطان، وآسا. ولا تقتصر هذه الأوراش على إنجاز مشاريع البناء والتأهيل، بل تندرج ضمن رؤية متكاملة تهدف إلى تعزيز العدالة المجالية، وتحسين إطار العيش، ومواكبة التحولات العمرانية والتنموية. إن أوراش سياسة المدينة بجهة كلميم واد نون متواصلة، من أجل تقريب التنمية من المواطن، وتعزيز جاذبية الجهة، وتحسين جودة العيش، بمقاربة ترابية طموحة، لأن الهدف لا يتمثل في إنجاز المشاريع فحسب، بل في بناء مجال أكثر توازناً وجاذبية، وأكثر قدرة على الاستجابة لتطلعات الساكنة اليوم وغداً."
-  }
-];
+    {
+      "fbid": "1038260595886727",
+      "url": "https://www.facebook.com/reel/1038260595886727/",
+      "contenu": "شكراكم على هذه السنوات رأي عاليد وستمعها كفاءة راقت من مستوى عالي جدا نساء ورجل لنجاجم انتزام عدلتكم انتزام على القطاع جرأة كفاءة ويالي ممكنتني متقط المواطنات والمواطنين واتقديل صحيح الجلالة لعيني رئيسة الحكومة سيدة رئيسة الحكومة ويالي سادة فطيما زرار المصوري ويالي سهمتك بشكل كبير انا كان عارف الانسانة في السياسية والفائلة هذا القطاع سهمتك بشكل كبير للدفاع على المساواة سنشكرك وستنعطر فيك ساعد سيدنا الله يصرو ساعد كده ليك توجد بعد ان كو!!!!Taemin شكرا لكم يزع겨 للدفاع والمتاك Regard للمستوى Бزعاج ليك رidjan والاموج لدينا دراع ناسا ناسا وعرف أن النساء لي كتقلد المسؤولية كي قوموا بها على أحسن وجه نشكركم بصدق وبابي مفتوح وشريف ونمفتوح دائم من هذا الوزارة وهذا القطاع وقد رجل النساء من قيمة عالية شكرا"
+    },
+    {
+      "fbid": "1681352509630433",
+      "url": "https://www.facebook.com/reel/1681352509630433/",
+      "contenu": "شهدت جهة كلميم واد نون دينامية تنموية جديدة، من خلال مشاريع تُحدث أثراً ملموساً على أرض الواقع، وتسهم في تنمية المدن والمجالات القروية. وقد تجسدت هذه الدينامية في إبرام 53 اتفاقية، مع تحقيق تغطية ترابية بنسبة 100%، بعد استفادة جميع الجماعات الترابية بالجهة من برامج سياسة المدينة. وحظي المجال القروي باهتمام خاص، حيث تم استهداف 45 جماعة قروية عبر مشاريع تهم تأهيل الطرق، وتحسين البنية التحتية، وإنجاز الفضاءات الخضراء وملاعب القرب، بعدد من الجماعات، من بينها البويرات، وتويزكي، والمحبس، وعوينة إيغمان، وعوينات لهنا، وميرلفت، وغيرها. كما أولت سياسة المدينة بجهة كلميم واد نون أهمية خاصة للمراكز القروية الصاعدة، مثل مركز ميرلفت وأباينو، بهدف تعزيز جاذبيتها، والارتقاء بالتجهيزات والخدمات الأساسية، وتقريب الخدمات من الساكنة. أما على مستوى المدن، فقد ركزت مشاريع سياسة المدينة على إعادة هيكلة الأحياء، وسد الخصاص في التجهيزات، وتهيئة الطرق والشوارع، وإحداث الفضاءات الخضراء والساحات العمومية، وذلك بالعديد من المناطق، من بينها كلميم، وسيدي إفني، وطانطان، وآسا. ولا تقتصر هذه الأوراش على إنجاز مشاريع البناء والتأهيل، بل تندرج ضمن رؤية متكاملة تهدف إلى تعزيز العدالة المجالية، وتحسين إطار العيش، ومواكبة التحولات العمرانية والتنموية. إن أوراش سياسة المدينة بجهة كلميم واد نون متواصلة، من أجل تقريب التنمية من المواطن، وتعزيز جاذبية الجهة، وتحسين جودة العيش، بمقاربة ترابية طموحة، لأن الهدف لا يتمثل في إنجاز المشاريع فحسب، بل في بناء مجال أكثر توازناً وجاذبية، وأكثر قدرة على الاستجابة لتطلعات الساكنة اليوم وغداً."
+    }
+  ];
 
   const EMAIL_REMARK_SCRIPT_URL =
     'https://script.google.com/macros/s/AKfycbwRllGpkxkBllOBnu9U7gZfH5Lg1qS-Iz-jf_rz_S1VKLydL0juENf-OfUI56mWQ_ojMA/exec';
@@ -495,7 +700,11 @@
     emailRemarkStatus: $('emailRemarkStatus'),
     progressOverlay: $('progressOverlay'), progressBar: $('progressBar'),
     progressPercent: $('progressPercent'), progressCount: $('progressCount'),
-    exitConfirmModal: $('exitConfirmModal')
+    exitConfirmModal: $('exitConfirmModal'),
+    menuHome: $('menuHome'), menuGalerie: $('menuGalerie'),
+    menuSort: $('menuSort'), menuYear: $('menuYear'),
+    yearBadge: $('yearBadge'), yearDropdownContent: $('yearDropdownContent'),
+    galleryDropdown: $('galleryDropdown'), sortDropdown: $('sortDropdown')
   };
 
   let reels = [];
@@ -530,25 +739,25 @@
   const formatViews = (v) => {
     if (v == null || v === '' || isNaN(v)) return '—';
     const n = Number(v);
-    if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + ' M';
-    if (n >= 1_000) return (n / 1_000).toFixed(1).replace(/\.0$/, '') + ' K';
+    if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + ' م';
+    if (n >= 1_000) return (n / 1_000).toFixed(1).replace(/\.0$/, '') + ' ألف';
     return String(n);
   };
 
   function formatDateArabicExact(dateStr, dateIso) {
-    if (!dateIso) return dateStr || 'Date invalide';
+    if (!dateIso) return dateStr || 'تاريخ غير صالح';
     try {
       const parts = dateIso.split('-');
-      if (parts.length !== 3) return dateStr || 'Date invalide';
+      if (parts.length !== 3) return dateStr || 'تاريخ غير صالح';
       const y = parseInt(parts[0], 10);
       const m = parseInt(parts[1], 10) - 1;
       const d = parseInt(parts[2], 10);
       const date = new Date(y, m, d);
-      if (isNaN(date.getTime())) return dateStr || 'Date invalide';
+      if (isNaN(date.getTime())) return dateStr || 'تاريخ غير صالح';
       const daysAr = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
       const monthsAr = ['يناير', 'فبراير', 'مارس', 'أبريل', 'ماي', 'يونيو', 'يوليوز', 'غشت', 'شتنبر', 'أكتوبر', 'نونبر', 'دجنبر'];
       return `${daysAr[date.getDay()]} ${String(date.getDate()).padStart(2, '0')} ${monthsAr[date.getMonth()]} ${date.getFullYear()}`;
-    } catch (e) { return dateStr || 'Date invalide'; }
+    } catch (e) { return dateStr || 'تاريخ غير صالح'; }
   }
 
   function normalizeSearchText(str) {
@@ -618,6 +827,7 @@
     return result;
   }
 
+  // ====== EXIT TRAP ======
   function activateExitTrap() {
     if (exitTrapActive) return;
     exitTrapActive = true;
@@ -650,7 +860,7 @@
     if (allowExit) return;
     if (!exitTrapActive) return;
     e.preventDefault();
-    e.returnValue = 'Voulez-vous vraiment quitter la galerie vidéo du Ministère ?';
+    e.returnValue = 'هل تريد فعلاً مغادرة معرض الفيديوهات التابع للوزارة؟';
     return e.returnValue;
   });
   window.addEventListener('popstate', () => {
@@ -668,6 +878,7 @@
     });
   }
 
+  // ====== REMARQUES ======
   function showEmailStatus(type, text) {
     if (!els.emailRemarkStatus) return;
     els.emailRemarkStatus.classList.remove('hidden');
@@ -699,41 +910,42 @@
       e.preventDefault();
       if (els.emailRemarkBtn.disabled) return;
       const text = (els.emailRemarkText.value || '').trim();
-      if (!text) { showEmailStatus('error', 'Veuillez saisir votre remarque avant l\'envoi.'); return; }
+      if (!text) { showEmailStatus('error', 'الرجاء كتابة ملاحظتك قبل الإرسال.'); return; }
       els.emailRemarkBtn.disabled = true;
-      showEmailStatus('pending', 'Envoi en cours…');
+      showEmailStatus('pending', 'جارٍ الإرسال…');
       const formData = new FormData(els.emailRemarkForm);
       fetch(EMAIL_REMARK_SCRIPT_URL, { method: 'POST', body: formData, redirect: 'follow' })
         .then(response => {
           if (!response.ok) throw new Error('Échec (' + response.status + ')');
-          showEmailStatus('success', 'تم إرسال الملاحظة بنجاح — Remarque envoyée avec succès');
+          showEmailStatus('success', 'تم إرسال الملاحظة بنجاح');
           els.emailRemarkForm.reset();
           setTimeout(() => { closeRemarksModal(); }, 1600);
         })
         .catch(error => {
           console.error('Erreur envoi e-mail :', error);
-          showEmailStatus('error', "Erreur lors de l'envoi. Veuillez réessayer.");
+          showEmailStatus('error', "حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.");
         })
         .finally(() => { els.emailRemarkBtn.disabled = false; });
     });
   }
 
+  // ====== THUMBS & CARTES ======
   function thumbMarkup(url, loadingAttr, extraClass = '') {
     const safeUrl = escapeHtml(url || '');
     return `
       <div class="thumb-wrap ${extraClass}">
-        <img src="${safeUrl}" alt="Miniature" loading="${loadingAttr}" decoding="async" referrerpolicy="no-referrer"
+        <img src="${safeUrl}" alt="صورة مصغرة" loading="${loadingAttr}" decoding="async" referrerpolicy="no-referrer"
              onload="this.parentElement.classList.remove('thumb-error');"
              onerror="this.parentElement.classList.add('thumb-error');">
         <div class="thumb-fallback">
           <i class="fa-regular fa-image"></i>
-          <span>Miniature indisponible</span>
+          <span>الصورة المصغرة غير متوفرة</span>
         </div>
       </div>`;
   }
 
   const galleryCardHTML = (r) => {
-    const rawTitle = r.titre || 'Titre indisponible';
+    const rawTitle = r.titre || 'العنوان غير متوفر';
     const truncatedTitle = rawTitle.length > 40 ? rawTitle.substring(0, 40) + '...' : rawTitle;
     const dateFormatted = formatDateArabicExact(r.date, r.date_iso);
     const views = formatViews(getViews(r));
@@ -745,7 +957,7 @@
     return `
     <article class="reel-card group relative aspect-[9/16] w-full bg-slate-900 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 active:scale-[0.98] touch-manipulation border-2 sm:border-[3px] border-white ring-1 ring-black/25" data-fbid="${escapeHtml(r.fbid)}">
       ${thumbMarkup(r.miniature, loadingAttr, 'absolute inset-0')}
-      ${isContentMatch ? '<span class="content-match-badge">CORRESPONDANCE</span>' : ''}
+      ${isContentMatch ? '<span class="content-match-badge">مطابقة</span>' : ''}
       <div class="thumb-gradient absolute inset-x-0 bottom-0 h-[75%] pointer-events-none z-[1]"></div>
       <div class="absolute top-2 left-2 z-[3] theme-tooltip">
         <span class="theme-chip" dir="rtl">${escapeHtml(themeAr)}</span>
@@ -774,7 +986,7 @@
   };
 
   const themeVideoCardHTML = (r) => {
-    const rawTitle = r.titre || 'Titre indisponible';
+    const rawTitle = r.titre || 'العنوان غير متوفر';
     const truncatedTitle = rawTitle.length > 40 ? rawTitle.substring(0, 40) + '...' : rawTitle;
     const dateFormatted = formatDateArabicExact(r.date, r.date_iso);
     const loadingAttr = isFirstLoad ? 'eager' : 'lazy';
@@ -782,7 +994,7 @@
     return `
     <article class="reel-card group relative aspect-[9/16] w-full bg-slate-900 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 active:scale-[0.98] touch-manipulation border-2 sm:border-[3px] border-white ring-1 ring-black/25" data-fbid="${escapeHtml(r.fbid)}">
       ${thumbMarkup(r.miniature, loadingAttr, 'absolute inset-0')}
-      ${isContentMatch ? '<span class="content-match-badge">CORRESPONDANCE</span>' : ''}
+      ${isContentMatch ? '<span class="content-match-badge">مطابقة</span>' : ''}
       <div class="thumb-gradient absolute inset-x-0 bottom-0 h-[75%] pointer-events-none z-[1]"></div>
       <div class="absolute bottom-0 inset-x-0 p-2 sm:p-3 flex flex-col z-[2]">
         <div class="flex items-center justify-start w-full mb-1.5">
@@ -800,11 +1012,12 @@
     </article>`;
   };
 
+  // ====== PROGRESS ======
   function updateProgressBar(done, total) {
     const pct = total > 0 ? Math.round((done / total) * 100) : 0;
     if (els.progressBar) els.progressBar.style.width = pct + '%';
     if (els.progressPercent) els.progressPercent.textContent = pct + '%';
-    if (els.progressCount) els.progressCount.textContent = `${done} / ${total} miniatures`;
+    if (els.progressCount) els.progressCount.textContent = `${done} / ${total} صورة مصغرة`;
   }
   function hideProgressOverlay() {
     if (!els.progressOverlay) return;
@@ -841,6 +1054,7 @@
     setTimeout(() => { if (progressTracking.active) { clearTimeout(progressTracking.showTimer); hideProgressOverlay(); } }, 10000);
   }
 
+  // ====== RENDER ======
   function render() {
     els.grid.classList.add('hidden');
     els.themesView.classList.add('hidden');
@@ -895,7 +1109,7 @@
             <div class="theme-card-icon w-12 h-12 rounded-full flex items-center justify-center mb-1"><i class="fa-solid fa-folder-open text-xl"></i></div>
             <h3 class="font-bold text-sm sm:text-base leading-tight" dir="rtl">${escapeHtml(meta.ar)}</h3>
             <p class="text-[10px] leading-tight opacity-75" dir="ltr" style="direction:ltr">${escapeHtml(themeFr)}</p>
-            <span class="theme-card-count text-xs font-semibold px-2.5 py-0.5 rounded-full mt-1">${meta.count} vidéo${meta.count > 1 ? 's' : ''}</span>
+            <span class="theme-card-count text-xs font-semibold px-2.5 py-0.5 rounded-full mt-1">${meta.count} فيديو</span>
           </div>`;
       });
       html += '</div>';
@@ -934,7 +1148,7 @@
                     ${thumbMarkup(v.miniature, 'lazy')}
                   </div>
                   <div class="flex-1 min-w-0 text-right">
-                    <div class="tree-video-title text-xs sm:text-sm text-slate-200 font-medium leading-snug" dir="auto" title="${escapeHtml(v.titre || '')}">${escapeHtml(v.titre || 'Sans titre')}</div>
+                    <div class="tree-video-title text-xs sm:text-sm text-slate-200 font-medium leading-snug" dir="auto" title="${escapeHtml(v.titre || '')}">${escapeHtml(v.titre || 'بدون عنوان')}</div>
                     <div class="flex flex-wrap items-center gap-1.5 mt-1.5 text-[10px] sm:text-[11px]">
                       <span class="inline-flex items-center gap-1 bg-slate-900/70 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700/60">
                         <i class="fa-regular fa-calendar text-slate-500"></i>
@@ -956,6 +1170,7 @@
     els.treeContent.innerHTML = html;
   }
 
+  // ====== PAGINATION ======
   function getPageNumbers(current, total) {
     if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
     if (current <= 4) return [1, 2, 3, 4, 5, '…', total];
@@ -969,15 +1184,17 @@
     const inactive = 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 active:bg-slate-600';
     const disabled = 'bg-slate-800 text-slate-600 border border-slate-700 cursor-not-allowed';
     let html = '';
-    html += `<button data-page="${currentPage - 1}" class="${base} ${currentPage === 1 ? disabled : inactive}" ${currentPage === 1 ? 'disabled' : ''}><i class="fa-solid fa-chevron-left text-xs"></i></button>`;
+    // En RTL : précédent = chevron-right, suivant = chevron-left
+    html += `<button data-page="${currentPage - 1}" class="${base} ${currentPage === 1 ? disabled : inactive}" ${currentPage === 1 ? 'disabled' : ''} aria-label="السابق"><i class="fa-solid fa-chevron-right text-xs"></i></button>`;
     getPageNumbers(currentPage, totalPages).forEach((p) => {
       if (p === '…') html += `<span class="${base} ${inactive} select-none">…</span>`;
-      else html += `<button data-page="${p}" class="${base} ${p === currentPage ? active : inactive}">${p}</button>`;
+      else html += `<button data-page="${p}" class="${base} ${p === currentPage ? active : inactive}" aria-label="صفحة ${p}">${p}</button>`;
     });
-    html += `<button data-page="${currentPage + 1}" class="${base} ${currentPage === totalPages ? disabled : inactive}" ${currentPage === totalPages ? 'disabled' : ''}><i class="fa-solid fa-chevron-right text-xs"></i></button>`;
+    html += `<button data-page="${currentPage + 1}" class="${base} ${currentPage === totalPages ? disabled : inactive}" ${currentPage === totalPages ? 'disabled' : ''} aria-label="التالي"><i class="fa-solid fa-chevron-left text-xs"></i></button>`;
     els.pagination.innerHTML = html;
   }
 
+  // ====== LECTEUR VIDÉO ======
   function loadVideoWithAutoplay(reel) {
     if (!reel) return;
     const shareUrl = reel.url_canonique || reel.url;
@@ -1003,7 +1220,7 @@
     currentReel = reel;
     els.detailsContent.innerHTML = renderDetails(reel);
     els.detailsContent.scrollTop = 0;
-    els.detailsDisplayTitle.textContent = reel.titre || 'Titre indisponible';
+    els.detailsDisplayTitle.textContent = reel.titre || 'العنوان غير متوفر';
     els.detailsDisplayDate.textContent = formatDateArabicExact(reel.date, reel.date_iso);
     els.playerViewsVal.textContent = formatViews(getViews(reel));
     els.playerReactionsVal.textContent = reel.reactions != null ? String(reel.reactions) : '—';
@@ -1054,21 +1271,22 @@
     return `
       ${(themeAr || themeFr) ? `<div class="flex flex-wrap gap-2">
         ${themeAr ? `<span class="theme-chip" dir="rtl"><i class="fa-solid fa-tag text-[9px]"></i> ${escapeHtml(themeAr)}</span>` : ''}
-        ${themeFr && themeFr !== themeAr ? `<span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-blue-500/15 text-blue-300 border border-blue-500/30"><i class="fa-solid fa-tag text-[10px]"></i>${escapeHtml(themeFr)}</span>` : ''}
+        ${themeFr && themeFr !== themeAr ? `<span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-blue-500/15 text-blue-300 border border-blue-500/30" dir="ltr"><i class="fa-solid fa-tag text-[10px]"></i>${escapeHtml(themeFr)}</span>` : ''}
       </div>` : ''}
-      <h2 class="text-base sm:text-lg font-bold text-white leading-relaxed" dir="auto">${reel.titre ? escapeHtml(reel.titre) : 'Vidéo Reel'}</h2>
+      <h2 class="text-base sm:text-lg font-bold text-white leading-relaxed" dir="auto">${reel.titre ? escapeHtml(reel.titre) : 'مقطع فيديو'}</h2>
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-        ${statHTML('Vues', formatViews(views), 'fa-eye', { icon: 'text-amber-400', text: 'text-amber-300' })}
-        ${statHTML('Réactions', reactions != null ? String(reactions) : '—', 'fa-heart', { icon: 'text-rose-400', text: 'text-rose-300' })}
-        ${statHTML('Date', reel.date || '—', 'fa-calendar', { icon: 'text-slate-400', text: 'text-slate-200' })}
+        ${statHTML('المشاهدات', formatViews(views), 'fa-eye', { icon: 'text-amber-400', text: 'text-amber-300' })}
+        ${statHTML('التفاعلات', reactions != null ? String(reactions) : '—', 'fa-heart', { icon: 'text-rose-400', text: 'text-rose-300' })}
+        ${statHTML('التاريخ', reel.date || '—', 'fa-calendar', { icon: 'text-slate-400', text: 'text-slate-200' })}
       </div>
-      ${description ? `<div class="pt-1"><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Description</div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-slate-900/40 p-3 rounded-lg border border-slate-700/50" dir="auto">${escapeHtml(description)}</p></div>` : ''}
-      ${enrichedContent ? `<div class="pt-1"><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Contenu vidéo </div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-amber-500/5 p-3 rounded-lg border border-amber-500/20" dir="auto">${escapeHtml(enrichedContent)}</p></div>` : ''}
+      ${description ? `<div class="pt-1"><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">الوصف</div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-slate-900/40 p-3 rounded-lg border border-slate-700/50" dir="auto">${escapeHtml(description)}</p></div>` : ''}
+      ${enrichedContent ? `<div class="pt-1"><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">محتوى الفيديو</div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-amber-500/5 p-3 rounded-lg border border-amber-500/20" dir="auto">${escapeHtml(enrichedContent)}</p></div>` : ''}
       <div class="flex flex-col sm:flex-row gap-2 pt-3">
-        ${reelUrl ? `<a href="${escapeHtml(reelUrl)}" target="_blank" rel="noopener" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors"><i class="fa-brands fa-facebook"></i> Voir sur Facebook</a>` : ''}
+        ${reelUrl ? `<a href="${escapeHtml(reelUrl)}" target="_blank" rel="noopener" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors" dir="ltr"><i class="fa-brands fa-facebook"></i> Voir sur Facebook</a>` : ''}
       </div>`;
   }
 
+  // ====== PLEIN ÉCRAN ======
   async function toggleFullscreen() {
     const el = els.playerZone;
     if (!el) return;
@@ -1091,9 +1309,10 @@
     if (!icon) return;
     const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
     icon.className = isFs ? 'fa-solid fa-compress text-sm' : 'fa-solid fa-expand text-sm';
-    els.fullscreenBtn.setAttribute('aria-label', isFs ? 'Quitter le plein écran' : 'Plein écran');
+    els.fullscreenBtn.setAttribute('aria-label', isFs ? 'الخروج من ملء الشاشة' : 'ملء الشاشة');
   }
 
+  // ====== EXPORT EXCEL ======
   function sanitizeSheetName(name) {
     if (!name) return 'Sans_titre';
     let s = String(name).replace(/[\\\/\?\*\[\]:]/g, '_').replace(/^'+|'+$/g, '');
@@ -1101,9 +1320,9 @@
     return s || 'Sans_titre';
   }
   function exportToExcel() {
-    if (typeof XLSX === 'undefined') { alert('SheetJS non chargé.'); return; }
+    if (typeof XLSX === 'undefined') { alert('لم يتم تحميل SheetJS.'); return; }
     const items = getFilteredAndSorted();
-    if (items.length === 0) { alert('Aucune donnée à exporter.'); return; }
+    if (items.length === 0) { alert('لا توجد بيانات للتصدير.'); return; }
     const themesMap = new Map();
     items.forEach(r => {
       const fr = r.theme_fr || 'Non classé';
@@ -1124,27 +1343,101 @@
         i++;
       }
       usedNames.add(sheetName.toLowerCase());
-      const rows = [['Titre', 'Description', 'FBID']];
+      const rows = [['العنوان', 'الوصف', 'FBID']];
       meta.videos.forEach(v => rows.push([v.titre || '', v.description || '', String(v.fbid || '')]));
       const ws = XLSX.utils.aoa_to_sheet(rows);
       ws['!cols'] = [{ wch: 60 }, { wch: 90 }, { wch: 22 }];
       ws['!views'] = [{ RTL: true }];
       XLSX.utils.book_append_sheet(wb, ws, sheetName);
     });
-    const summary = [['Thème (FR)', 'Thème (AR)', 'Nombre de vidéos']];
+    const summary = [['الموضوع (FR)', 'الموضوع (AR)', 'عدد الفيديوهات']];
     entries.forEach(meta => summary.push([meta.fr, meta.ar, meta.videos.length]));
-    summary.push(['TOTAL', '', items.length]);
+    summary.push(['المجموع', '', items.length]);
     const wsSum = XLSX.utils.aoa_to_sheet(summary);
     wsSum['!cols'] = [{ wch: 40 }, { wch: 40 }, { wch: 18 }];
     wsSum['!views'] = [{ RTL: true }];
-    let sumName = '_Récapitulatif'; let n = 2;
-    while (usedNames.has(sumName.toLowerCase())) { sumName = `_Récapitulatif_${n}`; n++; }
+    let sumName = '_ملخص'; let n = 2;
+    while (usedNames.has(sumName.toLowerCase())) { sumName = `_ملخص_${n}`; n++; }
     XLSX.utils.book_append_sheet(wb, wsSum, sumName.substring(0, 31));
     const today = new Date().toISOString().slice(0, 10);
     try { XLSX.writeFile(wb, `Galerie_Reels_${today}.xlsx`, { bookType: 'xlsx', compression: true }); }
-    catch (e) { console.error(e); alert('Erreur export : ' + e.message); }
+    catch (e) { console.error(e); alert('خطأ في التصدير: ' + e.message); }
   }
 
+  // ====== MENU : CONSTRUCTION DYNAMIQUE ======
+  function buildYearDropdown() {
+    if (!els.yearDropdownContent) return;
+    const yearsSet = new Set();
+    reels.forEach(r => { const y = getReelYear(r); if (y) yearsSet.add(y); });
+    const years = Array.from(yearsSet).sort((a, b) => Number(b) - Number(a));
+
+    let html = `
+      <button type="button" class="menu-dropdown-item" data-year="all" role="menuitem">
+        <i class="fa-solid fa-layer-group"></i>
+        <span>كل السنوات</span>
+        <i class="fa-solid fa-check dd-check"></i>
+      </button>`;
+
+    if (years.length > 0) {
+      html += '<div class="border-t border-white/10 my-1"></div>';
+      years.forEach(y => {
+        html += `
+          <button type="button" class="menu-dropdown-item" data-year="${escapeHtml(y)}" role="menuitem">
+            <i class="fa-solid fa-calendar-day"></i>
+            <span>${escapeHtml(y)}</span>
+            <i class="fa-solid fa-check dd-check"></i>
+          </button>`;
+      });
+    }
+    els.yearDropdownContent.innerHTML = html;
+  }
+
+  // ====== MENU : SYNCHRONISATION ======
+  function syncMenuState() {
+    if (els.yearBadge) {
+      els.yearBadge.textContent = (selectedYear === 'all') ? 'الكل' : selectedYear;
+    }
+
+    const isYearFilterActive = selectedYear && selectedYear !== 'all';
+    const isSortNonDefault = currentSort !== 'recent';
+    const isViewNonGallery = currentViewMode !== 'gallery';
+
+    [els.menuHome, els.menuGalerie, els.menuSort, els.menuYear].forEach(el => {
+      if (el) el.classList.remove('active');
+    });
+
+    if (isViewNonGallery) {
+      if (els.menuGalerie) els.menuGalerie.classList.add('active');
+    } else if (isSortNonDefault) {
+      if (els.menuSort) els.menuSort.classList.add('active');
+    } else if (isYearFilterActive) {
+      if (els.menuYear) els.menuYear.classList.add('active');
+    } else {
+      if (els.menuHome) els.menuHome.classList.add('active');
+    }
+
+    if (els.galleryDropdown) {
+      els.galleryDropdown.querySelectorAll('[data-view]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.view === currentViewMode);
+      });
+    }
+    if (els.sortDropdown) {
+      els.sortDropdown.querySelectorAll('[data-sort]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.sort === currentSort);
+      });
+    }
+    if (els.yearDropdownContent) {
+      els.yearDropdownContent.querySelectorAll('[data-year]').forEach(btn => {
+        btn.classList.toggle('active', String(btn.dataset.year) === String(selectedYear));
+      });
+    }
+
+    if (els.viewModeSelect) els.viewModeSelect.value = currentViewMode;
+    if (els.sortSelect) els.sortSelect.value = currentSort;
+    if (els.yearFilterSelect) els.yearFilterSelect.value = selectedYear;
+  }
+
+  // ====== ANNÉE : PEUPLEMENT DU SELECT ======
   function populateYearFilter() {
     if (!els.yearFilterSelect) return;
     const yearsSet = new Set();
@@ -1156,7 +1449,7 @@
     els.yearFilterSelect.innerHTML = '';
     const optAll = document.createElement('option');
     optAll.value = 'all';
-    optAll.textContent = 'Toutes les années';
+    optAll.textContent = 'كل السنوات';
     els.yearFilterSelect.appendChild(optAll);
     years.forEach(y => {
       const opt = document.createElement('option');
@@ -1174,78 +1467,219 @@
     els.yearFilterSelect.value = selectedYear;
   }
 
+  // ====== INITIALISATION ======
   function init(data) {
     reels = Array.isArray(data) ? data : [];
     byId = new Map(reels.map((r) => [String(r.fbid), r]));
     populateYearFilter();
+    buildYearDropdown();
     currentPage = 1;
+    syncMenuState();
     render();
   }
 
-  // ===== Événements =====
-  els.viewModeSelect.addEventListener('change', (e) => {
-    currentViewMode = e.target.value; activeTheme = null; currentPage = 1; render();
-  });
-  els.backToThemesBtn.addEventListener('click', () => { activeTheme = null; currentPage = 1; render(); });
-  els.grid.addEventListener('click', (e) => {
-    const card = e.target.closest('[data-fbid]');
-    if (!card) return;
-    const reel = byId.get(card.dataset.fbid);
-    if (reel) openDetails(reel);
-  });
-  els.themesView.addEventListener('click', (e) => {
-    const themeCard = e.target.closest('[data-theme]');
-    if (themeCard) { activeTheme = themeCard.dataset.theme; currentPage = 1; render(); }
-  });
-  els.treeContent.addEventListener('click', (e) => {
-    const toggleBtn = e.target.closest('.tree-toggle-btn');
-    if (toggleBtn) {
-      const icon = toggleBtn.querySelector('.tree-toggle');
-      const children = toggleBtn.nextElementSibling;
-      if (children && children.classList.contains('tree-children')) {
-        children.classList.toggle('hidden');
-        icon.classList.toggle('open');
-      }
-      return;
-    }
-    const node = e.target.closest('[data-fbid]');
-    if (node) { const reel = byId.get(node.dataset.fbid); if (reel) openDetails(reel); }
-  });
-  if (els.exportExcelBtn) els.exportExcelBtn.addEventListener('click', exportToExcel);
-  els.pagination.addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-page]');
-    if (!btn || btn.disabled) return;
-    const p = parseInt(btn.dataset.page, 10);
-    if (!p || p === currentPage) return;
-    currentPage = p; render();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-  els.sort.addEventListener('change', (e) => { currentSort = e.target.value; currentPage = 1; render(); });
-  if (els.yearFilterSelect) {
-    els.yearFilterSelect.addEventListener('change', (e) => {
-      selectedYear = e.target.value; currentPage = 1; render();
+  // ====== DROPDOWNS ======
+  function closeAllDropdowns(except) {
+    document.querySelectorAll('.menu-dropdown').forEach(dd => {
+      if (except && dd === except) return;
+      const content = dd.querySelector('.menu-dropdown-content');
+      const btn = dd.querySelector('.menu-item');
+      if (content) content.classList.add('hidden');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+      const chev = btn && btn.querySelector('.dd-chevron');
+      if (chev) chev.style.transform = '';
     });
   }
-  els.search.addEventListener('input', (e) => {
-    clearTimeout(searchTimer);
-    const val = e.target.value;
-    searchTimer = setTimeout(() => { currentQuery = val; currentPage = 1; render(); }, 200);
+  function openDropdown(dd) {
+    if (!dd) return;
+    const content = dd.querySelector('.menu-dropdown-content');
+    const btn = dd.querySelector('.menu-item');
+    if (content) content.classList.remove('hidden');
+    if (btn) btn.setAttribute('aria-expanded', 'true');
+    const chev = btn && btn.querySelector('.dd-chevron');
+    if (chev) chev.style.transform = 'rotate(180deg)';
+  }
+  function toggleDropdown(dd) {
+    if (!dd) return;
+    const content = dd.querySelector('.menu-dropdown-content');
+    const isOpen = content && !content.classList.contains('hidden');
+    closeAllDropdowns();
+    if (!isOpen) openDropdown(dd);
+  }
+
+  document.querySelectorAll('.menu-dropdown').forEach(dd => {
+    const btn = dd.querySelector('.menu-item');
+    if (!btn) return;
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      toggleDropdown(dd);
+    });
   });
-  els.detailsModal.addEventListener('click', (e) => {
-    if (e.target.closest('[data-close-details]')) closeDetails();
+
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.menu-dropdown')) closeAllDropdowns();
   });
+
+  // ====== MENU : ACTIONS ======
+  // 1) الرئيسية
+  if (els.menuHome) {
+    els.menuHome.addEventListener('click', function (e) {
+      e.preventDefault();
+      closeAllDropdowns();
+      currentViewMode = 'gallery';
+      activeTheme = null;
+      currentPage = 1;
+      syncMenuState();
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // 2) معرض الفيديوهات : choix de la vue
+  if (els.galleryDropdown) {
+    els.galleryDropdown.addEventListener('click', function (e) {
+      const btn = e.target.closest('[data-view]');
+      if (!btn) return;
+      currentViewMode = btn.dataset.view;
+      activeTheme = null;
+      currentPage = 1;
+      syncMenuState();
+      render();
+      closeAllDropdowns();
+    });
+  }
+
+  // 3) الأحدث : choix du tri
+  if (els.sortDropdown) {
+    els.sortDropdown.addEventListener('click', function (e) {
+      const btn = e.target.closest('[data-sort]');
+      if (!btn) return;
+      currentSort = btn.dataset.sort;
+      if (currentViewMode === 'tree') currentViewMode = 'gallery';
+      currentPage = 1;
+      syncMenuState();
+      render();
+      closeAllDropdowns();
+    });
+  }
+
+  // 4) السنوات : choix de l'année
+  if (els.yearDropdownContent) {
+    els.yearDropdownContent.addEventListener('click', function (e) {
+      const btn = e.target.closest('[data-year]');
+      if (!btn) return;
+      selectedYear = btn.dataset.year;
+      currentPage = 1;
+      syncMenuState();
+      render();
+      closeAllDropdowns();
+    });
+  }
+
+  // ====== FILTRES SOUS-MENU ======
+  if (els.viewModeSelect) {
+    els.viewModeSelect.addEventListener('change', (e) => {
+      currentViewMode = e.target.value;
+      activeTheme = null;
+      currentPage = 1;
+      syncMenuState();
+      render();
+    });
+  }
+  if (els.backToThemesBtn) {
+    els.backToThemesBtn.addEventListener('click', () => {
+      activeTheme = null;
+      currentPage = 1;
+      render();
+    });
+  }
+  if (els.sortSelect) {
+    els.sortSelect.addEventListener('change', (e) => {
+      currentSort = e.target.value;
+      currentPage = 1;
+      syncMenuState();
+      render();
+    });
+  }
+  if (els.yearFilterSelect) {
+    els.yearFilterSelect.addEventListener('change', (e) => {
+      selectedYear = e.target.value;
+      currentPage = 1;
+      syncMenuState();
+      render();
+    });
+  }
+
+  // ====== GRILLE / THÈMES / ARBRE / PAGINATION ======
+  if (els.grid) {
+    els.grid.addEventListener('click', (e) => {
+      const card = e.target.closest('[data-fbid]');
+      if (!card) return;
+      const reel = byId.get(card.dataset.fbid);
+      if (reel) openDetails(reel);
+    });
+  }
+  if (els.themesView) {
+    els.themesView.addEventListener('click', (e) => {
+      const themeCard = e.target.closest('[data-theme]');
+      if (themeCard) { activeTheme = themeCard.dataset.theme; currentPage = 1; render(); }
+    });
+  }
+  if (els.treeContent) {
+    els.treeContent.addEventListener('click', (e) => {
+      const toggleBtn = e.target.closest('.tree-toggle-btn');
+      if (toggleBtn) {
+        const icon = toggleBtn.querySelector('.tree-toggle');
+        const children = toggleBtn.nextElementSibling;
+        if (children && children.classList.contains('tree-children')) {
+          children.classList.toggle('hidden');
+          if (icon) icon.classList.toggle('open');
+        }
+        return;
+      }
+      const node = e.target.closest('[data-fbid]');
+      if (node) { const reel = byId.get(node.dataset.fbid); if (reel) openDetails(reel); }
+    });
+  }
+  if (els.exportExcelBtn) els.exportExcelBtn.addEventListener('click', exportToExcel);
+  if (els.pagination) {
+    els.pagination.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-page]');
+      if (!btn || btn.disabled) return;
+      const p = parseInt(btn.dataset.page, 10);
+      if (!p || p === currentPage) return;
+      currentPage = p; render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+  if (els.search) {
+    els.search.addEventListener('input', (e) => {
+      clearTimeout(searchTimer);
+      const val = e.target.value;
+      searchTimer = setTimeout(() => { currentQuery = val; currentPage = 1; render(); }, 200);
+    });
+  }
+
+  // ====== DETAILS / MODALS ======
+  if (els.detailsModal) {
+    els.detailsModal.addEventListener('click', (e) => {
+      if (e.target.closest('[data-close-details]')) closeDetails();
+    });
+  }
   const playBtn = document.getElementById('detailsPlayBtn');
   if (playBtn) playBtn.addEventListener('click', () => {
     if (!currentReel) return;
     if (!els.detailsFrame.src || els.detailsFrame.src === 'about:blank') loadVideoWithAutoplay(currentReel);
     revealPlayer();
   });
-  els.detailsFrame.addEventListener('load', () => {
-    if (els.detailsModal.classList.contains('hidden')) return;
-    if (!els.detailsFrame.src || els.detailsFrame.src === 'about:blank') return;
-    els.videoLoader.classList.add('hidden');
-    schedulePosterFade(300);
-  });
+  if (els.detailsFrame) {
+    els.detailsFrame.addEventListener('load', () => {
+      if (els.detailsModal.classList.contains('hidden')) return;
+      if (!els.detailsFrame.src || els.detailsFrame.src === 'about:blank') return;
+      els.videoLoader.classList.add('hidden');
+      schedulePosterFade(300);
+    });
+  }
   if (els.fullscreenBtn) {
     els.fullscreenBtn.addEventListener('click', toggleFullscreen);
     document.addEventListener('fullscreenchange', updateFullscreenIcon);
@@ -1253,21 +1687,28 @@
     document.addEventListener('msfullscreenchange', updateFullscreenIcon);
   }
   if (els.openRemarksBtn) els.openRemarksBtn.addEventListener('click', openRemarksModal);
-  if (els.remarksModal) els.remarksModal.addEventListener('click', (e) => {
-    if (e.target.closest('[data-close-remarks]')) closeRemarksModal();
-  });
+  if (els.remarksModal) {
+    els.remarksModal.addEventListener('click', (e) => {
+      if (e.target.closest('[data-close-remarks]')) closeRemarksModal();
+    });
+  }
   initEmailRemarkForm();
+
+  // ====== ÉCHAP ======
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
+    const openDD = document.querySelector('.menu-dropdown .menu-dropdown-content:not(.hidden)');
+    if (openDD) { e.preventDefault(); closeAllDropdowns(); return; }
     if (document.fullscreenElement || document.webkitFullscreenElement) return;
-    if (!els.detailsModal.classList.contains('hidden')) { e.preventDefault(); closeDetails(); return; }
-    if (!els.remarksModal.classList.contains('hidden')) { e.preventDefault(); closeRemarksModal(); return; }
+    if (els.detailsModal && !els.detailsModal.classList.contains('hidden')) { e.preventDefault(); closeDetails(); return; }
+    if (els.remarksModal && !els.remarksModal.classList.contains('hidden')) { e.preventDefault(); closeRemarksModal(); return; }
     if (exitDialogOpen) { e.preventDefault(); hideExitDialog(); return; }
     if (!exitTrapActive) return;
     e.preventDefault();
     showExitDialog('escape');
   });
 
+  // ====== CHARGEMENT INITIAL ======
   try {
     const rawData = document.getElementById('reelsData').textContent || '[]';
     const parsedData = JSON.parse(rawData);
