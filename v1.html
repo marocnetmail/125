@@ -129,25 +129,35 @@
     font-size: 8px; font-weight: 800; padding: 2px 6px;
     border-bottom-left-radius: 8px; letter-spacing: 0.03em;
   }
+
+  /* En-tête institutionnel : logo pleine largeur, sans marges ni bandes blanches */
   .institutional-banner {
-    width:100%; min-height:112px; padding:12px 20px;
-    display:flex; align-items:center; justify-content:center;
-    background:linear-gradient(180deg,#ffffff 0%,#f4f7fb 100%);
-    border-bottom:1px solid #dbe3ed; overflow:hidden;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+    border-bottom: 1px solid #dbe3ed;
+    overflow: hidden;
+    display: block;
+    line-height: 0;
   }
   .institutional-banner img {
-    display:block; width:auto; max-width:min(100%, 980px);
-    height:auto; max-height:150px; object-fit:contain; object-position:center;
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: none;
+    max-height: none;
+    object-fit: cover;
+    object-position: center;
+    margin: 0;
+    padding: 0;
+    border: 0;
   }
-  @media (max-width:640px) {
-    .institutional-banner { min-height:82px; padding:9px 12px; }
-    .institutional-banner img { max-height:92px; max-width:100%; }
-  }
+
   header.sticky {
     top:0; background:rgba(15,23,42,.97);
     border-top:3px solid #c59b45;
   }
-  /* Suppression des règles de padding/gap qui écrasaient les classes Tailwind */
 </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col">
@@ -169,7 +179,7 @@
   </div>
 </div>
 
-<!-- ============ EN-TÊTE INSTITUTIONNEL ============ -->
+<!-- ============ EN-TÊTE INSTITUTIONNEL (LOGO PLEINE LARGEUR) ============ -->
 <div class="institutional-banner" role="banner" aria-label="En-tête institutionnel de la vidéothèque du ministère">
   <img src="https://marocnetmail.github.io/125/images/logo2.png" alt="Logo institutionnel" loading="eager">
 </div>
@@ -180,8 +190,8 @@
     <!-- Mobile : grille 2 colonnes / Desktop : flex row -->
     <div class="grid grid-cols-2 gap-2 md:flex md:flex-row md:items-center md:gap-3 md:flex-wrap">
 
-      <!-- 1. Titre (mobile ligne 1 col 1) -->
-      <div class="col-span-1 md:order-1 flex items-center gap-2 md:flex-shrink-0">
+      <!-- 1. Titre -->
+      <div class="col-span-2 md:order-1 md:flex-shrink-0 flex items-center gap-2">
         <div class="p-1.5 sm:p-2 bg-blue-600 rounded-lg shadow">
           <i class="fa-solid fa-video text-white text-sm sm:text-xl"></i>
         </div>
@@ -190,14 +200,7 @@
         </h1>
       </div>
 
-      <!-- 2. Remarques (mobile ligne 1 col 2 / desktop ordre 6) -->
-      <button id="openRemarksBtn" type="button"
-              class="col-span-1 md:order-6 md:flex-shrink-0 cursor-pointer bg-slate-700 hover:bg-slate-600 active:bg-slate-500 border border-slate-600 text-sm font-medium px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-colors flex items-center justify-center gap-1.5 touch-manipulation w-full md:w-auto">
-        <i class="fa-solid fa-comment-dots text-amber-400"></i>
-        <span>Remarques</span>
-      </button>
-
-      <!-- 3. Recherche (mobile ligne 2 spans 2 / desktop ordre 2) -->
+      <!-- 2. Recherche -->
       <div class="col-span-2 md:order-2 md:flex-1 md:min-w-[180px]">
         <div class="relative">
           <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none"></i>
@@ -206,7 +209,7 @@
         </div>
       </div>
 
-      <!-- 4. Mode d'affichage (mobile ligne 3 col 1 / desktop ordre 3) -->
+      <!-- 3. Mode d'affichage -->
       <div class="col-span-1 md:order-3 md:flex-shrink-0 flex items-center gap-1.5">
         <i class="fa-solid fa-layer-group text-slate-400 text-xs hidden sm:inline"></i>
         <select id="viewModeSelect" class="w-full md:w-auto bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-blue-500 cursor-pointer">
@@ -216,7 +219,7 @@
         </select>
       </div>
 
-      <!-- 5. Tri (mobile ligne 3 col 2 / desktop ordre 4) -->
+      <!-- 4. Tri -->
       <div class="col-span-1 md:order-4 md:flex-shrink-0 flex items-center gap-1.5">
         <i class="fa-solid fa-sort text-slate-400 text-xs hidden sm:inline"></i>
         <select id="sortSelect" class="w-full md:w-auto bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-blue-500 cursor-pointer">
@@ -226,17 +229,12 @@
         </select>
       </div>
 
-      <!-- 6. Année (mobile ligne 4 col 1 / desktop ordre 5) -->
-      <div class="col-span-1 md:order-5 md:flex-shrink-0 flex items-center gap-1.5">
+      <!-- 5. Année -->
+      <div class="col-span-2 md:order-5 md:flex-shrink-0 flex items-center gap-1.5">
         <i class="fa-solid fa-calendar text-slate-400 text-xs hidden sm:inline"></i>
         <select id="yearFilterSelect" class="w-full md:w-auto bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-blue-500 cursor-pointer">
           <option value="all">Toutes les années</option>
         </select>
-      </div>
-
-      <!-- 7. Total (mobile ligne 4 col 2 / desktop ordre 7) -->
-      <div class="col-span-1 md:order-7 md:flex-shrink-0 text-xs bg-slate-900/60 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-400 whitespace-nowrap flex items-center justify-center">
-        Total : <span id="totalCount" class="font-bold text-white ml-1">0</span>
       </div>
 
     </div>
@@ -273,6 +271,17 @@
   </div>
   <nav id="pagination" class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-6 safe-bottom" aria-label="Pagination"></nav>
 </main>
+
+<!-- ============ FOOTER — RUBRIQUE REMARQUES (EN BAS DE PAGE) ============ -->
+<footer class="w-full max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 pt-2 pb-6 safe-bottom">
+  <div class="flex justify-center">
+    <button id="openRemarksBtn" type="button"
+            class="cursor-pointer bg-slate-700 hover:bg-slate-600 active:bg-slate-500 border border-slate-600 text-sm font-medium px-5 sm:px-6 py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 touch-manipulation shadow-md">
+      <i class="fa-solid fa-comment-dots text-amber-400"></i>
+      <span>Remarques</span>
+    </button>
+  </div>
+</footer>
 
 <!-- ============ MODAL DÉTAILS VIDÉO ============ -->
 <div id="detailsModal" class="fixed inset-0 z-50 hidden">
@@ -467,7 +476,7 @@
   const $ = (id) => document.getElementById(id);
   const els = {
     grid: $('reelsGrid'), empty: $('emptyState'), pagination: $('pagination'),
-    search: $('searchInput'), sort: $('sortSelect'), total: $('totalCount'),
+    search: $('searchInput'), sort: $('sortSelect'),
     yearFilterSelect: $('yearFilterSelect'),
     detailsModal: $('detailsModal'), detailsFrame: $('detailsFrame'),
     detailsPoster: $('detailsPoster'), detailsPosterImg: $('detailsPosterImg'),
@@ -499,7 +508,7 @@
   let posterFadeTimer = null;
   let currentViewMode = 'gallery';
   let activeTheme = null;
-  let selectedYear = '2026'; // Année par défaut
+  let selectedYear = '2026';
 
   let isFirstLoad = true;
   let progressTracking = { total: 0, done: 0, active: false, showTimer: null };
@@ -522,9 +531,7 @@
     if (v == null || v === '' || isNaN(v)) return '—';
     const n = Number(v);
     if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + ' M';
-    if (n >= 1_000) return (n / 1_000).toFixed(1).replace(/\.0$/, '') + ' K';   
-
-   if (n >= 1_000) return (n / 1_000).toFixed(1).replace(/\.0$/, '') + ' K';
+    if (n >= 1_000) return (n / 1_000).toFixed(1).replace(/\.0$/, '') + ' K';
     return String(n);
   };
 
@@ -544,21 +551,18 @@
     } catch (e) { return dateStr || 'Date invalide'; }
   }
 
-  // ============================================================
-  // NORMALISATION POUR RECHERCHE (arabe + français)
-  // ============================================================
   function normalizeSearchText(str) {
     return String(str || '')
       .toLowerCase()
       .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')     // accents latins
-      .replace(/[\u064B-\u0652]/g, '')     // tashkeel arabe
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[\u064B-\u0652]/g, '')
       .replace(/[أإآٱ]/g, 'ا')
       .replace(/ة/g, 'ه')
       .replace(/ى/g, 'ي')
       .replace(/ؤ/g, 'و')
       .replace(/ئ/g, 'ي')
-      .replace(/ـ/g, '')                   // tatweel
+      .replace(/ـ/g, '')
       .replace(/\s+/g, ' ')
       .trim();
   }
@@ -574,9 +578,6 @@
     return matched;
   }
 
-  // ============================================================
-  // Année d'un reel (robuste : utilise annee, sinon date_iso)
-  // ============================================================
   function getReelYear(r) {
     if (r && r.annee != null && !isNaN(Number(r.annee))) return String(Number(r.annee));
     if (r && r.date_iso) {
@@ -586,20 +587,15 @@
     return null;
   }
 
-  // ============================================================
-  // Filtrage combiné : recherche texte (reels + contenu) + année
-  // ============================================================
   function getFilteredAndSorted() {
     const rawQuery = currentQuery.trim();
     let result = reels;
     contentMatchSet = new Set();
 
-    // --- Filtre année (appliqué en premier) ---
     if (selectedYear && selectedYear !== 'all') {
       result = result.filter(r => getReelYear(r) === String(selectedYear));
     }
 
-    // --- Filtre recherche (s'applique sur le résultat filtré par année) ---
     if (rawQuery) {
       const nq = normalizeSearchText(rawQuery);
       const contentMatches = searchTabeleauUrlContent(rawQuery);
@@ -615,7 +611,6 @@
       });
     }
 
-    // --- Tri ---
     result = [...result];
     if (currentSort === 'views') result.sort((a, b) => getViews(b) - getViews(a));
     else if (currentSort === 'reactions') result.sort((a, b) => getReactions(b) - getReactions(a));
@@ -623,7 +618,6 @@
     return result;
   }
 
-  // ===== Confirmation avant de quitter =====
   function activateExitTrap() {
     if (exitTrapActive) return;
     exitTrapActive = true;
@@ -674,7 +668,6 @@
     });
   }
 
-  // ===== Remarques : formulaire email =====
   function showEmailStatus(type, text) {
     if (!els.emailRemarkStatus) return;
     els.emailRemarkStatus.classList.remove('hidden');
@@ -725,7 +718,6 @@
     });
   }
 
-  // ===== Miniature =====
   function thumbMarkup(url, loadingAttr, extraClass = '') {
     const safeUrl = escapeHtml(url || '');
     return `
@@ -857,7 +849,6 @@
     els.backNavigation.classList.add('hidden');
     els.empty.classList.add('hidden');
     const items = getFilteredAndSorted();
-    els.total.textContent = items.length;
     if (items.length === 0) { els.empty.classList.remove('hidden'); return; }
     if (currentViewMode === 'gallery') renderGallery(items);
     else if (currentViewMode === 'themes') renderThemes(items);
@@ -872,7 +863,7 @@
     const start = (currentPage - 1) * PAGE_SIZE;
     const pageItems = items.slice(start, start + PAGE_SIZE);
     els.grid.innerHTML = pageItems.map(galleryCardHTML).join('');
-    renderPagination(items.length, totalPages);
+    renderPagination(totalPages);
     if (isFirstLoad) { isFirstLoad = false; setTimeout(() => trackThumbnails(els.grid), 30); }
   }
   function renderThemes(items) {
@@ -886,7 +877,7 @@
       const start = (currentPage - 1) * PAGE_SIZE;
       const pageItems = themeItems.slice(start, start + PAGE_SIZE);
       els.grid.innerHTML = pageItems.map(themeVideoCardHTML).join('');
-      renderPagination(themeItems.length, totalPages);
+      renderPagination(totalPages);
     } else {
       els.themesView.classList.remove('hidden');
       const themesMap = new Map();
@@ -971,7 +962,7 @@
     if (current >= total - 3) return [1, '…', total - 4, total - 3, total - 2, total - 1, total];
     return [1, '…', current - 1, current, current + 1, '…', total];
   }
-  function renderPagination(totalItems, totalPages) {
+  function renderPagination(totalPages) {
     if (totalPages <= 1) { els.pagination.innerHTML = ''; return; }
     const base = 'min-w-[2.5rem] h-10 px-3 rounded-lg font-semibold text-sm transition-colors touch-manipulation inline-flex items-center justify-center';
     const active = 'bg-blue-600 text-white shadow-lg';
@@ -1154,9 +1145,6 @@
     catch (e) { console.error(e); alert('Erreur export : ' + e.message); }
   }
 
-  // ============================================================
-  // Remplissage dynamique du sélecteur d'années
-  // ============================================================
   function populateYearFilter() {
     if (!els.yearFilterSelect) return;
     const yearsSet = new Set();
@@ -1176,7 +1164,6 @@
       opt.textContent = y;
       els.yearFilterSelect.appendChild(opt);
     });
-    // Conserver 2026 par défaut si présent, sinon 'all'
     if (years.includes('2026')) {
       selectedYear = '2026';
     } else if (years.length > 0) {
