@@ -123,15 +123,12 @@
     from { opacity: 0; transform: translateY(20px) scale(0.95); }
     to { opacity: 1; transform: translateY(0) scale(1); }
   }
-  /* Met en évidence les résultats issus de la recherche par contenu */
   .content-match-badge {
     position: absolute; top: 0; right: 0; z-index: 4;
     background: rgba(245,158,11,0.95); color: #1c1917;
     font-size: 8px; font-weight: 800; padding: 2px 6px;
     border-bottom-left-radius: 8px; letter-spacing: 0.03em;
   }
-
-  /* En-tête institutionnel de la vidéothèque */
   .institutional-banner {
     width:100%; min-height:112px; padding:12px 20px;
     display:flex; align-items:center; justify-content:center;
@@ -146,16 +143,11 @@
     .institutional-banner { min-height:82px; padding:9px 12px; }
     .institutional-banner img { max-height:92px; max-width:100%; }
   }
-  /* Barre de navigation placée immédiatement sous le logo */
   header.sticky {
     top:0; background:rgba(15,23,42,.97);
     border-top:3px solid #c59b45;
   }
-  header.sticky > div { padding-top:12px; padding-bottom:12px; }
-  @media (min-width:768px) {
-    header.sticky > div > .flex { gap:12px; }
-  }
-
+  /* Suppression des règles de padding/gap qui écrasaient les classes Tailwind */
 </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col">
@@ -184,9 +176,12 @@
 
 <!-- ============ HEADER ============ -->
 <header class="sticky top-0 z-40 bg-slate-800/95 backdrop-blur border-b border-slate-700 shadow-lg">
-  <div class="max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4">
-    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-      <div class="flex items-center gap-2 flex-shrink-0">
+  <div class="max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-3">
+    <!-- Mobile : grille 2 colonnes / Desktop : flex row -->
+    <div class="grid grid-cols-2 gap-2 md:flex md:flex-row md:items-center md:gap-3 md:flex-wrap">
+
+      <!-- 1. Titre (mobile ligne 1 col 1) -->
+      <div class="col-span-1 md:order-1 flex items-center gap-2 md:flex-shrink-0">
         <div class="p-1.5 sm:p-2 bg-blue-600 rounded-lg shadow">
           <i class="fa-solid fa-video text-white text-sm sm:text-xl"></i>
         </div>
@@ -195,7 +190,15 @@
         </h1>
       </div>
 
-      <div class="flex-1 min-w-[180px]">
+      <!-- 2. Remarques (mobile ligne 1 col 2 / desktop ordre 6) -->
+      <button id="openRemarksBtn" type="button"
+              class="col-span-1 md:order-6 md:flex-shrink-0 cursor-pointer bg-slate-700 hover:bg-slate-600 active:bg-slate-500 border border-slate-600 text-sm font-medium px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-colors flex items-center justify-center gap-1.5 touch-manipulation w-full md:w-auto">
+        <i class="fa-solid fa-comment-dots text-amber-400"></i>
+        <span>Remarques</span>
+      </button>
+
+      <!-- 3. Recherche (mobile ligne 2 spans 2 / desktop ordre 2) -->
+      <div class="col-span-2 md:order-2 md:flex-1 md:min-w-[180px]">
         <div class="relative">
           <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none"></i>
           <input type="text" id="searchInput" inputmode="search" placeholder="Rechercher dans le contenu…"
@@ -203,40 +206,46 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-1.5">
+      <!-- 4. Mode d'affichage (mobile ligne 3 col 1 / desktop ordre 3) -->
+      <div class="col-span-1 md:order-3 md:flex-shrink-0 flex items-center gap-1.5">
         <i class="fa-solid fa-layer-group text-slate-400 text-xs hidden sm:inline"></i>
-        <select id="viewModeSelect" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-blue-500 cursor-pointer">
+        <select id="viewModeSelect" class="w-full md:w-auto bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-blue-500 cursor-pointer">
           <option value="gallery">Galerie</option>
           <option value="themes">Axes thématiques</option>
           <option value="tree">Organisation hiérarchique</option>
         </select>
       </div>
 
-      <div class="flex items-center gap-1.5">
+      <!-- 5. Tri (mobile ligne 3 col 2 / desktop ordre 4) -->
+      <div class="col-span-1 md:order-4 md:flex-shrink-0 flex items-center gap-1.5">
         <i class="fa-solid fa-sort text-slate-400 text-xs hidden sm:inline"></i>
-        <select id="sortSelect" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-blue-500 cursor-pointer">
+        <select id="sortSelect" class="w-full md:w-auto bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-blue-500 cursor-pointer">
           <option value="recent">Plus récents</option>
           <option value="views">Plus vues</option>
           <option value="reactions">Plus réagies / commentées</option>
         </select>
       </div>
 
-      <button id="openRemarksBtn" type="button"
-              class="cursor-pointer bg-slate-700 hover:bg-slate-600 active:bg-slate-500 border border-slate-600 text-sm font-medium px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-colors flex items-center gap-1.5 flex-shrink-0 touch-manipulation">
-        <i class="fa-solid fa-comment-dots text-amber-400"></i>
-        <span class="hidden sm:inline">Remarques</span>
-      </button>
-
-      <div class="hidden lg:block text-xs bg-slate-900/60 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-400 whitespace-nowrap">
-        Total : <span id="totalCount" class="font-bold text-white">0</span>
+      <!-- 6. Année (mobile ligne 4 col 1 / desktop ordre 5) -->
+      <div class="col-span-1 md:order-5 md:flex-shrink-0 flex items-center gap-1.5">
+        <i class="fa-solid fa-calendar text-slate-400 text-xs hidden sm:inline"></i>
+        <select id="yearFilterSelect" class="w-full md:w-auto bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-blue-500 cursor-pointer">
+          <option value="all">Toutes les années</option>
+        </select>
       </div>
+
+      <!-- 7. Total (mobile ligne 4 col 2 / desktop ordre 7) -->
+      <div class="col-span-1 md:order-7 md:flex-shrink-0 text-xs bg-slate-900/60 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-400 whitespace-nowrap flex items-center justify-center">
+        Total : <span id="totalCount" class="font-bold text-white ml-1">0</span>
+      </div>
+
     </div>
   </div>
 </header>
 
 <!-- ============ MAIN ============ -->
-<main class="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-6 flex-1 w-full relative">
-  <div id="backNavigation" class="hidden mb-4">
+<main class="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-8 py-3 sm:py-6 flex-1 w-full relative">
+  <div id="backNavigation" class="hidden mb-3">
     <button id="backToThemesBtn" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-slate-700">
       <i class="fa-solid fa-arrow-left"></i> Retour aux axes thématiques
     </button>
@@ -262,7 +271,7 @@
     <i class="fa-regular fa-folder-open text-5xl text-slate-600 mb-4"></i>
     <h3 class="text-lg font-medium text-slate-300">Aucune vidéo trouvée</h3>
   </div>
-  <nav id="pagination" class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-6 safe-bottom" aria-label="Pagination"></nav>
+  <nav id="pagination" class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-6 safe-bottom" aria-label="Pagination"></nav>
 </main>
 
 <!-- ============ MODAL DÉTAILS VIDÉO ============ -->
@@ -436,8 +445,6 @@
 
   // ============================================================
   // TABLEAU INDÉPENDANT tabeleau_url_content
-  // Source dédiée pour la recherche par contenu (FBID + URL + contenu).
-  // Le nom est conservé exactement tel que demandé.
   // ============================================================
   const tabeleau_url_content = [
   {
@@ -448,7 +455,8 @@
   {
     "fbid": "1681352509630433",
     "url": "https://www.facebook.com/reel/1681352509630433/",
-"contenu": "شهدت جهة كلميم واد نون دينامية تنموية جديدة، من خلال مشاريع تُحدث أثراً ملموساً على أرض الواقع، وتسهم في تنمية المدن والمجالات القروية. وقد تجسدت هذه الدينامية في إبرام 53 اتفاقية، مع تحقيق تغطية ترابية بنسبة 100%، بعد استفادة جميع الجماعات الترابية بالجهة من برامج سياسة المدينة. وحظي المجال القروي باهتمام خاص، حيث تم استهداف 45 جماعة قروية عبر مشاريع تهم تأهيل الطرق، وتحسين البنية التحتية، وإنجاز الفضاءات الخضراء وملاعب القرب، بعدد من الجماعات، من بينها البويرات، وتويزكي، والمحبس، وعوينة إيغمان، وعوينات لهنا، وميرلفت، وغيرها. كما أولت سياسة المدينة بجهة كلميم واد نون أهمية خاصة للمراكز القروية الصاعدة، مثل مركز ميرلفت وأباينو، بهدف تعزيز جاذبيتها، والارتقاء بالتجهيزات والخدمات الأساسية، وتقريب الخدمات من الساكنة. أما على مستوى المدن، فقد ركزت مشاريع سياسة المدينة على إعادة هيكلة الأحياء، وسد الخصاص في التجهيزات، وتهيئة الطرق والشوارع، وإحداث الفضاءات الخضراء والساحات العمومية، وذلك بالعديد من المناطق، من بينها كلميم، وسيدي إفني، وطانطان، وآسا. ولا تقتصر هذه الأوراش على إنجاز مشاريع البناء والتأهيل، بل تندرج ضمن رؤية متكاملة تهدف إلى تعزيز العدالة المجالية، وتحسين إطار العيش، ومواكبة التحولات العمرانية والتنموية. إن أوراش سياسة المدينة بجهة كلميم واد نون متواصلة، من أجل تقريب التنمية من المواطن، وتعزيز جاذبية الجهة، وتحسين جودة العيش، بمقاربة ترابية طموحة، لأن الهدف لا يتمثل في إنجاز المشاريع فحسب، بل في بناء مجال أكثر توازناً وجاذبية، وأكثر قدرة على الاستجابة لتطلعات الساكنة اليوم وغداً."  }
+    "contenu": "شهدت جهة كلميم واد نون دينامية تنموية جديدة، من خلال مشاريع تُحدث أثراً ملموساً على أرض الواقع، وتسهم في تنمية المدن والمجالات القروية. وقد تجسدت هذه الدينامية في إبرام 53 اتفاقية، مع تحقيق تغطية ترابية بنسبة 100%، بعد استفادة جميع الجماعات الترابية بالجهة من برامج سياسة المدينة. وحظي المجال القروي باهتمام خاص، حيث تم استهداف 45 جماعة قروية عبر مشاريع تهم تأهيل الطرق، وتحسين البنية التحتية، وإنجاز الفضاءات الخضراء وملاعب القرب، بعدد من الجماعات، من بينها البويرات، وتويزكي، والمحبس، وعوينة إيغمان، وعوينات لهنا، وميرلفت، وغيرها. كما أولت سياسة المدينة بجهة كلميم واد نون أهمية خاصة للمراكز القروية الصاعدة، مثل مركز ميرلفت وأباينو، بهدف تعزيز جاذبيتها، والارتقاء بالتجهيزات والخدمات الأساسية، وتقريب الخدمات من الساكنة. أما على مستوى المدن، فقد ركزت مشاريع سياسة المدينة على إعادة هيكلة الأحياء، وسد الخصاص في التجهيزات، وتهيئة الطرق والشوارع، وإحداث الفضاءات الخضراء والساحات العمومية، وذلك بالعديد من المناطق، من بينها كلميم، وسيدي إفني، وطانطان، وآسا. ولا تقتصر هذه الأوراش على إنجاز مشاريع البناء والتأهيل، بل تندرج ضمن رؤية متكاملة تهدف إلى تعزيز العدالة المجالية، وتحسين إطار العيش، ومواكبة التحولات العمرانية والتنموية. إن أوراش سياسة المدينة بجهة كلميم واد نون متواصلة، من أجل تقريب التنمية من المواطن، وتعزيز جاذبية الجهة، وتحسين جودة العيش، بمقاربة ترابية طموحة، لأن الهدف لا يتمثل في إنجاز المشاريع فحسب، بل في بناء مجال أكثر توازناً وجاذبية، وأكثر قدرة على الاستجابة لتطلعات الساكنة اليوم وغداً."
+  }
 ];
 
   const EMAIL_REMARK_SCRIPT_URL =
@@ -460,6 +468,7 @@
   const els = {
     grid: $('reelsGrid'), empty: $('emptyState'), pagination: $('pagination'),
     search: $('searchInput'), sort: $('sortSelect'), total: $('totalCount'),
+    yearFilterSelect: $('yearFilterSelect'),
     detailsModal: $('detailsModal'), detailsFrame: $('detailsFrame'),
     detailsPoster: $('detailsPoster'), detailsPosterImg: $('detailsPosterImg'),
     detailsContent: $('detailsContent'),
@@ -490,6 +499,7 @@
   let posterFadeTimer = null;
   let currentViewMode = 'gallery';
   let activeTheme = null;
+  let selectedYear = '2026'; // Année par défaut
 
   let isFirstLoad = true;
   let progressTracking = { total: 0, done: 0, active: false, showTimer: null };
@@ -499,7 +509,6 @@
   let exitDialogOpen = false;
   let exitSource = null;
 
-  // Cache des correspondances "contenu" pour mise en évidence
   let contentMatchSet = new Set();
 
   const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({
@@ -513,7 +522,9 @@
     if (v == null || v === '' || isNaN(v)) return '—';
     const n = Number(v);
     if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + ' M';
-    if (n >= 1_000) return (n / 1_000).toFixed(1).replace(/\.0$/, '') + ' K';
+    if (n >= 1_000) return (n / 1_000).toFixed(1).replace(/\.0$/, '') + ' K';   
+
+   if (n >= 1_000) return (n / 1_000).toFixed(1).replace(/\.0$/, '') + ' K';
     return String(n);
   };
 
@@ -552,10 +563,9 @@
       .trim();
   }
 
-  // Recherche dans tabeleau_url_content : renvoie l'ensemble des fbid dont le contenu correspond
   function searchTabeleauUrlContent(query) {
     const q = normalizeSearchText(query);
-    const matched = new Map(); // fbid -> item complet
+    const matched = new Map();
     if (!q) return matched;
     for (const item of tabeleau_url_content) {
       const hay = normalizeSearchText(item.contenu || '');
@@ -564,18 +574,38 @@
     return matched;
   }
 
+  // ============================================================
+  // Année d'un reel (robuste : utilise annee, sinon date_iso)
+  // ============================================================
+  function getReelYear(r) {
+    if (r && r.annee != null && !isNaN(Number(r.annee))) return String(Number(r.annee));
+    if (r && r.date_iso) {
+      const m = String(r.date_iso).match(/^(\d{4})/);
+      if (m) return m[1];
+    }
+    return null;
+  }
+
+  // ============================================================
+  // Filtrage combiné : recherche texte (reels + contenu) + année
+  // ============================================================
   function getFilteredAndSorted() {
     const rawQuery = currentQuery.trim();
     let result = reels;
     contentMatchSet = new Set();
 
+    // --- Filtre année (appliqué en premier) ---
+    if (selectedYear && selectedYear !== 'all') {
+      result = result.filter(r => getReelYear(r) === String(selectedYear));
+    }
+
+    // --- Filtre recherche (s'applique sur le résultat filtré par année) ---
     if (rawQuery) {
       const nq = normalizeSearchText(rawQuery);
-      // Recherche croisée : champs classiques de reels + contenu enrichi de tabeleau_url_content
       const contentMatches = searchTabeleauUrlContent(rawQuery);
       contentMatches.forEach((_v, fbid) => contentMatchSet.add(fbid));
 
-      result = reels.filter((r) => {
+      result = result.filter((r) => {
         const hay = normalizeSearchText(
           [r.titre, r.description, r.theme_fr, r.theme_ar, r.fbid].filter(Boolean).join(' ')
         );
@@ -585,6 +615,7 @@
       });
     }
 
+    // --- Tri ---
     result = [...result];
     if (currentSort === 'views') result.sort((a, b) => getViews(b) - getViews(a));
     else if (currentSort === 'reactions') result.sort((a, b) => getReactions(b) - getReactions(a));
@@ -1041,8 +1072,7 @@
         ${statHTML('Date', reel.date || '—', 'fa-calendar', { icon: 'text-slate-400', text: 'text-slate-200' })}
       </div>
       ${description ? `<div class="pt-1"><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Description</div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-slate-900/40 p-3 rounded-lg border border-slate-700/50" dir="auto">${escapeHtml(description)}</p></div>` : ''}
-     
-	 ${enrichedContent ? `<div class="pt-1"><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Contenu vidéo </div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-amber-500/5 p-3 rounded-lg border border-amber-500/20" dir="auto">${escapeHtml(enrichedContent)}</p></div>` : ''}
+      ${enrichedContent ? `<div class="pt-1"><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Contenu vidéo </div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-amber-500/5 p-3 rounded-lg border border-amber-500/20" dir="auto">${escapeHtml(enrichedContent)}</p></div>` : ''}
       <div class="flex flex-col sm:flex-row gap-2 pt-3">
         ${reelUrl ? `<a href="${escapeHtml(reelUrl)}" target="_blank" rel="noopener" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors"><i class="fa-brands fa-facebook"></i> Voir sur Facebook</a>` : ''}
       </div>`;
@@ -1124,9 +1154,43 @@
     catch (e) { console.error(e); alert('Erreur export : ' + e.message); }
   }
 
+  // ============================================================
+  // Remplissage dynamique du sélecteur d'années
+  // ============================================================
+  function populateYearFilter() {
+    if (!els.yearFilterSelect) return;
+    const yearsSet = new Set();
+    reels.forEach(r => {
+      const y = getReelYear(r);
+      if (y) yearsSet.add(y);
+    });
+    const years = Array.from(yearsSet).sort((a, b) => Number(b) - Number(a));
+    els.yearFilterSelect.innerHTML = '';
+    const optAll = document.createElement('option');
+    optAll.value = 'all';
+    optAll.textContent = 'Toutes les années';
+    els.yearFilterSelect.appendChild(optAll);
+    years.forEach(y => {
+      const opt = document.createElement('option');
+      opt.value = y;
+      opt.textContent = y;
+      els.yearFilterSelect.appendChild(opt);
+    });
+    // Conserver 2026 par défaut si présent, sinon 'all'
+    if (years.includes('2026')) {
+      selectedYear = '2026';
+    } else if (years.length > 0) {
+      selectedYear = years[0];
+    } else {
+      selectedYear = 'all';
+    }
+    els.yearFilterSelect.value = selectedYear;
+  }
+
   function init(data) {
     reels = Array.isArray(data) ? data : [];
     byId = new Map(reels.map((r) => [String(r.fbid), r]));
+    populateYearFilter();
     currentPage = 1;
     render();
   }
@@ -1170,6 +1234,11 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
   els.sort.addEventListener('change', (e) => { currentSort = e.target.value; currentPage = 1; render(); });
+  if (els.yearFilterSelect) {
+    els.yearFilterSelect.addEventListener('change', (e) => {
+      selectedYear = e.target.value; currentPage = 1; render();
+    });
+  }
   els.search.addEventListener('input', (e) => {
     clearTimeout(searchTimer);
     const val = e.target.value;
