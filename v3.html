@@ -1688,13 +1688,13 @@ window.reelsData = [];
 window.tabeleau_url_content = [];
 
 window.videothequeDataReady = Promise.all([
-    fetch("./json/reelsData.json").then(function(response) {
+      fetch("../json/reelsData.json").then(function(response) {
         if (!response.ok) {
             throw new Error("Impossible de charger reelsData.json");
         }
         return response.json();
     }),
-    fetch("./JSON/url_content.json").then(function(response) {
+    fetch("../JSON/url_content.json").then(function(response) {
         if (!response.ok) {
             throw new Error("Impossible de charger url_content.json");
         }
