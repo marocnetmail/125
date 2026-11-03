@@ -1260,9 +1260,7 @@
     }
   }
 
-  // ====== ANNÉE : PEUPLEMENT (CORRIGÉ) ======
-  // Le select #yearFilterSelect n'existe pas dans le HTML ; on ne peut donc
-  // pas compter sur lui pour mettre à jour `selectedYear`. On le fait toujours.
+  // ====== ANNÉE : PEUPLEMENT ======
   function populateYearFilter() {
     const yearsSet = new Set();
     reels.forEach(r => {
@@ -1271,22 +1269,6 @@
     });
     const years = Array.from(yearsSet).sort((a, b) => Number(b) - Number(a));
 
-    // (Facultatif) Alimenter un éventuel <select> s'il est présent dans le DOM.
-    const sel = document.getElementById('yearFilterSelect');
-    if (sel) {
-      sel.innerHTML = '';
-      const optAll = document.createElement('option');
-      optAll.value = 'all';
-      optAll.textContent = 'كل السنوات';
-      sel.appendChild(optAll);
-      years.forEach(y => {
-        const opt = document.createElement('option');
-        opt.value = y;
-        opt.textContent = y;
-        sel.appendChild(opt);
-      });
-    }
-
     if (years.includes('2026')) {
       selectedYear = '2026';
     } else if (years.length > 0) {
@@ -1294,7 +1276,6 @@
     } else {
       selectedYear = 'all';
     }
-    if (sel) sel.value = selectedYear;
   }
 
   // ====== INITIALISATION ======
@@ -1524,30 +1505,34 @@
   }
 
   if (Array.isArray(window.reelsData) && window.reelsData.length > 0) {
-    // Cas où le script de données aurait déjà tourné (ordre modifié, etc.)
     bootApp();
   } else {
-    // Cas normal : le script de données s'exécute APRÈS le script principal.
     window.addEventListener('videotheque:data-ready', bootApp, { once: true });
   }
 
 })();
 </script>
 
-<!-- ============ CHARGEMENT DES DONNÉES EXTERNES ============ -->
-<!-- NOTE: veiller à ce que les dossiers "json" existent bien et que la casse
-     (majuscules/minuscules) soit cohérente sur GitHub Pages (Linux = sensible à la casse). -->
+<!-- ============ CHARGEMENT DES DONNÉES EXTERNES (chemins absolus GitHub Pages) ============ -->
 <script>
 window.reelsData = [];
 window.tabeleau_url_content = [];
 
+// Chemins ABSOLUS — indépendants de l'emplacement de la page.
+var REELS_DATA_URL  = "https://marocnetmail.github.io/125/json/reelsData.json";
+var URL_CONTENT_URL = "https://marocnetmail.github.io/125/json/url_content.json";
+
 window.videothequeDataReady = Promise.all([
-  fetch("../json/reelsData.json").then(function (response) {
-    if (!response.ok) throw new Error("Impossible de charger reelsData.json (" + response.status + ")");
+  fetch(REELS_DATA_URL, { cache: "no-store" }).then(function (response) {
+    if (!response.ok) {
+      throw new Error("Impossible de charger reelsData.json (" + response.status + " depuis " + REELS_DATA_URL + ")");
+    }
     return response.json();
   }),
-  fetch("../json/url_content.json").then(function (response) {
-    if (!response.ok) throw new Error("Impossible de charger url_content.json (" + response.status + ")");
+  fetch(URL_CONTENT_URL, { cache: "no-store" }).then(function (response) {
+    if (!response.ok) {
+      throw new Error("Impossible de charger url_content.json (" + response.status + " depuis " + URL_CONTENT_URL + ")");
+    }
     return response.json();
   })
 ]).then(function (resultats) {
@@ -1555,15 +1540,21 @@ window.videothequeDataReady = Promise.all([
   window.tabeleau_url_content = Array.isArray(resultats[1]) ? resultats[1] : [];
   console.log("Vidéothèque chargée :", {
     videos: window.reelsData.length,
-    contenus: window.tabeleau_url_content.length
+    contenus: window.tabeleau_url_content.length,
+    reelsDataUrl: REELS_DATA_URL,
+    urlContentUrl: URL_CONTENT_URL
   });
   return { reelsData: window.reelsData, tabeleau_url_content: window.tabeleau_url_content };
 }).catch(function (erreur) {
   console.error("Erreur de chargement de la vidéothèque :", erreur);
+  console.error("Vérifiez que les URLs absolues sont accessibles :", {
+    reelsData: REELS_DATA_URL,
+    urlContent: URL_CONTENT_URL
+  });
   return { reelsData: window.reelsData, tabeleau_url_content: window.tabeleau_url_content };
 }).finally(function () {
-  // Toujours déclencher l'événement, succès ou échec,
-  // pour que le script principal puisse sortir de son état "vide".
+  // Toujours déclencher l'événement (succès ou échec)
+  // pour que le script principal sorte de son état « vide ».
   window.dispatchEvent(new Event("videotheque:data-ready"));
 });
 </script>
