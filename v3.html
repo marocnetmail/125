@@ -130,15 +130,9 @@
     border-bottom-left-radius: 8px; letter-spacing: 0.03em;
   }
 
-  /* ===== RTL play-button overrides (n'applique qu'en arabe/RTL) ===== */
-  html[dir="rtl"] .play-btn-gallery {
-    align-self: flex-end;
-  }
-  html[dir="rtl"] .play-btn-theme-wrapper {
-    justify-content: flex-end;
-  }
+  html[dir="rtl"] .play-btn-gallery { align-self: flex-end; }
+  html[dir="rtl"] .play-btn-theme-wrapper { justify-content: flex-end; }
 
-  /* En-tête institutionnel */
   .institutional-banner {
     width: 100%; margin: 0; padding: 0;
     background: #ffffff;
@@ -152,36 +146,20 @@
     margin: 0; padding: 0; border: 0;
   }
 
-  /* ==================== MENU PRINCIPAL ==================== */
   .main-menu-bar {
-    background-color: #092c4c;
-    color: #ffffff;
+    background-color: #092c4c; color: #ffffff;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
   .menu-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 14px 18px;
-    font-size: 14.5px;
-    font-weight: 600;
-    color: #ffffff;
-    text-decoration: none;
-    white-space: nowrap;
-    border-bottom: 3px solid transparent;
-    transition: all 0.2s;
-    background: transparent;
-    cursor: pointer;
-    line-height: 1.2;
-    font-family: inherit;
-    border-left: none; border-right: none; border-top: none;
+    display: flex; align-items: center; gap: 8px;
+    padding: 14px 18px; font-size: 14.5px; font-weight: 600;
+    color: #ffffff; text-decoration: none; white-space: nowrap;
+    border-bottom: 3px solid transparent; transition: all 0.2s;
+    background: transparent; cursor: pointer; line-height: 1.2;
+    font-family: inherit; border-left: none; border-right: none; border-top: none;
   }
-  .menu-item:hover {
-    background-color: rgba(255, 255, 255, 0.06);
-    color: #93c5fd;
-  }
-  .menu-item.active,
-  .menu-item[aria-expanded="true"] {
+  .menu-item:hover { background-color: rgba(255, 255, 255, 0.06); color: #93c5fd; }
+  .menu-item.active, .menu-item[aria-expanded="true"] {
     border-bottom-color: #3b82f6;
     background-color: rgba(59, 130, 246, 0.14);
     color: #bfdbfe;
@@ -194,37 +172,22 @@
   .menu-search {
     background-color: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 9999px;
-    color: white;
-    font-size: 14px;
-    width: 100%;
-    max-width: 320px;
-    outline: none;
-    transition: all 0.2s;
-    font-family: inherit;
+    border-radius: 9999px; color: white; font-size: 14px;
+    width: 100%; max-width: 320px; outline: none;
+    transition: all 0.2s; font-family: inherit;
   }
   .menu-search::placeholder { color: rgba(255, 255, 255, 0.6); }
-  .menu-search:focus {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.6);
-  }
+  .menu-search:focus { background-color: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.6); }
 
-  /* ==================== DROPDOWNS (RTL natif) ==================== */
   .menu-dropdown { position: relative; display: flex; }
   .menu-dropdown > .menu-item { width: 100%; }
   .menu-dropdown-content {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    left: auto;
-    min-width: 240px;
-    background: #0b3559;
+    position: absolute; top: 100%; right: 0; left: auto;
+    min-width: 240px; background: #0b3559;
     border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 0 0 12px 12px;
     box-shadow: 0 14px 36px rgba(0, 0, 0, 0.5);
-    z-index: 60;
-    padding: 6px 0;
-    overflow: hidden;
+    z-index: 60; padding: 6px 0; overflow: hidden;
     animation: dropdownFade 0.15s ease-out;
   }
   @keyframes dropdownFade {
@@ -233,94 +196,55 @@
   }
   .menu-dropdown.align-right .menu-dropdown-content { right: auto; left: 0; }
   .menu-dropdown-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 11px 18px;
-    color: #e2e8f0;
-    font-size: 14px;
-    font-weight: 500;
-    text-align: right;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-    white-space: nowrap;
-    font-family: inherit;
-    direction: rtl;
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    padding: 11px 18px; color: #e2e8f0; font-size: 14px; font-weight: 500;
+    text-align: right; background: transparent; border: none;
+    cursor: pointer; transition: background 0.15s, color 0.15s;
+    white-space: nowrap; font-family: inherit; direction: rtl;
   }
-  .menu-dropdown-item:hover {
-    background: rgba(255, 255, 255, 0.09);
-    color: #ffffff;
-  }
+  .menu-dropdown-item:hover { background: rgba(255, 255, 255, 0.09); color: #ffffff; }
   .menu-dropdown-item.active {
     background: rgba(59, 130, 246, 0.24);
-    color: #93c5fd;
-    font-weight: 700;
+    color: #93c5fd; font-weight: 700;
   }
   .menu-dropdown-item i {
-    width: 16px;
-    text-align: center;
-    font-size: 12px;
-    flex-shrink: 0;
-    opacity: 0.88;
+    width: 16px; text-align: center; font-size: 12px;
+    flex-shrink: 0; opacity: 0.88;
   }
   .menu-dropdown-item .dd-check {
-    margin-right: auto;
-    margin-left: 0;
-    font-size: 11px;
-    color: #60a5fa;
-    opacity: 0;
+    margin-right: auto; margin-left: 0;
+    font-size: 11px; color: #60a5fa; opacity: 0;
   }
   .menu-dropdown-item.active .dd-check { opacity: 1; }
 
   .menu-badge {
     display: inline-block;
     background: rgba(59, 130, 246, 0.3);
-    color: #bfdbfe;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 1px 7px;
-    border-radius: 9999px;
+    color: #bfdbfe; font-size: 10px; font-weight: 700;
+    padding: 1px 7px; border-radius: 9999px;
     border: 1px solid rgba(59, 130, 246, 0.5);
-    line-height: 1.5;
-    flex-shrink: 0;
-    letter-spacing: 0.02em;
+    line-height: 1.5; flex-shrink: 0; letter-spacing: 0.02em;
   }
 
-  /* Ajustements mobiles */
   @media (max-width: 639px) {
     .menu-item { padding: 11px 10px; font-size: 13px; gap: 6px; justify-content: flex-start; }
     .menu-search { max-width: none; font-size: 13px; }
     .menu-dropdown-content {
-      min-width: 210px;
-      max-width: calc(100vw - 16px);
+      min-width: 210px; max-width: calc(100vw - 16px);
       right: 0; left: auto;
     }
-    .menu-dropdown.align-right .menu-dropdown-content {
-      right: auto; left: 0;
-    }
+    .menu-dropdown.align-right .menu-dropdown-content { right: auto; left: 0; }
     .menu-badge { font-size: 9px; padding: 0 5px; }
     .menu-dropdown-item { padding: 10px 14px; font-size: 13px; }
   }
 
-  /* Sous-menu de filtrage */
-  .sub-menu-bar {
-    background-color: #1e293b;
-    border-bottom: 1px solid #334155;
-  }
-
-  header.sticky {
-    top:0; background:rgba(15,23,42,.97);
-    border-top:3px solid #c59b45;
-  }
+  .sub-menu-bar { background-color: #1e293b; border-bottom: 1px solid #334155; }
+  header.sticky { top:0; background:rgba(15,23,42,.97); border-top:3px solid #c59b45; }
 </style>
 <base target="_blank">
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col">
 
-<!-- ============ PROGRESS OVERLAY ============ -->
 <div id="progressOverlay" class="hidden fixed inset-0 z-[100] bg-slate-900/95 backdrop-blur-md flex items-center justify-center">
   <div class="w-full max-w-md px-6">
     <div class="text-center mb-6">
@@ -337,104 +261,71 @@
   </div>
 </div>
 
-<!-- ============ EN-TÊTE INSTITUTIONNEL ============ -->
 <div class="institutional-banner" role="banner" aria-label="الشعار المؤسساتي للفيديوتيكة">
   <img src="https://marocnetmail.github.io/125/images/logo2.png" alt="الشعار المؤسساتي" loading="eager">
 </div>
 
-<!-- ============ MENU PRINCIPAL ============ -->
 <nav class="main-menu-bar w-full sticky top-0 z-40 shadow-lg" dir="rtl" aria-label="القائمة الرئيسية">
   <div class="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-8">
     <div class="flex flex-col sm:flex-row sm:items-stretch gap-1 sm:gap-3">
-
       <div class="grid grid-cols-2 sm:flex sm:flex-row sm:items-stretch sm:flex-1 w-full">
-
-        <!-- 1) الرئيسية -->
         <button type="button" class="menu-item" data-cat="home" id="menuHome" aria-label="الرئيسية">
-          <i class="fa-solid fa-house"></i>
-          <span>الرئيسية</span>
+          <i class="fa-solid fa-house"></i><span>الرئيسية</span>
         </button>
-
-        <!-- 2) معرض الفيديوهات -->
         <div class="menu-dropdown" data-dropdown="gallery">
           <button type="button" class="menu-item" data-cat="gallery" id="menuGalerie"
                   aria-haspopup="true" aria-expanded="false" aria-controls="galleryDropdown">
-            <i class="fa-solid fa-table-cells-large"></i>
-            <span>معرض الفيديوهات</span>
+            <i class="fa-solid fa-table-cells-large"></i><span>معرض الفيديوهات</span>
             <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-70 dd-chevron"></i>
           </button>
           <div class="menu-dropdown-content hidden" id="galleryDropdown" role="menu" aria-label="أوضاع العرض">
             <button type="button" class="menu-dropdown-item" data-view="themes" role="menuitem">
-              <i class="fa-solid fa-folder-open"></i>
-              <span>المحاور الموضوعاتية</span>
-              <i class="fa-solid fa-check dd-check"></i>
+              <i class="fa-solid fa-folder-open"></i><span>المحاور الموضوعاتية</span><i class="fa-solid fa-check dd-check"></i>
             </button>
             <button type="button" class="menu-dropdown-item" data-view="tree" role="menuitem">
-              <i class="fa-solid fa-sitemap"></i>
-              <span>التنظيم الهيكلي</span>
-              <i class="fa-solid fa-check dd-check"></i>
+              <i class="fa-solid fa-sitemap"></i><span>التنظيم الهيكلي</span><i class="fa-solid fa-check dd-check"></i>
             </button>
           </div>
         </div>
-
-        <!-- 3) الأحدث -->
         <div class="menu-dropdown" data-dropdown="sort">
           <button type="button" class="menu-item" data-cat="sort" id="menuSort"
                   aria-haspopup="true" aria-expanded="false" aria-controls="sortDropdown">
-            <i class="fa-solid fa-clock-rotate-left"></i>
-            <span>الأحدث</span>
+            <i class="fa-solid fa-clock-rotate-left"></i><span>الأحدث</span>
             <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-70 dd-chevron"></i>
           </button>
           <div class="menu-dropdown-content hidden" id="sortDropdown" role="menu" aria-label="خيارات الفرز">
             <button type="button" class="menu-dropdown-item" data-sort="recent" role="menuitem">
-              <i class="fa-solid fa-clock"></i>
-              <span>الأحدث</span>
-              <i class="fa-solid fa-check dd-check"></i>
+              <i class="fa-solid fa-clock"></i><span>الأحدث</span><i class="fa-solid fa-check dd-check"></i>
             </button>
             <button type="button" class="menu-dropdown-item" data-sort="views" role="menuitem">
-              <i class="fa-solid fa-eye"></i>
-              <span>الأكثر مشاهدة</span>
-              <i class="fa-solid fa-check dd-check"></i>
+              <i class="fa-solid fa-eye"></i><span>الأكثر مشاهدة</span><i class="fa-solid fa-check dd-check"></i>
             </button>
             <button type="button" class="menu-dropdown-item" data-sort="reactions" role="menuitem">
-              <i class="fa-solid fa-heart"></i>
-              <span>الأكثر تفاعلاً وتعليقاً</span>
-              <i class="fa-solid fa-check dd-check"></i>
+              <i class="fa-solid fa-heart"></i><span>الأكثر تفاعلاً وتعليقاً</span><i class="fa-solid fa-check dd-check"></i>
             </button>
           </div>
         </div>
-
-        <!-- 4) السنوات -->
         <div class="menu-dropdown align-right" data-dropdown="year">
           <button type="button" class="menu-item" data-cat="year" id="menuYear"
                   aria-haspopup="true" aria-expanded="false" aria-controls="yearDropdownContent">
-            <i class="fa-solid fa-calendar"></i>
-            <span>السنوات</span>
+            <i class="fa-solid fa-calendar"></i><span>السنوات</span>
             <span class="menu-badge" id="yearBadge">2026</span>
             <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-70 dd-chevron"></i>
           </button>
-          <div class="menu-dropdown-content hidden" id="yearDropdownContent" role="menu" aria-label="فلتر حسب السنة">
-            <!-- Rempli dynamiquement par JS -->
-          </div>
+          <div class="menu-dropdown-content hidden" id="yearDropdownContent" role="menu" aria-label="فلتر حسب السنة"></div>
         </div>
-
       </div>
-
-      <!-- Barre de recherche (icône à droite) -->
       <div class="flex items-center w-full sm:w-auto pb-2 sm:pb-0">
         <div class="relative w-full sm:w-auto">
           <i class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-white/60 text-sm pointer-events-none"></i>
           <input type="text" id="searchInput" inputmode="search" placeholder="البحث في المحتوى…"
-                 aria-label="البحث في المحتوى"
-                 class="menu-search py-2 pr-9 pl-4" dir="rtl">
+                 aria-label="البحث في المحتوى" class="menu-search py-2 pr-9 pl-4" dir="rtl">
         </div>
       </div>
-
     </div>
   </div>
 </nav>
 
-<!-- ============ MAIN ============ -->
 <main class="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-8 py-3 sm:py-6 flex-1 w-full relative">
   <div id="backNavigation" class="hidden mb-3">
     <button id="backToThemesBtn" type="button" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-slate-700" dir="rtl">
@@ -465,18 +356,15 @@
   <nav id="pagination" class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-6 safe-bottom" aria-label="ترقيم الصفحات"></nav>
 </main>
 
-<!-- ============ FOOTER ============ -->
 <footer class="w-full max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 pt-2 pb-6 safe-bottom">
   <div class="flex justify-center">
     <button id="openRemarksBtn" type="button"
             class="cursor-pointer bg-slate-700 hover:bg-slate-600 active:bg-slate-500 border border-slate-600 text-sm font-medium px-5 sm:px-6 py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 touch-manipulation shadow-md">
-      <i class="fa-solid fa-comment-dots text-amber-400"></i>
-      <span>الملاحظات</span>
+      <i class="fa-solid fa-comment-dots text-amber-400"></i><span>الملاحظات</span>
     </button>
   </div>
 </footer>
 
-<!-- ============ MODAL DÉTAILS VIDÉO ============ -->
 <div id="detailsModal" class="fixed inset-0 z-50 hidden">
   <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" data-close-details></div>
   <div class="relative z-10 w-full h-full flex items-center justify-center p-2 sm:p-4">
@@ -526,15 +414,13 @@
   </div>
 </div>
 
-<!-- ============ MODAL REMARQUES ============ -->
 <div id="remarksModal" class="fixed inset-0 z-50 hidden">
   <div class="absolute inset-0 bg-black/85 backdrop-blur-sm" data-close-remarks></div>
   <div class="relative z-10 w-full h-full flex items-center justify-center p-3 sm:p-4">
     <div class="relative w-full max-w-lg bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
       <div class="flex items-center justify-between p-3 sm:p-4 border-b border-slate-700" dir="rtl">
         <h2 class="text-white font-bold text-base sm:text-lg flex items-center gap-2">
-          <i class="fa-solid fa-comment-dots text-amber-400"></i>
-          <span>الملاحظات</span>
+          <i class="fa-solid fa-comment-dots text-amber-400"></i><span>الملاحظات</span>
         </h2>
         <button type="button" data-close-remarks
                 class="w-9 h-9 rounded-full bg-slate-900 hover:bg-red-600 border border-slate-700 text-white flex items-center justify-center transition-colors touch-manipulation"
@@ -550,15 +436,13 @@
               ملاحظتك <span class="text-rose-400">*</span>
             </label>
             <textarea id="emailRemarkText" name="monTexte" rows="5" required
-              placeholder="اكتب ملاحظتك هنا…"
-              aria-label="ملاحظتك"
+              placeholder="اكتب ملاحظتك هنا…" aria-label="ملاحظتك"
               class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500 placeholder-slate-500 resize-y" dir="auto"></textarea>
           </div>
           <div id="emailRemarkStatus" class="hidden rounded-lg px-3 py-2 text-sm" role="status" aria-live="polite"></div>
           <button type="submit" id="emailRemarkBtn"
                   class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-colors touch-manipulation disabled:opacity-60 disabled:cursor-not-allowed">
-            <i class="fa-solid fa-paper-plane"></i>
-            <span>إرسال بالبريد الإلكتروني</span>
+            <i class="fa-solid fa-paper-plane"></i><span>إرسال بالبريد الإلكتروني</span>
           </button>
           <p class="text-[10px] text-slate-500 text-center pt-1">سيتم إرسال ملاحظتك مباشرة إلى المصلحة المختصة.</p>
         </form>
@@ -567,7 +451,6 @@
   </div>
 </div>
 
-<!-- ============ MODAL CONFIRMATION DE SORTIE ============ -->
 <div id="exitConfirmModal" class="fixed inset-0 z-[80] hidden">
   <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" data-exit-cancel></div>
   <div class="relative z-10 w-full h-full flex items-center justify-center p-4">
@@ -603,35 +486,10 @@
   </div>
 </div>
 
-<!-- ============ DONNÉES JSON (reels) ============ -->
-<script type="application/json" id="reelsData"></script>
-
-<!-- ============ ALIGNEMENT DYNAMIQUE DU SOUS-MENU ============ -->
-<script>
-(function syncStickySubMenu() {
-  var nav = document.querySelector('.main-menu-bar');
-  var sub = document.getElementById('subMenuBar');
-  if (!nav || !sub) return;
-  var apply = function () { sub.style.top = nav.offsetHeight + 'px'; };
-  apply();
-  window.addEventListener('load', apply);
-  window.addEventListener('resize', apply);
-  window.addEventListener('orientationchange', apply);
-  if (window.ResizeObserver) {
-    try { new ResizeObserver(apply).observe(nav); } catch (e) {}
-  }
-})();
-</script>
-
+<!-- ============ SCRIPT PRINCIPAL ============ -->
 <script>
 (function () {
   'use strict';
-
-  // ============================================================
-  // TABLEAU INDÉPENDANT tabeleau_url_content
-  // ============================================================
-  // Données externes : url_content.json
-;
 
   const EMAIL_REMARK_SCRIPT_URL =
     'https://script.google.com/macros/s/AKfycbwRllGpkxkBllOBnu9U7gZfH5Lg1qS-Iz-jf_rz_S1VKLydL0juENf-OfUI56mWQ_ojMA/exec';
@@ -641,15 +499,14 @@
   const $ = (id) => document.getElementById(id);
   const els = {
     grid: $('reelsGrid'), empty: $('emptyState'), pagination: $('pagination'),
-    search: $('searchInput'), sort: $('sortSelect'),
-    yearFilterSelect: $('yearFilterSelect'),
+    search: $('searchInput'),
     detailsModal: $('detailsModal'), detailsFrame: $('detailsFrame'),
     detailsPoster: $('detailsPoster'), detailsPosterImg: $('detailsPosterImg'),
     detailsContent: $('detailsContent'),
     detailsDisplayTitle: $('detailsDisplayTitle'), detailsDisplayDate: $('detailsDisplayDate'),
     playerViewsVal: $('playerViewsVal'), playerReactionsVal: $('playerReactionsVal'),
     videoLoader: $('videoLoader'), playerZone: $('playerZone'), fullscreenBtn: $('fullscreenBtn'),
-    viewModeSelect: $('viewModeSelect'), themesView: $('themesView'),
+    themesView: $('themesView'),
     treeView: $('treeView'), treeContent: $('treeContent'),
     exportExcelBtn: $('exportExcelBtn'),
     backNavigation: $('backNavigation'), backToThemesBtn: $('backToThemesBtn'),
@@ -677,7 +534,7 @@
   let posterFadeTimer = null;
   let currentViewMode = 'gallery';
   let activeTheme = null;
-  let selectedYear = '2026';
+  let selectedYear = 'all';
 
   let isFirstLoad = true;
   let progressTracking = { total: 0, done: 0, active: false, showTimer: null };
@@ -688,7 +545,7 @@
   let exitSource = null;
 
   let contentMatchSet = new Set();
-  let iframeReady = false; // NEW: flag to track if the video iframe has finished loading
+  let iframeReady = false;
 
   const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -723,8 +580,7 @@
 
   function normalizeSearchText(str) {
     return String(str || '')
-      .toLowerCase()
-      .normalize('NFD')
+      .toLowerCase().normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/[\u064B-\u0652]/g, '')
       .replace(/[أإآٱ]/g, 'ا')
@@ -733,15 +589,15 @@
       .replace(/ؤ/g, 'و')
       .replace(/ئ/g, 'ي')
       .replace(/ـ/g, '')
-      .replace(/\s+/g, ' ')
-      .trim();
+      .replace(/\s+/g, ' ').trim();
   }
 
   function searchTabeleauUrlContent(query) {
     const q = normalizeSearchText(query);
     const matched = new Map();
     if (!q) return matched;
-    for (const item of tabeleau_url_content) {
+    const content = window.tabeleau_url_content || [];
+    for (const item of content) {
       const hay = normalizeSearchText(item.contenu || '');
       if (hay.includes(q)) matched.set(String(item.fbid), item);
     }
@@ -898,10 +754,7 @@
         <img src="${safeUrl}" alt="صورة مصغرة" loading="${loadingAttr}" decoding="async" referrerpolicy="no-referrer"
              onload="this.parentElement.classList.remove('thumb-error');"
              onerror="this.parentElement.classList.add('thumb-error');">
-        <div class="thumb-fallback">
-          <i class="fa-regular fa-image"></i>
-          <span>الصورة المصغرة غير متوفرة</span>
-        </div>
+        <div class="thumb-fallback"><i class="fa-regular fa-image"></i><span>الصورة المصغرة غير متوفرة</span></div>
       </div>`;
   }
 
@@ -1047,6 +900,12 @@
       els.grid.classList.remove('hidden');
       els.pagination.classList.remove('hidden');
       const themeItems = items.filter(r => (r.theme_fr || 'Non classé') === activeTheme);
+      if (themeItems.length === 0) {
+        els.grid.classList.add('hidden');
+        els.pagination.classList.add('hidden');
+        els.empty.classList.remove('hidden');
+        return;
+      }
       const totalPages = Math.max(1, Math.ceil(themeItems.length / PAGE_SIZE));
       if (currentPage > totalPages) currentPage = totalPages;
       const start = (currentPage - 1) * PAGE_SIZE;
@@ -1197,7 +1056,12 @@
     els.detailsModal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     loadVideoWithAutoplay(reel);
-    // IMPORTANT: no fixed timer here — the poster stays visible until the iframe has actually loaded.
+    // Filet de sécurité : si l'iframe ne déclenche jamais 'load', on révèle le lecteur après 15s.
+    clearTimeout(posterFadeTimer);
+    posterFadeTimer = setTimeout(() => {
+      if (els.detailsModal.classList.contains('hidden')) return;
+      revealPlayer();
+    }, 15000);
   }
   function closeDetails() {
     clearTimeout(posterFadeTimer);
@@ -1221,7 +1085,8 @@
     const themeAr = reel.theme_ar || null;
     const reelUrl = reel.url || '';
     const description = reel.description || null;
-    const contentItem = tabeleau_url_content.find(x => String(x.fbid) === String(reel.fbid));
+    const content = window.tabeleau_url_content || [];
+    const contentItem = content.find(x => String(x.fbid) === String(reel.fbid));
     const enrichedContent = contentItem ? contentItem.contenu : null;
     const statHTML = (label, value, icon, colorClasses) => `
       <div class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3">
@@ -1393,32 +1258,35 @@
         btn.classList.toggle('active', String(btn.dataset.year) === String(selectedYear));
       });
     }
-
-    if (els.viewModeSelect) els.viewModeSelect.value = currentViewMode;
-    if (els.sortSelect) els.sortSelect.value = currentSort;
-    if (els.yearFilterSelect) els.yearFilterSelect.value = selectedYear;
   }
 
-  // ====== ANNÉE : PEUPLEMENT DU SELECT ======
+  // ====== ANNÉE : PEUPLEMENT (CORRIGÉ) ======
+  // Le select #yearFilterSelect n'existe pas dans le HTML ; on ne peut donc
+  // pas compter sur lui pour mettre à jour `selectedYear`. On le fait toujours.
   function populateYearFilter() {
-    if (!els.yearFilterSelect) return;
     const yearsSet = new Set();
     reels.forEach(r => {
       const y = getReelYear(r);
       if (y) yearsSet.add(y);
     });
     const years = Array.from(yearsSet).sort((a, b) => Number(b) - Number(a));
-    els.yearFilterSelect.innerHTML = '';
-    const optAll = document.createElement('option');
-    optAll.value = 'all';
-    optAll.textContent = 'كل السنوات';
-    els.yearFilterSelect.appendChild(optAll);
-    years.forEach(y => {
-      const opt = document.createElement('option');
-      opt.value = y;
-      opt.textContent = y;
-      els.yearFilterSelect.appendChild(opt);
-    });
+
+    // (Facultatif) Alimenter un éventuel <select> s'il est présent dans le DOM.
+    const sel = document.getElementById('yearFilterSelect');
+    if (sel) {
+      sel.innerHTML = '';
+      const optAll = document.createElement('option');
+      optAll.value = 'all';
+      optAll.textContent = 'كل السنوات';
+      sel.appendChild(optAll);
+      years.forEach(y => {
+        const opt = document.createElement('option');
+        opt.value = y;
+        opt.textContent = y;
+        sel.appendChild(opt);
+      });
+    }
+
     if (years.includes('2026')) {
       selectedYear = '2026';
     } else if (years.length > 0) {
@@ -1426,7 +1294,7 @@
     } else {
       selectedYear = 'all';
     }
-    els.yearFilterSelect.value = selectedYear;
+    if (sel) sel.value = selectedYear;
   }
 
   // ====== INITIALISATION ======
@@ -1535,35 +1403,10 @@
   }
 
   // ====== FILTRES SOUS-MENU ======
-  if (els.viewModeSelect) {
-    els.viewModeSelect.addEventListener('change', (e) => {
-      currentViewMode = e.target.value;
-      activeTheme = null;
-      currentPage = 1;
-      syncMenuState();
-      render();
-    });
-  }
   if (els.backToThemesBtn) {
     els.backToThemesBtn.addEventListener('click', () => {
       activeTheme = null;
       currentPage = 1;
-      render();
-    });
-  }
-  if (els.sortSelect) {
-    els.sortSelect.addEventListener('change', (e) => {
-      currentSort = e.target.value;
-      currentPage = 1;
-      syncMenuState();
-      render();
-    });
-  }
-  if (els.yearFilterSelect) {
-    els.yearFilterSelect.addEventListener('change', (e) => {
-      selectedYear = e.target.value;
-      currentPage = 1;
-      syncMenuState();
       render();
     });
   }
@@ -1631,9 +1474,7 @@
       loadVideoWithAutoplay(currentReel);
       return;
     }
-    if (iframeReady) {
-      revealPlayer();
-    }
+    if (iframeReady) revealPlayer();
   });
   if (els.detailsFrame) {
     els.detailsFrame.addEventListener('load', () => {
@@ -1672,52 +1513,58 @@
     showExitDialog('escape');
   });
 
-  // ====== CHARGEMENT INITIAL ======
-  try {
-    const rawData = document.getElementById('reelsData').textContent || '[]';
-    const parsedData = JSON.parse(rawData);
-    if (Array.isArray(parsedData)) init(parsedData);
-  } catch (err) { console.error('Erreur chargement initial:', err); }
+  // ====== BOOT : attendre les données AVANT d'initialiser ======
+  function bootApp() {
+    try {
+      const data = Array.isArray(window.reelsData) ? window.reelsData : [];
+      init(data);
+    } catch (err) {
+      console.error('Erreur initialisation app:', err);
+    }
+  }
+
+  if (Array.isArray(window.reelsData) && window.reelsData.length > 0) {
+    // Cas où le script de données aurait déjà tourné (ordre modifié, etc.)
+    bootApp();
+  } else {
+    // Cas normal : le script de données s'exécute APRÈS le script principal.
+    window.addEventListener('videotheque:data-ready', bootApp, { once: true });
+  }
 
 })();
 </script>
 
-<!-- Chargement des données externes de la vidéothèque -->
+<!-- ============ CHARGEMENT DES DONNÉES EXTERNES ============ -->
+<!-- NOTE: veiller à ce que les dossiers "json" existent bien et que la casse
+     (majuscules/minuscules) soit cohérente sur GitHub Pages (Linux = sensible à la casse). -->
 <script>
 window.reelsData = [];
 window.tabeleau_url_content = [];
 
 window.videothequeDataReady = Promise.all([
-      fetch("../json/reelsData.json").then(function(response) {
-        if (!response.ok) {
-            throw new Error("Impossible de charger reelsData.json");
-        }
-        return response.json();
-    }),
-    fetch("../JSON/url_content.json").then(function(response) {
-        if (!response.ok) {
-            throw new Error("Impossible de charger url_content.json");
-        }
-        return response.json();
-    })
-]).then(function(resultats) {
-    window.reelsData = resultats[0];
-    window.tabeleau_url_content = resultats[1];
-
-    window.dispatchEvent(new Event("videotheque:data-ready"));
-
-    console.log("Vidéothèque chargée :", {
-        videos: window.reelsData.length,
-        contenus: window.tabeleau_url_content.length
-    });
-
-    return {
-        reelsData: window.reelsData,
-        tabeleau_url_content: window.tabeleau_url_content
-    };
-}).catch(function(erreur) {
-    console.error("Erreur de chargement de la vidéothèque :", erreur);
-    throw erreur;
+  fetch("../json/reelsData.json").then(function (response) {
+    if (!response.ok) throw new Error("Impossible de charger reelsData.json (" + response.status + ")");
+    return response.json();
+  }),
+  fetch("../json/url_content.json").then(function (response) {
+    if (!response.ok) throw new Error("Impossible de charger url_content.json (" + response.status + ")");
+    return response.json();
+  })
+]).then(function (resultats) {
+  window.reelsData = Array.isArray(resultats[0]) ? resultats[0] : [];
+  window.tabeleau_url_content = Array.isArray(resultats[1]) ? resultats[1] : [];
+  console.log("Vidéothèque chargée :", {
+    videos: window.reelsData.length,
+    contenus: window.tabeleau_url_content.length
+  });
+  return { reelsData: window.reelsData, tabeleau_url_content: window.tabeleau_url_content };
+}).catch(function (erreur) {
+  console.error("Erreur de chargement de la vidéothèque :", erreur);
+  return { reelsData: window.reelsData, tabeleau_url_content: window.tabeleau_url_content };
+}).finally(function () {
+  // Toujours déclencher l'événement, succès ou échec,
+  // pour que le script principal puisse sortir de son état "vide".
+  window.dispatchEvent(new Event("videotheque:data-ready"));
 });
 </script>
 
