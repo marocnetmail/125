@@ -1,47 +1,47 @@
 [
-    {
-        "id": 1,
-        "theme_fr": "Aide directe au logement",
-        "theme_ar": "الدعم المباشر للسكن"
-    },
-    {
-        "id": 2,
-        "theme_fr": "Aménagement du territoire",
-        "theme_ar": "إعداد التراب الوطني"
-    },
-    {
-        "id": 3,
-        "theme_fr": "Œuvres sociales",
-        "theme_ar": "الأعمال الاجتماعية"
-    },
-    {
-        "id": 4,
-        "theme_fr": "Développement rural",
-        "theme_ar": "التنمية القروية"
-    },
-    {
-        "id": 5,
-        "theme_fr": "Habitat et logement",
-        "theme_ar": "السكن"
-    },
-    {
-        "id": 6,
-        "theme_fr": "Habitat insalubre",
-        "theme_ar": "السكن غير اللائق"
-    },
-    {
-        "id": 7,
-        "theme_fr": "Politique de la ville",
-        "theme_ar": "سياسة المدينة"
-    },
-    {
-        "id": 8,
-        "theme_fr": "Urbanisme",
-        "theme_ar": "التعمير"
-    },
-    {
-        "id": 9,
-        "theme_fr": "Ministère et activités institutionnelles",
-        "theme_ar": "الوزارة والأنشطة المؤسساتية"
-    }
+  {
+    "id": 1,
+    "theme_fr": "Aide directe au logement",
+    "theme_ar": "الدعم المباشر للسكن"
+  },
+  {
+    "id": 2,
+    "theme_fr": "Aménagement du territoire",
+    "theme_ar": "إعداد التراب الوطني"
+  },
+  {
+    "id": 3,
+    "theme_fr": "Œuvres sociales",
+    "theme_ar": "الأعمال الاجتماعية"
+  },
+  {
+    "id": 4,
+    "theme_fr": "Développement rural",
+    "theme_ar": "التنمية القروية"
+  },
+  {
+    "id": 5,
+    "theme_fr": "Habitat et logement",
+    "theme_ar": "السكن"
+  },
+  {
+    "id": 6,
+    "theme_fr": "Habitat insalubre",
+    "theme_ar": "السكن غير اللائق"
+  },
+  {
+    "id": 7,
+    "theme_fr": "Politique de la ville",
+    "theme_ar": "سياسة المدينة"
+  },
+  {
+    "id": 8,
+    "theme_fr": "Urbanisme",
+    "theme_ar": "التعمير"
+  },
+  {
+    "id": 9,
+    "theme_fr": "activite en paralele ",
+    "theme_ar": "الانشطة الموازية"
+  }
 ]
