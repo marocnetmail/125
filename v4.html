@@ -2,26 +2,56 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d3fa8">
+<meta name="color-scheme" content="light">
+<meta name="format-detection" content="telephone=no">
 <title>Gestion de la vidéothèque — MATUHPV</title>
+<link rel="preconnect" href="https://api.github.com" crossorigin>
+<link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+<link rel="preconnect" href="https://www.facebook.com" crossorigin>
 <style>
   :root{
     --blue:#155eef; --blue-dark:#0d3fa8; --bg:#f3f5f8; --card:#ffffff;
     --border:#dce2ea; --text:#172033; --muted:#5e6878; --soft:#eef3fb;
+    --radius:12px; --tap:44px;
   }
   *{box-sizing:border-box}
+  html{
+    -webkit-text-size-adjust:100%;
+    -webkit-tap-highlight-color:transparent;
+    scroll-behavior:smooth;
+  }
   html,body{margin:0;padding:0}
   body{
     font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
     background:var(--bg); color:var(--text); font-size:15px; line-height:1.5;
-    -webkit-font-smoothing:antialiased;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+
+  /* Scrollbar (Webkit + Firefox) */
+  ::-webkit-scrollbar{width:10px; height:10px}
+  ::-webkit-scrollbar-track{background:#f1f3f7}
+  ::-webkit-scrollbar-thumb{background:#c9d4e2; border-radius:5px}
+  ::-webkit-scrollbar-thumb:hover{background:#a8b6ca}
+  *{scrollbar-width:thin; scrollbar-color:#c9d4e2 #f1f3f7}
+
+  /* Focus clavier visible */
+  *:focus-visible{outline:2px solid var(--blue); outline-offset:2px; border-radius:4px}
+  button{font:inherit}
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.01ms !important; transition-duration:.01ms !important}
   }
 
   /* ---------- Barre supérieure ---------- */
   .topbar{
     position:sticky; top:0; z-index:60;
     display:flex; align-items:center; justify-content:space-between; gap:16px;
-    padding:14px 24px; color:#fff;
+    padding:12px 24px; color:#fff;
+    padding-top:max(12px, env(safe-area-inset-top));
     background:linear-gradient(90deg,#0d3fa8,#155eef);
     box-shadow:0 2px 12px rgba(13,63,168,.28);
   }
@@ -52,6 +82,7 @@
     border:0; border-radius:10px; padding:11px 18px; font-weight:700; font-size:14px;
     cursor:pointer; display:inline-flex; align-items:center; gap:7px;
     transition:filter .15s, opacity .15s, background .15s; white-space:nowrap;
+    touch-action:manipulation;
   }
   .btn.primary{background:var(--blue); color:#fff}
   .btn.primary:hover:not(:disabled){filter:brightness(1.08)}
@@ -59,10 +90,11 @@
   .btn.ghost:hover:not(:disabled){background:#dde5f2}
   .btn.danger{background:#fee2e2; color:#a11}
   .btn.danger:hover:not(:disabled){background:#fecaca}
-  .btn.tiny{padding:7px 12px; font-size:13px; border-radius:8px}
+  .btn.tiny{padding:8px 12px; font-size:13px; border-radius:8px; min-height:36px}
   .btn:disabled{opacity:.42; cursor:not-allowed}
   .btn.white{background:rgba(255,255,255,.18); color:#fff}
   .btn.white:hover:not(:disabled){background:rgba(255,255,255,.28)}
+  .btn .btn-icon{font-size:15px; line-height:1}
 
   /* ---------- Onglets ---------- */
   .tabs{display:flex; gap:6px; border-bottom:1px solid var(--border); padding:0 4px; overflow-x:auto}
@@ -87,17 +119,18 @@
   /* ---------- Barre d'outils ---------- */
   .toolbar{
     display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-    background:#fff; border:1px solid var(--border); border-radius:12px; padding:12px 14px;
+    background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:12px 14px;
     box-shadow:0 1px 3px rgba(23,32,51,.04);
   }
   .toolbar .grow{flex:1 1 300px; max-width:500px}
   .toolbar .spacer{flex:1 1 auto}
   .hint{font-size:12.5px; color:var(--muted)}
 
-  /* ---------- Tableaux ---------- */
+  /* ---------- Tableaux (desktop) ---------- */
   .table-wrap{
-    background:#fff; border:1px solid var(--border); border-radius:12px;
+    background:#fff; border:1px solid var(--border); border-radius:var(--radius);
     overflow:auto; max-height:72vh; box-shadow:0 1px 3px rgba(23,32,51,.05);
+    -webkit-overflow-scrolling:touch;
   }
   table{border-collapse:separate; border-spacing:0; width:100%; font-size:14px}
   #videosTable{min-width:1400px}
@@ -119,6 +152,7 @@
   code{
     background:#eef1f6; padding:2px 7px; border-radius:5px;
     font-family:ui-monospace,Consolas,monospace; font-size:12.5px;
+    word-break:break-all;
   }
   a{color:var(--blue); text-decoration:none}
   a:hover{text-decoration:underline}
@@ -126,6 +160,7 @@
   .cell-input{
     width:100%; padding:8px 10px; font-size:13.5px; border-radius:8px;
     border:1px solid #d5dce7; background:#fff; font-family:inherit;
+    transition:border-color .15s, box-shadow .15s;
   }
   .cell-input:focus{outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(21,94,239,.12)}
   .cell-input:disabled{background:#f4f6fa; color:#8b95a5; cursor:not-allowed}
@@ -134,7 +169,6 @@
   td.col-theme .cell-input{min-width:180px}
   td.col-theme-ar .cell-input{min-width:160px; text-align:right}
 
-  /* Colonnes d'action (1ʳᵉ et 2ᵉ) : compactes et centrées */
   td.col-action-1, td.col-action-2{
     white-space:nowrap; vertical-align:middle; text-align:center;
   }
@@ -150,7 +184,7 @@
   /* ---------- Overlay ---------- */
   .overlay{
     position:fixed; inset:0; z-index:400; display:grid; place-items:center;
-    background:rgba(23,32,51,.45); backdrop-filter:blur(2px);
+    background:rgba(23,32,51,.45); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
   }
   .overlay[hidden]{display:none}
   .overlay-box{
@@ -169,14 +203,15 @@
   /* ---------- Modales ---------- */
   .modal{
     position:fixed; inset:0; z-index:450;
-    display:grid; place-items:center;
-    background:rgba(23,32,51,.5); backdrop-filter:blur(2px);
-    padding:18px;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(23,32,51,.5); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+    padding:18px; overscroll-behavior:contain;
   }
   .modal[hidden]{display:none}
   .modal-box{
     background:#fff; border-radius:14px; width:min(920px,100%);
-    max-height:calc(100vh - 36px); display:flex; flex-direction:column;
+    max-height:calc(100vh - 36px); max-height:calc(100dvh - 36px);
+    display:flex; flex-direction:column;
     box-shadow:0 18px 60px rgba(0,0,0,.35); overflow:hidden;
   }
   .modal-box.modal-details{width:min(1150px,100%)}
@@ -184,20 +219,27 @@
     display:flex; align-items:center; justify-content:space-between; gap:12px;
     padding:16px 20px; border-bottom:1px solid var(--border);
     background:linear-gradient(90deg,#0d3fa8,#155eef); color:#fff;
+    flex:0 0 auto;
   }
-  .modal-head h3{margin:0; font-size:17px; font-weight:700}
+  .modal-head h3{margin:0; font-size:17px; font-weight:700; word-break:break-word}
   .modal-close{
     background:rgba(255,255,255,.18); border:0; color:#fff;
-    width:34px; height:34px; border-radius:9px; cursor:pointer; font-size:15px;
+    width:36px; height:36px; border-radius:9px; cursor:pointer; font-size:15px;
+    display:grid; place-items:center; flex-shrink:0;
   }
   .modal-close:hover{background:rgba(255,255,255,.3)}
-  .modal-body{padding:18px 22px; display:flex; flex-direction:column; gap:14px; overflow:auto}
+  .modal-body{
+    padding:18px 22px; display:flex; flex-direction:column; gap:14px;
+    overflow:auto; flex:1 1 auto; -webkit-overflow-scrolling:touch;
+  }
   .modal-foot{
     display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;
     padding:14px 20px; border-top:1px solid var(--border); background:#fafbfd;
+    flex:0 0 auto;
+    padding-bottom:max(14px, env(safe-area-inset-bottom));
   }
 
-  /* ---------- Détail (modal Détails) ---------- */
+  /* ---------- Détails ---------- */
   .detail-section{border-top:1px solid var(--border); padding-top:16px; margin-top:4px}
   .detail-section:first-child{border-top:0; margin-top:0; padding-top:0}
   .detail-section-title{
@@ -228,6 +270,7 @@
     width:100%; min-height:350px; font-size:15px; line-height:1.65;
     padding:13px 15px; border:2px solid var(--blue); border-radius:9px;
     background:#f8fafd; resize:vertical; font-family:inherit; color:inherit;
+    transition:background .15s, box-shadow .15s;
   }
   .detail-contenu:focus{background:#fff; outline:none; box-shadow:0 0 0 3px rgba(21,94,239,.15)}
   .detail-contenu:disabled{background:#f4f6fa; color:#8b95a5; border-color:#d5dce7}
@@ -236,8 +279,9 @@
     background:#eef3fb; border:1px solid #c9d7f0; color:var(--blue-dark);
     padding:6px 12px; border-radius:8px; font-weight:700; font-size:13.5px;
     font-family:ui-monospace,Consolas,monospace;
+    word-break:break-all;
   }
-  .detail-fbid-badge .lock{opacity:.65}
+  .detail-fbid-badge .lock{opacity:.65; flex-shrink:0}
 
   /* ---------- Lecteur vidéo ---------- */
   .modal-video{
@@ -246,7 +290,7 @@
   }
   .modal-video[hidden]{display:none}
   .modal-video iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
-  @media (max-width:760px){ .modal-video{height:280px} }
+  @media (max-width:760px){ .modal-video{height:260px} }
 
   /* ---------- Modale de connexion ---------- */
   .modal-login{width:min(480px,100%)}
@@ -292,6 +336,7 @@
   #toasts{
     position:fixed; right:18px; bottom:18px; z-index:500;
     display:flex; flex-direction:column; gap:10px; max-width:420px;
+    padding-bottom:env(safe-area-inset-bottom);
   }
   .toast{
     display:flex; align-items:flex-start; gap:10px; padding:13px 15px;
@@ -310,11 +355,198 @@
   .toast.out{opacity:0; transform:translateX(24px); transition:.3s}
   @keyframes slidein{from{opacity:0; transform:translateX(34px)}}
 
-  @media (max-width:760px){
-    .layout{padding:12px 12px 60px}
-    .brand h1{font-size:15px}
+  /* ==================================================================
+     MOBILE / TABLETTE (< 900px) — Vue cartes + modales plein écran
+     ================================================================== */
+  @media (max-width: 900px){
+    /* Coquille générale */
+    .layout{padding:14px 14px 60px; gap:12px}
+    body{font-size:14.5px}
+
+    /* Topbar compacte */
+    .topbar{padding:10px 14px; gap:8px}
+    .brand h1{font-size:16px}
     .brand .sub{display:none}
+    .logo{width:38px; height:38px; font-size:19px; flex-basis:38px}
+    .topbar-right{gap:6px}
+    .topbar-right .btn{padding:9px 11px; font-size:13px; gap:5px}
+    .topbar-right .btn .btn-text,
+    .topbar-right .btn span:not(.btn-icon){display:none}
     .topbar-right .btn span{display:none}
+    #connState{font-size:11.5px; padding:5px 10px; max-width:140px; overflow:hidden; text-overflow:ellipsis}
+
+    /* Champs : 16px pour empêcher le zoom iOS */
+    input, select, textarea, .cell-input{font-size:16px}
+
+    /* Barre d'outils : empilée */
+    .toolbar{
+      flex-direction:column; align-items:stretch; gap:8px; padding:12px;
+    }
+    .toolbar .grow{flex:none; width:100%; max-width:100%}
+    .toolbar .spacer{display:none}
+    .toolbar .btn{width:100%; justify-content:center; min-height:var(--tap)}
+
+    /* ============ Vidéos : vue cartes ============ */
+    .table-wrap{
+      max-height:none; border:0; background:transparent;
+      box-shadow:none; overflow:visible;
+    }
+    #videosTable{
+      display:block; min-width:0; width:100%; font-size:14px;
+    }
+    #videosTable thead{display:none}
+    #videosTable tbody{display:block}
+
+    #videosTable tr{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:6px 12px;
+      padding:14px;
+      margin-bottom:12px;
+      background:#fff;
+      border:1px solid var(--border);
+      border-left:4px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:0 1px 3px rgba(23,32,51,.06);
+    }
+    #videosTable tr.dirty{border-left-color:#f59e0b; background:#fffbeb}
+    #videosTable tr:last-child{margin-bottom:0}
+
+    #videosTable td{
+      display:block; padding:2px 0; border:0; grid-column:1 / -1;
+    }
+    #videosTable td.nowrap{white-space:normal}
+
+    /* Actions : 2 boutons côte à côte en haut */
+    #videosTable td.col-action-1,
+    #videosTable td.col-action-2{
+      grid-column:auto;
+      padding:0 0 10px 0;
+      margin-bottom:6px;
+      border-bottom:1px solid var(--border);
+      text-align:stretch;
+    }
+    #videosTable td.col-action-1 .btn,
+    #videosTable td.col-action-2 .btn{
+      width:100%; justify-content:center; min-height:var(--tap);
+      white-space:normal;
+    }
+
+    /* Date + Année sur la même ligne */
+    #videosTable td[data-label="Date"],
+    #videosTable td[data-label="Année"]{
+      grid-column:auto;
+    }
+
+    /* Étiquettes */
+    #videosTable td[data-label]::before{
+      content:attr(data-label);
+      display:block;
+      font-size:11px; font-weight:800;
+      color:var(--blue-dark);
+      text-transform:uppercase; letter-spacing:.4px;
+      margin-bottom:5px;
+    }
+
+    /* Inputs pleine largeur */
+    #videosTable .cell-input,
+    #videosTable td.col-titre .cell-input,
+    #videosTable td.col-desc .cell-input,
+    #videosTable td.col-theme .cell-input,
+    #videosTable td.col-theme-ar .cell-input{
+      min-width:0; width:100%; min-height:var(--tap);
+    }
+    #videosTable td.col-desc .cell-input{min-height:90px}
+
+    /* État vide */
+    #videosTable td.empty{
+      grid-column:1 / -1 !important;
+      text-align:center; padding:30px 10px;
+      border-bottom:0;
+    }
+    #videosTable td.empty::before{content:none}
+
+    /* ============ Thèmes : vue cartes ============ */
+    .themes-table{display:block; min-width:0; width:100%}
+    .themes-table thead{display:none}
+    .themes-table tbody, .themes-table tr, .themes-table td{display:block}
+    .themes-table tr{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:14px;
+      margin-bottom:10px;
+      box-shadow:0 1px 3px rgba(23,32,51,.05);
+    }
+    .themes-table tr:last-child{margin-bottom:0}
+    .themes-table td{padding:4px 0; border:0}
+    .themes-table td[data-label]::before{
+      content:attr(data-label);
+      display:block;
+      font-size:11px; font-weight:800;
+      color:var(--blue-dark);
+      text-transform:uppercase; letter-spacing:.4px;
+      margin-bottom:5px;
+    }
+    .themes-table .cell-input{min-width:0; width:100%; min-height:var(--tap)}
+    .themes-table td.center{text-align:left; padding-top:8px}
+    .themes-table td.center::before{
+      content:"Vidéos liées :";
+      display:inline; font-size:11px; font-weight:800;
+      color:var(--blue-dark); text-transform:uppercase;
+      margin-right:6px;
+    }
+    .row-actions{display:flex; gap:6px; flex-direction:row; margin-top:6px}
+    .row-actions .btn{flex:1; justify-content:center; min-height:var(--tap)}
+
+    /* ============ Modales : plein écran ============ */
+    .modal{padding:0; align-items:stretch}
+    .modal-box,
+    .modal-box.modal-details,
+    .modal-box.modal-login{
+      width:100%; max-width:100%;
+      height:100vh; height:100dvh;
+      max-height:100vh; max-height:100dvh;
+      border-radius:0;
+    }
+    .modal-head{
+      padding:14px 16px;
+      padding-top:max(14px, env(safe-area-inset-top));
+    }
+    .modal-head h3{font-size:16px}
+    .modal-body{padding:16px; gap:14px}
+    .modal-foot{
+      padding:12px 16px;
+      padding-bottom:max(12px, env(safe-area-inset-bottom));
+    }
+    .modal-foot .btn{flex:1; justify-content:center; min-height:var(--tap)}
+
+    /* Détails : grilles en 1 colonne */
+    .readonly-grid, .editable-grid{
+      grid-template-columns:1fr;
+    }
+    .detail-contenu{min-height:300px; font-size:16px}
+    .modal-video{height:240px}
+
+    /* Login : scroll safe */
+    .modal-login .login-head{padding-top:max(26px, env(safe-area-inset-top))}
+    .modal-login .login-foot{padding-bottom:max(24px, env(safe-area-inset-bottom))}
+
+    /* Toasts plus larges, alignés bas */
+    #toasts{
+      left:10px; right:10px; bottom:10px; max-width:none;
+      padding-bottom:env(safe-area-inset-bottom);
+    }
+    .toast{width:100%}
+  }
+
+  /* Petits mobiles : actions pleine largeur, une par ligne si nécessaire */
+  @media (max-width: 380px){
+    #videosTable tr{grid-template-columns:1fr}
+    #videosTable td.col-action-1,
+    #videosTable td.col-action-2{grid-column:1 / -1}
+    #videosTable td[data-label="Date"],
+    #videosTable td[data-label="Année"]{grid-column:1 / -1}
   }
 </style>
 </head>
@@ -330,9 +562,15 @@
   </div>
   <div class="topbar-right">
     <span id="connState" class="pill pill-off">Non connecté</span>
-    <button id="loginBtn" class="btn white" title="Se connecter à GitHub">🔒 <span>Se connecter</span></button>
-    <button id="logoutBtn" class="btn white" hidden title="Se déconnecter">🚪 <span>Déconnexion</span></button>
-    <button id="reloadBtn" class="btn white" disabled title="Recharger depuis GitHub">↻ <span>Recharger</span></button>
+    <button id="loginBtn" class="btn white" title="Se connecter à GitHub" aria-label="Se connecter à GitHub">
+      <span class="btn-icon">🔒</span><span class="btn-text">Se connecter</span>
+    </button>
+    <button id="logoutBtn" class="btn white" hidden title="Se déconnecter" aria-label="Se déconnecter">
+      <span class="btn-icon">🚪</span><span class="btn-text">Déconnexion</span>
+    </button>
+    <button id="reloadBtn" class="btn white" disabled title="Recharger depuis GitHub" aria-label="Recharger">
+      <span class="btn-icon">↻</span><span class="btn-text">Recharger</span>
+    </button>
   </div>
 </header>
 
@@ -345,15 +583,14 @@
 
   <section id="tab-videos" class="tab-panel active">
     <div class="toolbar">
-      <input id="search" class="grow cell-input" type="text" placeholder="Rechercher par FBID, titre, description ou thème…">
+      <input id="search" class="grow cell-input" type="search" placeholder="Rechercher par FBID, titre, description ou thème…" autocomplete="off">
       <span class="spacer"></span>
       <button id="resetVideos" class="btn ghost" disabled>Annuler les modifications</button>
       <button id="saveVideos" class="btn primary" disabled>Enregistrer sur GitHub</button>
     </div>
     <p class="hint" style="margin:-4px 2px 0">
-      Colonne 1 : <b>Modifier le contenu</b> (lecteur vidéo + transcription).
-      Colonne 2 : <b>Détails</b> (fiche complète, édition de tous les champs autorisés).
-      Titre / description / thèmes se modifient directement dans le tableau.
+      Colonne 1 : <b>Modifier le contenu</b> (lecteur + transcription).
+      Colonne 2 : <b>Détails</b> (fiche complète).
     </p>
     <div class="table-wrap">
       <table id="videosTable">
@@ -379,15 +616,14 @@
 
   <section id="tab-themes" class="tab-panel">
     <div class="toolbar">
-      <input id="themeSearch" class="grow cell-input" type="text" placeholder="Filtrer les thèmes…">
+      <input id="themeSearch" class="grow cell-input" type="search" placeholder="Filtrer les thèmes…" autocomplete="off">
       <span class="spacer"></span>
       <button id="addTheme" class="btn ghost">＋ Ajouter un thème</button>
-      <button id="resetThemes" class="btn ghost" disabled>Annuler les modifications</button>
-      <button id="saveThemes" class="btn primary" disabled>Enregistrer les thèmes sur GitHub</button>
+      <button id="resetThemes" class="btn ghost" disabled>Annuler</button>
+      <button id="saveThemes" class="btn primary" disabled>Enregistrer les thèmes</button>
     </div>
     <p class="hint" style="margin:-4px 2px 0">
-      Référentiel bilingue utilisé par le tableau des vidéos. La suppression d'un thème utilisé
-      par des vidéos est signalée, mais ne modifie jamais les vidéos elles-mêmes.
+      Référentiel bilingue utilisé par le tableau des vidéos.
     </p>
     <div class="table-wrap">
       <table class="themes-table">
@@ -439,7 +675,7 @@
       <p class="login-help">
         Créez un <i>Fine-grained Personal Access Token</i> limité au dépôt
         <code>marocnetmail/125</code> avec la permission <b>Contents&nbsp;: Read and write</b>.
-        Le jeton reste en mémoire uniquement pendant cette session et n'est jamais enregistré.
+        Le jeton reste en mémoire pendant la session uniquement.
       </p>
       <div id="loginError" class="login-error" hidden></div>
       <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center">
@@ -462,7 +698,7 @@
   <div class="modal-box modal-details" role="dialog" aria-modal="true" aria-labelledby="detailsTitle">
     <div class="modal-head">
       <h3 id="detailsTitle">Détails de la vidéo</h3>
-      <button class="modal-close" id="detailsX" type="button" title="Fermer">✕</button>
+      <button class="modal-close" id="detailsX" type="button" title="Fermer" aria-label="Fermer">✕</button>
     </div>
     <div class="modal-body" id="detailsBody"></div>
     <div class="modal-foot">
@@ -478,7 +714,7 @@
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-head">
       <h3 id="modalTitle">Transcription de la vidéo</h3>
-      <button class="modal-close" id="modalX" type="button" title="Fermer">✕</button>
+      <button class="modal-close" id="modalX" type="button" title="Fermer" aria-label="Fermer">✕</button>
     </div>
     <div class="modal-body">
       <div class="detail-section">
@@ -517,9 +753,6 @@
 <script>
 "use strict";
 
-/* =====================================================================
-   0. CONFIGURATION PUBLIQUE (aucun jeton ici)
-   ===================================================================== */
 const CONFIG = {
   owner:          "marocnetmail",
   repo:           "125",
@@ -530,9 +763,6 @@ const CONFIG = {
   imagesDir:      "images"
 };
 
-/* =====================================================================
-   1. UTILITAIRES DOM
-   ===================================================================== */
 const $  = sel => document.querySelector(sel);
 const $$ = sel => Array.from(document.querySelectorAll(sel));
 
@@ -558,9 +788,6 @@ function el(tag, props, ...kids){
   return node;
 }
 
-/* =====================================================================
-   2. BASE64 / UTF-8
-   ===================================================================== */
 function b64EncodeUtf8(str){
   const bytes = new TextEncoder().encode(str);
   let bin = ""; const CHUNK = 0x8000;
@@ -577,22 +804,15 @@ function b64DecodeUtf8(b64){
   return new TextDecoder("utf-8").decode(bytes);
 }
 
-/* =====================================================================
-   3. RÉSEAU ROBUSTE
-   ===================================================================== */
 function validateTokenFormat(raw){
   const t = String(raw || "").replace(/[\u200B-\u200D\uFEFF\u00A0]/g, "").trim();
   if (!t) throw new Error("Jeton vide.");
   if (!/^[A-Za-z0-9_]+$/.test(t))
-    throw new Error(
-      "Le jeton contient des caractères invalides.\n"
-      + "Un PAT GitHub ne doit contenir que des lettres, chiffres et underscores."
-    );
+    throw new Error("Le jeton contient des caractères invalides.\n"
+      + "Un PAT GitHub ne doit contenir que des lettres, chiffres et underscores.");
   if (!/^(github_pat_|ghp_|gho_|ghu_|ghs_|ghr_)/.test(t))
-    throw new Error(
-      "Format de jeton non reconnu.\n"
-      + "Un Fine-grained PAT commence par « github_pat_ », un PAT classique par « ghp_ »."
-    );
+    throw new Error("Format de jeton non reconnu.\n"
+      + "Un Fine-grained PAT commence par « github_pat_ », un PAT classique par « ghp_ ».");
   return t;
 }
 async function safeFetch(url, opts, stepName){
@@ -609,9 +829,6 @@ async function safeFetch(url, opts, stepName){
   }
 }
 
-/* =====================================================================
-   4. ÉTAT GLOBAL
-   ===================================================================== */
 const DEFAULT_THEMES = [
   { theme_fr:"Aide directe au logement",  theme_ar:"الدعم المباشر للسكن" },
   { theme_fr:"Aménagement du territoire", theme_ar:"إعداد التراب الوطني" },
@@ -624,26 +841,17 @@ const DEFAULT_THEMES = [
 ];
 
 const state = {
-  token: "",
-  connected: false,
-  user: "",
+  token: "", connected: false, user: "",
   videos: null, videoSha: null,
   themes: null, themeSha: null,
   themeSnapshot: "", themeDirty: false,
   urlContent: null, urlContentSha: null, urlContentLoaded: false,
-  dirty: new Set(),
-  snapshot: new Map(),
-  sort: { key: null, dir: -1 },
-  search: ""
+  dirty: new Set(), snapshot: new Map(),
+  sort: { key: null, dir: -1 }, search: ""
 };
 
-let modalDetailsCtx = null;
-let modalContentCtx = null;
-let searchTimer = null;
+let modalDetailsCtx = null, modalContentCtx = null, searchTimer = null;
 
-/* =====================================================================
-   5. CLÉS JSON
-   ===================================================================== */
 const FIELD_KEYS = {
   fbid:          ["fbid", "id", "video_id", "fb_id"],
   date:          ["date_publication", "date_pub", "date", "published_at", "created_time", "date_mise_en_ligne"],
@@ -665,7 +873,6 @@ const FIELD_KEYS = {
   miniature:     ["miniature", "thumbnail", "image", "miniature_url", "thumb"],
   contenu:       ["contenu", "content", "transcription"]
 };
-
 function get(obj, field){
   const keys = FIELD_KEYS[field] || [field];
   for (const k of keys){
@@ -697,9 +904,6 @@ function findIsoDate(item){
   return "";
 }
 
-/* =====================================================================
-   6. NOTIFICATIONS & OVERLAY
-   ===================================================================== */
 function toast(message, type){
   type = type || "info";
   const box = $("#toasts");
@@ -717,9 +921,6 @@ function busy(on, message){
   else ov.hidden = true;
 }
 
-/* =====================================================================
-   7. GITHUB — AUTH
-   ===================================================================== */
 function ensureAuth(){
   if (!state.connected || !state.token)
     throw new Error("Vous devez être connecté à GitHub pour effectuer cette opération.");
@@ -740,10 +941,10 @@ function ghHeaders(extra){
 function ghError(status, message){
   const map = {
     401: "401 — Jeton GitHub invalide ou expiré.",
-    403: "403 — Accès refusé ou quota GitHub dépassé. Vérifiez la permission « Contents: Read and write ».",
+    403: "403 — Accès refusé ou quota GitHub dépassé.",
     404: "404 — Dépôt, branche ou fichier introuvable.",
     409: "409 — Conflit : le fichier a été modifié entre-temps.",
-    422: "422 — Opération refusée par GitHub (SHA obsolète ou contenu invalide)."
+    422: "422 — Opération refusée par GitHub."
   };
   const err = new Error((map[status] ? map[status] + " " : "") + (message || "Erreur GitHub inconnue."));
   err.status = status;
@@ -783,16 +984,13 @@ async function verifyLogin(token){
     { headers, cache: "no-store", mode: "cors", credentials: "omit" },
     "accès au fichier " + CONFIG.urlContentPath);
   if (fileRes.status === 404)
-    throw new Error("Fichier « " + CONFIG.urlContentPath + " » introuvable sur la branche « " + CONFIG.branch + " ».");
+    throw new Error("Fichier « " + CONFIG.urlContentPath + " » introuvable.");
   if (!fileRes.ok)
     throw new Error("GitHub a répondu " + fileRes.status + " sur " + CONFIG.urlContentPath + ".");
 
   return { login: user.login, repo: repo.full_name };
 }
 
-/* =====================================================================
-   8. MODALE DE CONNEXION
-   ===================================================================== */
 function openLoginModal(){
   $("#loginError").hidden = true;
   $("#loginError").textContent = "";
@@ -891,9 +1089,6 @@ function logout(){
   openLoginModal();
 }
 
-/* =====================================================================
-   9. GITHUB — FICHIERS
-   ===================================================================== */
 async function ghGetFile(path){
   const url = apiUrl(path) + "?ref=" + encodeURIComponent(CONFIG.branch) + "&_=" + Date.now();
   const res = await safeFetch(url,
@@ -928,9 +1123,6 @@ async function ghPutFile(path, text, sha, message){
   return data;
 }
 
-/* =====================================================================
-   10. CHARGEMENT
-   ===================================================================== */
 async function loadAll(){
   ensureAuth();
   if (state.dirty.size > 0 || state.themeDirty){
@@ -962,17 +1154,13 @@ async function loadAll(){
       themesCreated = true;
     }
 
-    state.videos = videos;
-    state.videoSha = vFile.sha;
-    state.themes = themes;
-    state.themeSha = themeSha;
+    state.videos = videos; state.videoSha = vFile.sha;
+    state.themes = themes; state.themeSha = themeSha;
     state.themeSnapshot = JSON.stringify(themes);
     state.themeDirty = false;
     state.dirty.clear();
     state.sort = { key: null, dir: -1 };
-    state.search = "";
-    $("#search").value = "";
-    $("#themeSearch").value = "";
+    state.search = ""; $("#search").value = ""; $("#themeSearch").value = "";
     state.urlContent = null; state.urlContentSha = null; state.urlContentLoaded = false;
 
     snapshotVideos();
@@ -981,7 +1169,7 @@ async function loadAll(){
 
     toast("Données chargées : " + state.videos.length + " vidéo(s), " + state.themes.length + " thème(s).", "success");
     if (themesCreated){
-      toast("« " + CONFIG.themesPath + " » absent sur GitHub.\nRéférentiel par défaut proposé : enregistrez-le pour créer le fichier.", "warn");
+      toast("« " + CONFIG.themesPath + " » absent. Référentiel par défaut proposé.", "warn");
     }
   } catch (e) {
     toast(e.message, "error");
@@ -994,17 +1182,14 @@ function snapshotVideos(){
   if (!state.videos) return;
   state.videos.forEach((item, i) => {
     state.snapshot.set(i, {
-      titre:       String(get(item, "titre") ?? ""),
+      titre: String(get(item, "titre") ?? ""),
       description: String(get(item, "description") ?? ""),
-      theme_fr:    String(get(item, "theme_fr") ?? ""),
-      theme_ar:    String(get(item, "theme_ar") ?? "")
+      theme_fr: String(get(item, "theme_fr") ?? ""),
+      theme_ar: String(get(item, "theme_ar") ?? "")
     });
   });
 }
 
-/* =====================================================================
-   11. TABLEAU VIDÉOS
-   ===================================================================== */
 function themeListFr(){
   if (!state.themes) return [];
   return state.themes.map(t => String(t.theme_fr || "").trim()).filter(Boolean);
@@ -1060,62 +1245,83 @@ function themeSelect(item, index){
   });
   return sel;
 }
-function linkCell(value){
-  const s = String(value || "").trim();
-  if (!s) return el("td", { class: "nowrap" }, "—");
-  if (/^https?:\/\//i.test(s)){
-    return el("td", { class: "nowrap" }, el("a", { href: s, target: "_blank", rel: "noopener noreferrer" }, "Lien"));
-  }
-  return el("td", { class: "nowrap" }, "—");
-}
 
 function buildRow(item, index){
   const tr = el("tr", { "data-index": index });
   if (state.dirty.has(index)) tr.classList.add("dirty");
 
-  /* Col 1 : Modifier le contenu (transcription + lecteur) */
+  /* Col 1 : Modifier le contenu */
   const tdContent = el("td", { class: "col-action-1" });
   const btnContent = el("button", {
     class: "btn tiny ghost",
     type: "button",
     title: "Lire la vidéo et modifier la transcription",
     onclick: () => openContentModal(item)
-  }, "✎ Modifier le contenu");
+  },
+    el("span", { class: "btn-icon" }, "✎"),
+    el("span", { class: "btn-text" }, " Modifier le contenu")
+  );
   if (!state.connected) btnContent.disabled = true;
   tdContent.appendChild(btnContent);
   tr.appendChild(tdContent);
 
-  /* Col 2 : Détails (fiche complète) */
+  /* Col 2 : Détails */
   const tdDetails = el("td", { class: "col-action-2" });
   const btnDetails = el("button", {
     class: "btn tiny primary",
     type: "button",
     title: "Voir tous les détails et modifier",
     onclick: () => openDetailsModal(item)
-  }, "🔍 Détails");
+  },
+    el("span", { class: "btn-icon" }, "🔍"),
+    el("span", { class: "btn-text" }, " Détails")
+  );
   if (!state.connected) btnDetails.disabled = true;
   tdDetails.appendChild(btnDetails);
   tr.appendChild(tdDetails);
 
   /* Col 3 : Date */
-  tr.appendChild(el("td", { class: "nowrap" }, txt(get(item, "date"))));
+  tr.appendChild(el("td", { class: "nowrap", "data-label": "Date" }, txt(get(item, "date"))));
   /* Col 4 : Année */
-  tr.appendChild(el("td", { class: "nowrap center" }, txt(get(item, "annee"))));
+  tr.appendChild(el("td", { class: "nowrap center", "data-label": "Année" }, txt(get(item, "annee"))));
+
   /* Col 5 : Titre */
-  tr.appendChild(el("td", { class: "col-titre" }, inputFor(item, index, "titre", "text")));
+  const tdTitre = el("td", { class: "col-titre", "data-label": "Titre" });
+  tdTitre.appendChild(inputFor(item, index, "titre", "text"));
+  tr.appendChild(tdTitre);
+
   /* Col 6 : Description */
-  tr.appendChild(el("td", { class: "col-desc" }, inputFor(item, index, "description", "textarea")));
+  const tdDesc = el("td", { class: "col-desc", "data-label": "Description" });
+  tdDesc.appendChild(inputFor(item, index, "description", "textarea"));
+  tr.appendChild(tdDesc);
+
   /* Col 7 : Thème FR */
-  tr.appendChild(el("td", { class: "col-theme" }, themeSelect(item, index)));
+  const tdTheme = el("td", { class: "col-theme", "data-label": "Thème français" });
+  tdTheme.appendChild(themeSelect(item, index));
+  tr.appendChild(tdTheme);
+
   /* Col 8 : Thème AR */
-  tr.appendChild(el("td", { class: "col-theme-ar" },
-    inputFor(item, index, "theme_ar", "text", { dir: "rtl", "data-field": "theme_ar" })));
+  const tdThemeAr = el("td", { class: "col-theme-ar", "data-label": "Thème arabe" });
+  tdThemeAr.appendChild(inputFor(item, index, "theme_ar", "text", { dir: "rtl", "data-field": "theme_ar" }));
+  tr.appendChild(tdThemeAr);
+
   /* Col 9 : Type */
-  tr.appendChild(el("td", { class: "nowrap" }, txt(get(item, "type"))));
+  tr.appendChild(el("td", { class: "nowrap", "data-label": "Type" }, txt(get(item, "type"))));
+
   /* Col 10 : FBID */
-  tr.appendChild(el("td", { class: "nowrap" }, el("code", {}, txt(get(item, "fbid")))));
+  const tdFbid = el("td", { class: "nowrap", "data-label": "FBID" });
+  tdFbid.appendChild(el("code", {}, txt(get(item, "fbid"))));
+  tr.appendChild(tdFbid);
+
   /* Col 11 : URL → "Lien" */
-  tr.appendChild(linkCell(get(item, "url")));
+  const tdUrl = el("td", { class: "nowrap", "data-label": "URL vidéo" });
+  const urlValue = String(get(item, "url") || "").trim();
+  if (urlValue && /^https?:\/\//i.test(urlValue)){
+    tdUrl.appendChild(el("a", { href: urlValue, target: "_blank", rel: "noopener noreferrer" }, "Lien"));
+  } else {
+    tdUrl.textContent = "—";
+  }
+  tr.appendChild(tdUrl);
 
   return tr;
 }
@@ -1195,7 +1401,7 @@ function updateSaveButtons(){
   const n = state.dirty.size;
   const btn = $("#saveVideos");
   btn.disabled = !state.connected || n === 0;
-  btn.textContent = n ? "Enregistrer " + n + " modification" + (n > 1 ? "s" : "") + " sur GitHub"
+  btn.textContent = n ? "Enregistrer " + n + " modification" + (n > 1 ? "s" : "")
                       : "Enregistrer sur GitHub";
   $("#resetVideos").disabled = n === 0;
 }
@@ -1207,9 +1413,6 @@ function updateSortIndicators(){
   });
 }
 
-/* =====================================================================
-   12. SAUVEGARDE VIDÉOS / THÈMES
-   ===================================================================== */
 async function saveVideos(){
   try { ensureAuth(); } catch (e){ toast(e.message, "error"); return; }
   if (!state.videos){ toast("Chargez d'abord les données.", "error"); return; }
@@ -1222,18 +1425,17 @@ async function saveVideos(){
     const current = await ghGetFile(CONFIG.videosPath);
     if (!current) throw new Error("Fichier vidéos introuvable sur GitHub.");
     if (current.sha !== state.videoSha)
-      throw new Error("Le fichier vidéos a été modifié sur GitHub entre-temps (conflit SHA). Rechargez puis réessayez.");
+      throw new Error("Conflit SHA : le fichier a changé. Rechargez puis réessayez.");
     const text = JSON.stringify(state.videos, null, 2) + "\n";
     JSON.parse(text);
     const n = state.dirty.size;
     const res = await ghPutFile(CONFIG.videosPath, text, current.sha,
-      "MATUHPV — mise à jour de " + n + " vidéo(s) (titre, description, thèmes)");
+      "MATUHPV — mise à jour de " + n + " vidéo(s)");
     state.videoSha = res.content.sha;
     state.dirty.clear();
     snapshotVideos();
     renderVideos(); updateSaveButtons();
-    toast("✅ Vidéos enregistrées. Commit : "
-      + String(res.commit && res.commit.sha || "").slice(0, 7), "success");
+    toast("✅ Vidéos enregistrées. Commit : " + String(res.commit && res.commit.sha || "").slice(0, 7), "success");
   } catch (e) {
     toast(e.message, "error");
   } finally {
@@ -1244,7 +1446,7 @@ async function saveVideos(){
 }
 function resetVideos(){
   if (state.dirty.size === 0) return;
-  if (!confirm("Annuler toutes les modifications non enregistrées du tableau des vidéos ?")) return;
+  if (!confirm("Annuler toutes les modifications non enregistrées ?")) return;
   for (const [index, snap] of state.snapshot){
     const item = state.videos[index];
     if (!item) continue;
@@ -1258,9 +1460,6 @@ function resetVideos(){
   toast("Modifications annulées.", "info");
 }
 
-/* =====================================================================
-   13. THÈMES — TABLEAU
-   ===================================================================== */
 function countVideosForTheme(fr){
   if (!state.videos) return 0;
   const target = String(fr || "").trim().toLowerCase();
@@ -1282,12 +1481,12 @@ function updateThemeButtons(){
 }
 function buildThemeRow(theme, index){
   const tr = el("tr");
-  const tdFr = el("td");
+  const tdFr = el("td", { "data-label": "Thème français" });
   const inFr = el("input", { type: "text", class: "cell-input" });
   inFr.value = theme.theme_fr || "";
   if (!state.connected) inFr.disabled = true;
   tdFr.appendChild(inFr);
-  const tdAr = el("td");
+  const tdAr = el("td", { "data-label": "Thème arabe" });
   const inAr = el("input", { type: "text", class: "cell-input", dir: "rtl" });
   inAr.value = theme.theme_ar || "";
   if (!state.connected) inAr.disabled = true;
@@ -1300,7 +1499,7 @@ function buildThemeRow(theme, index){
   }
   inFr.addEventListener("input", () => { theme.theme_fr = inFr.value; markThemeDirty(); refreshUse(); });
   inAr.addEventListener("input", () => { theme.theme_ar = inAr.value; markThemeDirty(); });
-  const tdAct = el("td");
+  const tdAct = el("td", { "data-label": "Actions" });
   const actions = el("div", { class: "row-actions" });
   const btnVideos = el("button", { class: "btn tiny ghost", onclick: () => filterVideosByTheme(theme.theme_fr) }, "Vidéos");
   const btnDel = el("button", { class: "btn tiny danger", onclick: () => deleteTheme(index) }, "Supprimer");
@@ -1386,7 +1585,7 @@ async function saveThemes(){
     const current = await ghGetFile(CONFIG.themesPath);
     const currentSha = current ? current.sha : null;
     if (currentSha !== state.themeSha)
-      throw new Error("Le fichier thèmes a été modifié sur GitHub entre-temps (conflit SHA).");
+      throw new Error("Conflit SHA : le fichier des thèmes a changé. Rechargez.");
     const text = JSON.stringify(state.themes, null, 2) + "\n";
     JSON.parse(text);
     const res = await ghPutFile(CONFIG.themesPath, text, state.themeSha,
@@ -1395,8 +1594,7 @@ async function saveThemes(){
     state.themeSnapshot = JSON.stringify(state.themes);
     state.themeDirty = false;
     renderVideos(); updateThemeButtons();
-    toast("✅ Thèmes enregistrés. Commit : "
-      + String(res.commit && res.commit.sha || "").slice(0, 7), "success");
+    toast("✅ Thèmes enregistrés. Commit : " + String(res.commit && res.commit.sha || "").slice(0, 7), "success");
   } catch (e) {
     toast(e.message, "error");
   } finally {
@@ -1406,22 +1604,17 @@ async function saveThemes(){
   }
 }
 
-/* =====================================================================
-   14. GESTION url_content.json
-   ===================================================================== */
 async function ensureUrlContentLoaded(){
   if (state.urlContentLoaded) return;
   const f = await ghGetFile(CONFIG.urlContentPath);
   if (!f){
-    state.urlContent = [];
-    state.urlContentSha = null;
+    state.urlContent = []; state.urlContentSha = null;
   } else {
     let parsed;
     try { parsed = JSON.parse(f.text); }
     catch (e){ throw new Error("url_content.json invalide : " + e.message); }
     if (!Array.isArray(parsed)) throw new Error("url_content.json doit contenir un tableau JSON.");
-    state.urlContent = parsed;
-    state.urlContentSha = f.sha;
+    state.urlContent = parsed; state.urlContentSha = f.sha;
   }
   state.urlContentLoaded = true;
 }
@@ -1441,9 +1634,8 @@ async function _putContenuToGitHub(fbid, newContenu, videoUrl){
   const idx = fresh.findIndex(x => String(x.fbid) === fbid);
   const cached = findUrlContent(fbid);
 
-  if (idx !== -1 && cached
-      && String(cached.contenu ?? "") !== String(fresh[idx].contenu ?? ""))
-    throw new Error("Conflit : l'entrée contenu a été modifiée par un autre utilisateur.\nFermez, rechargez, puis réessayez.");
+  if (idx !== -1 && cached && String(cached.contenu ?? "") !== String(fresh[idx].contenu ?? ""))
+    throw new Error("Conflit : le contenu a été modifié par un autre utilisateur.");
 
   if (idx === -1){
     fresh.push({ fbid, url: videoUrl || "", contenu: newContenu });
@@ -1460,9 +1652,6 @@ async function _putContenuToGitHub(fbid, newContenu, videoUrl){
   return res;
 }
 
-/* =====================================================================
-   15. MODALE CONTENU
-   ===================================================================== */
 function buildFacebookEmbedUrl(videoUrl){
   const u = String(videoUrl || "").trim();
   if (!u) return "";
@@ -1480,6 +1669,7 @@ function renderModalVideo(containerId, videoUrl){
     src: embedUrl,
     allow: "autoplay; encrypted-media; picture-in-picture; clipboard-write",
     allowfullscreen: true,
+    loading: "lazy",
     scrolling: "no",
     frameborder: "0",
     title: "Lecteur vidéo"
@@ -1527,15 +1717,12 @@ async function openContentModal(videoItem){
 
     const contenu = entry ? String(entry.contenu ?? "") : "";
     $("#modalContent").value = contenu;
-    if (!entry){
-      $("#modalState").textContent = "Entrée absente de url_content.json — la sauvegarde la créera.";
-    }
+    if (!entry) $("#modalState").textContent = "Entrée absente de url_content.json — la sauvegarde la créera.";
     modalContentCtx = { fbid, videoUrl, original: contenu };
     $("#modalContent").disabled = false;
     $("#modalContent").placeholder = "";
     $("#modalSave").disabled = false;
     $("#modalCancel").disabled = false;
-    setTimeout(() => $("#modalContent").focus(), 60);
   } catch (e) {
     $("#modalState").textContent = "Erreur : " + e.message;
     toast(e.message, "error");
@@ -1559,8 +1746,7 @@ async function saveContentModal(){
   $("#modalState").textContent = "Enregistrement en cours…";
   try {
     const res = await _putContenuToGitHub(fbid, newContent, videoUrl);
-    toast("✅ Contenu enregistré pour fbid " + fbid + ". Commit : "
-      + String(res.commit && res.commit.sha || "").slice(0, 7), "success");
+    toast("✅ Contenu enregistré. Commit : " + String(res.commit && res.commit.sha || "").slice(0, 7), "success");
     closeContentModal();
   } catch (e) {
     $("#modalState").textContent = "Erreur : " + e.message;
@@ -1578,9 +1764,6 @@ function cancelContentModal(){
   closeContentModal();
 }
 
-/* =====================================================================
-   16. MODALE DÉTAILS
-   ===================================================================== */
 function readonlyField(label, value, opts){
   opts = opts || {};
   const field = el("div", { class: "detail-field" });
@@ -1617,14 +1800,13 @@ async function openDetailsModal(videoItem){
 
   stopVideo("detailsVideo");
   $("#detailsBody").innerHTML = "";
-  $("#detailsTitle").textContent = "Détails de la vidéo — FBID " + fbid;
+  $("#detailsTitle").textContent = "Détails — FBID " + fbid;
   $("#detailsSave").disabled = true;
   $("#detailsCancel").disabled = true;
   $("#detailsModal").hidden = false;
 
   modalDetailsCtx = {
-    fbid,
-    videoItem,
+    fbid, videoItem,
     original: {
       titre: String(get(videoItem, "titre") || ""),
       description: String(get(videoItem, "description") || ""),
@@ -1637,14 +1819,12 @@ async function openDetailsModal(videoItem){
 
   const body = $("#detailsBody");
 
-  /* Lecteur */
   const secPlayer = el("div", { class: "detail-section" });
   secPlayer.appendChild(el("h4", { class: "detail-section-title" }, "Lecteur vidéo"));
   const videoBox = el("div", { class: "modal-video", id: "detailsVideo", hidden: true });
   secPlayer.appendChild(videoBox);
   body.appendChild(secPlayer);
 
-  /* Identification */
   const secId = el("div", { class: "detail-section" });
   secId.appendChild(el("h4", { class: "detail-section-title" }, "Identification"));
   const idGrid = el("div", { class: "readonly-grid" });
@@ -1662,7 +1842,6 @@ async function openDetailsModal(videoItem){
   secId.appendChild(idGrid);
   body.appendChild(secId);
 
-  /* Métadonnées */
   const secMeta = el("div", { class: "detail-section" });
   secMeta.appendChild(el("h4", { class: "detail-section-title" }, "Métadonnées"));
   const metaGrid = el("div", { class: "readonly-grid" });
@@ -1679,7 +1858,6 @@ async function openDetailsModal(videoItem){
   secMeta.appendChild(metaGrid);
   body.appendChild(secMeta);
 
-  /* Modifiables */
   const secEdit = el("div", { class: "detail-section" });
   secEdit.appendChild(el("h4", { class: "detail-section-title" }, "Informations modifiables"));
   const editGrid = el("div", { class: "editable-grid" });
@@ -1704,28 +1882,22 @@ async function openDetailsModal(videoItem){
   secEdit.appendChild(editGrid);
   body.appendChild(secEdit);
 
-  /* Contenu */
   const secContenu = el("div", { class: "detail-section" });
   secContenu.appendChild(el("h4", { class: "detail-section-title" }, "Contenu / Transcription"));
   const contenuTa = el("textarea", {
-    id: "detailsContenu",
-    class: "detail-contenu",
-    dir: "auto",
-    spellcheck: "true",
-    disabled: true,
-    placeholder: "Chargement…"
+    id: "detailsContenu", class: "detail-contenu",
+    dir: "auto", spellcheck: "true", disabled: true, placeholder: "Chargement…"
   });
   secContenu.appendChild(contenuTa);
   body.appendChild(secContenu);
 
-  /* Autres propriétés dynamiques */
   const handled = new Set();
   Object.values(FIELD_KEYS).forEach(arr => arr.forEach(k => handled.add(k)));
   ["date_iso","iso_date","dateISO","published_iso","iso","created_iso"].forEach(k => handled.add(k));
   const otherKeys = Object.keys(videoItem).filter(k => !handled.has(k));
   if (otherKeys.length > 0){
     const secOther = el("div", { class: "detail-section" });
-    secOther.appendChild(el("h4", { class: "detail-section-title" }, "Autres propriétés du JSON"));
+    secOther.appendChild(el("h4", { class: "detail-section-title" }, "Autres propriétés JSON"));
     const otherGrid = el("div", { class: "readonly-grid" });
     otherKeys.sort().forEach(k => {
       const v = videoItem[k];
@@ -1737,7 +1909,6 @@ async function openDetailsModal(videoItem){
     body.appendChild(secOther);
   }
 
-  /* Chargement contenu + lecteur */
   try {
     await ensureUrlContentLoaded();
     const entry = findUrlContent(fbid);
@@ -1759,7 +1930,6 @@ async function openDetailsModal(videoItem){
     contenuTa.placeholder = "";
     $("#detailsSave").disabled = false;
     $("#detailsCancel").disabled = false;
-    setTimeout(() => titreInput.focus(), 60);
   } catch (e) {
     toast(e.message, "error");
   }
@@ -1851,17 +2021,11 @@ async function saveDetailsModal(){
   toast(msgs.join("\n"), contenuSaved ? "success" : "info");
 }
 
-/* =====================================================================
-   17. ONGLETS
-   ===================================================================== */
 function activateTab(name){
   $$(".tab").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
   $$(".tab-panel").forEach(p => p.classList.toggle("active", p.id === "tab-" + name));
 }
 
-/* =====================================================================
-   18. INITIALISATION
-   ===================================================================== */
 document.addEventListener("DOMContentLoaded", () => {
   if (location.protocol === "file:"){
     toast("Page ouverte en « file:// » : les requêtes GitHub peuvent être bloquées.\nServez-la via HTTP.", "warn");
