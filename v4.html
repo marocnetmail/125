@@ -55,10 +55,6 @@
     text-transform:uppercase; letter-spacing:.7px;
   }
   .help{font-size:12.5px; color:var(--muted); line-height:1.55; margin:12px 0 0}
-  .help code{
-    background:#eef1f6; padding:2px 6px; border-radius:5px;
-    font-family:ui-monospace,Consolas,monospace; font-size:12px;
-  }
 
   /* ---------- Boutons ---------- */
   .btn{
@@ -113,7 +109,7 @@
     overflow:auto; max-height:72vh; box-shadow:0 1px 3px rgba(23,32,51,.05);
   }
   table{border-collapse:separate; border-spacing:0; width:100%; font-size:13px}
-  #videosTable{min-width:1480px}
+  #videosTable{min-width:1200px}
   thead th{
     position:sticky; top:0; z-index:5; background:var(--soft); color:var(--blue-dark);
     text-align:left; font-size:11.5px; text-transform:uppercase; letter-spacing:.45px;
@@ -139,14 +135,6 @@
   a:hover{text-decoration:underline}
 
   /* ---------- Colonnes spécifiques ---------- */
-  td.col-thumb{width:78px}
-  .thumb-box{
-    width:64px; height:64px; border-radius:8px; overflow:hidden;
-    background:#eef1f6; display:grid; place-items:center;
-    font-size:11px; color:#8b95a5; border:1px solid #e3e8f0;
-  }
-  .thumb-box.thumb-missing{color:#b0b8c5}
-  .thumb{width:100%; height:100%; object-fit:cover; display:block}
   .cell-input{
     width:100%; padding:6px 8px; font-size:12.5px; border-radius:7px;
     border:1px solid #d5dce7; background:#fff;
@@ -192,7 +180,7 @@
   }
   .modal[hidden]{display:none}
   .modal-box{
-    background:#fff; border-radius:14px; width:min(920px,100%);
+    background:#fff; border-radius:14px; width:min(1080px,100%);
     max-height:calc(100vh - 36px); display:flex; flex-direction:column;
     box-shadow:0 18px 60px rgba(0,0,0,.35); overflow:hidden;
   }
@@ -218,9 +206,34 @@
     font-size:13px; word-break:break-all;
   }
   .modal-url-box a{color:var(--blue)}
+
+  /* ---------- Lecteur vidéo intégré à la modale ---------- */
+  .modal-video{
+    position:relative;
+    width:100%;
+    height:450px;
+    background:#000;
+    border-radius:8px;
+    overflow:hidden;
+    border:1px solid #d5dce7;
+  }
+  .modal-video[hidden]{display:none}
+  .modal-video iframe{
+    position:absolute; inset:0;
+    width:100%; height:100%; border:0;
+  }
+  @media (max-width:760px){
+    .modal-video{ height:280px; }
+  }
+
+  /* ---------- Zone de transcription agrandie ---------- */
   .modal-body textarea{
-    width:100%; min-height:280px; resize:vertical; font:inherit; font-size:13.5px;
-    padding:10px 12px; border:1px solid #cbd3df; border-radius:8px; line-height:1.55;
+    width:100%;
+    min-height:350px;
+    resize:vertical;
+    font:inherit; font-size:14px;
+    padding:12px 14px;
+    border:1px solid #cbd3df; border-radius:8px; line-height:1.6;
   }
   .modal-body textarea:focus{border-color:var(--blue); box-shadow:0 0 0 3px rgba(21,94,239,.15); outline:none}
   .modal-body textarea:disabled{background:#f4f6fa; color:#8b95a5}
@@ -324,21 +337,6 @@
 
 <div class="layout">
 
-  <section class="card" id="infoCard">
-    <h2>1. Accès au dépôt GitHub</h2>
-    <p class="help">
-      Dépôt : <code id="infoRepo">marocnetmail/125</code> — branche <code id="infoBranch">main</code>.
-      Fichiers gérés : <code>json/reelsData.json</code> (vidéos),
-      <code>json/themes.json</code> (thèmes),
-      <code>json/url_content.json</code> (transcriptions).
-    </p>
-    <p class="help">
-      Le jeton GitHub est saisi via la fenêtre de connexion qui s'affiche au démarrage.
-      Il reste <b>uniquement en mémoire</b> pendant la session et n'est jamais enregistré
-      (ni sur disque, ni dans le navigateur, ni sur GitHub).
-    </p>
-  </section>
-
   <nav class="tabs">
     <button class="tab active" data-tab="videos">Vidéos <span class="badge" id="countBadge">0</span></button>
     <button class="tab" data-tab="themes">Thèmes <span class="badge" id="themeBadge">0</span></button>
@@ -353,27 +351,23 @@
     </div>
     <p class="hint" style="margin:-4px 2px 0">
       Seuls <b>titre</b>, <b>description</b>, <b>thème français</b> et <b>thème arabe</b> sont modifiables.
-      La transcription (champ <code>contenu</code> dans <code>url_content.json</code>) se modifie via
-      le bouton <b>Modifier le contenu</b> de chaque ligne.
-      Cliquez sur <b>Date de publication</b> ou <b>Vues</b> pour trier.
+      Le bouton <b>Modifier le contenu</b> ouvre le lecteur vidéo (lecture automatique) et permet
+      d'éditer la transcription enregistrée dans <code>json/url_content.json</code>.
+      Cliquez sur <b>Date de publication</b> pour trier.
     </p>
     <div class="table-wrap">
       <table id="videosTable">
         <thead>
           <tr>
-            <th>Miniature</th>
             <th class="sortable" data-sort="date" data-arrow="↕">Date de publication</th>
             <th>Année</th>
             <th>Titre</th>
             <th>Description</th>
             <th>Thème français</th>
             <th>Thème arabe</th>
-            <th class="sortable" data-sort="vues" data-arrow="↕">Vues</th>
-            <th>Réactions</th>
             <th>Type</th>
             <th>FBID</th>
             <th>URL vidéo</th>
-            <th>Fichier miniature</th>
             <th style="width:170px">Transcription</th>
           </tr>
         </thead>
@@ -466,10 +460,14 @@
 <div id="contentModal" class="modal" hidden>
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-head">
-      <h3 id="modalTitle">Modifier le contenu de la vidéo</h3>
+      <h3 id="modalTitle">Vidéo — lecture et transcription</h3>
       <button class="modal-close" id="modalX" type="button" title="Fermer">✕</button>
     </div>
     <div class="modal-body">
+      <div class="modal-section">
+        <label>Lecteur vidéo</label>
+        <div id="modalVideo" class="modal-video" hidden></div>
+      </div>
       <div class="modal-section">
         <label for="modalUrlBox">URL de la vidéo</label>
         <div id="modalUrlBox" class="modal-url-box">—</div>
@@ -615,7 +613,7 @@ const DEFAULT_THEMES = [
 ];
 
 const state = {
-  token: "",                 // ⚠️ mémoire uniquement
+  token: "",
   connected: false,
   user: "",
 
@@ -670,7 +668,6 @@ function txt(v){
   if (typeof v === "object") return JSON.stringify(v);
   return String(v);
 }
-function truncate(s, n){ s = String(s); return s.length > n ? s.slice(0, n - 1) + "…" : s; }
 
 /* =====================================================================
    6. NOTIFICATIONS & OVERLAY
@@ -994,45 +991,7 @@ function snapshotVideos(){
 }
 
 /* =====================================================================
-   10. MINIATURES
-   ===================================================================== */
-function encodePath(p){ return String(p).split("/").map(encodeURIComponent).join("/"); }
-function rawBase(){
-  return "https://raw.githubusercontent.com/"
-    + encodeURIComponent(CONFIG.owner) + "/"
-    + encodeURIComponent(CONFIG.repo) + "/"
-    + CONFIG.branch.split("/").map(encodeURIComponent).join("/");
-}
-function miniatureFile(item){
-  const custom = String(get(item, "miniature") || "").trim();
-  if (custom) return custom;
-  const fbid = String(get(item, "fbid") || "").trim();
-  return fbid ? fbid + ".jpg" : "";
-}
-function thumbUrl(item){
-  const base = rawBase() + "/" + encodePath(CONFIG.imagesDir) + "/";
-  const custom = String(get(item, "miniature") || "").trim();
-  const fbid = String(get(item, "fbid") || "").trim();
-  if (custom){
-    if (/^https?:\/\//i.test(custom)) return custom;
-    let clean = custom.replace(/^\.?\//, "");
-    if (clean.startsWith(CONFIG.imagesDir + "/")) clean = clean.slice(CONFIG.imagesDir.length + 1);
-    return base + encodePath(clean);
-  }
-  return fbid ? base + encodeURIComponent(fbid) + ".jpg" : "";
-}
-function thumbEl(item){
-  const box = el("div", { class: "thumb-box" });
-  const url = thumbUrl(item);
-  if (!url){ box.textContent = "—"; return box; }
-  const img = el("img", { class:"thumb", src:url, alt:"miniature", loading:"lazy", referrerpolicy:"no-referrer" });
-  img.addEventListener("error", () => { img.remove(); box.textContent = "n/a"; box.classList.add("thumb-missing"); });
-  box.appendChild(img);
-  return box;
-}
-
-/* =====================================================================
-   11. TABLEAU DES VIDÉOS
+   10. TABLEAU DES VIDÉOS
    ===================================================================== */
 function themeListFr(){
   if (!state.themes) return [];
@@ -1084,46 +1043,62 @@ function themeSelect(item, index){
   });
   return sel;
 }
+
+/* Affiche « Lien » (jamais l'URL complète). Le lien reste cliquable,
+   ouvre un nouvel onglet. La valeur JSON d'origine n'est pas modifiée. */
 function linkCell(value){
   const s = String(value || "").trim();
   if (!s) return el("td", { class: "nowrap" }, "—");
   if (/^https?:\/\//i.test(s)){
     return el("td", { class: "nowrap" },
-      el("a", { href: s, target: "_blank", rel: "noopener noreferrer", title: s }, truncate(s, 40)));
+      el("a", { href: s, target: "_blank", rel: "noopener noreferrer" }, "Lien")
+    );
   }
-  return el("td", { class: "nowrap", title: s }, truncate(s, 40));
+  return el("td", { class: "nowrap" }, "—");
 }
 function transcriptionBtn(item){
   const btn = el("button", {
     class: "btn tiny ghost",
     type: "button",
-    title: state.connected ? "Modifier la transcription" : "Connexion requise",
+    title: state.connected ? "Lire la vidéo et modifier la transcription" : "Connexion requise",
     onclick: () => openContentModal(item)
   }, "✎ Modifier le contenu");
   if (!state.connected) btn.disabled = true;
   return btn;
 }
+
+/* ⚠️ Colonnes supprimées : Miniature, Vues, Réactions, Fichier miniature.
+   Le tableau contient désormais 10 colonnes. */
 function buildRow(item, index){
   const tr = el("tr", { "data-index": index });
   if (state.dirty.has(index)) tr.classList.add("dirty");
-  tr.appendChild(el("td", { class: "col-thumb" }, thumbEl(item)));
+
+  /* 1 Date de publication */
   tr.appendChild(el("td", { class: "nowrap" }, txt(get(item, "date"))));
+  /* 2 Année */
   tr.appendChild(el("td", { class: "nowrap center" }, txt(get(item, "annee"))));
+  /* 3 Titre (éditable) */
   tr.appendChild(el("td", { class: "col-titre" }, inputFor(item, index, "titre", "text")));
+  /* 4 Description (éditable) */
   tr.appendChild(el("td", { class: "col-desc" }, inputFor(item, index, "description", "textarea")));
+  /* 5 Thème français (éditable) */
   tr.appendChild(el("td", { class: "col-theme" }, themeSelect(item, index)));
+  /* 6 Thème arabe (éditable) */
   tr.appendChild(el("td", { class: "col-theme-ar" },
     inputFor(item, index, "theme_ar", "text", { dir: "rtl", "data-field": "theme_ar" })
   ));
-  tr.appendChild(el("td", { class: "nowrap num" }, txt(get(item, "vues"))));
-  tr.appendChild(el("td", { class: "nowrap num" }, txt(get(item, "reactions"))));
+  /* 7 Type */
   tr.appendChild(el("td", { class: "nowrap" }, txt(get(item, "type"))));
+  /* 8 FBID */
   tr.appendChild(el("td", { class: "nowrap" }, el("code", {}, txt(get(item, "fbid")))));
+  /* 9 URL vidéo — affichée comme « Lien » cliquable */
   tr.appendChild(linkCell(get(item, "url")));
-  tr.appendChild(el("td", { class: "small" }, txt(miniatureFile(item))));
+  /* 10 Transcription */
   tr.appendChild(el("td", { class: "nowrap" }, transcriptionBtn(item)));
+
   return tr;
 }
+
 function parseDateValue(v){
   const s = String(v || "").trim();
   if (!s) return 0;
@@ -1168,7 +1143,7 @@ function renderVideos(){
   const tbody = $("#videosBody");
   tbody.textContent = "";
   if (!state.videos){
-    tbody.appendChild(el("tr", {}, el("td", { colspan: 14, class: "empty" },
+    tbody.appendChild(el("tr", {}, el("td", { colspan: 10, class: "empty" },
       state.connected ? "Aucune donnée chargée. Cliquez sur « Recharger »."
                       : "Connectez-vous à GitHub pour charger la vidéothèque.")));
     $("#countBadge").textContent = "0";
@@ -1176,7 +1151,7 @@ function renderVideos(){
   }
   const rows = visibleRows();
   if (rows.length === 0){
-    tbody.appendChild(el("tr", {}, el("td", { colspan: 14, class: "empty" }, "Aucune vidéo ne correspond à la recherche.")));
+    tbody.appendChild(el("tr", {}, el("td", { colspan: 10, class: "empty" }, "Aucune vidéo ne correspond à la recherche.")));
   } else {
     const frag = document.createDocumentFragment();
     for (const r of rows) frag.appendChild(buildRow(r.item, r.index));
@@ -1216,7 +1191,7 @@ function updateSortIndicators(){
 }
 
 /* =====================================================================
-   12. ENREGISTREMENT DES VIDÉOS
+   11. ENREGISTREMENT DES VIDÉOS
    ===================================================================== */
 async function saveVideos(){
   ensureAuth();
@@ -1267,7 +1242,7 @@ function resetVideos(){
 }
 
 /* =====================================================================
-   13. TABLEAU DES THÈMES
+   12. TABLEAU DES THÈMES
    ===================================================================== */
 function countVideosForTheme(fr){
   if (!state.videos) return 0;
@@ -1416,7 +1391,7 @@ async function saveThemes(){
 }
 
 /* =====================================================================
-   14. MODALE CONTENU / TRANSCRIPTION
+   13. MODALE VIDÉO + TRANSCRIPTION
    ===================================================================== */
 async function ensureUrlContentLoaded(){
   if (state.urlContentLoaded) return;
@@ -1439,19 +1414,56 @@ function findUrlContent(fbid){
   const id = String(fbid);
   return state.urlContent.find(x => String(x.fbid) === id) || null;
 }
+function buildFacebookEmbedUrl(videoUrl){
+  const u = String(videoUrl || "").trim();
+  if (!u) return "";
+  return "https://www.facebook.com/plugins/video.php?href="
+    + encodeURIComponent(u)
+    + "&show_text=false&autoplay=true&width=560";
+}
+function renderModalVideo(videoUrl){
+  const box = $("#modalVideo");
+  box.innerHTML = "";
+  if (!videoUrl || !/^https?:\/\//i.test(videoUrl)){
+    box.hidden = true;
+    return;
+  }
+  const embedUrl = buildFacebookEmbedUrl(videoUrl);
+  if (!embedUrl){
+    box.hidden = true;
+    return;
+  }
+  const iframe = el("iframe", {
+    src: embedUrl,
+    allow: "autoplay; encrypted-media; picture-in-picture; clipboard-write",
+    allowfullscreen: true,
+    scrolling: "no",
+    frameborder: "0",
+    title: "Lecteur vidéo"
+  });
+  box.appendChild(iframe);
+  box.hidden = false;
+}
+function stopModalVideo(){
+  const box = $("#modalVideo");
+  box.innerHTML = "";
+  box.hidden = true;
+}
+
 async function openContentModal(videoItem){
   ensureAuth();
   const fbid = String(get(videoItem, "fbid") || "").trim();
   if (!fbid){ toast("FBID manquant pour cette vidéo.", "error"); return; }
 
-  const modal = $("#contentModal");
-  const ta = $("#modalContent");
-  const urlBox = $("#modalUrlBox");
-  const fbidBox = $("#modalFbid");
+  const modal    = $("#contentModal");
+  const ta       = $("#modalContent");
+  const urlBox   = $("#modalUrlBox");
+  const fbidBox  = $("#modalFbid");
   const stateBox = $("#modalState");
-  const saveBtn = $("#modalSave");
+  const saveBtn  = $("#modalSave");
   const cancelBtn = $("#modalCancel");
 
+  stopModalVideo();
   fbidBox.textContent = fbid;
   ta.value = "";
   ta.disabled = true;
@@ -1465,20 +1477,28 @@ async function openContentModal(videoItem){
   try {
     await ensureUrlContentLoaded();
     const entry = findUrlContent(fbid);
-    const videoUrl = String(get(videoItem, "url") || "").trim()
-                  || (entry ? String(entry.url || "").trim() : "");
-    if (videoUrl && /^https?:\/\//i.test(videoUrl)){
-      urlBox.innerHTML = "";
-      urlBox.appendChild(el("a", { href: videoUrl, target: "_blank", rel: "noopener noreferrer" }, videoUrl));
+
+    const videoUrl =
+      String(get(videoItem, "url") || "").trim()
+      || (entry ? String(entry.url || "").trim() : "")
+      || ("https://www.facebook.com/reel/" + fbid + "/");
+
+    urlBox.innerHTML = "";
+    if (/^https?:\/\//i.test(videoUrl)){
+      urlBox.appendChild(el("a", { href: videoUrl, target: "_blank", rel: "noopener noreferrer" }, "Lien"));
     } else {
       urlBox.textContent = videoUrl || "URL indisponible";
     }
+
+    renderModalVideo(videoUrl);
+
     if (!entry){
       stateBox.textContent = "Entrée absente de url_content.json — la sauvegarde la créera.";
       ta.value = "";
     } else {
       ta.value = String(entry.contenu ?? "");
     }
+
     modalCtx = { fbid, original: ta.value, videoUrl };
     ta.disabled = false;
     ta.placeholder = "";
@@ -1490,12 +1510,15 @@ async function openContentModal(videoItem){
     toast(e.message, "error");
   }
 }
+
 function closeContentModal(){
+  stopModalVideo();
   $("#contentModal").hidden = true;
   $("#modalContent").value = "";
   $("#modalContent").disabled = true;
   modalCtx = null;
 }
+
 async function saveContentModal(){
   if (!modalCtx) return;
   ensureAuth();
@@ -1562,7 +1585,7 @@ function cancelContentModal(){
 }
 
 /* =====================================================================
-   15. ONGLETS
+   14. ONGLETS
    ===================================================================== */
 function activateTab(name){
   $$(".tab").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
@@ -1570,26 +1593,19 @@ function activateTab(name){
 }
 
 /* =====================================================================
-   16. INITIALISATION
+   15. INITIALISATION
    ===================================================================== */
 document.addEventListener("DOMContentLoaded", () => {
-  // Info dépôt
-  $("#infoRepo").textContent = CONFIG.owner + "/" + CONFIG.repo;
-  $("#infoBranch").textContent = CONFIG.branch;
-
   if (location.protocol === "file:"){
     toast("Cette page est ouverte en « file:// ».\nLes requêtes vers GitHub peuvent être bloquées.\nServez-la via HTTP (ex. : python -m http.server 8000).", "warn");
   }
 
-  // Onglets
   $$(".tab").forEach(btn => btn.addEventListener("click", () => activateTab(btn.dataset.tab)));
 
-  // Topbar
   $("#loginBtn").addEventListener("click", openLoginModal);
   $("#logoutBtn").addEventListener("click", logout);
   $("#reloadBtn").addEventListener("click", loadAll);
 
-  // Modale login
   $("#loginSubmit").addEventListener("click", submitLogin);
   $("#loginCancel").addEventListener("click", cancelLogin);
   $("#tokenInput").addEventListener("keydown", e => {
@@ -1616,13 +1632,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Recherche vidéos
   $("#search").addEventListener("input", e => {
     clearTimeout(searchTimer);
     const v = e.target.value;
     searchTimer = setTimeout(() => { state.search = v; renderVideos(); }, 180);
   });
-  // Tri
   $$("#videosTable th.sortable").forEach(th => {
     th.addEventListener("click", () => {
       const key = th.dataset.sort;
@@ -1632,33 +1646,31 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Vidéos
   $("#saveVideos").addEventListener("click", saveVideos);
   $("#resetVideos").addEventListener("click", resetVideos);
 
-  // Thèmes
   $("#addTheme").addEventListener("click", addTheme);
   $("#saveThemes").addEventListener("click", saveThemes);
   $("#resetThemes").addEventListener("click", resetThemes);
   $("#themeSearch").addEventListener("input", renderThemes);
 
-  // Modale contenu
   $("#modalSave").addEventListener("click", saveContentModal);
   $("#modalCancel").addEventListener("click", cancelContentModal);
   $("#modalClose").addEventListener("click", cancelContentModal);
   $("#modalX").addEventListener("click", cancelContentModal);
 
-  // Avertissement fermeture
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && !$("#contentModal").hidden) cancelContentModal();
+  });
+
   window.addEventListener("beforeunload", e => {
     if (state.dirty.size > 0 || state.themeDirty){
       e.preventDefault(); e.returnValue = ""; return "";
     }
   });
 
-  // Rendu initial
   renderVideos(); renderThemes(); updateSaveButtons(); updateThemeButtons(); updateSortIndicators();
 
-  // 🔒 Modale de connexion au démarrage
   openLoginModal();
 });
 </script>
