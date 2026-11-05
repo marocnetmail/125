@@ -41,13 +41,26 @@
   .pill-off{background:rgba(255,255,255,.16); color:#fff}
   .pill-on{background:#22c55e; color:#06301a}
 
-  .layout{max-width:1700px; margin:0 auto; padding:18px 22px 70px; display:flex; flex-direction:column; gap:16px}
-  .card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px; box-shadow:0 1px 3px rgba(23,32,51,.05)}
-  .card h2{margin:0 0 14px; font-size:13px; color:var(--blue-dark); text-transform:uppercase; letter-spacing:.7px}
-
+  /* ---------- Conteneur ---------- */
+  .layout{
+    max-width:1700px; margin:0 auto; padding:18px 22px 70px;
+    display:flex; flex-direction:column; gap:16px;
+  }
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:14px;
+    padding:18px; box-shadow:0 1px 3px rgba(23,32,51,.05);
+  }
+  .card h2{
+    margin:0 0 14px; font-size:13px; color:var(--blue-dark);
+    text-transform:uppercase; letter-spacing:.7px;
+  }
   .help{font-size:12.5px; color:var(--muted); line-height:1.55; margin:12px 0 0}
-  .help code{background:#eef1f6; padding:2px 6px; border-radius:5px; font-family:ui-monospace,Consolas,monospace; font-size:12px}
+  .help code{
+    background:#eef1f6; padding:2px 6px; border-radius:5px;
+    font-family:ui-monospace,Consolas,monospace; font-size:12px;
+  }
 
+  /* ---------- Boutons ---------- */
   .btn{
     border:0; border-radius:9px; padding:10px 16px; font-weight:700; font-size:13px;
     cursor:pointer; display:inline-flex; align-items:center; gap:7px;
@@ -64,6 +77,7 @@
   .btn.white{background:rgba(255,255,255,.18); color:#fff}
   .btn.white:hover:not(:disabled){background:rgba(255,255,255,.28)}
 
+  /* ---------- Onglets ---------- */
   .tabs{display:flex; gap:6px; border-bottom:1px solid var(--border); padding:0 4px; overflow-x:auto}
   .tab{
     background:none; border:0; border-bottom:3px solid transparent;
@@ -72,13 +86,18 @@
   }
   .tab:hover{color:var(--blue-dark)}
   .tab.active{color:var(--blue); border-bottom-color:var(--blue)}
-  .badge{background:#e9eef7; color:#172033; border-radius:999px; padding:1px 9px; font-size:12px; font-weight:700}
+  .badge{
+    background:#e9eef7; color:#172033; border-radius:999px;
+    padding:1px 9px; font-size:12px; font-weight:700;
+  }
   .tab.active .badge{background:var(--blue); color:#fff}
   .badge-blue{background:#dbeafe; color:#0d3fa8}
 
+  /* ---------- Panneaux ---------- */
   .tab-panel{display:none; flex-direction:column; gap:12px}
   .tab-panel.active{display:flex}
 
+  /* ---------- Barre d'outils ---------- */
   .toolbar{
     display:flex; gap:10px; flex-wrap:wrap; align-items:center;
     background:#fff; border:1px solid var(--border); border-radius:12px; padding:10px 12px;
@@ -88,6 +107,7 @@
   .toolbar .spacer{flex:1 1 auto}
   .hint{font-size:12px; color:var(--muted)}
 
+  /* ---------- Tableaux ---------- */
   .table-wrap{
     background:#fff; border:1px solid var(--border); border-radius:12px;
     overflow:auto; max-height:72vh; box-shadow:0 1px 3px rgba(23,32,51,.05);
@@ -111,10 +131,14 @@
   td.num{font-variant-numeric:tabular-nums}
   td.empty{padding:34px 16px; text-align:center; color:var(--muted); font-style:italic}
   td.small{font-size:11.5px; color:var(--muted); word-break:break-all; max-width:170px}
-  code{background:#eef1f6; padding:2px 6px; border-radius:5px; font-family:ui-monospace,Consolas,monospace; font-size:12px}
+  code{
+    background:#eef1f6; padding:2px 6px; border-radius:5px;
+    font-family:ui-monospace,Consolas,monospace; font-size:12px;
+  }
   a{color:var(--blue); text-decoration:none}
   a:hover{text-decoration:underline}
 
+  /* ---------- Colonnes spécifiques ---------- */
   td.col-thumb{width:78px}
   .thumb-box{
     width:64px; height:64px; border-radius:8px; overflow:hidden;
@@ -123,13 +147,17 @@
   }
   .thumb-box.thumb-missing{color:#b0b8c5}
   .thumb{width:100%; height:100%; object-fit:cover; display:block}
-  .cell-input{width:100%; padding:6px 8px; font-size:12.5px; border-radius:7px; border:1px solid #d5dce7; background:#fff}
+  .cell-input{
+    width:100%; padding:6px 8px; font-size:12.5px; border-radius:7px;
+    border:1px solid #d5dce7; background:#fff;
+  }
   .cell-input:disabled{background:#f4f6fa; color:#8b95a5; cursor:not-allowed}
   td.col-titre .cell-input{min-width:190px}
   td.col-desc .cell-input{min-width:230px; min-height:46px; line-height:1.4}
   td.col-theme .cell-input{min-width:170px}
   td.col-theme-ar .cell-input{min-width:160px; text-align:right}
 
+  /* ---------- Tableau des thèmes ---------- */
   .themes-table{min-width:820px}
   .themes-table td{padding:9px 10px; vertical-align:middle}
   .themes-table .cell-input{min-width:150px}
@@ -137,25 +165,58 @@
   .row-actions{display:flex; gap:6px; flex-wrap:wrap}
 
   /* ---------- Overlay ---------- */
-  .overlay{position:fixed; inset:0; z-index:400; display:grid; place-items:center; background:rgba(23,32,51,.45); backdrop-filter:blur(2px)}
+  .overlay{
+    position:fixed; inset:0; z-index:400; display:grid; place-items:center;
+    background:rgba(23,32,51,.45); backdrop-filter:blur(2px);
+  }
   .overlay[hidden]{display:none}
-  .overlay-box{background:#fff; border-radius:14px; padding:26px 36px; display:flex; flex-direction:column; align-items:center; gap:14px; box-shadow:0 12px 44px rgba(0,0,0,.28); min-width:250px}
+  .overlay-box{
+    background:#fff; border-radius:14px; padding:26px 36px;
+    display:flex; flex-direction:column; align-items:center; gap:14px;
+    box-shadow:0 12px 44px rgba(0,0,0,.28); min-width:250px;
+  }
   .overlay-box p{margin:0; font-size:13.5px; color:var(--muted); font-weight:600; text-align:center}
-  .spinner{width:34px; height:34px; border-radius:50%; border:3px solid #dbe4f3; border-top-color:var(--blue); animation:spin .8s linear infinite}
+  .spinner{
+    width:34px; height:34px; border-radius:50%;
+    border:3px solid #dbe4f3; border-top-color:var(--blue);
+    animation:spin .8s linear infinite;
+  }
   @keyframes spin{to{transform:rotate(360deg)}}
 
   /* ---------- Modales ---------- */
-  .modal{position:fixed; inset:0; z-index:450; display:grid; place-items:center; background:rgba(23,32,51,.5); backdrop-filter:blur(2px); padding:18px}
+  .modal{
+    position:fixed; inset:0; z-index:450;
+    display:grid; place-items:center;
+    background:rgba(23,32,51,.5); backdrop-filter:blur(2px);
+    padding:18px;
+  }
   .modal[hidden]{display:none}
-  .modal-box{background:#fff; border-radius:14px; width:min(920px,100%); max-height:calc(100vh - 36px); display:flex; flex-direction:column; box-shadow:0 18px 60px rgba(0,0,0,.35); overflow:hidden}
-  .modal-head{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 18px; border-bottom:1px solid var(--border); background:linear-gradient(90deg,#0d3fa8,#155eef); color:#fff}
+  .modal-box{
+    background:#fff; border-radius:14px; width:min(920px,100%);
+    max-height:calc(100vh - 36px); display:flex; flex-direction:column;
+    box-shadow:0 18px 60px rgba(0,0,0,.35); overflow:hidden;
+  }
+  .modal-head{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:14px 18px; border-bottom:1px solid var(--border);
+    background:linear-gradient(90deg,#0d3fa8,#155eef); color:#fff;
+  }
   .modal-head h3{margin:0; font-size:15px; font-weight:700}
-  .modal-close{background:rgba(255,255,255,.18); border:0; color:#fff; width:30px; height:30px; border-radius:8px; cursor:pointer; font-size:14px}
+  .modal-close{
+    background:rgba(255,255,255,.18); border:0; color:#fff;
+    width:30px; height:30px; border-radius:8px; cursor:pointer; font-size:14px;
+  }
   .modal-close:hover{background:rgba(255,255,255,.3)}
   .modal-body{padding:16px 18px; display:flex; flex-direction:column; gap:14px; overflow:auto}
   .modal-section{display:flex; flex-direction:column; gap:6px}
-  .modal-section > label{font-size:12px; font-weight:700; color:#475467; text-transform:uppercase; letter-spacing:.5px}
-  .modal-url-box{padding:9px 10px; border:1px solid #d5dce7; border-radius:8px; background:#f7f9fd; font-size:13px; word-break:break-all}
+  .modal-section > label{
+    font-size:12px; font-weight:700; color:#475467;
+    text-transform:uppercase; letter-spacing:.5px;
+  }
+  .modal-url-box{
+    padding:9px 10px; border:1px solid #d5dce7; border-radius:8px; background:#f7f9fd;
+    font-size:13px; word-break:break-all;
+  }
   .modal-url-box a{color:var(--blue)}
   .modal-body textarea{
     width:100%; min-height:280px; resize:vertical; font:inherit; font-size:13.5px;
@@ -163,8 +224,14 @@
   }
   .modal-body textarea:focus{border-color:var(--blue); box-shadow:0 0 0 3px rgba(21,94,239,.15); outline:none}
   .modal-body textarea:disabled{background:#f4f6fa; color:#8b95a5}
-  .modal-hint{font-size:12px; color:var(--muted); display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-  .modal-foot{display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap; padding:12px 18px; border-top:1px solid var(--border); background:#fafbfd}
+  .modal-hint{
+    font-size:12px; color:var(--muted);
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  }
+  .modal-foot{
+    display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;
+    padding:12px 18px; border-top:1px solid var(--border); background:#fafbfd;
+  }
 
   /* ---------- Modale de connexion ---------- */
   .modal-login{width:min(460px,100%)}
@@ -173,7 +240,10 @@
   .login-head h2{margin:0; font-size:19px; font-weight:700; color:var(--text)}
   .login-sub{margin:0; font-size:13px; color:var(--muted); text-align:center}
   .login-body{padding:18px 24px 6px; display:flex; flex-direction:column; gap:14px}
-  .login-body label{font-size:12px; font-weight:700; color:#475467; display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px}
+  .login-body label{
+    font-size:12px; font-weight:700; color:#475467;
+    display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px;
+  }
   .pw-wrap{position:relative; display:flex}
   .pw-wrap input{
     width:100%; padding:11px 44px 11px 12px; font:inherit; font-size:14px;
@@ -196,18 +266,32 @@
   }
   .login-error[hidden]{display:none}
   .login-foot{padding:6px 24px 22px; display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap}
-  .login-spinner{padding:0 24px 22px; display:flex; align-items:center; gap:12px; color:var(--muted); font-size:13px}
+  .login-spinner{
+    padding:0 24px 22px; display:flex; align-items:center; gap:12px;
+    color:var(--muted); font-size:13px;
+  }
   .login-spinner[hidden]{display:none}
   .login-spinner .spinner{width:22px; height:22px; border-width:2px}
 
   /* ---------- Notifications ---------- */
-  #toasts{position:fixed; right:18px; bottom:18px; z-index:500; display:flex; flex-direction:column; gap:10px; max-width:400px}
-  .toast{display:flex; align-items:flex-start; gap:10px; padding:12px 14px; border-radius:10px; background:#fff; border-left:5px solid var(--blue); box-shadow:0 8px 26px rgba(23,32,51,.20); font-size:13px; animation:slidein .25s ease}
+  #toasts{
+    position:fixed; right:18px; bottom:18px; z-index:500;
+    display:flex; flex-direction:column; gap:10px; max-width:400px;
+  }
+  .toast{
+    display:flex; align-items:flex-start; gap:10px; padding:12px 14px;
+    border-radius:10px; background:#fff; border-left:5px solid var(--blue);
+    box-shadow:0 8px 26px rgba(23,32,51,.20); font-size:13px;
+    animation:slidein .25s ease;
+  }
   .toast-success{border-left-color:#16a34a}
   .toast-error{border-left-color:#dc2626}
   .toast-warn{border-left-color:#f59e0b}
   .toast-msg{flex:1; white-space:pre-wrap; word-break:break-word}
-  .toast-close{background:none; border:0; cursor:pointer; color:#8b95a5; font-size:14px; line-height:1; padding:0 2px}
+  .toast-close{
+    background:none; border:0; cursor:pointer; color:#8b95a5;
+    font-size:14px; line-height:1; padding:0 2px;
+  }
   .toast.out{opacity:0; transform:translateX(24px); transition:.3s}
   @keyframes slidein{from{opacity:0; transform:translateX(34px)}}
 
@@ -222,7 +306,6 @@
 </head>
 <body>
 
-<!-- ================= BARRE SUPÉRIEURE ================= -->
 <header class="topbar">
   <div class="brand">
     <div class="logo">M</div>
@@ -346,13 +429,12 @@
       <h2 id="loginTitle">Connexion à GitHub</h2>
       <p class="login-sub">Authentification nécessaire pour gérer les contenus de la vidéothèque</p>
     </div>
-    <form class="login-body" id="loginForm" onsubmit="return false;">
+    <div class="login-body">
       <div>
         <label for="tokenInput">GitHub Token</label>
         <div class="pw-wrap">
           <input id="tokenInput" type="password" placeholder="github_pat_…"
-                 autocomplete="off" spellcheck="false" autocapitalize="off" autocorrect="off"
-                 inputmode="text">
+                 autocomplete="off" spellcheck="false" autocapitalize="off" autocorrect="off">
           <button id="pwToggle" type="button" class="pw-toggle" aria-label="Afficher le jeton" title="Afficher / masquer">
             <svg id="eyeOpen" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5C6.5 5 2.1 8.7 0 12c2.1 3.3 6.5 7 12 7s9.9-3.7 12-7c-2.1-3.3-6.5-7-12-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>
             <svg id="eyeClosed" viewBox="0 0 24 24" aria-hidden="true" style="display:none"><path d="M2.1 3.5 3.5 2.1l18.4 18.4-1.4 1.4-3.1-3.1A11.5 11.5 0 0 1 12 19.5C6.5 19.5 2.1 15.8 0 12.5c1-1.6 2.5-3.3 4.4-4.7L2.1 3.5zM12 6.5c1.7 0 3.2.6 4.3 1.7L12 12.5l-4.3 4.3A7.3 7.3 0 0 1 4.7 12C6.5 8.9 9.1 6.5 12 6.5z"/></svg>
@@ -365,7 +447,11 @@
         Le jeton reste en mémoire uniquement pendant cette session et n'est jamais enregistré.
       </p>
       <div id="loginError" class="login-error" hidden></div>
-    </form>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center">
+        <button id="testNetBtn" class="btn ghost tiny" type="button">🔌 Tester la connexion réseau</button>
+        <span id="testNetResult" class="hint"></span>
+      </div>
+    </div>
     <div class="login-spinner" id="loginSpinner" hidden>
       <div class="spinner"></div><span>Vérification du jeton…</span>
     </div>
@@ -405,7 +491,6 @@
   </div>
 </div>
 
-<!-- ================= OVERLAY ================= -->
 <div id="overlay" class="overlay" hidden>
   <div class="overlay-box">
     <div class="spinner"></div>
@@ -415,49 +500,28 @@
 
 <div id="toasts"></div>
 
-<!-- Configuration publique (aucun secret) -->
-<script src="env.js"></script>
-
 <script>
 "use strict";
 
 /* =====================================================================
-   0. ÉTAT GLOBAL
+   0. CONFIGURATION (publique, en dur — aucun jeton ici)
+   ===================================================================== */
+const CONFIG = {
+  owner:          "marocnetmail",
+  repo:           "125",
+  branch:         "main",
+  videosPath:     "json/reelsData.json",
+  themesPath:     "json/themes.json",
+  urlContentPath: "json/url_content.json",
+  imagesDir:      "images"
+};
+
+/* =====================================================================
+   1. UTILITAIRES DOM
    ===================================================================== */
 const $  = sel => document.querySelector(sel);
 const $$ = sel => Array.from(document.querySelectorAll(sel));
 
-const state = {
-  token: "",                   // ⚠️ en mémoire uniquement — jamais persisté
-  connected: false,
-  user: "",
-
-  cfg: {
-    owner: "", repo: "", branch: "main",
-    videosPath: "json/reelsData.json",
-    themesPath: "json/themes.json",
-    urlContentPath: "json/url_content.json",
-    imagesDir: "images"
-  },
-
-  videos: null, videoSha: null,
-  themes: null, themeSha: null,
-  themeSnapshot: "", themeDirty: false,
-
-  urlContent: null, urlContentSha: null, urlContentLoaded: false,
-
-  dirty: new Set(),
-  snapshot: new Map(),
-  sort: { key: null, dir: -1 },
-  search: ""
-};
-
-let modalCtx = null;
-let searchTimer = null;
-
-/* =====================================================================
-   1. HELPERS DOM
-   ===================================================================== */
 function el(tag, props, ...kids){
   const node = document.createElement(tag);
   if (props){
@@ -481,7 +545,7 @@ function el(tag, props, ...kids){
 }
 
 /* =====================================================================
-   2. BASE64 / UTF-8 (arabe compris)
+   2. BASE64 / UTF-8
    ===================================================================== */
 function b64EncodeUtf8(str){
   const bytes = new TextEncoder().encode(str);
@@ -500,7 +564,78 @@ function b64DecodeUtf8(b64){
 }
 
 /* =====================================================================
-   3. CHAMPS JSON
+   3. RÉSEAU ROBUSTE
+   ===================================================================== */
+function validateTokenFormat(raw){
+  const t = String(raw || "").replace(/[\u200B-\u200D\uFEFF\u00A0]/g, "").trim();
+  if (!t) throw new Error("Jeton vide.");
+  if (!/^[A-Za-z0-9_]+$/.test(t))
+    throw new Error(
+      "Le jeton contient des caractères invalides.\n"
+      + "Un PAT GitHub ne doit contenir que des lettres, chiffres et underscores.\n"
+      + "Vérifiez qu'aucun espace, retour à la ligne ou caractère invisible n'a été collé."
+    );
+  if (!/^(github_pat_|ghp_|gho_|ghu_|ghs_|ghr_)/.test(t))
+    throw new Error(
+      "Format de jeton non reconnu.\n"
+      + "Un Fine-grained PAT commence par « github_pat_ ». Un PAT classique par « ghp_ »."
+    );
+  return t;
+}
+async function safeFetch(url, opts, stepName){
+  try {
+    return await fetch(url, opts);
+  } catch (e) {
+    const msg = (e && e.message) || String(e);
+    console.error("[safeFetch]", stepName, "→", String(url).split("?")[0], "→", msg);
+    throw new Error(
+      "Impossible de joindre GitHub — étape : " + stepName + "\n"
+      + "Détail navigateur : " + msg + "\n\n"
+      + "Causes fréquentes :\n"
+      + "  • Bloqueur de publicités / extension de confidentialité activée\n"
+      + "  • Page ouverte en « file:// » au lieu d'un serveur HTTP(S)\n"
+      + "  • Réseau, pare-feu, VPN ou DNS bloquant api.github.com\n"
+      + "  • Connexion internet indisponible"
+    );
+  }
+}
+
+/* =====================================================================
+   4. ÉTAT GLOBAL
+   ===================================================================== */
+const DEFAULT_THEMES = [
+  { theme_fr:"Aide directe au logement",  theme_ar:"الدعم المباشر للسكن" },
+  { theme_fr:"Aménagement du territoire", theme_ar:"إعداد التراب الوطني" },
+  { theme_fr:"Œuvres sociales",           theme_ar:"الأعمال الاجتماعية" },
+  { theme_fr:"Développement rural",       theme_ar:"التنمية القروية" },
+  { theme_fr:"Habitat et logement",       theme_ar:"السكن" },
+  { theme_fr:"Habitat insalubre",         theme_ar:"السكن غير اللائق" },
+  { theme_fr:"Politique de la ville",     theme_ar:"سياسة المدينة" },
+  { theme_fr:"Urbanisme",                 theme_ar:"التعمير" }
+];
+
+const state = {
+  token: "",                 // ⚠️ mémoire uniquement
+  connected: false,
+  user: "",
+
+  videos: null, videoSha: null,
+  themes: null, themeSha: null,
+  themeSnapshot: "", themeDirty: false,
+
+  urlContent: null, urlContentSha: null, urlContentLoaded: false,
+
+  dirty: new Set(),
+  snapshot: new Map(),
+  sort: { key: null, dir: -1 },
+  search: ""
+};
+
+let modalCtx = null;
+let searchTimer = null;
+
+/* =====================================================================
+   5. CHAMPS JSON
    ===================================================================== */
 const FIELD_KEYS = {
   fbid:          ["fbid", "id", "video_id", "fb_id"],
@@ -512,14 +647,8 @@ const FIELD_KEYS = {
   theme_ar:      ["theme_ar", "themeAr", "thème_ar"],
   vues:          ["vues", "views", "view_count", "nb_vues", "vues_totales"],
   reactions:     ["reactions", "reaction_count", "likes", "nb_reactions"],
-  commentaires:  ["commentaires", "comments", "comment_count", "nb_commentaires"],
-  duree:         ["duree", "duration", "duree_secondes", "duration_seconds", "length"],
-  largeur:       ["largeur", "width"],
-  hauteur:       ["hauteur", "height"],
-  langue:        ["langue", "language", "lang"],
   type:          ["type", "media_type"],
   url:           ["url", "url_video", "video_url", "lien", "link"],
-  url_canonique: ["url_canonique", "canonical_url", "url_canonical", "canonical"],
   miniature:     ["miniature", "thumbnail", "image", "miniature_url", "thumb"],
   contenu:       ["contenu", "content", "transcription"]
 };
@@ -544,7 +673,7 @@ function txt(v){
 function truncate(s, n){ s = String(s); return s.length > n ? s.slice(0, n - 1) + "…" : s; }
 
 /* =====================================================================
-   4. NOTIFICATIONS & OVERLAY
+   6. NOTIFICATIONS & OVERLAY
    ===================================================================== */
 function toast(message, type){
   type = type || "info";
@@ -564,35 +693,17 @@ function busy(on, message){
 }
 
 /* =====================================================================
-   5. CONFIGURATION + ERREURS GITHUB
+   7. AUTHENTIFICATION
    ===================================================================== */
-function applyEnvConfig(){
-  const c = window.GITHUB_CONFIG || {};
-  state.cfg.owner  = String(c.OWNER  || "").trim();
-  state.cfg.repo   = String(c.REPO   || "").trim();
-  state.cfg.branch = String(c.BRANCH || "main").trim() || "main";
-  state.cfg.videosPath     = String(c.VIDEOS_PATH     || c.VIDEOS || "json/reelsData.json").trim();
-  state.cfg.themesPath     = String(c.THEMES_PATH     || c.THEMES || "json/themes.json").trim();
-  state.cfg.urlContentPath = String(c.FILE_PATH       || c.URL_CONTENT || "json/url_content.json").trim();
-  state.cfg.imagesDir      = String(c.IMAGES_DIR      || c.IMAGES || "images").trim() || "images";
-
-  if (!state.cfg.owner || !state.cfg.repo)
-    throw new Error("Configuration GitHub manquante dans env.js (OWNER / REPO).");
-
-  $("#infoRepo").textContent   = state.cfg.owner + "/" + state.cfg.repo;
-  $("#infoBranch").textContent = state.cfg.branch;
-}
-
 function ensureAuth(){
   if (!state.connected || !state.token)
     throw new Error("Vous devez être connecté à GitHub pour effectuer cette opération.");
 }
-
 function apiUrl(path){
   const p = String(path).split("/").filter(Boolean).map(encodeURIComponent).join("/");
   return "https://api.github.com/repos/"
-    + encodeURIComponent(state.cfg.owner) + "/"
-    + encodeURIComponent(state.cfg.repo) + "/contents/" + p;
+    + encodeURIComponent(CONFIG.owner) + "/"
+    + encodeURIComponent(CONFIG.repo) + "/contents/" + p;
 }
 function ghHeaders(extra){
   return Object.assign({
@@ -614,73 +725,53 @@ function ghError(status, message){
   return err;
 }
 
-async function ghGetFile(path){
-  const url = apiUrl(path) + "?ref=" + encodeURIComponent(state.cfg.branch) + "&_=" + Date.now();
-  const res = await fetch(url, { headers: ghHeaders(), cache: "no-store" });
-  if (res.status === 404) return null;
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw ghError(res.status, data.message);
-  if (data.type && data.type !== "file")
-    throw new Error("« " + path + " » ne correspond pas à un fichier.");
-  let content = data.content || "";
-  if (!content && data.encoding === "none" && data.download_url){
-    const r2 = await fetch(data.download_url + "?_=" + Date.now(), { cache: "no-store" });
-    if (!r2.ok) throw new Error("Impossible de télécharger « " + path + " ».");
-    return { sha: data.sha, text: await r2.text() };
-  }
-  return { sha: data.sha, text: b64DecodeUtf8(content) };
-}
-async function ghPutFile(path, text, sha, message){
-  const body = { message, content: b64EncodeUtf8(text), branch: state.cfg.branch };
-  if (sha) body.sha = sha;
-  const res = await fetch(apiUrl(path), {
-    method: "PUT",
-    headers: ghHeaders({ "Content-Type": "application/json" }),
-    body: JSON.stringify(body)
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw ghError(res.status, data.message);
-  return data;
-}
-
-/* =====================================================================
-   6. LOGIN
-   ===================================================================== */
 async function verifyLogin(token){
-  // 1. Validité du jeton
-  const userRes = await fetch("https://api.github.com/user", {
-    headers: {
-      "Authorization": "Bearer " + token,
-      "Accept": "application/vnd.github+json",
-      "X-GitHub-Api-Version": "2022-11-28"
-    },
-    cache: "no-store"
-  });
-  if (userRes.status === 401) throw new Error("Jeton invalide ou expiré. Vérifiez le PAT saisi.");
-  if (!userRes.ok) throw new Error("Erreur GitHub " + userRes.status + " lors de la vérification du jeton.");
+  token = validateTokenFormat(token);
+  const headers = {
+    "Authorization": "Bearer " + token,
+    "Accept": "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28"
+  };
+
+  const userRes = await safeFetch(
+    "https://api.github.com/user",
+    { headers, cache: "no-store", mode: "cors", credentials: "omit" },
+    "validation du jeton (GET /user)"
+  );
+  if (userRes.status === 401)
+    throw new Error("Jeton refusé par GitHub (401). Vérifiez qu'il n'a pas été révoqué et qu'il est complet.");
+  if (!userRes.ok)
+    throw new Error("GitHub a répondu " + userRes.status + " lors de la validation du jeton.");
   const user = await userRes.json();
 
-  // 2. Accès au dépôt
-  const repoRes = await fetch(
-    "https://api.github.com/repos/"
-    + encodeURIComponent(state.cfg.owner) + "/" + encodeURIComponent(state.cfg.repo),
-    { headers: { "Authorization": "Bearer " + token, "Accept": "application/vnd.github+json" }, cache: "no-store" }
+  const repoRes = await safeFetch(
+    "https://api.github.com/repos/" + encodeURIComponent(CONFIG.owner) + "/" + encodeURIComponent(CONFIG.repo),
+    { headers, cache: "no-store", mode: "cors", credentials: "omit" },
+    "accès au dépôt"
   );
   if (repoRes.status === 404)
-    throw new Error("Dépôt « " + state.cfg.owner + "/" + state.cfg.repo + " » inaccessible avec ce jeton.");
-  if (!repoRes.ok) throw new Error("Erreur GitHub " + repoRes.status + " lors de l'accès au dépôt.");
+    throw new Error("Dépôt « " + CONFIG.owner + "/" + CONFIG.repo + " » inaccessible avec ce jeton.");
+  if (repoRes.status === 403)
+    throw new Error("Accès refusé au dépôt (403). Le PAT n'a probablement pas la permission sur ce dépôt.");
+  if (!repoRes.ok)
+    throw new Error("GitHub a répondu " + repoRes.status + " lors de l'accès au dépôt.");
   const repo = await repoRes.json();
-  if (repo.permissions && !repo.permissions.push && !repo.permissions.admin)
-    throw new Error("Le jeton ne dispose pas des droits d'écriture (permission « Contents: Read and write » requise).");
 
-  // 3. Lecture du fichier cible (vérifie la permission Contents)
-  const fileRes = await fetch(
-    apiUrl(state.cfg.urlContentPath) + "?ref=" + encodeURIComponent(state.cfg.branch),
-    { headers: { "Authorization": "Bearer " + token, "Accept": "application/vnd.github+json" }, cache: "no-store" }
+  if (repo.permissions && !repo.permissions.push && !repo.permissions.admin)
+    throw new Error(
+      "Le jeton n'a pas le droit d'écriture sur ce dépôt.\n"
+      + "Autorisez la permission « Contents : Read and write » sur le PAT."
+    );
+
+  const fileRes = await safeFetch(
+    apiUrl(CONFIG.urlContentPath) + "?ref=" + encodeURIComponent(CONFIG.branch),
+    { headers, cache: "no-store", mode: "cors", credentials: "omit" },
+    "accès au fichier " + CONFIG.urlContentPath
   );
   if (fileRes.status === 404)
-    throw new Error("Fichier « " + state.cfg.urlContentPath + " » introuvable sur la branche « " + state.cfg.branch + " ».");
-  if (!fileRes.ok) throw new Error("Erreur GitHub " + fileRes.status + " lors de l'accès au fichier JSON cible.");
+    throw new Error("Fichier « " + CONFIG.urlContentPath + " » introuvable sur la branche « " + CONFIG.branch + " ».");
+  if (!fileRes.ok)
+    throw new Error("GitHub a répondu " + fileRes.status + " lors de l'accès à " + CONFIG.urlContentPath + ".");
 
   return { login: user.login, repo: repo.full_name };
 }
@@ -690,6 +781,7 @@ function openLoginModal(){
   $("#loginError").textContent = "";
   $("#tokenInput").value = "";
   $("#tokenInput").type = "password";
+  $("#tokenInput").disabled = false;
   $("#eyeOpen").style.display = "";
   $("#eyeClosed").style.display = "none";
   $("#loginSpinner").hidden = true;
@@ -708,14 +800,17 @@ function showLoginError(msg){
   box.textContent = msg;
   box.hidden = false;
 }
+
 async function submitLogin(){
-  const token = $("#tokenInput").value.trim();
-  if (!token){ showLoginError("Veuillez saisir un jeton GitHub."); return; }
+  let token;
+  try { token = validateTokenFormat($("#tokenInput").value); }
+  catch (e){ showLoginError(e.message); return; }
 
   $("#loginError").hidden = true;
   $("#loginSpinner").hidden = false;
   $("#loginSubmit").disabled = true;
   $("#loginCancel").disabled = true;
+  $("#tokenInput").disabled = true;
 
   try {
     const info = await verifyLogin(token);
@@ -723,7 +818,6 @@ async function submitLogin(){
     state.connected = true;
     state.user = info.login;
 
-    // Mise à jour de l'UI
     $("#connState").textContent = "Connecté · " + info.login;
     $("#connState").className = "pill pill-on";
     $("#loginBtn").hidden = true;
@@ -733,7 +827,6 @@ async function submitLogin(){
     closeLoginModal();
     toast("Connexion réussie en tant que " + info.login + ".", "success");
 
-    // Chargement automatique des données
     await loadAll();
   } catch (e) {
     state.token = "";
@@ -745,14 +838,17 @@ async function submitLogin(){
     $("#loginSpinner").hidden = true;
     $("#loginSubmit").disabled = false;
     $("#loginCancel").disabled = false;
+    $("#tokenInput").disabled = false;
   }
 }
+
 function cancelLogin(){
   closeLoginModal();
   if (!state.connected){
-    toast("Session non authentifiée : les données ne sont pas chargées. Cliquez sur « Se connecter ».", "warn");
+    toast("Session non authentifiée. Cliquez sur « Se connecter » pour gérer les contenus.", "warn");
   }
 }
+
 function logout(){
   if (state.dirty.size > 0 || state.themeDirty){
     if (!confirm("Des modifications non enregistrées seront perdues.\nSe déconnecter quand même ?")) return;
@@ -780,7 +876,46 @@ function logout(){
 }
 
 /* =====================================================================
-   7. CHARGEMENT DES DONNÉES
+   8. GITHUB — LECTURE / ÉCRITURE FICHIERS
+   ===================================================================== */
+async function ghGetFile(path){
+  const url = apiUrl(path) + "?ref=" + encodeURIComponent(CONFIG.branch) + "&_=" + Date.now();
+  const res = await safeFetch(url,
+    { headers: ghHeaders(), cache: "no-store", mode: "cors", credentials: "omit" },
+    "lecture " + path);
+  if (res.status === 404) return null;
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw ghError(res.status, data.message);
+  if (data.type && data.type !== "file")
+    throw new Error("« " + path + " » ne correspond pas à un fichier.");
+  let content = data.content || "";
+  if (!content && data.encoding === "none" && data.download_url){
+    const r2 = await safeFetch(data.download_url + "?_=" + Date.now(),
+      { cache: "no-store", mode: "cors", credentials: "omit" },
+      "téléchargement " + path);
+    if (!r2.ok) throw new Error("Impossible de télécharger « " + path + " ».");
+    return { sha: data.sha, text: await r2.text() };
+  }
+  return { sha: data.sha, text: b64DecodeUtf8(content) };
+}
+
+async function ghPutFile(path, text, sha, message){
+  const body = { message, content: b64EncodeUtf8(text), branch: CONFIG.branch };
+  if (sha) body.sha = sha;
+  const res = await safeFetch(apiUrl(path), {
+    method: "PUT",
+    headers: ghHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify(body),
+    mode: "cors",
+    credentials: "omit"
+  }, "écriture " + path);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw ghError(res.status, data.message);
+  return data;
+}
+
+/* =====================================================================
+   9. CHARGEMENT DES DONNÉES
    ===================================================================== */
 async function loadAll(){
   ensureAuth();
@@ -789,15 +924,15 @@ async function loadAll(){
   }
   busy(true, "Chargement des données depuis GitHub…");
   try {
-    const vFile = await ghGetFile(state.cfg.videosPath);
-    if (!vFile) throw new Error("Fichier introuvable sur GitHub : " + state.cfg.videosPath);
+    const vFile = await ghGetFile(CONFIG.videosPath);
+    if (!vFile) throw new Error("Fichier introuvable sur GitHub : " + CONFIG.videosPath);
     let videos;
     try { videos = JSON.parse(vFile.text); }
     catch (e){ throw new Error("Le JSON des vidéos est invalide : " + e.message); }
     if (!Array.isArray(videos)) throw new Error("Le fichier des vidéos doit contenir un tableau JSON.");
 
-    const tFile = await ghGetFile(state.cfg.themesPath);
-    let themes, themeSha = null;
+    const tFile = await ghGetFile(CONFIG.themesPath);
+    let themes, themeSha = null, themesCreated = false;
     if (tFile){
       let parsed;
       try { parsed = JSON.parse(tFile.text); }
@@ -810,6 +945,7 @@ async function loadAll(){
       themeSha = tFile.sha;
     } else {
       themes = DEFAULT_THEMES.map(o => Object.assign({}, o));
+      themesCreated = true;
     }
 
     state.videos = videos;
@@ -823,7 +959,6 @@ async function loadAll(){
     state.search = "";
     $("#search").value = "";
     $("#themeSearch").value = "";
-    // On invalide le cache url_content pour le recharger à la prochaine ouverture
     state.urlContent = null; state.urlContentSha = null; state.urlContentLoaded = false;
 
     snapshotVideos();
@@ -831,12 +966,20 @@ async function loadAll(){
     updateSaveButtons(); updateThemeButtons(); updateSortIndicators();
 
     toast("Données chargées : " + state.videos.length + " vidéo(s), " + state.themes.length + " thème(s).", "success");
+    if (themesCreated){
+      toast(
+        "« " + CONFIG.themesPath + " » est introuvable sur GitHub.\n"
+        + "Un référentiel par défaut est proposé : enregistrez-le pour créer le fichier.",
+        "warn"
+      );
+    }
   } catch (e) {
     toast(e.message, "error");
   } finally {
     busy(false);
   }
 }
+
 function snapshotVideos(){
   state.snapshot.clear();
   if (!state.videos) return;
@@ -851,24 +994,14 @@ function snapshotVideos(){
 }
 
 /* =====================================================================
-   8. MINIATURES
+   10. MINIATURES
    ===================================================================== */
-const DEFAULT_THEMES = [
-  { theme_fr:"Aide directe au logement",  theme_ar:"الدعم المباشر للسكن" },
-  { theme_fr:"Aménagement du territoire", theme_ar:"إعداد التراب الوطني" },
-  { theme_fr:"Œuvres sociales",           theme_ar:"الأعمال الاجتماعية" },
-  { theme_fr:"Développement rural",       theme_ar:"التنمية القروية" },
-  { theme_fr:"Habitat et logement",       theme_ar:"السكن" },
-  { theme_fr:"Habitat insalubre",         theme_ar:"السكن غير اللائق" },
-  { theme_fr:"Politique de la ville",     theme_ar:"سياسة المدينة" },
-  { theme_fr:"Urbanisme",                 theme_ar:"التعمير" }
-];
 function encodePath(p){ return String(p).split("/").map(encodeURIComponent).join("/"); }
 function rawBase(){
   return "https://raw.githubusercontent.com/"
-    + encodeURIComponent(state.cfg.owner) + "/"
-    + encodeURIComponent(state.cfg.repo) + "/"
-    + state.cfg.branch.split("/").map(encodeURIComponent).join("/");
+    + encodeURIComponent(CONFIG.owner) + "/"
+    + encodeURIComponent(CONFIG.repo) + "/"
+    + CONFIG.branch.split("/").map(encodeURIComponent).join("/");
 }
 function miniatureFile(item){
   const custom = String(get(item, "miniature") || "").trim();
@@ -877,13 +1010,13 @@ function miniatureFile(item){
   return fbid ? fbid + ".jpg" : "";
 }
 function thumbUrl(item){
-  const base = rawBase() + "/" + encodePath(state.cfg.imagesDir) + "/";
+  const base = rawBase() + "/" + encodePath(CONFIG.imagesDir) + "/";
   const custom = String(get(item, "miniature") || "").trim();
   const fbid = String(get(item, "fbid") || "").trim();
   if (custom){
     if (/^https?:\/\//i.test(custom)) return custom;
     let clean = custom.replace(/^\.?\//, "");
-    if (clean.startsWith(state.cfg.imagesDir + "/")) clean = clean.slice(state.cfg.imagesDir.length + 1);
+    if (clean.startsWith(CONFIG.imagesDir + "/")) clean = clean.slice(CONFIG.imagesDir.length + 1);
     return base + encodePath(clean);
   }
   return fbid ? base + encodeURIComponent(fbid) + ".jpg" : "";
@@ -899,7 +1032,7 @@ function thumbEl(item){
 }
 
 /* =====================================================================
-   9. TABLEAU DES VIDÉOS
+   11. TABLEAU DES VIDÉOS
    ===================================================================== */
 function themeListFr(){
   if (!state.themes) return [];
@@ -915,7 +1048,9 @@ function inputFor(item, index, field, kind, attrs){
   const key = resolveKey(item, field);
   const props = Object.assign({ class: "cell-input" }, attrs || {});
   if (!state.connected) props.disabled = true;
-  let node = kind === "textarea" ? el("textarea", Object.assign({ rows: 2 }, props)) : el("input", Object.assign({ type: "text" }, props));
+  let node = kind === "textarea"
+    ? el("textarea", Object.assign({ rows: 2 }, props))
+    : el("input", Object.assign({ type: "text" }, props));
   node.value = (item[key] === undefined || item[key] === null) ? "" : String(item[key]);
   node.addEventListener("input", () => { item[key] = node.value; markDirty(index); });
   return node;
@@ -953,7 +1088,8 @@ function linkCell(value){
   const s = String(value || "").trim();
   if (!s) return el("td", { class: "nowrap" }, "—");
   if (/^https?:\/\//i.test(s)){
-    return el("td", { class: "nowrap" }, el("a", { href: s, target: "_blank", rel: "noopener noreferrer", title: s }, truncate(s, 40)));
+    return el("td", { class: "nowrap" },
+      el("a", { href: s, target: "_blank", rel: "noopener noreferrer", title: s }, truncate(s, 40)));
   }
   return el("td", { class: "nowrap", title: s }, truncate(s, 40));
 }
@@ -1015,9 +1151,7 @@ function visibleRows(){
   if (q){
     rows = rows.filter(({ item }) =>
       ["fbid", "titre", "description", "theme_fr", "theme_ar"].some(f =>
-        String(get(item, f) ?? "").toLowerCase().includes(q)
-      )
-    );
+        String(get(item, f) ?? "").toLowerCase().includes(q)));
   }
   const { key, dir } = state.sort;
   if (key){
@@ -1082,21 +1216,25 @@ function updateSortIndicators(){
 }
 
 /* =====================================================================
-   10. ENREGISTREMENT VIDÉOS
+   12. ENREGISTREMENT DES VIDÉOS
    ===================================================================== */
 async function saveVideos(){
   ensureAuth();
+  if (!state.videos){ toast("Chargez d'abord les données depuis GitHub.", "error"); return; }
   if (state.dirty.size === 0){ toast("Aucune modification à enregistrer.", "warn"); return; }
   busy(true, "Enregistrement des vidéos sur GitHub…");
+  const btn = $("#saveVideos");
+  const oldTxt = btn.textContent;
+  btn.disabled = true;
   try {
-    const current = await ghGetFile(state.cfg.videosPath);
+    const current = await ghGetFile(CONFIG.videosPath);
     if (!current) throw new Error("Le fichier des vidéos est introuvable sur GitHub.");
     if (current.sha !== state.videoSha)
-      throw new Error("Le fichier a été modifié sur GitHub depuis son chargement (conflit de SHA).\nRechargez les données puis réappliquez vos modifications.");
+      throw new Error("Le fichier a été modifié sur GitHub depuis son chargement (conflit de SHA).\nRechargez puis réappliquez vos modifications.");
     const text = JSON.stringify(state.videos, null, 2) + "\n";
     JSON.parse(text);
     const n = state.dirty.size;
-    const res = await ghPutFile(state.cfg.videosPath, text, current.sha,
+    const res = await ghPutFile(CONFIG.videosPath, text, current.sha,
       "MATUHPV — mise à jour de " + n + " vidéo(s) (titre, description, thèmes)");
     state.videoSha = res.content.sha;
     state.dirty.clear();
@@ -1104,8 +1242,13 @@ async function saveVideos(){
     renderVideos(); updateSaveButtons();
     toast("Modifications enregistrées sur GitHub.\nCommit : "
       + String(res.commit && res.commit.sha || "").slice(0, 7), "success");
-  } catch (e) { toast(e.message, "error"); }
-  finally { busy(false); }
+  } catch (e) {
+    toast(e.message, "error");
+  } finally {
+    busy(false);
+    btn.textContent = oldTxt;
+    updateSaveButtons();
+  }
 }
 function resetVideos(){
   if (state.dirty.size === 0) return;
@@ -1124,7 +1267,7 @@ function resetVideos(){
 }
 
 /* =====================================================================
-   11. TABLEAU DES THÈMES
+   13. TABLEAU DES THÈMES
    ===================================================================== */
 function countVideosForTheme(fr){
   if (!state.videos) return 0;
@@ -1188,7 +1331,8 @@ function renderThemes(){
   const q = ($("#themeSearch").value || "").trim().toLowerCase();
   let list = state.themes.map((t, i) => ({ t, i }));
   if (q) list = list.filter(({ t }) =>
-    String(t.theme_fr || "").toLowerCase().includes(q) || String(t.theme_ar || "").toLowerCase().includes(q));
+    String(t.theme_fr || "").toLowerCase().includes(q) ||
+    String(t.theme_ar || "").toLowerCase().includes(q));
   if (list.length === 0){
     tbody.appendChild(el("tr", {}, el("td", { colspan: 4, class: "empty" }, "Aucun thème ne correspond au filtre.")));
   } else {
@@ -1232,8 +1376,12 @@ function resetThemes(){
 }
 async function saveThemes(){
   ensureAuth();
+  if (!state.themes){ toast("Chargez d'abord les données.", "error"); return; }
   if (!state.themeDirty){ toast("Aucune modification à enregistrer.", "warn"); return; }
   busy(true, "Enregistrement des thèmes sur GitHub…");
+  const btn = $("#saveThemes");
+  const oldTxt = btn.textContent;
+  btn.disabled = true;
   try {
     const seen = new Set();
     state.themes.forEach((t, i) => {
@@ -1243,13 +1391,13 @@ async function saveThemes(){
       if (seen.has(k)) throw new Error("Le thème « " + fr + " » est présent en double.");
       seen.add(k);
     });
-    const current = await ghGetFile(state.cfg.themesPath);
+    const current = await ghGetFile(CONFIG.themesPath);
     const currentSha = current ? current.sha : null;
     if (currentSha !== state.themeSha)
       throw new Error("Le fichier des thèmes a changé sur GitHub depuis son chargement (conflit de SHA).\nRechargez avant d'enregistrer.");
     const text = JSON.stringify(state.themes, null, 2) + "\n";
     JSON.parse(text);
-    const res = await ghPutFile(state.cfg.themesPath, text, state.themeSha,
+    const res = await ghPutFile(CONFIG.themesPath, text, state.themeSha,
       "MATUHPV — mise à jour du référentiel des thèmes");
     state.themeSha = res.content.sha;
     state.themeSnapshot = JSON.stringify(state.themes);
@@ -1258,16 +1406,21 @@ async function saveThemes(){
     renderVideos();
     toast("Référentiel des thèmes enregistré. Commit : "
       + String(res.commit && res.commit.sha || "").slice(0, 7), "success");
-  } catch (e) { toast(e.message, "error"); }
-  finally { busy(false); }
+  } catch (e) {
+    toast(e.message, "error");
+  } finally {
+    busy(false);
+    btn.textContent = oldTxt;
+    updateThemeButtons();
+  }
 }
 
 /* =====================================================================
-   12. MODALE CONTENU / TRANSCRIPTION
+   14. MODALE CONTENU / TRANSCRIPTION
    ===================================================================== */
 async function ensureUrlContentLoaded(){
   if (state.urlContentLoaded) return;
-  const f = await ghGetFile(state.cfg.urlContentPath);
+  const f = await ghGetFile(CONFIG.urlContentPath);
   if (!f){
     state.urlContent = [];
     state.urlContentSha = null;
@@ -1299,7 +1452,6 @@ async function openContentModal(videoItem){
   const saveBtn = $("#modalSave");
   const cancelBtn = $("#modalCancel");
 
-  $("#modalTitle").textContent = "Modifier le contenu de la vidéo";
   fbidBox.textContent = fbid;
   ta.value = "";
   ta.disabled = true;
@@ -1321,14 +1473,13 @@ async function openContentModal(videoItem){
     } else {
       urlBox.textContent = videoUrl || "URL indisponible";
     }
-
     if (!entry){
       stateBox.textContent = "Entrée absente de url_content.json — la sauvegarde la créera.";
       ta.value = "";
     } else {
       ta.value = String(entry.contenu ?? "");
     }
-    modalCtx = { fbid, original: ta.value };
+    modalCtx = { fbid, original: ta.value, videoUrl };
     ta.disabled = false;
     ta.placeholder = "";
     saveBtn.disabled = false;
@@ -1348,7 +1499,7 @@ function closeContentModal(){
 async function saveContentModal(){
   if (!modalCtx) return;
   ensureAuth();
-  const { fbid } = modalCtx;
+  const { fbid, videoUrl } = modalCtx;
   const ta = $("#modalContent");
   const saveBtn = $("#modalSave");
   const cancelBtn = $("#modalCancel");
@@ -1359,8 +1510,7 @@ async function saveContentModal(){
   stateBox.textContent = "Enregistrement en cours…";
 
   try {
-    // Re-fetch pour éviter d'écraser une modification concurrente
-    const f = await ghGetFile(state.cfg.urlContentPath);
+    const f = await ghGetFile(CONFIG.urlContentPath);
     if (!f) throw new Error("Fichier url_content.json introuvable sur GitHub.");
     let fresh;
     try { fresh = JSON.parse(f.text); }
@@ -1371,16 +1521,11 @@ async function saveContentModal(){
     const cached = findUrlContent(fbid);
     const newContent = ta.value;
 
-    if (idx !== -1 && cached && String(cached.contenu ?? "") !== String(fresh[idx].contenu ?? "")){
+    if (idx !== -1 && cached && String(cached.contenu ?? "") !== String(fresh[idx].contenu ?? ""))
       throw new Error("Conflit : cette entrée a été modifiée par un autre utilisateur.\nFermez la fenêtre, rechargez, puis réessayez.");
-    }
 
     if (idx === -1){
-      fresh.push({
-        fbid,
-        url: String(get(state.videos?.find(v => String(get(v, "fbid")) === fbid) || {}, "url") || ""),
-        contenu: newContent
-      });
+      fresh.push({ fbid, url: videoUrl || "", contenu: newContent });
     } else {
       fresh[idx] = Object.assign({}, fresh[idx], { contenu: newContent });
     }
@@ -1388,12 +1533,9 @@ async function saveContentModal(){
     const text = JSON.stringify(fresh, null, 2) + "\n";
     JSON.parse(text);
 
-    const res = await ghPutFile(
-      state.cfg.urlContentPath, text, f.sha,
-      "Correction du contenu de la vidéo " + fbid
-    );
+    const res = await ghPutFile(CONFIG.urlContentPath, text, f.sha,
+      "Correction du contenu de la vidéo " + fbid);
 
-    // Mise à jour du cache
     state.urlContent = fresh;
     state.urlContentSha = res.content.sha;
     state.urlContentLoaded = true;
@@ -1420,7 +1562,7 @@ function cancelContentModal(){
 }
 
 /* =====================================================================
-   13. ONGLETS
+   15. ONGLETS
    ===================================================================== */
 function activateTab(name){
   $$(".tab").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
@@ -1428,11 +1570,16 @@ function activateTab(name){
 }
 
 /* =====================================================================
-   14. INITIALISATION
+   16. INITIALISATION
    ===================================================================== */
 document.addEventListener("DOMContentLoaded", () => {
-  try { applyEnvConfig(); }
-  catch (e){ toast(e.message, "error"); }
+  // Info dépôt
+  $("#infoRepo").textContent = CONFIG.owner + "/" + CONFIG.repo;
+  $("#infoBranch").textContent = CONFIG.branch;
+
+  if (location.protocol === "file:"){
+    toast("Cette page est ouverte en « file:// ».\nLes requêtes vers GitHub peuvent être bloquées.\nServez-la via HTTP (ex. : python -m http.server 8000).", "warn");
+  }
 
   // Onglets
   $$(".tab").forEach(btn => btn.addEventListener("click", () => activateTab(btn.dataset.tab)));
@@ -1456,8 +1603,20 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#eyeClosed").style.display = show ? "" : "none";
     $("#pwToggle").setAttribute("aria-label", show ? "Masquer le jeton" : "Afficher le jeton");
   });
+  $("#testNetBtn").addEventListener("click", async () => {
+    const out = $("#testNetResult");
+    out.textContent = "Test en cours…";
+    try {
+      const r = await safeFetch("https://api.github.com/zen",
+        { mode: "cors", credentials: "omit", cache: "no-store" }, "test réseau");
+      if (r.ok) out.textContent = "✅ GitHub est joignable.";
+      else out.textContent = "⚠ GitHub a répondu " + r.status + " au test.";
+    } catch (e) {
+      out.textContent = "❌ GitHub injoignable : " + e.message.split("\n")[0];
+    }
+  });
 
-  // Recherche vidéos (debounce)
+  // Recherche vidéos
   $("#search").addEventListener("input", e => {
     clearTimeout(searchTimer);
     const v = e.target.value;
@@ -1489,17 +1648,17 @@ document.addEventListener("DOMContentLoaded", () => {
   $("#modalClose").addEventListener("click", cancelContentModal);
   $("#modalX").addEventListener("click", cancelContentModal);
 
-  // Avertissement de fermeture
+  // Avertissement fermeture
   window.addEventListener("beforeunload", e => {
     if (state.dirty.size > 0 || state.themeDirty){
       e.preventDefault(); e.returnValue = ""; return "";
     }
   });
 
-  // Rendus initiaux
+  // Rendu initial
   renderVideos(); renderThemes(); updateSaveButtons(); updateThemeButtons(); updateSortIndicators();
 
-  // 🔒 Affichage automatique de la modale de connexion au démarrage
+  // 🔒 Modale de connexion au démarrage
   openLoginModal();
 });
 </script>
