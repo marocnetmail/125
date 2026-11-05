@@ -43,7 +43,7 @@
 
   /* ---------- Conteneur ---------- */
   .layout{
-    max-width:1750px; margin:0 auto; padding:20px 24px 140px;
+    max-width:1750px; margin:0 auto; padding:20px 24px 70px;
     display:flex; flex-direction:column; gap:18px;
   }
 
@@ -63,13 +63,6 @@
   .btn:disabled{opacity:.42; cursor:not-allowed}
   .btn.white{background:rgba(255,255,255,.18); color:#fff}
   .btn.white:hover:not(:disabled){background:rgba(255,255,255,.28)}
-  .btn.btn-large{
-    padding:15px 26px; font-size:15px; font-weight:800; letter-spacing:.5px;
-    box-shadow:0 4px 14px rgba(21,94,239,.32);
-  }
-  .btn.btn-large:hover:not(:disabled){
-    filter:brightness(1.1); box-shadow:0 6px 20px rgba(21,94,239,.42);
-  }
 
   /* ---------- Onglets ---------- */
   .tabs{display:flex; gap:6px; border-bottom:1px solid var(--border); padding:0 4px; overflow-x:auto}
@@ -107,7 +100,7 @@
     overflow:auto; max-height:72vh; box-shadow:0 1px 3px rgba(23,32,51,.05);
   }
   table{border-collapse:separate; border-spacing:0; width:100%; font-size:14px}
-  #videosTable{min-width:1350px}
+  #videosTable{min-width:1400px}
   thead th{
     position:sticky; top:0; z-index:5; background:var(--soft); color:var(--blue-dark);
     text-align:left; font-size:12.5px; text-transform:uppercase; letter-spacing:.45px;
@@ -140,10 +133,12 @@
   td.col-desc .cell-input{min-width:240px; min-height:52px; line-height:1.45}
   td.col-theme .cell-input{min-width:180px}
   td.col-theme-ar .cell-input{min-width:160px; text-align:right}
-  td.actions-cell{
-    display:flex; gap:6px; flex-wrap:wrap; align-items:flex-start;
-    min-width:200px;
+
+  /* Colonnes d'action (1ʳᵉ et 2ᵉ) : compactes et centrées */
+  td.col-action-1, td.col-action-2{
+    white-space:nowrap; vertical-align:middle; text-align:center;
   }
+  th.col-action-1, th.col-action-2{ text-align:center; }
 
   /* ---------- Tableau des thèmes ---------- */
   .themes-table{min-width:820px}
@@ -203,35 +198,21 @@
   }
 
   /* ---------- Détail (modal Détails) ---------- */
-  .detail-section{
-    border-top:1px solid var(--border);
-    padding-top:16px; margin-top:4px;
-  }
+  .detail-section{border-top:1px solid var(--border); padding-top:16px; margin-top:4px}
   .detail-section:first-child{border-top:0; margin-top:0; padding-top:0}
   .detail-section-title{
     margin:0 0 12px; font-size:13px; font-weight:800;
     text-transform:uppercase; letter-spacing:.6px; color:var(--blue-dark);
   }
-  .readonly-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
-    gap:12px;
-  }
-  .editable-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-    gap:14px;
-  }
+  .readonly-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px}
+  .editable-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:14px}
   .detail-field{display:flex; flex-direction:column; gap:5px}
   .detail-field.editable .cell-input{
     border-color:var(--blue); background:#f8fafd;
     font-size:13.5px; padding:9px 11px;
   }
   .detail-field.editable .cell-input:focus{background:#fff}
-  .detail-label{
-    font-size:11.5px; font-weight:700; color:#475467;
-    text-transform:uppercase; letter-spacing:.4px;
-  }
+  .detail-label{font-size:11.5px; font-weight:700; color:#475467; text-transform:uppercase; letter-spacing:.4px}
   .detail-value{
     font-size:14px; padding:9px 11px;
     background:#f7f9fd; border-radius:8px;
@@ -244,22 +225,11 @@
   .detail-value a{color:var(--blue); text-decoration:none}
   .detail-value a:hover{text-decoration:underline}
   .detail-contenu{
-    width:100%;
-    min-height:350px;
-    font-size:15px;
-    line-height:1.65;
-    padding:13px 15px;
-    border:2px solid var(--blue);
-    border-radius:9px;
-    background:#f8fafd;
-    resize:vertical;
-    font-family:inherit;
-    color:inherit;
+    width:100%; min-height:350px; font-size:15px; line-height:1.65;
+    padding:13px 15px; border:2px solid var(--blue); border-radius:9px;
+    background:#f8fafd; resize:vertical; font-family:inherit; color:inherit;
   }
-  .detail-contenu:focus{
-    background:#fff; outline:none;
-    box-shadow:0 0 0 3px rgba(21,94,239,.15);
-  }
+  .detail-contenu:focus{background:#fff; outline:none; box-shadow:0 0 0 3px rgba(21,94,239,.15)}
   .detail-contenu:disabled{background:#f4f6fa; color:#8b95a5; border-color:#d5dce7}
   .detail-fbid-badge{
     display:inline-flex; align-items:center; gap:8px;
@@ -318,24 +288,9 @@
   .login-spinner[hidden]{display:none}
   .login-spinner .spinner{width:22px; height:22px; border-width:2px}
 
-  /* ---------- Barre de sauvegarde globale (fixe en bas) ---------- */
-  .global-save-bar{
-    position:fixed; bottom:0; left:0; right:0; z-index:55;
-    background:linear-gradient(180deg, rgba(255,255,255,0.98), #ffffff);
-    border-top:3px solid var(--blue);
-    padding:14px 24px;
-    display:flex; align-items:center; gap:18px; flex-wrap:wrap;
-    box-shadow:0 -4px 24px rgba(13,63,168,.15);
-  }
-  .save-status{
-    font-size:13.5px; color:var(--muted); flex:1; min-width:180px;
-    font-weight:600;
-  }
-  .save-status.active{color:var(--blue-dark)}
-
   /* ---------- Notifications ---------- */
   #toasts{
-    position:fixed; right:18px; bottom:110px; z-index:500;
+    position:fixed; right:18px; bottom:18px; z-index:500;
     display:flex; flex-direction:column; gap:10px; max-width:420px;
   }
   .toast{
@@ -356,14 +311,10 @@
   @keyframes slidein{from{opacity:0; transform:translateX(34px)}}
 
   @media (max-width:760px){
-    .layout{padding:12px 12px 160px}
+    .layout{padding:12px 12px 60px}
     .brand h1{font-size:15px}
     .brand .sub{display:none}
     .topbar-right .btn span{display:none}
-    .global-save-bar{padding:10px 14px; gap:10px}
-    .save-status{width:100%; order:2}
-    .btn.btn-large{flex:1; padding:13px 16px; font-size:14px}
-    #toasts{bottom:150px}
   }
 </style>
 </head>
@@ -400,15 +351,16 @@
       <button id="saveVideos" class="btn primary" disabled>Enregistrer sur GitHub</button>
     </div>
     <p class="hint" style="margin:-4px 2px 0">
-      <b>Détails</b> ouvre une fiche complète (lecteur + toutes les propriétés JSON) avec édition de
-      <i>titre</i>, <i>description</i>, <i>thèmes</i> et <i>contenu</i>. Le bouton <b>Modifier le contenu</b>
-      reste disponible pour une édition rapide de la transcription. Les modifications de vidéos/thèmes sont
-      publiées via le bouton <b>« SAUVEGARDER TOUTES LES DONNÉES »</b> en bas de page.
+      Colonne 1 : <b>Modifier le contenu</b> (lecteur vidéo + transcription).
+      Colonne 2 : <b>Détails</b> (fiche complète, édition de tous les champs autorisés).
+      Titre / description / thèmes se modifient directement dans le tableau.
     </p>
     <div class="table-wrap">
       <table id="videosTable">
         <thead>
           <tr>
+            <th class="col-action-1" style="width:170px">Contenu</th>
+            <th class="col-action-2" style="width:120px">Détails</th>
             <th class="sortable" data-sort="date" data-arrow="↕">Date de publication</th>
             <th>Année</th>
             <th>Titre</th>
@@ -418,8 +370,6 @@
             <th>Type</th>
             <th>FBID</th>
             <th>URL vidéo</th>
-            <th>Transcription</th>
-            <th style="width:200px">Actions</th>
           </tr>
         </thead>
         <tbody id="videosBody"></tbody>
@@ -456,12 +406,6 @@
 
 </div>
 
-<!-- ================= BARRE DE SAUVEGARDE GLOBALE ================= -->
-<div class="global-save-bar">
-  <button id="saveAllBtn" class="btn primary btn-large" disabled>💾 SAUVEGARDER TOUTES LES DONNÉES</button>
-  <span class="save-status" id="saveAllStatus">Connectez-vous pour activer la sauvegarde globale.</span>
-</div>
-
 <!-- ================= MODALE DE CONNEXION ================= -->
 <div id="loginModal" class="modal" hidden>
   <div class="modal-box modal-login" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
@@ -483,9 +427,6 @@
     <div class="login-body">
       <div>
         <label for="tokenInput">GitHub Token</label>
-                <label for="tokenInput"> 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
- </label>/label>
-
         <div class="pw-wrap">
           <input id="tokenInput" type="password" placeholder="github_pat_…"
                  autocomplete="off" spellcheck="false" autocapitalize="off" autocorrect="off">
@@ -495,7 +436,11 @@
           </button>
         </div>
       </div>
-      
+      <p class="login-help">
+        Créez un <i>Fine-grained Personal Access Token</i> limité au dépôt
+        <code>marocnetmail/125</code> avec la permission <b>Contents&nbsp;: Read and write</b>.
+        Le jeton reste en mémoire uniquement pendant cette session et n'est jamais enregistré.
+      </p>
       <div id="loginError" class="login-error" hidden></div>
       <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center">
         <button id="testNetBtn" class="btn ghost tiny" type="button">🔌 Tester la connexion réseau</button>
@@ -528,7 +473,7 @@
   </div>
 </div>
 
-<!-- ================= MODALE CONTENU (raccourci) ================= -->
+<!-- ================= MODALE CONTENU ================= -->
 <div id="contentModal" class="modal" hidden>
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-head">
@@ -542,7 +487,7 @@
       </div>
       <div class="detail-section">
         <h4 class="detail-section-title">URL de la vidéo</h4>
-        <div id="modalUrlBox" class="modal-url-box detail-value">—</div>
+        <div id="modalUrlBox" class="detail-value">—</div>
       </div>
       <div class="detail-section">
         <h4 class="detail-section-title">Contenu / Transcription</h4>
@@ -941,7 +886,7 @@ function logout(){
   closeDetailsModal();
   closeContentModal();
   renderVideos(); renderThemes();
-  updateSaveButtons(); updateThemeButtons(); updateSortIndicators(); updateGlobalStatus();
+  updateSaveButtons(); updateThemeButtons(); updateSortIndicators();
   toast("Déconnecté. Le jeton a été effacé de la mémoire.", "info");
   openLoginModal();
 }
@@ -1032,7 +977,7 @@ async function loadAll(){
 
     snapshotVideos();
     renderVideos(); renderThemes();
-    updateSaveButtons(); updateThemeButtons(); updateSortIndicators(); updateGlobalStatus();
+    updateSaveButtons(); updateThemeButtons(); updateSortIndicators();
 
     toast("Données chargées : " + state.videos.length + " vidéo(s), " + state.themes.length + " thème(s).", "success");
     if (themesCreated){
@@ -1123,42 +1068,25 @@ function linkCell(value){
   }
   return el("td", { class: "nowrap" }, "—");
 }
+
 function buildRow(item, index){
   const tr = el("tr", { "data-index": index });
   if (state.dirty.has(index)) tr.classList.add("dirty");
 
-  /* 1 Date */
-  tr.appendChild(el("td", { class: "nowrap" }, txt(get(item, "date"))));
-  /* 2 Année */
-  tr.appendChild(el("td", { class: "nowrap center" }, txt(get(item, "annee"))));
-  /* 3 Titre */
-  tr.appendChild(el("td", { class: "col-titre" }, inputFor(item, index, "titre", "text")));
-  /* 4 Description */
-  tr.appendChild(el("td", { class: "col-desc" }, inputFor(item, index, "description", "textarea")));
-  /* 5 Thème FR */
-  tr.appendChild(el("td", { class: "col-theme" }, themeSelect(item, index)));
-  /* 6 Thème AR */
-  tr.appendChild(el("td", { class: "col-theme-ar" },
-    inputFor(item, index, "theme_ar", "text", { dir: "rtl", "data-field": "theme_ar" })));
-  /* 7 Type */
-  tr.appendChild(el("td", { class: "nowrap" }, txt(get(item, "type"))));
-  /* 8 FBID */
-  tr.appendChild(el("td", { class: "nowrap" }, el("code", {}, txt(get(item, "fbid")))));
-  /* 9 URL → "Lien" */
-  tr.appendChild(linkCell(get(item, "url")));
-  /* 10 Transcription (raccourci "Modifier le contenu") */
-  const tdContent = el("td", { class: "nowrap" });
+  /* Col 1 : Modifier le contenu (transcription + lecteur) */
+  const tdContent = el("td", { class: "col-action-1" });
   const btnContent = el("button", {
     class: "btn tiny ghost",
     type: "button",
     title: "Lire la vidéo et modifier la transcription",
     onclick: () => openContentModal(item)
-  }, "✎ Contenu");
+  }, "✎ Modifier le contenu");
   if (!state.connected) btnContent.disabled = true;
   tdContent.appendChild(btnContent);
   tr.appendChild(tdContent);
-  /* 11 Actions (Détails) */
-  const tdActions = el("td", { class: "actions-cell" });
+
+  /* Col 2 : Détails (fiche complète) */
+  const tdDetails = el("td", { class: "col-action-2" });
   const btnDetails = el("button", {
     class: "btn tiny primary",
     type: "button",
@@ -1166,8 +1094,28 @@ function buildRow(item, index){
     onclick: () => openDetailsModal(item)
   }, "🔍 Détails");
   if (!state.connected) btnDetails.disabled = true;
-  tdActions.appendChild(btnDetails);
-  tr.appendChild(tdActions);
+  tdDetails.appendChild(btnDetails);
+  tr.appendChild(tdDetails);
+
+  /* Col 3 : Date */
+  tr.appendChild(el("td", { class: "nowrap" }, txt(get(item, "date"))));
+  /* Col 4 : Année */
+  tr.appendChild(el("td", { class: "nowrap center" }, txt(get(item, "annee"))));
+  /* Col 5 : Titre */
+  tr.appendChild(el("td", { class: "col-titre" }, inputFor(item, index, "titre", "text")));
+  /* Col 6 : Description */
+  tr.appendChild(el("td", { class: "col-desc" }, inputFor(item, index, "description", "textarea")));
+  /* Col 7 : Thème FR */
+  tr.appendChild(el("td", { class: "col-theme" }, themeSelect(item, index)));
+  /* Col 8 : Thème AR */
+  tr.appendChild(el("td", { class: "col-theme-ar" },
+    inputFor(item, index, "theme_ar", "text", { dir: "rtl", "data-field": "theme_ar" })));
+  /* Col 9 : Type */
+  tr.appendChild(el("td", { class: "nowrap" }, txt(get(item, "type"))));
+  /* Col 10 : FBID */
+  tr.appendChild(el("td", { class: "nowrap" }, el("code", {}, txt(get(item, "fbid")))));
+  /* Col 11 : URL → "Lien" */
+  tr.appendChild(linkCell(get(item, "url")));
 
   return tr;
 }
@@ -1241,7 +1189,7 @@ function markDirty(index){
   if (changed) state.dirty.add(index); else state.dirty.delete(index);
   const tr = document.querySelector('tr[data-index="' + index + '"]');
   if (tr) tr.classList.toggle("dirty", changed);
-  updateSaveButtons(); updateGlobalStatus();
+  updateSaveButtons();
 }
 function updateSaveButtons(){
   const n = state.dirty.size;
@@ -1258,90 +1206,40 @@ function updateSortIndicators(){
     th.dataset.arrow = active ? (state.sort.dir === 1 ? "▲" : "▼") : "↕";
   });
 }
-function updateGlobalStatus(){
-  const v = state.dirty.size;
-  const t = state.themeDirty ? 1 : 0;
-  const statusEl = $("#saveAllStatus");
-  const btn = $("#saveAllBtn");
-  if (!statusEl || !btn) return;
-  if (!state.connected){
-    statusEl.textContent = "Connectez-vous pour activer la sauvegarde globale.";
-    statusEl.classList.remove("active");
-    btn.disabled = true;
-    return;
-  }
-  if (v === 0 && t === 0){
-    statusEl.textContent = "Aucune modification en attente.";
-    statusEl.classList.remove("active");
-    btn.disabled = true;
-    return;
-  }
-  const parts = [];
-  if (v > 0) parts.push(v + " vidéo" + (v > 1 ? "s" : "") + " modifiée" + (v > 1 ? "s" : ""));
-  if (t) parts.push("thèmes modifiés");
-  statusEl.textContent = "En attente : " + parts.join(", ");
-  statusEl.classList.add("active");
-  btn.disabled = false;
-}
 
 /* =====================================================================
-   12. SAUVEGARDE VIDÉOS / THÈMES (fonctions internes réutilisables)
+   12. SAUVEGARDE VIDÉOS / THÈMES
    ===================================================================== */
-async function _doSaveVideos(){
-  if (!state.videos) throw new Error("Vidéos non chargées.");
-  if (state.dirty.size === 0) return null;
-  const current = await ghGetFile(CONFIG.videosPath);
-  if (!current) throw new Error("Fichier vidéos introuvable sur GitHub.");
-  if (current.sha !== state.videoSha)
-    throw new Error("Le fichier vidéos a été modifié sur GitHub entre-temps (conflit SHA). Rechargez puis réessayez.");
-  const text = JSON.stringify(state.videos, null, 2) + "\n";
-  JSON.parse(text);
-  const n = state.dirty.size;
-  const res = await ghPutFile(CONFIG.videosPath, text, current.sha,
-    "MATUHPV — mise à jour de " + n + " vidéo(s) (titre, description, thèmes)");
-  state.videoSha = res.content.sha;
-  state.dirty.clear();
-  snapshotVideos();
-  return res;
-}
-async function _doSaveThemes(){
-  if (!state.themes) throw new Error("Thèmes non chargés.");
-  if (!state.themeDirty) return null;
-  const seen = new Set();
-  state.themes.forEach((t, i) => {
-    const fr = String(t.theme_fr || "").trim();
-    if (!fr) throw new Error("Thème n°" + (i + 1) + " : libellé français vide.");
-    const k = fr.toLowerCase();
-    if (seen.has(k)) throw new Error("Thème « " + fr + " » présent en double.");
-    seen.add(k);
-  });
-  const current = await ghGetFile(CONFIG.themesPath);
-  const currentSha = current ? current.sha : null;
-  if (currentSha !== state.themeSha)
-    throw new Error("Le fichier thèmes a été modifié sur GitHub entre-temps (conflit SHA).");
-  const text = JSON.stringify(state.themes, null, 2) + "\n";
-  JSON.parse(text);
-  const res = await ghPutFile(CONFIG.themesPath, text, state.themeSha,
-    "MATUHPV — mise à jour du référentiel des thèmes");
-  state.themeSha = res.content.sha;
-  state.themeSnapshot = JSON.stringify(state.themes);
-  state.themeDirty = false;
-  return res;
-}
-
 async function saveVideos(){
   try { ensureAuth(); } catch (e){ toast(e.message, "error"); return; }
   if (!state.videos){ toast("Chargez d'abord les données.", "error"); return; }
   if (state.dirty.size === 0){ toast("Aucune modification vidéo à enregistrer.", "warn"); return; }
   busy(true, "Enregistrement des vidéos…");
+  const btn = $("#saveVideos");
+  const oldTxt = btn.textContent;
+  btn.disabled = true;
   try {
-    const res = await _doSaveVideos();
-    renderVideos(); updateSaveButtons(); updateGlobalStatus();
-    toast("✅ Vidéos enregistrées. Commit : " + String(res.commit && res.commit.sha || "").slice(0, 7), "success");
+    const current = await ghGetFile(CONFIG.videosPath);
+    if (!current) throw new Error("Fichier vidéos introuvable sur GitHub.");
+    if (current.sha !== state.videoSha)
+      throw new Error("Le fichier vidéos a été modifié sur GitHub entre-temps (conflit SHA). Rechargez puis réessayez.");
+    const text = JSON.stringify(state.videos, null, 2) + "\n";
+    JSON.parse(text);
+    const n = state.dirty.size;
+    const res = await ghPutFile(CONFIG.videosPath, text, current.sha,
+      "MATUHPV — mise à jour de " + n + " vidéo(s) (titre, description, thèmes)");
+    state.videoSha = res.content.sha;
+    state.dirty.clear();
+    snapshotVideos();
+    renderVideos(); updateSaveButtons();
+    toast("✅ Vidéos enregistrées. Commit : "
+      + String(res.commit && res.commit.sha || "").slice(0, 7), "success");
   } catch (e) {
     toast(e.message, "error");
   } finally {
     busy(false);
+    btn.textContent = oldTxt;
+    updateSaveButtons();
   }
 }
 function resetVideos(){
@@ -1356,7 +1254,7 @@ function resetVideos(){
     item[resolveKey(item, "theme_ar")]    = snap.theme_ar;
   }
   state.dirty.clear();
-  renderVideos(); updateSaveButtons(); updateGlobalStatus();
+  renderVideos(); updateSaveButtons();
   toast("Modifications annulées.", "info");
 }
 
@@ -1374,7 +1272,7 @@ function countVideosForTheme(fr){
 }
 function markThemeDirty(){
   state.themeDirty = JSON.stringify(state.themes) !== state.themeSnapshot;
-  updateThemeButtons(); updateGlobalStatus();
+  updateThemeButtons();
 }
 function updateThemeButtons(){
   const dirty = state.themeDirty;
@@ -1465,7 +1363,7 @@ function resetThemes(){
   if (!confirm("Annuler toutes les modifications du référentiel des thèmes ?")) return;
   state.themes = JSON.parse(state.themeSnapshot);
   state.themeDirty = false;
-  renderThemes(); updateThemeButtons(); updateGlobalStatus();
+  renderThemes(); updateThemeButtons();
   toast("Référentiel des thèmes restauré.", "info");
 }
 async function saveThemes(){
@@ -1473,70 +1371,43 @@ async function saveThemes(){
   if (!state.themes){ toast("Chargez d'abord les données.", "error"); return; }
   if (!state.themeDirty){ toast("Aucune modification de thèmes.", "warn"); return; }
   busy(true, "Enregistrement des thèmes…");
+  const btn = $("#saveThemes");
+  const oldTxt = btn.textContent;
+  btn.disabled = true;
   try {
-    const res = await _doSaveThemes();
-    renderVideos(); updateThemeButtons(); updateGlobalStatus();
-    toast("✅ Thèmes enregistrés. Commit : " + String(res.commit && res.commit.sha || "").slice(0, 7), "success");
+    const seen = new Set();
+    state.themes.forEach((t, i) => {
+      const fr = String(t.theme_fr || "").trim();
+      if (!fr) throw new Error("Thème n°" + (i + 1) + " : libellé français vide.");
+      const k = fr.toLowerCase();
+      if (seen.has(k)) throw new Error("Thème « " + fr + " » présent en double.");
+      seen.add(k);
+    });
+    const current = await ghGetFile(CONFIG.themesPath);
+    const currentSha = current ? current.sha : null;
+    if (currentSha !== state.themeSha)
+      throw new Error("Le fichier thèmes a été modifié sur GitHub entre-temps (conflit SHA).");
+    const text = JSON.stringify(state.themes, null, 2) + "\n";
+    JSON.parse(text);
+    const res = await ghPutFile(CONFIG.themesPath, text, state.themeSha,
+      "MATUHPV — mise à jour du référentiel des thèmes");
+    state.themeSha = res.content.sha;
+    state.themeSnapshot = JSON.stringify(state.themes);
+    state.themeDirty = false;
+    renderVideos(); updateThemeButtons();
+    toast("✅ Thèmes enregistrés. Commit : "
+      + String(res.commit && res.commit.sha || "").slice(0, 7), "success");
   } catch (e) {
     toast(e.message, "error");
   } finally {
     busy(false);
+    btn.textContent = oldTxt;
+    updateThemeButtons();
   }
 }
 
 /* =====================================================================
-   14. SAUVEGARDE GLOBALE (vidéos + thèmes)
-   ===================================================================== */
-async function saveAllData(){
-  try { ensureAuth(); } catch (e){ toast(e.message, "error"); return; }
-  const hasVideos = state.dirty.size > 0;
-  const hasThemes = state.themeDirty;
-  if (!hasVideos && !hasThemes){
-    toast("Aucune modification en attente.\nLes transcriptions (contenu) sont enregistrées immédiatement via la fenêtre Détails ou Modifier le contenu.", "info");
-    return;
-  }
-
-  const btn = $("#saveAllBtn");
-  const oldTxt = btn.textContent;
-  btn.disabled = true;
-  btn.textContent = "⏳ Sauvegarde en cours…";
-  busy(true, "Sauvegarde de toutes les données…");
-
-  const results = [];
-
-  if (hasVideos){
-    try {
-      const r = await _doSaveVideos();
-      results.push({ ok: true, msg: "Vidéos (" + state.dirty.size + ") — commit " + String(r.commit && r.commit.sha || "").slice(0, 7) });
-    } catch (e) {
-      results.push({ ok: false, msg: "Vidéos : " + e.message });
-    }
-  }
-
-  if (hasThemes){
-    try {
-      const r = await _doSaveThemes();
-      results.push({ ok: true, msg: "Thèmes — commit " + String(r.commit && r.commit.sha || "").slice(0, 7) });
-    } catch (e) {
-      results.push({ ok: false, msg: "Thèmes : " + e.message });
-    }
-  }
-
-  renderVideos(); updateSaveButtons(); updateThemeButtons(); updateGlobalStatus();
-  busy(false);
-  btn.disabled = false;
-  btn.textContent = oldTxt;
-
-  const failures = results.filter(r => !r.ok);
-  if (failures.length === 0){
-    toast("✅ Toutes les données ont été enregistrées avec succès.\n" + results.map(r => "• " + r.msg).join("\n"), "success");
-  } else {
-    toast("⚠ Certaines données n'ont pas pu être enregistrées :\n" + failures.map(r => "• " + r.msg).join("\n"), "error");
-  }
-}
-
-/* =====================================================================
-   15. GESTION url_content.json
+   14. GESTION url_content.json
    ===================================================================== */
 async function ensureUrlContentLoaded(){
   if (state.urlContentLoaded) return;
@@ -1590,7 +1461,7 @@ async function _putContenuToGitHub(fbid, newContenu, videoUrl){
 }
 
 /* =====================================================================
-   16. MODALE CONTENU (raccourci)
+   15. MODALE CONTENU
    ===================================================================== */
 function buildFacebookEmbedUrl(videoUrl){
   const u = String(videoUrl || "").trim();
@@ -1708,7 +1579,7 @@ function cancelContentModal(){
 }
 
 /* =====================================================================
-   17. MODALE DÉTAILS
+   16. MODALE DÉTAILS
    ===================================================================== */
 function readonlyField(label, value, opts){
   opts = opts || {};
@@ -1766,14 +1637,14 @@ async function openDetailsModal(videoItem){
 
   const body = $("#detailsBody");
 
-  /* --- Lecteur vidéo --- */
+  /* Lecteur */
   const secPlayer = el("div", { class: "detail-section" });
   secPlayer.appendChild(el("h4", { class: "detail-section-title" }, "Lecteur vidéo"));
   const videoBox = el("div", { class: "modal-video", id: "detailsVideo", hidden: true });
   secPlayer.appendChild(videoBox);
   body.appendChild(secPlayer);
 
-  /* --- Identification --- */
+  /* Identification */
   const secId = el("div", { class: "detail-section" });
   secId.appendChild(el("h4", { class: "detail-section-title" }, "Identification"));
   const idGrid = el("div", { class: "readonly-grid" });
@@ -1791,7 +1662,7 @@ async function openDetailsModal(videoItem){
   secId.appendChild(idGrid);
   body.appendChild(secId);
 
-  /* --- Métadonnées --- */
+  /* Métadonnées */
   const secMeta = el("div", { class: "detail-section" });
   secMeta.appendChild(el("h4", { class: "detail-section-title" }, "Métadonnées"));
   const metaGrid = el("div", { class: "readonly-grid" });
@@ -1808,7 +1679,7 @@ async function openDetailsModal(videoItem){
   secMeta.appendChild(metaGrid);
   body.appendChild(secMeta);
 
-  /* --- Champs modifiables --- */
+  /* Modifiables */
   const secEdit = el("div", { class: "detail-section" });
   secEdit.appendChild(el("h4", { class: "detail-section-title" }, "Informations modifiables"));
   const editGrid = el("div", { class: "editable-grid" });
@@ -1833,7 +1704,7 @@ async function openDetailsModal(videoItem){
   secEdit.appendChild(editGrid);
   body.appendChild(secEdit);
 
-  /* --- Contenu --- */
+  /* Contenu */
   const secContenu = el("div", { class: "detail-section" });
   secContenu.appendChild(el("h4", { class: "detail-section-title" }, "Contenu / Transcription"));
   const contenuTa = el("textarea", {
@@ -1847,7 +1718,7 @@ async function openDetailsModal(videoItem){
   secContenu.appendChild(contenuTa);
   body.appendChild(secContenu);
 
-  /* --- Autres propriétés dynamiques --- */
+  /* Autres propriétés dynamiques */
   const handled = new Set();
   Object.values(FIELD_KEYS).forEach(arr => arr.forEach(k => handled.add(k)));
   ["date_iso","iso_date","dateISO","published_iso","iso","created_iso"].forEach(k => handled.add(k));
@@ -1866,7 +1737,7 @@ async function openDetailsModal(videoItem){
     body.appendChild(secOther);
   }
 
-  /* --- Chargement contenu + lecteur --- */
+  /* Chargement contenu + lecteur */
   try {
     await ensureUrlContentLoaded();
     const entry = findUrlContent(fbid);
@@ -1975,13 +1846,13 @@ async function saveDetailsModal(){
 
   const msgs = [];
   if (contenuSaved) msgs.push("✅ Contenu enregistré sur GitHub.");
-  if (videoChanged) msgs.push("ℹ Titre / description / thèmes appliqués localement.\nCliquez sur « SAUVEGARDER TOUTES LES DONNÉES » ou « Enregistrer sur GitHub » pour publier.");
+  if (videoChanged) msgs.push("ℹ Titre / description / thèmes appliqués localement.\nCliquez sur « Enregistrer sur GitHub » pour publier.");
 
   toast(msgs.join("\n"), contenuSaved ? "success" : "info");
 }
 
 /* =====================================================================
-   18. ONGLETS
+   17. ONGLETS
    ===================================================================== */
 function activateTab(name){
   $$(".tab").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
@@ -1989,7 +1860,7 @@ function activateTab(name){
 }
 
 /* =====================================================================
-   19. INITIALISATION
+   18. INITIALISATION
    ===================================================================== */
 document.addEventListener("DOMContentLoaded", () => {
   if (location.protocol === "file:"){
@@ -2050,15 +1921,11 @@ document.addEventListener("DOMContentLoaded", () => {
   $("#resetThemes").addEventListener("click", resetThemes);
   $("#themeSearch").addEventListener("input", renderThemes);
 
-  $("#saveAllBtn").addEventListener("click", saveAllData);
-
-  /* Modale Détails */
   $("#detailsSave").addEventListener("click", saveDetailsModal);
   $("#detailsCancel").addEventListener("click", cancelDetailsModal);
   $("#detailsClose").addEventListener("click", cancelDetailsModal);
   $("#detailsX").addEventListener("click", cancelDetailsModal);
 
-  /* Modale Contenu */
   $("#modalSave").addEventListener("click", saveContentModal);
   $("#modalCancel").addEventListener("click", cancelContentModal);
   $("#modalClose").addEventListener("click", cancelContentModal);
@@ -2077,7 +1944,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   renderVideos(); renderThemes();
-  updateSaveButtons(); updateThemeButtons(); updateSortIndicators(); updateGlobalStatus();
+  updateSaveButtons(); updateThemeButtons(); updateSortIndicators();
 
   openLoginModal();
 });
