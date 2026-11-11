@@ -1,5 +1,4 @@
 [
-
 {
   "fbid": "2288792411663751",
   "type": "video",
@@ -17,8 +16,11 @@
   "video_mp4": null,
   "video_largeur": null,
   "video_hauteur": null,
-    "theme_fr_original": "Politique de la ville",
-    "theme_ar_original": "سياسة المدينة"
+  "theme_fr_original": "Politique de la ville",
+  "theme_ar_original": "سياسة المدينة",
+      "theme_fr": "Politique de la ville",
+    "theme_ar": "سياسة المدينة"
+  
 }
 
 ,
