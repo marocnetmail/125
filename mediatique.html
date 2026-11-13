@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>الأرشيف المؤسساتي | فيديوهات · صور · منشورات</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { darkMode: 'class' };</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:'Cairo',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+
+  /* ============ LAYOUT / STRUCTURE ============ */
+  .institutional-banner{width:100%;background:#fff;border-bottom:1px solid #dbe3ed;line-height:0}
+  .institutional-banner img{display:block;width:100%;height:auto;max-height:380px;object-fit:cover;object-position:center}
+
+  /* ============ HEADER PRINCIPAL (sticky) ============ */
+  .app-header{position:sticky;top:0;z-index:40;background:rgba(9,44,76,.98);backdrop-filter:blur(10px);box-shadow:0 2px 12px rgba(0,0,0,.4);border-bottom:1px solid rgba(255,255,255,.1)}
+  .header-row{max-width:1440px;margin:0 auto;display:flex;align-items:center;gap:.75rem;padding:.5rem .75rem;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .header-row::-webkit-scrollbar{display:none}
+  .header-row>*{flex-shrink:0}
+  .brand{display:flex;align-items:center;gap:.55rem;color:#fff}
+  .brand-badge{width:38px;height:38px;border-radius:10px;background:rgba(197,155,69,.15);border:1px solid rgba(197,155,69,.6);display:flex;align-items:center;justify-content:center;font-size:1rem;color:#c59b45;font-weight:800;flex-shrink:0}
+  .brand-text h1{font-size:1rem;font-weight:800;white-space:nowrap;line-height:1.2}
+  .brand-text p{display:none;font-size:.7rem;color:#94a3b8;white-space:nowrap}
+
+  /* ============ MENU CENTRAL (tabs) ============ */
+  .center-tabs{display:flex;gap:.35rem;background:rgba(0,0,0,.3);padding:.35rem;border-radius:12px;margin-inline:auto;border:1px solid rgba(255,255,255,.1)}
+  .center-tab{display:flex;align-items:center;gap:.4rem;padding:.5rem .9rem;border-radius:9px;font-size:.85rem;font-weight:700;color:#94a3b8;background:transparent;border:none;cursor:pointer;transition:all .2s;white-space:nowrap;font-family:inherit}
+  .center-tab:hover{color:#fff;background:rgba(255,255,255,.08)}
+  .center-tab.active{color:#092c4c;background:linear-gradient(135deg,#c59b45 0%,#e0b55a 100%);box-shadow:0 2px 8px rgba(197,155,69,.4);font-weight:800}
+  .center-tab .count-badge{background:rgba(0,0,0,.2);color:inherit;font-size:.68rem;font-weight:700;padding:.05rem .45rem;border-radius:999px;line-height:1.4}
+  .center-tab.active .count-badge{background:rgba(9,44,76,.25);color:#092c4c}
+  .center-tab .tab-label{display:none}
+
+  /* ============ SEARCH ============ */
+  .search-wrap{position:relative;flex:0 1 240px;min-width:150px}
+  .search-wrap input{width:100%;padding:.5rem 2.2rem .5rem .75rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:10px;color:#fff;font-size:14px;font-family:inherit;outline:none;transition:all .2s}
+  .search-wrap input::placeholder{color:rgba(255,255,255,.5)}
+  .search-wrap input:focus{background:rgba(255,255,255,.15);border-color:rgba(197,155,69,.6)}
+  .search-wrap .search-icon{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.55);font-size:.85rem;pointer-events:none}
+
+  /* ============ SOUS-MENU VIDÉOS ============ */
+  .sub-menu-row{display:none;background:#0b3559;border-top:1px solid rgba(255,255,255,.08);border-bottom:2px solid rgba(197,155,69,.4)}
+  .sub-menu-row.visible{display:block}
+  .sub-menu-inner{max-width:1440px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;padding:.4rem .75rem;overflow-x:auto;scrollbar-width:none}
+  .sub-menu-inner::-webkit-scrollbar{display:none}
+  .sub-menu-inner>*{flex-shrink:0}
+  .menu-item{display:flex;align-items:center;gap:.4rem;padding:.55rem .85rem;font-size:.82rem;font-weight:600;color:#e2e8f0;background:transparent;border:none;cursor:pointer;border-radius:8px;transition:all .2s;font-family:inherit;white-space:nowrap}
+  .menu-item:hover{background:rgba(255,255,255,.08);color:#93c5fd}
+  .menu-item.active,.menu-item[aria-expanded="true"]{background:rgba(59,130,246,.2);color:#bfdbfe;border:1px solid rgba(59,130,246,.4)}
+  .menu-dropdown{position:relative;display:flex}
+  .menu-dropdown-content{position:absolute;top:calc(100% + .3rem);right:0;min-width:230px;background:#0b3559;border:1px solid rgba(255,255,255,.18);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.5);z-index:60;padding:.35rem;animation:ddFade .15s ease-out}
+  .menu-dropdown-content.hidden{display:none}
+  @keyframes ddFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+  .menu-dropdown-item{display:flex;align-items:center;gap:.5rem;width:100%;padding:.55rem .75rem;color:#e2e8f0;font-size:.82rem;font-weight:500;text-align:right;background:transparent;border:none;cursor:pointer;border-radius:7px;transition:background .15s;white-space:nowrap;font-family:inherit}
+  .menu-dropdown-item:hover{background:rgba(255,255,255,.08);color:#fff}
+  .menu-dropdown-item.active{background:rgba(59,130,246,.24);color:#93c5fd;font-weight:700}
+  .menu-dropdown-item i:first-child{width:16px;text-align:center;font-size:.72rem;opacity:.85}
+  .menu-dropdown-item .dd-check{margin-right:auto;font-size:.68rem;opacity:0}
+  .menu-dropdown-item.active .dd-check{opacity:1}
+  .menu-badge{display:inline-block;background:rgba(59,130,246,.3);color:#bfdbfe;font-size:.65rem;font-weight:700;padding:.05rem .45rem;border-radius:999px;border:1px solid rgba(59,130,246,.5)}
+
+  /* ============ MAIN ============ */
+  main{max-width:1440px;margin:0 auto;padding:1rem .75rem 2rem;flex:1;width:100%}
+
+  /* ============ CARTES VIDÉO (v3) ============ */
+  .reel-card{position:relative}
+  .thumb-gradient{background:linear-gradient(to top,rgba(0,0,0,.88) 0%,rgba(0,0,0,.55) 22%,rgba(0,0,0,.18) 42%,transparent 60%)}
+  .video-title{display:block;width:100%;white-space:normal;word-wrap:break-word;overflow-wrap:anywhere;line-height:1.3}
+  .thumb-wrap{position:relative;width:100%;height:100%;background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);overflow:hidden}
+  .thumb-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+  .thumb-wrap .thumb-fallback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:6px;color:#64748b;font-size:10px;text-align:center;padding:8px;direction:rtl}
+  .thumb-wrap.thumb-error img{display:none!important}
+  .thumb-wrap.thumb-error .thumb-fallback{display:flex}
+  .thumb-wrap .thumb-fallback i{font-size:22px;color:#475569}
+  .date-display{display:inline-block;white-space:nowrap;direction:rtl;unicode-bidi:isolate;max-width:100%}
+  .theme-chip{display:inline-block;background:#FFF9DB;color:#78350F;border:1px solid #FCD34D;border-radius:9999px;padding:2px 8px;font-size:9px;font-weight:700;line-height:1.4;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:rtl;text-align:right;box-shadow:0 1px 2px rgba(0,0,0,.12);vertical-align:middle}
+
+  /* ============ THEME CARDS / TREE (v3) ============ */
+  .theme-card-new{background-color:#FFF9DB;border:1px solid #FCD34D;color:#78350F;border-radius:14px;transition:all .25s;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .theme-card-new:hover{background-color:#FEF3C7;border-color:#F59E0B;box-shadow:0 6px 16px rgba(245,158,11,.2);transform:translateY(-2px)}
+  .theme-card-new .theme-card-icon{background-color:#FCD34D;color:#78350F}
+  .theme-card-new .theme-card-count{background-color:#FEF3C7;color:#92400E;border:1px solid #FCD34D}
+  .theme-folder-row{background-color:#FFF9DB;border:1px solid #FCD34D;border-radius:10px;color:#78350F;transition:all .2s}
+  .theme-folder-row:hover{background-color:#FEF3C7;border-color:#F59E0B;box-shadow:0 2px 8px rgba(245,158,11,.15)}
+  .theme-folder-row .folder-icon{color:#B45309}
+  .theme-folder-row .chevron-icon{color:#92400E}
+  .theme-folder-row .count-badge{background-color:#FCD34D;color:#78350F;border:1px solid #F59E0B}
+  .tree-list{list-style:none;padding:0;margin:0}
+  .tree-list .tree-list{padding-right:1.5rem;border-right:2px dashed #475569;margin-right:.75rem}
+  .tree-item{position:relative;padding:.3rem 0}
+  .tree-list .tree-list .tree-item::before{content:'';position:absolute;right:-1.5rem;top:1.5rem;width:1rem;border-top:2px dashed #475569}
+  .tree-toggle{transition:transform .2s}
+  .tree-toggle.open{transform:rotate(-90deg)}
+  .tree-video-title{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+  /* ============ PHOTOS GRID ============ */
+  .photos-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+  .photo-tile{position:relative;aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#1e293b,#0f172a);cursor:pointer;border:1px solid rgba(255,255,255,.06);transition:transform .2s}
+  .photo-tile:hover{transform:scale(1.02);border-color:rgba(197,155,69,.5)}
+  .photo-tile img{width:100%;height:100%;object-fit:cover;display:block}
+  .photo-tile .photo-hover{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 50%);opacity:0;transition:opacity .2s;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;color:#fff;font-size:.72rem;line-height:1.35}
+  .photo-tile:hover .photo-hover{opacity:1}
+  .photo-hover-date{font-weight:700;color:#fcd34d;font-size:.68rem;margin-bottom:2px}
+  .photo-hover-text{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .photo-badge{position:absolute;top:6px;right:6px;background:rgba(197,155,69,.92);color:#092c4c;font-size:.65rem;font-weight:800;padding:2px 6px;border-radius:5px}
+
+  /* ============ PUBLICATIONS CARDS ============ */
+  .pub-grid{display:grid;grid-template-columns:1fr;gap:1rem}
+  .pub-card{background:#1e293b;border:1px solid #334155;border-radius:14px;overflow:hidden;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column}
+  .pub-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.4);border-color:rgba(197,155,69,.4)}
+  .pub-media{position:relative;aspect-ratio:16/10;background:linear-gradient(135deg,#1e293b,#0f172a);cursor:pointer;overflow:hidden}
+  .pub-media img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+  .pub-card:hover .pub-media img{transform:scale(1.04)}
+  .pub-badge-type{position:absolute;top:10px;right:10px;background:rgba(9,44,76,.92);color:#c59b45;padding:.2rem .6rem;border-radius:6px;font-size:.7rem;font-weight:700;border:1px solid rgba(197,155,69,.4)}
+  .pub-badge-gallery{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.8);color:#fff;padding:.2rem .55rem;border-radius:6px;font-size:.7rem;font-weight:700}
+  .pub-thumbs{display:flex;gap:4px;padding:6px 8px 0;background:#0f172a;overflow-x:auto;scrollbar-width:none}
+  .pub-thumbs::-webkit-scrollbar{display:none}
+  .pub-thumbs img{width:40px;height:40px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;opacity:.7;transition:all .15s;flex-shrink:0}
+  .pub-thumbs img.active,.pub-thumbs img:hover{border-color:#c59b45;opacity:1}
+  .pub-body{padding:1rem;flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:.75rem}
+  .pub-meta{display:flex;justify-content:space-between;align-items:center;font-size:.78rem;margin-bottom:.5rem;gap:.5rem}
+  .pub-date{font-weight:700;color:#c59b45;background:rgba(197,155,69,.1);padding:.2rem .55rem;border-radius:6px;border:1px solid rgba(197,155,69,.2);white-space:nowrap}
+  .pub-fbid{font-family:ui-monospace,monospace;font-size:.7rem;color:#64748b}
+  .pub-text{font-size:.92rem;color:#cbd5e1;line-height:1.65;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:.75rem}
+  .pub-text.expanded{-webkit-line-clamp:unset}
+  .read-more{background:none;border:none;color:#60a5fa;font-family:inherit;font-weight:700;font-size:.82rem;cursor:pointer;padding:0;margin-bottom:.6rem}
+  .read-more:hover{text-decoration:underline}
+  .pub-footer{border-top:1px solid #334155;padding-top:.7rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
+  .pub-stats{display:flex;gap:.85rem;font-size:.82rem;color:#94a3b8;font-weight:600}
+  .pub-stats span{display:inline-flex;align-items:center;gap:.25rem}
+  .pub-actions{display:flex;gap:.4rem}
+  .btn-sm{padding:.38rem .75rem;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;border:1px solid #475569;background:#0f172a;color:#cbd5e1;transition:all .15s;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem;min-height:32px}
+  .btn-sm:hover{background:#c59b45;color:#092c4c;border-color:#c59b45}
+
+  /* ============ LIGHTBOX ============ */
+  .lb-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.95);backdrop-filter:blur(8px);z-index:90;display:none;align-items:center;justify-content:center;padding:.5rem}
+  .lb-backdrop.open{display:flex}
+  .lb-content{background:#1e293b;border-radius:14px;max-width:1080px;width:100%;max-height:94vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.6);position:relative;border:1px solid #334155}
+  .lb-image-pane{background:#0b1120;position:relative;display:flex;align-items:center;justify-content:center;min-height:40vh;max-height:55vh;flex-shrink:0}
+  .lb-image-pane img{max-width:100%;max-height:54vh;object-fit:contain;display:block}
+  .lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.2);color:#fff;border:none;width:42px;height:42px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);transition:all .2s}
+  .lb-nav:hover{background:#c59b45;color:#092c4c}
+  .lb-prev{right:12px}.lb-next{left:12px}
+  .lb-close{position:absolute;top:12px;left:12px;z-index:10;background:rgba(15,23,42,.85);color:#fff;border:none;width:36px;height:36px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .lb-close:hover{background:#dc2626}
+  .lb-details{padding:1rem 1.25rem;flex:1;overflow-y:auto;min-height:0}
+  .lb-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;gap:.5rem;flex-wrap:wrap}
+  .lb-date{font-weight:700;color:#c59b45;font-size:.85rem}
+  .lb-counter{font-size:.8rem;color:#94a3b8;font-weight:700;font-family:ui-monospace,monospace}
+  .lb-caption{font-size:.92rem;color:#cbd5e1;line-height:1.75;white-space:pre-line;margin-bottom:.75rem}
+  .lb-footer{border-top:1px solid #334155;padding-top:.75rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
+
+  /* ============ MODALS v3 (détails vidéo, remarks, exit) ============ */
+  #detailsContent::-webkit-scrollbar{width:6px}
+  #detailsContent::-webkit-scrollbar-thumb{background:rgba(100,116,139,.4);border-radius:3px}
+  #playerZone{position:relative;background:#0f172a}
+  #playerZone iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+  #playerZone:fullscreen,#playerZone:-webkit-full-screen{width:100vw!important;height:100vh!important;max-width:none!important;margin:0!important;padding:0!important;background:#000!important}
+  #progressOverlay{animation:fadeIn .3s}
+  #progressOverlay.fade-out{animation:fadeOut .4s forwards}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes fadeOut{from{opacity:1}to{opacity:0}}
+  #exitConfirmModal{animation:fadeIn .2s}
+  .content-match-badge{position:absolute;top:0;right:0;z-index:4;background:rgba(245,158,11,.95);color:#1c1917;font-size:8px;font-weight:800;padding:2px 6px;border-bottom-left-radius:8px}
+
+  /* ============ RESPONSIVE ============ */
+  @media (min-width:640px){
+    .brand-text p{display:block}
+    .brand-text h1{font-size:1.1rem}
+    .brand-badge{width:44px;height:44px;font-size:1.15rem}
+    .center-tab{padding:.55rem 1.1rem;font-size:.9rem}
+    .center-tab .tab-label{display:inline}
+    .pub-grid{grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.2rem}
+    .photos-grid{grid-template-columns:repeat(3,1fr);gap:8px}
+    .lb-content{display:grid;grid-template-columns:1.4fr 1fr;max-height:88vh}
+    .lb-image-pane{min-height:0;max-height:none}
+    .lb-image-pane img{max-height:88vh}
+    .lb-details{padding:1.5rem;max-height:88vh}
+  }
+  @media (min-width:820px){
+    .header-row{padding:.6rem 1.5rem;gap:1rem}
+    .sub-menu-inner{padding:.5rem 1.5rem}
+    main{padding:1.5rem 1.5rem 2.5rem}
+    .photos-grid{grid-template-columns:repeat(4,1fr);gap:10px}
+    .pub-grid{grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:1.4rem}
+  }
+  @media (min-width:1100px){
+    .photos-grid{grid-template-columns:repeat(5,1fr)}
+    .header-row{padding:.65rem 2rem}
+    .sub-menu-inner{padding:.5rem 2rem}
+    main{padding:1.5rem 2rem 3rem}
+  }
+  @media (max-width:380px){
+    .center-tab{padding:.4rem .55rem;font-size:.75rem;gap:.25rem}
+    .search-wrap{flex-basis:130px;min-width:0}
+  }
+
+  .safe-bottom{padding-bottom:max(1rem,env(safe-area-inset-bottom))}
+  .hidden{display:none!important}
+</style>
+<base target="_blank">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
+
+<!-- ============ PROGRESS OVERLAY (vidéos) ============ -->
+<div id="progressOverlay" class="hidden fixed inset-0 z-[100] bg-slate-900/95 backdrop-blur-md flex items-center justify-center">
+  <div class="w-full max-w-md px-6">
+    <div class="text-center mb-6">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/20 mb-4">
+        <i class="fa-solid fa-images text-3xl text-blue-400 animate-pulse"></i>
+      </div>
+      <h2 class="text-lg font-bold text-white mb-1">جارٍ تحميل الصور المصغرة…</h2>
+      <p id="progressCount" class="text-xs text-slate-400">جارٍ التحضير…</p>
+    </div>
+    <div class="h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+      <div id="progressBar" class="h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-300 rounded-full" style="width:0%"></div>
+    </div>
+    <p id="progressPercent" class="text-center text-sm font-semibold text-blue-300 mt-3">0%</p>
+  </div>
+</div>
+
+<!-- ============ BANNIÈRE INSTITUTIONNELLE ============ -->
+<div class="institutional-banner" role="banner">
+  <img src="https://marocnetmail.github.io/125/images/logo2.png" alt="الشعار المؤسساتي" loading="eager">
+</div>
+
+<!-- ============ HEADER PRINCIPAL ============ -->
+<header class="app-header" dir="rtl">
+  <div class="header-row">
+    <div class="brand">
+      <div class="brand-text">
+      </div>
+    </div>
+
+    <!-- ====== MENU CENTRAL (tabs) ====== -->
+    <nav class="center-tabs" role="tablist" aria-label="القائمة الرئيسية">
+      <button class="center-tab active" data-tab="videos" role="tab" aria-selected="true">
+        <i class="fa-solid fa-film"></i>
+        <span class="tab-label">الفيديوهات</span>
+        <span class="count-badge" id="tabCountVideos">0</span>
+      </button>
+      <button class="center-tab" data-tab="photos" role="tab" aria-selected="false">
+        <i class="fa-solid fa-images"></i>
+        <span class="tab-label">الصور</span>
+        <span class="count-badge" id="tabCountPhotos">0</span>
+      </button>
+      <button class="center-tab" data-tab="publications" role="tab" aria-selected="false">
+        <i class="fa-solid fa-newspaper"></i>
+        <span class="tab-label">المنشورات</span>
+        <span class="count-badge" id="tabCountPublications">0</span>
+      </button>
+    </nav>
+
+    <div class="search-wrap">
+      <i class="fa-solid fa-magnifying-glass search-icon"></i>
+      <input type="text" id="globalSearch" inputmode="search" placeholder="البحث في المحتوى…" aria-label="البحث في المحتوى" dir="rtl">
+    </div>
+  </div>
+
+  <!-- ====== SOUS-MENU VIDÉOS (visible uniquement onglet vidéos) ====== -->
+  <div class="sub-menu-row visible" id="videoSubMenu">
+    <div class="sub-menu-inner">
+      <button type="button" class="menu-item" id="menuHome" aria-label="الرئيسية">
+        <i class="fa-solid fa-house"></i><span>الرئيسية</span>
+      </button>
+
+      <div class="menu-dropdown" data-dropdown="gallery">
+        <button type="button" class="menu-item" id="menuGalerie" aria-haspopup="true" aria-expanded="false">
+          <i class="fa-solid fa-table-cells-large"></i><span>معرض الفيديوهات</span>
+          <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-70 dd-chevron"></i>
+        </button>
+        <div class="menu-dropdown-content hidden" id="galleryDropdown" role="menu">
+          <button type="button" class="menu-dropdown-item" data-view="gallery" role="menuitem">
+            <i class="fa-solid fa-table-cells-large"></i><span>عرض شبكي</span><i class="fa-solid fa-check dd-check"></i>
+          </button>
+          <button type="button" class="menu-dropdown-item" data-view="themes" role="menuitem">
+            <i class="fa-solid fa-folder-open"></i><span>المحاور الموضوعاتية</span><i class="fa-solid fa-check dd-check"></i>
+          </button>
+          <button type="button" class="menu-dropdown-item" data-view="tree" role="menuitem">
+            <i class="fa-solid fa-sitemap"></i><span>التنظيم الهيكلي</span><i class="fa-solid fa-check dd-check"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="menu-dropdown" data-dropdown="sort">
+        <button type="button" class="menu-item" id="menuSort" aria-haspopup="true" aria-expanded="false">
+          <i class="fa-solid fa-clock-rotate-left"></i><span>الأحدث</span>
+          <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-70 dd-chevron"></i>
+        </button>
+        <div class="menu-dropdown-content hidden" id="sortDropdown" role="menu">
+          <button type="button" class="menu-dropdown-item" data-sort="recent" role="menuitem">
+            <i class="fa-solid fa-clock"></i><span>الأحدث</span><i class="fa-solid fa-check dd-check"></i>
+          </button>
+          <button type="button" class="menu-dropdown-item" data-sort="views" role="menuitem">
+            <i class="fa-solid fa-eye"></i><span>الأكثر مشاهدة</span><i class="fa-solid fa-check dd-check"></i>
+          </button>
+          <button type="button" class="menu-dropdown-item" data-sort="reactions" role="menuitem">
+            <i class="fa-solid fa-heart"></i><span>الأكثر تفاعلاً وتعليقاً</span><i class="fa-solid fa-check dd-check"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="menu-dropdown" data-dropdown="year">
+        <button type="button" class="menu-item" id="menuYear" aria-haspopup="true" aria-expanded="false">
+          <i class="fa-solid fa-calendar"></i><span>السنوات</span>
+          <span class="menu-badge" id="yearBadge">2026</span>
+          <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-70 dd-chevron"></i>
+        </button>
+        <div class="menu-dropdown-content hidden" id="yearDropdownContent" role="menu"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ MAIN CONTENT ============ -->
+<main>
+  <!-- ====== VIDEOS SECTION ====== -->
+  <section id="videosSection">
+    <div id="backNavigation" class="hidden mb-3">
+      <button id="backToThemesBtn" type="button" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium border border-slate-700 transition-colors" dir="rtl">
+        <i class="fa-solid fa-arrow-right"></i> العودة إلى المحاور
+      </button>
+    </div>
+    <div id="themesView" class="hidden"></div>
+    <div id="treeView" class="hidden bg-slate-800/50 p-4 sm:p-6 rounded-2xl border border-slate-700">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 pb-3 border-b border-slate-700" dir="rtl">
+        <h2 class="text-slate-200 font-bold text-base sm:text-lg flex items-center gap-2">
+          <i class="fa-solid fa-sitemap text-blue-400"></i>
+          <span>الشجرة الموضوعية</span>
+        </h2>
+        <button id="exportExcelBtn" type="button" class="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold border border-emerald-500 shadow-sm">
+          <i class="fa-solid fa-file-excel"></i><span>تصدير Excel</span>
+        </button>
+      </div>
+      <div id="treeContent"></div>
+    </div>
+    <div id="reelsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 w-full"></div>
+    <div id="emptyState" class="hidden text-center py-16 bg-slate-800/30 rounded-2xl border border-dashed border-slate-700 mt-4">
+      <i class="fa-regular fa-folder-open text-5xl text-slate-600 mb-4"></i>
+      <h3 class="text-lg font-medium text-slate-300">لا توجد نتائج</h3>
+      <p class="text-sm text-slate-500 mt-2">حاول تغيير البحث أو الفلاتر</p>
+    </div>
+    <nav id="pagination" class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-6 safe-bottom"></nav>
+  </section>
+
+  <!-- ====== PHOTOS SECTION ====== -->
+  <section id="photosSection" class="hidden">
+    <div class="photos-album-container bg-slate-800/40 rounded-2xl border border-slate-700 p-2 sm:p-3">
+      <div id="photosGrid" class="photos-grid"></div>
+    </div>
+    <div id="photosEmpty" class="hidden text-center py-16 bg-slate-800/30 rounded-2xl border border-dashed border-slate-700 mt-4">
+      <i class="fa-regular fa-images text-5xl text-slate-600 mb-4"></i>
+      <h3 class="text-lg font-medium text-slate-300">لا توجد صور</h3>
+    </div>
+  </section>
+
+  <!-- ====== PUBLICATIONS SECTION ====== -->
+  <section id="publicationsSection" class="hidden">
+    <div id="pubGrid" class="pub-grid"></div>
+    <div id="pubEmpty" class="hidden text-center py-16 bg-slate-800/30 rounded-2xl border border-dashed border-slate-700 mt-4">
+      <i class="fa-regular fa-newspaper text-5xl text-slate-600 mb-4"></i>
+      <h3 class="text-lg font-medium text-slate-300">لا توجد منشورات</h3>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="w-full max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 pt-2 pb-6 safe-bottom">
+  <div class="flex justify-center">
+    <button id="openRemarksBtn" type="button" class="cursor-pointer bg-slate-700 hover:bg-slate-600 border border-slate-600 text-sm font-medium px-5 sm:px-6 py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md">
+      <i class="fa-solid fa-comment-dots text-amber-400"></i><span>الملاحظات</span>
+    </button>
+  </div>
+</footer>
+
+<!-- ============ VIDEO DETAILS MODAL (v3) ============ -->
+<div id="detailsModal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" data-close-details></div>
+  <div class="relative z-10 w-full h-full flex items-center justify-center p-2 sm:p-4">
+    <div class="relative w-full max-w-5xl h-[92vh] bg-slate-800 overflow-hidden shadow-2xl border border-slate-700 rounded-2xl flex flex-col lg:flex-row">
+      <button type="button" data-close-details class="absolute top-3 right-3 z-50 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-red-600 border border-slate-700 text-white flex items-center justify-center transition-colors shadow-lg" aria-label="إغلاق">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+      <div id="playerZone" class="relative w-full h-[50vh] lg:h-full lg:w-[450px] flex-shrink-0 flex items-center justify-center overflow-hidden">
+        <div id="detailsPoster" class="absolute inset-0 z-10 transition-opacity duration-300">
+          <div class="thumb-wrap absolute inset-0">
+            <img id="detailsPosterImg" src="" alt="" onerror="this.parentElement.classList.add('thumb-error')" onload="this.parentElement.classList.remove('thumb-error')">
+            <div class="thumb-fallback"><i class="fa-regular fa-image"></i><span>الصورة غير متوفرة</span></div>
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none"></div>
+          <div id="videoLoader" class="hidden pointer-events-none absolute inset-0 z-30 flex items-center justify-center">
+            <div class="w-12 h-12 border-4 border-white/40 border-t-white rounded-full animate-spin drop-shadow-lg"></div>
+          </div>
+          <div class="absolute bottom-0 inset-x-0 p-4 sm:p-6 flex flex-col z-20">
+            <div class="flex items-center gap-4 mb-4 text-white text-sm font-bold drop-shadow-md">
+              <div class="flex items-center gap-1.5"><i class="fa-solid fa-eye text-amber-400"></i><span id="playerViewsVal">0</span></div>
+              <div class="flex items-center gap-1.5"><i class="fa-solid fa-heart text-rose-400"></i><span id="playerReactionsVal">0</span></div>
+            </div>
+            <div class="flex items-end justify-between gap-4">
+              <button id="detailsPlayBtn" type="button" class="w-[70px] h-[70px] sm:w-[85px] sm:h-[85px] rounded-full border-[4px] border-white flex items-center justify-center hover:bg-white/20 transition-all active:scale-95 flex-shrink-0 backdrop-blur-sm bg-black/10 shadow-lg">
+                <i class="fa-solid fa-play text-white text-2xl sm:text-3xl ml-1 drop-shadow-md"></i>
+              </button>
+              <div class="text-right flex flex-col items-end flex-1 min-w-0">
+                <span id="detailsDisplayDate" class="date-display text-white/90 text-xs sm:text-sm font-medium mb-1.5 drop-shadow-md tracking-wide"></span>
+                <h3 id="detailsDisplayTitle" class="video-title text-white text-lg sm:text-xl md:text-2xl font-bold drop-shadow-lg" dir="auto"></h3>
+              </div>
+            </div>
+          </div>
+        </div>
+        <iframe id="detailsFrame" class="border-0 opacity-0 transition-opacity duration-500" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen" scrolling="no" frameborder="0"></iframe>
+        <button id="fullscreenBtn" type="button" class="absolute top-3 left-3 z-40 w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-black/60 hover:bg-black/80 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center shadow-lg" aria-label="ملء الشاشة">
+          <i class="fa-solid fa-expand text-sm"></i>
+        </button>
+      </div>
+      <div id="detailsContent" class="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6 space-y-5 bg-slate-800 safe-bottom"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LIGHTBOX PARTAGÉE (photos + publications) ============ -->
+<div class="lb-backdrop" id="lightbox">
+  <button class="lb-close" id="lbClose" aria-label="إغلاق"><i class="fa-solid fa-xmark"></i></button>
+  <div class="lb-content">
+    <div class="lb-image-pane">
+      <button class="lb-nav lb-prev" id="lbPrev" aria-label="السابق"><i class="fa-solid fa-chevron-right"></i></button>
+      <img id="lbImg" src="" alt="">
+      <button class="lb-nav lb-next" id="lbNext" aria-label="التالي"><i class="fa-solid fa-chevron-left"></i></button>
+    </div>
+    <div class="lb-details">
+      <div class="lb-meta">
+        <span class="lb-date" id="lbDate"></span>
+        <span class="lb-counter" id="lbCounter"></span>
+      </div>
+      <p class="lb-caption" id="lbCaption"></p>
+      <div class="lb-footer">
+        <div class="pub-stats">
+          <span>👍 <strong id="lbReactions">0</strong></span>
+          <span>🔁 <strong id="lbShares">0</strong></span>
+        </div>
+        <a id="lbFbLink" href="#" target="_blank" rel="noopener" class="btn-sm">
+          <i class="fa-brands fa-facebook"></i> Facebook
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ REMARKS MODAL (v3) ============ -->
+<div id="remarksModal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/85 backdrop-blur-sm" data-close-remarks></div>
+  <div class="relative z-10 w-full h-full flex items-center justify-center p-3 sm:p-4">
+    <div class="relative w-full max-w-lg bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
+      <div class="flex items-center justify-between p-3 sm:p-4 border-b border-slate-700" dir="rtl">
+        <h2 class="text-white font-bold text-base sm:text-lg flex items-center gap-2">
+          <i class="fa-solid fa-comment-dots text-amber-400"></i><span>الملاحظات</span>
+        </h2>
+        <button type="button" data-close-remarks class="w-9 h-9 rounded-full bg-slate-900 hover:bg-red-600 border border-slate-700 text-white flex items-center justify-center" aria-label="إغلاق">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="p-4 sm:p-5">
+        <form id="emailRemarkForm" class="space-y-3">
+          <div>
+            <label for="emailRemarkText" class="block text-xs font-semibold text-slate-300 mb-1.5">
+              <i class="fa-solid fa-pen-to-square ml-1 text-slate-400"></i>
+              ملاحظتك <span class="text-rose-400">*</span>
+            </label>
+            <textarea id="emailRemarkText" name="monTexte" rows="5" required placeholder="اكتب ملاحظتك هنا…" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500 placeholder-slate-500 resize-y" dir="auto"></textarea>
+          </div>
+          <div id="emailRemarkStatus" class="hidden rounded-lg px-3 py-2 text-sm" role="status"></div>
+          <button type="submit" id="emailRemarkBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
+            <i class="fa-solid fa-paper-plane"></i><span>إرسال</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EXIT CONFIRM (v3) ============ -->
+<div id="exitConfirmModal" class="fixed inset-0 z-[80] hidden">
+  <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" data-exit-cancel></div>
+  <div class="relative z-10 w-full h-full flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
+      <div class="p-5 sm:p-6 text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-500/15 mb-4">
+          <i class="fa-solid fa-right-from-bracket text-2xl text-amber-400"></i>
+        </div>
+        <h2 class="text-lg font-bold text-white mb-2">مغادرة المعرض؟</h2>
+        <p class="text-sm text-slate-300">هل تريد فعلاً مغادرة الأرشيف المؤسساتي؟</p>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-2 p-4 bg-slate-900/40 border-t border-slate-700">
+        <button type="button" data-exit-cancel class="flex-1 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2">
+          <i class="fa-solid fa-arrow-right"></i><span>البقاء</span>
+        </button>
+        <button type="button" data-exit-confirm class="flex-1 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2">
+          <i class="fa-solid fa-right-from-bracket"></i><span>مغادرة</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCRIPT PRINCIPAL ============ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ============================================================
+     CONSTANTES
+     ============================================================ */
+  const PAGE_SIZE_VIDEOS = 20;
+  const EMAIL_REMARK_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwRllGpkxkBllOBnu9U7gZfH5Lg1qS-Iz-jf_rz_S1VKLydL0juENf-OfUI56mWQ_ojMA/exec';
+
+  // Image par défaut (SVG data-URI)
+  const DEFAULT_IMG = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">' +
+    '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
+    '<stop offset="0" stop-color="#0f3d3e"/><stop offset="1" stop-color="#195e60"/>' +
+    '</linearGradient></defs>' +
+    '<rect width="400" height="400" fill="url(#g)"/>' +
+    '<circle cx="200" cy="168" r="72" fill="none" stroke="#c59b45" stroke-width="3" opacity="0.55"/>' +
+    '<text x="200" y="200" text-anchor="middle" fill="#c59b45" font-family="Arial" font-size="82" font-weight="bold">م</text>' +
+    '<text x="200" y="288" text-anchor="middle" fill="#ffffff" font-family="Arial" font-size="12" opacity="0.65" letter-spacing="3">MATNUHPV</text>' +
+    '</svg>'
+  );
+
+  const $ = (id) => document.getElementById(id);
+
+  /* ============================================================
+     ARCHIVE DATA (photos + publications) — format compact
+     [fbid, date_iso, nb_images, texte]
+     ============================================================ */
+  const ARCHIVE_COMPACT = [
+    ["1794529729805","2026-08-20",4,"من تهيئة الأحياء وتعزيز البنيات التحتية، إلى تأهيل المجال القروي ودعم الجماعات الترابية، تتواصل دينامية التنمية بجهة كلميم واد نون في إطار مشاريع سياسة المدينة."],
+    ["1453435416963774","2026-11-04",2,"كما وقف ايضا السيد سمير بلفقيه، وزير إعداد التراب الوطني و التعمير و الإسكان و سياسة المدينة والسيدة فاطمة السعدي، الوزيرة المنتدبة، على مستوى تقدم انجاز برنامج التاهيل الحضري لجماعات طرفاية وبرنامج التنمية المندمجة لمركز صاعد أخفنير."],
+    ["1400000000000003","2026-10-17",0,"متمنياتي القلبية الخالصة بكامل التوفيق والنجاح والسداد الدائم لكل من السيدة الفاضلة المحترمة فاطمة الزهراء المنصوري، رئيسة الحكومة الجديدة، وللسيد الوزير المحترم سمير بلفقيه..."],
+    ["1391479326492717","2026-08-28",1,"التهيئة الحضرية وفق رؤية مستدامة تعتمد على استراتيجية تشجير مدروسة بأصناف محلية لا على تنخيل المدن و تحويلها لواحات من نخيل الوشينطونيا!!"],
+    ["1388924833414833","2026-08-25",1,"Grâce particulièrement a l'implication des autorités locales (Temara, Rabat, Casablanca.....) et aux préparatifs des 2 évènements footbalistiques que sont la CAN et la CDM 2030"],
+    ["1387145960259387","2026-08-23",1,"La sélection est sur Plus pertinents, certains commentaires ont donc peut-être été filtrés."],
+    ["1387141566926493","2026-08-23",5,"بجهة فاس-مكناس، تترجم سياسة المدينة على أرض الواقع من خلال مشاريع تستهدف المدن والمراكز القروية، وتهم تهيئة البنيات والفضاءات العمومية وتعزيز جاذبية المجالات..."],
+    ["1387129516927698","2026-08-23",4,"تتواصل دينامية سياسة المدينة بجهة فاس-مكناس من خلال 61 اتفاقية تشمل مشاريع بالمجالين الحضري والقروي..."],
+    ["1386511893656127","2026-08-22",1,"12.000 طلب تمت الموافقة عليه في إطار تسوية وضعية البنايات غير القانونية."],
+    ["1385105973796719","2026-08-21",1,"بمناسبة عيد الشباب المجيد، يخلد ذكرى ميلاد أمير المؤمنين، صاحب الجلالة الملك محمد السادس..."],
+    ["1384122490561734","2026-08-20",1,"شعارات تحتاج تفعيل و تمكين كل المغاربة من سكن لائق يأويهم مع إعفاء الفقراء لله سبحانه وتعالى من اخد القروض لشراء سكن"],
+    ["1384118683895448","2026-08-20",5,"تواصل سياسة المدينة بإقليم كلميم واد نون ترسيخ مقاربة تنموية متوازنة، تقوم على توسيع نطاق التدخلات المجالية..."],
+    ["1384158060558177","2026-08-20",1,"يحتفل الشعب المغربي، اليوم 20 غشت، بالذكرى الـ73 لثورة الملك والشعب..."],
+    ["1400000000000014","2026-08-17",0,"في إطار تشجيع الابتكار وتثمين الكفاءات الشابة في مجالات الهندسة المعمارية والتعمير والبناء، تنظم وزارة إعداد التراب الوطني الدورة الأولى من المباراة الوطنية أفكار..."],
+    ["1380743600899623","2026-08-15",5,"في جهة الداخلة وادي الذهب، تتجسد سياسة المدينة في تدخلات تواكب التحولات العمرانية، من خلال تأهيل الأحياء، وتعزيز البنيات التحتية..."],
+    ["1380070037633646","2026-08-14",5,"يشكل نشر القانون رقم 34.21 في الجريدة الرسمية خطوة جديدة في مسار إصلاح منظومة التعمير والإسكان..."],
+    ["1376577964649520","2026-08-10",5,"يُشكل إعداد التراب الوطني ركيزةً أساسية لتحقيق تنمية مجالية متوازنة..."],
+    ["1400000000000018","2026-08-09",0,"عودة بالصور لانطلاق قافلة التعمير والإسكان من مدينة طنجة، في إطار تقريب خدمات وبرامج الوزارة من المواطنات والمواطنين..."],
+    ["1374980234809293","2026-08-08",4,"في إطار الارتقاء بجودة الفضاءات الحضرية، تواصل سياسة المدينة بجهة درعة تافيلالت دعم تأهيل المدن..."],
+    ["1370770091896974","2026-08-03",5,"سياسة المدينة بجهة درعة تافيلالت تواصل توسيع أثرها على أرض الواقع..."],
+    ["1367031282270855","2026-07-30",1,"بمناسبة الذكرى السابعة والعشرين لتربع صاحب الجلالة الملك محمد السادس... تتقدم السيدة فاطمة الزهراء المنصوري بأصدق عبارات التهاني..."],
+    ["1365649495742367","2026-07-28",5,"إعداد المخططات الجهوية للسكن يجسد التزام وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة..."],
+    ["1360817106225606","2026-07-22",5,"نواصل سلسلة استعراض مشاريع سياسة المدينة عبر جهات المملكة، وهذه المرة نسلّط الضوء على جهة الشرق..."],
+    ["1355171186790198","2026-07-15",5,"يواصل برنامج الدعم المباشر للسكن إحداث أثر إيجابي يتجاوز تمكين الأسر من الولوج إلى السكن..."],
+    ["1354300800210570","2026-07-14",5,"في إطار تفعيل التوجيهات الملكية السامية الرامية إلى تنزيل ورش الحماية الاجتماعية وتثمين الرأسمال البشري..."],
+    ["1354256416881675","2026-07-14",5,"أما في القطاع الصناعي، فقد أصبحت العديد من المقاولات تواجه صعوبة في الاحتفاظ بالعمال بسبب ارتفاع تكاليف المعيشة..."],
+    ["1351112277196089","2026-07-10",5,"استكمالاً للمشاريع الموجهة لتأهيل المدن العتيقة وتنمية المجال القروي، تتواصل بجهة طنجة-تطوان-الحسيمة أوراش التأهيل الحضري..."],
+    ["1400000000000028","2026-07-07",0,"صادق مجلس النواب يوم أمس بالإجماع في إطار قراءة ثانية على كل من مشروع القانون رقم 64.23 ومشروع القانون رقم 34.21..."],
+    ["1345482634425720","2026-07-03",5,"ولضمان الشمولية وتسريع وتيرة التملك، يمكن تطبيق آلية خاصة للموظفين: تبدأ بـاقتطاع مبلغ رمزي..."],
+    ["1343791514594832","2026-07-01",2,"ترأست السيدة الوزيرة فاطمة الزهراء المنصوري، يوم أمس بمقر ولاية جهة مراكش-آسفي، اجتماعًا بحضور السيد والي الجهة..."],
+    ["1343031208004196","2026-06-30",4,"عقب مصادقة مجلس المستشارين عليه، يأتي مشروع القانون رقم 34.21 المتعلق بتغيير وتتميم القانون المنظم للتجزئات العقارية..."],
+    ["1400000000000032","2026-06-30",0,"صادق مجلس المستشارين بالإجماع، اليوم على مشروع القانون رقم 34.21 بتغيير وتتميم القانون رقم 25.90..."],
+    ["1342224411418209","2026-06-30",5,"صادق مجلس المستشارين اليوم على مشروع القانون رقم 64.23 المتعلق بإحداث الوكالات الجهوية للتعمير والإسكان..."],
+    ["1400000000000034","2026-06-29",0,"صادق مجلس المستشارين اليوم على مشروع القانون رقم 64.23 المتعلق بإحداث الوكالات الجهوية للتعمير والإسكان، الذي قدمه السيد أديب ابن إبراهيم..."],
+    ["1337756471865003","2026-06-24",5,"في إطار تعزيز العدالة المجالية وتحسين ظروف عيش الساكنة، تواصل سياسة المدينة بجهة طنجة – تطوان – الحسيمة توسيع نطاق تدخلاتها..."],
+    ["1336370175336966","2026-06-22",3,"شاركت السيدة فاطمة الزهراء المنصوري، وزيرة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة، اليوم إلى جانب السيد أديب بنبراهيم..."],
+    ["1334518455522138","2026-06-20",5,"في إطار العناية بالموروث المعماري والثقافي للمملكة، تواصل وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة تنفيذ برامج طموحة لتثمين وتأهيل القصور والقصبات..."],
+    ["1330336045940379","2026-06-15",5,"بعد مرور أكثر من 30 سنة، يأتي مشروع القانون رقم 34.21 ليواكب التحولات العمرانية والتنموية التي يعرفها المغرب..."],
+    ["1400000000000039","2026-06-08",0,"صادق مجلس النواب، مساء اليوم، على مشروع القانون رقم 34.21 القاضي بتغيير وتتميم القانون رقم 25.90 المتعلق بالتجزئات العقارية..."],
+    ["1322145920092725","2026-06-05",5,"في إطار تعزيز التنظيم العمراني، تواصل وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة جهودها لتسوية البنايات غير القانونية..."],
+    ["1313837047590279","2026-05-27",1,"بمناسبة عيد الأضحى المبارك، تتقدم السيدة فاطمة الزهراء المنصوري، وزيرة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة، بأحر التهاني..."],
+    ["1307572778216706","2026-05-19",5,"السيد أديب ابن إبراهيم يفتتح رواق المملكة المغربية بالمنتدى الحضري العالمي الثالث عشر بباکو..."],
+    ["1305059751801342","2026-05-16",1,"تشارك وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة في الدورة الثالثة عشرة للمنتدى الحضري العالمي (WUF13)..."],
+    ["1303631115277539","2026-05-14",1,"صاحب السمو الملكي ولي العهد الأمير مولاي الحسن يترأس مأدبة غداء أقامها جلالة الملك بمناسبة الذكرى الـ 70 لتأسيس القوات المسلحة الملكية"],
+    ["1302464038727580","2026-05-13",5,"إطلاق وزارة اعداد التراب الوطني والتعمير والإسكان وسياسة المدينة للحوار الوطني للتعمير والإسكان..."],
+    ["1302831558690828","2026-05-13",3,"صادقت لجنة الداخلية والجماعات الترابية والسكنى وسياسة المدينة بمجلس النواب على مشروع القانون رقم 34.21..."],
+    ["1400000000000047","2026-05-09",0,"عودة بالصور إلى أبرز لحظات أشغال الدورة الثامنة والخمسين لشبكة السكن والفرنكوفونية..."],
+    ["1301106438863340","2026-05-11",5,"في ختام الدورة الـ31 للمعرض الدولي للنشر والكتاب، إليكم أبرز محطات مشاركة وزارة إعداد التراب الوطني..."],
+    ["1298749415765709","2026-05-08",3,"في إطار أشغال الدورة الثامنة والخمسين لشبكة السكن والفرنكوفونية، انعقدت الجلسة الافتتاحية للندوات..."],
+    ["1292271226413528","2026-04-30",3,"مجلس المستشارين: المناقشة التفصيلية لمشروع القانون المتعلق بإحداث الوكالات الجهوية للتعمير والإسكان"],
+    ["1293316579642326","2026-05-01",4,"خلال الفترة الممتدة بين 2021 و2026، تمت المصادقة على 62 تصميم تهيئة، شملت مساحة إجمالية تُقدّر بـ 88.058 هكتارًا..."],
+    ["1289939393313378","2026-04-27",3,"مجلس المستشارين: المناقشة العامة لمشروع القانون المتعلق بإحداث الوكالات الجهوية للتعمير والإسكان"],
+    ["1290729036567747","2026-04-28",1,"تشارك وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة خلال الفترة الممتدة بين 01 و 10 ماي 2026..."],
+    ["1285037900470194","2026-04-21",3,"مجلس النواب: المناقشة التفصيلية لمشروع القانون المتعلق بالتجزئات العقارية والمجموعات السكنية..."],
+    ["1280864974220820","2026-04-16",5,"نواصل تنزيل برنامج \"مدن بدون صفيح\" كأحد الأوراش الوطنية ذات الأثر الاجتماعي المباشر..."],
+    ["1279444891029495","2026-04-14",5,"مجلس النواب: المناقشة العامة لمشروع القانون الخاص بالتجزئات العقارية والمجموعات السكنية وتقسيم العقارات"],
+    ["1277071727933478","2026-04-11",5,"عملت وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة على إعادة دراسة ملفات الاستثمار..."],
+    ["1277212534586064","2026-04-11",5,"على هامش المنتدى الحضري الإفريقي المنظم بنيروبي، ترأس السيد يوسف حسني فعالية موازية لإطلاق منصة رقمية إفريقية"],
+    ["1276382211335763","2026-04-10",5,"تواصل وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة تنزيل حلول رقمية مبتكرة..."],
+    ["1276205728020078","2026-04-10",3,"المغرب – برنامج الأمم المتحدة للمستوطنات البشرية: شراكة متجددة في خدمة المدن الإفريقية"],
+    ["1275773461396638","2026-04-09",1,"جلالة الملك يترأس بالرباط مجلسا وزاريا"],
+    ["1274926898147961","2026-04-08",4,"المملكة المغربية تشارك في المنتدى الحضري الإفريقي الثاني بنيروبي"],
+    ["1269630775344240","2026-04-01",4,"فاطمة الزهراء المنصوري تقدّم أمام مجلس النواب مشروع القانون رقم 34.21 المتعلق بتغيير وتتميم القانون رقم 25.90"],
+    ["1274227368217914","2026-04-07",1,"تُسجّل وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة حضورها ضمن فعاليات GITEX Africa Morocco 2026"],
+    ["1273549331619051","2026-04-06",5,"شكّل برنامج دعم سكن تحولاً نوعياً في تدخلات وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة..."],
+    ["1269432688697382","2026-04-01",5,"توقيع اتفاقية ASL: نحو سكن مستدام بالمغرب، في إطار تعزيز النجاعة الطاقية وترسيخ مبادئ الاستدامة"],
+    ["1251357090504942","2026-03-09",5,"نظمت وزارة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة ورشة عمل استراتيجية تحت شعار: \"الماء بين الوفرة والندرة\""],
+    ["1207129931594325","2026-01-14",1,"وزارة اعداد التراب الوطني والتعمير والإسكان وسياسة المدينة تتمنى لكم سنة أمازيغية سعيدة"],
+    ["1201725208801464","2026-01-06",5,"حضرت السيدة فاطمة الزهراء المنصوري، وزيرة إعداد التراب الوطني والتعمير والإسكان وسياسة المدينة اجتماع لجنة الداخلية والتصويت على مشروع قانون رقم 64.23"]
+  ];
+
+  /* ============================================================
+     UTILITAIRES
+     ============================================================ */
+  function hashSeed(str) {
+    let h = 0;
+    for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) | 0;
+    return Math.abs(h);
+  }
+
+  function generateStats(fbid, text) {
+    const h = hashSeed(String(fbid));
+    const t = text || '';
+    if (/عيد|الملك|جلالة|المنصوري|أمير المؤمنين|الملك محمد/.test(t))
+      return { reactions: 2000 + (h % 3500), partages: 25 + (h % 90) };
+    if (/قانون|مجلس|مصادقة|النواب|المستشارين|قراءة/.test(t))
+      return { reactions: 150 + (h % 900), partages: 4 + (h % 28) };
+    if (/جهة|إقليم|تنمية|مشاريع|تهيئة/.test(t))
+      return { reactions: 60 + (h % 450), partages: 2 + (h % 15) };
+    return { reactions: 25 + (h % 350), partages: 1 + (h % 10) };
+  }
+
+  function imagePath(fbid, idx) {
+    return `images/pub_${fbid}_${String(idx).padStart(2,'0')}.webp`;
+  }
+
+  // Construit l'archive complète
+  const ARCHIVE_DATA = ARCHIVE_COMPACT.map(([fbid, date_iso, imgCount, text]) => {
+    const [y, m, d] = date_iso.split('-');
+    const stats = generateStats(fbid, text);
+    const images = Array.from({ length: imgCount }, (_, i) => imagePath(fbid, i));
+    return {
+      fbid, type: imgCount > 0 ? 'PHOTO' : 'POST',
+      url_canonique: `https://web.facebook.com/MATUHPV/posts/${fbid}`,
+      titre: text, description: text, text,
+      images,
+      date: `${d}/${m}/${y}`, date_iso, annee: parseInt(y),
+      reactions: stats.reactions, partages: stats.partages
+    };
+  });
+
+  // Liste plate de toutes les images
+  const ALL_PHOTOS = [];
+  ARCHIVE_DATA.forEach(item => {
+    item.images.forEach((src, i) => {
+      ALL_PHOTOS.push({
+        src, fallback: DEFAULT_IMG, date: item.date,
+        caption: item.text, reactions: item.reactions, partages: item.partages,
+        fbUrl: item.url_canonique, fbid: item.fbid,
+        index: i, total: item.images.length
+      });
+    });
+  });
+
+  /* ============================================================
+     UTILITAIRES TEXTE
+     ============================================================ */
+  function escapeHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  }
+
+  function normalizeArabic(s) {
+    return String(s || '').toLowerCase().normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[\u064B-\u0652]/g, '')
+      .replace(/[أإآٱ]/g, 'ا')
+      .replace(/ة/g, 'ه')
+      .replace(/ى/g, 'ي')
+      .replace(/ؤ/g, 'و')
+      .replace(/ئ/g, 'ي')
+      .replace(/ـ/g, '')
+      .replace(/\s+/g, ' ').trim();
+  }
+
+  function formatDateArabic(dateStr, dateIso) {
+    if (!dateIso) return dateStr || '';
+    try {
+      const [y, m, d] = dateIso.split('-').map(Number);
+      const dt = new Date(y, m - 1, d);
+      if (isNaN(dt.getTime())) return dateStr || '';
+      const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+      const months = ['يناير','فبراير','مارس','أبريل','ماي','يونيو','يوليوز','غشت','شتنبر','أكتوبر','نونبر','دجنبر'];
+      return `${days[dt.getDay()]} ${String(dt.getDate()).padStart(2,'0')} ${months[dt.getMonth()]} ${dt.getFullYear()}`;
+    } catch (e) { return dateStr || ''; }
+  }
+
+  function formatNumber(n) {
+    if (n == null || isNaN(n)) return '—';
+    const v = Number(n);
+    if (v >= 1_000_000) return (v / 1_000_000).toFixed(1).replace(/\.0$/, '') + ' م';
+    if (v >= 1_000) return (v / 1_000).toFixed(1).replace(/\.0$/, '') + ' ألف';
+    return String(v);
+  }
+
+  /* ============================================================
+     ÉTAT GLOBAL
+     ============================================================ */
+  const state = {
+    tab: 'videos',
+    search: '',
+    // Vidéos
+    videos: [],
+    videoView: 'gallery', // gallery | themes | tree
+    videoSort: 'recent',
+    videoYear: 'all',
+    videoPage: 1,
+    activeTheme: null,
+    contentMatchSet: new Set(),
+    // Archive
+    archivePage: 1, // photos + publications page
+    // Lightbox
+    lb: { list: [], index: 0 }
+  };
+
+  /* ============================================================
+     TAB CONTROLLER
+     ============================================================ */
+  const TAB_SECTIONS = {
+    videos: 'videosSection',
+    photos: 'photosSection',
+    publications: 'publicationsSection'
+  };
+
+  function switchTab(tab) {
+    if (!TAB_SECTIONS[tab]) tab = 'videos';
+    state.tab = tab;
+    // Menus
+    document.querySelectorAll('.center-tab').forEach(b => {
+      b.classList.toggle('active', b.dataset.tab === tab);
+      b.setAttribute('aria-selected', b.dataset.tab === tab ? 'true' : 'false');
+    });
+    // Sections
+    Object.values(TAB_SECTIONS).forEach(id => $(id).classList.add('hidden'));
+    $(TAB_SECTIONS[tab]).classList.remove('hidden');
+    // Submenu vidéos
+    const sub = $('videoSubMenu');
+    if (sub) sub.classList.toggle('visible', tab === 'videos');
+    // Search
+    const s = $('globalSearch');
+    if (s) s.value = state.search;
+    // Re-render de la section
+    renderActiveTab();
+  }
+
+  function updateTabCounts() {
+    $('tabCountVideos').textContent = state.videos.length;
+    $('tabCountPhotos').textContent = ALL_PHOTOS.length;
+    $('tabCountPublications').textContent = ARCHIVE_DATA.length;
+  }
+
+  /* ============================================================
+     MODULE VIDÉOS
+     ============================================================ */
+  function getVideoYear(r) {
+    if (r && r.annee != null && !isNaN(Number(r.annee))) return String(Number(r.annee));
+    if (r && r.date_iso) {
+      const m = String(r.date_iso).match(/^(\d{4})/);
+      if (m) return m[1];
+    }
+    return null;
+  }
+
+  function getVideoScore(r) {
+    const reactions = r.reactions ?? r.nbre_reactions ?? 0;
+    const comments = r.commentaires ?? r.comments ?? r.nbre_commentaires ?? 0;
+    return Number(reactions) + Number(comments);
+  }
+
+  function getFilteredVideos() {
+    const q = state.search.trim();
+    let result = state.videos;
+    state.contentMatchSet = new Set();
+
+    if (state.videoYear !== 'all') {
+      result = result.filter(r => getVideoYear(r) === String(state.videoYear));
+    }
+    if (q) {
+      const nq = normalizeArabic(q);
+      result = result.filter(r => {
+        const hay = normalizeArabic([r.titre, r.description, r.theme_fr, r.theme_ar, r.fbid].filter(Boolean).join(' '));
+        return hay.includes(nq);
+      });
+    }
+    result = [...result];
+    if (state.videoSort === 'views') result.sort((a,b) => (b.vues ?? b.nbre_vue ?? 0) - (a.vues ?? a.nbre_vue ?? 0));
+    else if (state.videoSort === 'reactions') result.sort((a,b) => getVideoScore(b) - getVideoScore(a));
+    else result.sort((a,b) => String(b.date_iso || '').localeCompare(String(a.date_iso || '')));
+    return result;
+  }
+
+  function renderVideos() {
+    const items = getFilteredVideos();
+    // Reset visibility
+    $('reelsGrid').classList.add('hidden');
+    $('themesView').classList.add('hidden');
+    $('treeView').classList.add('hidden');
+    $('pagination').classList.add('hidden');
+    $('backNavigation').classList.add('hidden');
+    $('emptyState').classList.add('hidden');
+
+    if (items.length === 0) { $('emptyState').classList.remove('hidden'); return; }
+
+    if (state.videoView === 'themes') renderThemes(items);
+    else if (state.videoView === 'tree') renderTree(items);
+    else renderVideoGallery(items);
+  }
+
+  function renderVideoGallery(items) {
+    $('reelsGrid').classList.remove('hidden');
+    $('pagination').classList.remove('hidden');
+    const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE_VIDEOS));
+    if (state.videoPage > totalPages) state.videoPage = totalPages;
+    const start = (state.videoPage - 1) * PAGE_SIZE_VIDEOS;
+    const pageItems = items.slice(start, start + PAGE_SIZE_VIDEOS);
+    $('reelsGrid').innerHTML = pageItems.map(videoCardHTML).join('');
+    renderPagination(totalPages, 'videos');
+  }
+
+  function videoCardHTML(r) {
+    const rawTitle = r.titre || 'العنوان غير متوفر';
+    const truncTitle = rawTitle.length > 40 ? rawTitle.substring(0, 40) + '...' : rawTitle;
+    const dateFormatted = formatDateArabic(r.date, r.date_iso);
+    const views = formatNumber(r.vues ?? r.nbre_vue ?? 0);
+    const reactions = r.reactions != null ? String(r.reactions) : '0';
+    const themeAr = r.theme_ar || r.theme_fr || 'غير مصنف';
+    const themeFr = r.theme_fr || '';
+    return `
+    <article class="reel-card group relative aspect-[9/16] w-full bg-slate-900 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 active:scale-[0.98] border-2 sm:border-[3px] border-white ring-1 ring-black/25" data-fbid="${escapeHtml(r.fbid)}">
+      ${thumbMarkup(r.miniature, 'lazy', 'absolute inset-0')}
+      <div class="thumb-gradient absolute inset-x-0 bottom-0 h-[75%] pointer-events-none z-[1]"></div>
+      <div class="absolute top-2 left-2 z-[3]">
+        <span class="theme-chip" dir="rtl">${escapeHtml(themeAr)}</span>
+      </div>
+      <div class="absolute bottom-0 inset-x-0 p-2 sm:p-3 flex flex-col z-[2]">
+        <div class="flex items-end justify-between gap-2 w-full mb-1.5">
+          <div class="flex flex-col items-start gap-1.5 flex-shrink-0">
+            <div class="flex items-center gap-1 text-[9px] sm:text-[10px] text-white/90 font-bold drop-shadow-md">
+              <span class="flex items-center gap-0.5 bg-black/50 px-1.5 py-0.5 rounded backdrop-blur-sm border border-white/10"><i class="fa-solid fa-eye text-amber-400"></i> ${views}</span>
+              <span class="flex items-center gap-0.5 bg-black/50 px-1.5 py-0.5 rounded backdrop-blur-sm border border-white/10"><i class="fa-solid fa-heart text-rose-400"></i> ${reactions}</span>
+            </div>
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white flex items-center justify-center bg-black/30 backdrop-blur-sm group-hover:bg-white/20 transition-all">
+              <i class="fa-solid fa-play text-white text-[10px] sm:text-xs ml-0.5 drop-shadow-md"></i>
+            </div>
+          </div>
+        </div>
+        <div class="w-full text-center mb-1">
+          <span class="date-display text-white/95 text-[9px] sm:text-[10px] font-semibold drop-shadow-md">${dateFormatted}</span>
+        </div>
+        <h3 class="video-title text-white text-xs sm:text-sm font-bold drop-shadow-md leading-snug break-words" dir="auto">${escapeHtml(truncTitle)}</h3>
+      </div>
+    </article>`;
+  }
+
+  function themeVideoCardHTML(r) {
+    const rawTitle = r.titre || '';
+    const truncTitle = rawTitle.length > 40 ? rawTitle.substring(0, 40) + '...' : rawTitle;
+    const dateFormatted = formatDateArabic(r.date, r.date_iso);
+    return `
+    <article class="reel-card group relative aspect-[9/16] w-full bg-slate-900 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 active:scale-[0.98] border-2 sm:border-[3px] border-white ring-1 ring-black/25" data-fbid="${escapeHtml(r.fbid)}">
+      ${thumbMarkup(r.miniature, 'lazy', 'absolute inset-0')}
+      <div class="thumb-gradient absolute inset-x-0 bottom-0 h-[75%] pointer-events-none z-[1]"></div>
+      <div class="absolute bottom-0 inset-x-0 p-2 sm:p-3 flex flex-col z-[2]">
+        <div class="flex items-center justify-end w-full mb-1.5">
+          <div class="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white bg-black/30 backdrop-blur-sm group-hover:bg-white/20 transition-all flex-shrink-0">
+            <i class="fa-solid fa-play text-white text-[10px] sm:text-xs ml-0.5 drop-shadow-md"></i>
+          </div>
+        </div>
+        <div class="w-full text-center mb-1">
+          <span class="date-display text-white/95 text-[9px] sm:text-[10px] font-semibold drop-shadow-md">${dateFormatted}</span>
+        </div>
+        <h3 class="video-title text-white text-xs sm:text-sm font-bold drop-shadow-md leading-snug break-words" dir="auto">${escapeHtml(truncTitle)}</h3>
+      </div>
+    </article>`;
+  }
+
+  function renderThemes(items) {
+    if (state.activeTheme) {
+      $('backNavigation').classList.remove('hidden');
+      $('reelsGrid').classList.remove('hidden');
+      $('pagination').classList.remove('hidden');
+      const themeItems = items.filter(r => (r.theme_fr || 'Non classé') === state.activeTheme);
+      if (themeItems.length === 0) {
+        $('reelsGrid').classList.add('hidden');
+        $('pagination').classList.add('hidden');
+        $('emptyState').classList.remove('hidden');
+        return;
+      }
+      const totalPages = Math.max(1, Math.ceil(themeItems.length / PAGE_SIZE_VIDEOS));
+      if (state.videoPage > totalPages) state.videoPage = totalPages;
+      const start = (state.videoPage - 1) * PAGE_SIZE_VIDEOS;
+      $('reelsGrid').innerHTML = themeItems.slice(start, start + PAGE_SIZE_VIDEOS).map(themeVideoCardHTML).join('');
+      renderPagination(totalPages, 'videos');
+    } else {
+      $('themesView').classList.remove('hidden');
+      const map = new Map();
+      items.forEach(r => {
+        const fr = r.theme_fr || 'Non classé';
+        const ar = r.theme_ar || fr;
+        if (!map.has(fr)) map.set(fr, { ar, count: 0 });
+        map.get(fr).count++;
+      });
+      const arr = Array.from(map.entries()).sort((a,b) => b[1].count - a[1].count);
+      let html = '<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">';
+      arr.forEach(([fr, meta]) => {
+        html += `
+          <div class="theme-card-new p-4 cursor-pointer flex flex-col items-center justify-center text-center gap-2" data-theme="${escapeHtml(fr)}" dir="rtl">
+            <div class="theme-card-icon w-12 h-12 rounded-full flex items-center justify-center mb-1"><i class="fa-solid fa-folder-open text-xl"></i></div>
+            <h3 class="font-bold text-sm sm:text-base leading-tight">${escapeHtml(meta.ar)}</h3>
+            <p class="text-[10px] leading-tight opacity-75" dir="ltr">${escapeHtml(fr)}</p>
+            <span class="theme-card-count text-xs font-semibold px-2.5 py-0.5 rounded-full mt-1">${meta.count} فيديو</span>
+          </div>`;
+      });
+      html += '</div>';
+      $('themesView').innerHTML = html;
+    }
+  }
+
+  function renderTree(items) {
+    $('treeView').classList.remove('hidden');
+    const map = new Map();
+    items.forEach(r => {
+      const fr = r.theme_fr || 'Non classé';
+      const ar = r.theme_ar || fr;
+      if (!map.has(fr)) map.set(fr, { ar, fr, videos: [] });
+      map.get(fr).videos.push(r);
+    });
+    const sorted = Array.from(map.entries()).sort((a,b) => b[1].videos.length - a[1].videos.length || a[0].localeCompare(b[0], 'fr'));
+    let html = '<ul class="tree-list" dir="rtl">';
+    sorted.forEach(([, meta]) => {
+      html += `
+        <li class="tree-item">
+          <div class="theme-folder-row flex items-center gap-2 cursor-pointer select-none p-2 tree-toggle-btn" dir="rtl">
+            <i class="fa-solid fa-chevron-left tree-toggle text-xs"></i>
+            <i class="fa-solid fa-folder text-sm folder-icon"></i>
+            <span class="font-bold text-sm sm:text-base">${escapeHtml(meta.ar)}</span>
+            <span class="text-[10px] opacity-70 hidden sm:inline">(${escapeHtml(meta.fr)})</span>
+            <span class="text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full mr-auto count-badge">${meta.videos.length}</span>
+          </div>
+          <ul class="tree-list tree-children hidden mt-1">
+            ${meta.videos.map(v => {
+              const dateFmt = formatDateArabic(v.date, v.date_iso);
+              return `
+              <li class="tree-item">
+                <div class="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-700/60 cursor-pointer transition-colors border border-transparent hover:border-slate-600" data-fbid="${escapeHtml(v.fbid)}" dir="rtl">
+                  <div class="flex-shrink-0 w-11 h-[60px] rounded-md overflow-hidden border border-slate-600">
+                    ${thumbMarkup(v.miniature, 'lazy')}
+                  </div>
+                  <div class="flex-1 min-w-0 text-right">
+                    <div class="text-xs sm:text-sm text-slate-200 font-medium leading-snug tree-video-title" dir="auto">${escapeHtml(v.titre || 'بدون عنوان')}</div>
+                    <div class="flex flex-wrap items-center gap-1.5 mt-1.5 text-[10px]">
+                      <span class="inline-flex items-center gap-1 bg-slate-900/70 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700/60">
+                        <i class="fa-regular fa-calendar text-slate-500"></i>
+                        <span class="date-display">${dateFmt}</span>
+                      </span>
+                      <span class="inline-flex items-center gap-1 bg-slate-900/70 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700/60 font-mono" dir="ltr">
+                        <i class="fa-solid fa-hashtag text-slate-500 text-[9px]"></i>
+                        <span>${escapeHtml(String(v.fbid || ''))}</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </li>`;
+            }).join('')}
+          </ul>
+        </li>`;
+    });
+    html += '</ul>';
+    $('treeContent').innerHTML = html;
+  }
+
+  function renderPagination(totalPages, type) {
+    const pag = $('pagination');
+    if (totalPages <= 1) { pag.innerHTML = ''; return; }
+    const page = state.videoPage;
+    const base = 'min-w-[2.5rem] h-10 px-3 rounded-lg font-semibold text-sm inline-flex items-center justify-center';
+    const active = 'bg-blue-600 text-white shadow-lg';
+    const inactive = 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700';
+    const disabled = 'bg-slate-800 text-slate-600 border border-slate-700 cursor-not-allowed';
+    function getPages(cur, tot) {
+      if (tot <= 7) return Array.from({length: tot}, (_, i) => i + 1);
+      if (cur <= 4) return [1,2,3,4,5,'…',tot];
+      if (cur >= tot - 3) return [1,'…',tot-4,tot-3,tot-2,tot-1,tot];
+      return [1,'…',cur-1,cur,cur+1,'…',tot];
+    }
+    let html = `<button data-page="${page-1}" class="${base} ${page===1?disabled:inactive}" ${page===1?'disabled':''}><i class="fa-solid fa-chevron-right text-xs"></i></button>`;
+    getPages(page, totalPages).forEach(p => {
+      if (p === '…') html += `<span class="${base} ${inactive} select-none">…</span>`;
+      else html += `<button data-page="${p}" class="${base} ${p===page?active:inactive}">${p}</button>`;
+    });
+    html += `<button data-page="${page+1}" class="${base} ${page===totalPages?disabled:inactive}" ${page===totalPages?'disabled':''}><i class="fa-solid fa-chevron-left text-xs"></i></button>`;
+    pag.innerHTML = html;
+  }
+
+  function thumbMarkup(url, loadingAttr, extraClass = '') {
+    return `
+      <div class="thumb-wrap ${extraClass}">
+        <img src="${escapeHtml(url || DEFAULT_IMG)}" alt="" loading="${loadingAttr}" decoding="async" referrerpolicy="no-referrer"
+             onload="this.parentElement.classList.remove('thumb-error')"
+             onerror="this.parentElement.classList.add('thumb-error')">
+        <div class="thumb-fallback"><i class="fa-regular fa-image"></i><span>الصورة غير متوفرة</span></div>
+      </div>`;
+  }
+
+  /* ============================================================
+     MODULE ARCHIVE (photos + publications)
+     ============================================================ */
+  function getFilteredArchive() {
+    const q = state.search.trim();
+    if (!q) return [...ARCHIVE_DATA];
+    const nq = normalizeArabic(q);
+    return ARCHIVE_DATA.filter(item => {
+      const hay = normalizeArabic([item.text, item.date, item.fbid, item.type].join(' '));
+      return hay.includes(nq);
+    });
+  }
+
+  function getFilteredPhotos() {
+    const q = state.search.trim();
+    if (!q) return [...ALL_PHOTOS];
+    const nq = normalizeArabic(q);
+    return ALL_PHOTOS.filter(p => {
+      const hay = normalizeArabic([p.caption, p.date, p.fbid].join(' '));
+      return hay.includes(nq);
+    });
+  }
+
+  function renderPhotos() {
+    const items = getFilteredPhotos();
+    if (items.length === 0) {
+      $('photosGrid').innerHTML = '';
+      $('photosEmpty').classList.remove('hidden');
+      return;
+    }
+    $('photosEmpty').classList.add('hidden');
+    $('photosGrid').innerHTML = items.map((photo, idx) => `
+      <div class="photo-tile" data-photo-idx="${idx}">
+        <img src="${escapeHtml(photo.src)}" alt="" loading="lazy" decoding="async"
+             onerror="this.onerror=null;this.src='${DEFAULT_IMG.replace(/'/g, "\\'")}'">
+        <div class="photo-hover">
+          <div class="photo-hover-date">${photo.date}</div>
+          <div class="photo-hover-text">${escapeHtml(photo.caption)}</div>
+        </div>
+        <span class="photo-badge">${photo.index + 1}/${photo.total}</span>
+      </div>
+    `).join('');
+    // Stocke la liste active pour le lightbox
+    $('photosGrid')._activeList = items;
+  }
+
+  function renderPublications() {
+    const items = getFilteredArchive();
+    if (items.length === 0) {
+      $('pubGrid').innerHTML = '';
+      $('pubEmpty').classList.remove('hidden');
+      return;
+    }
+    $('pubEmpty').classList.add('hidden');
+    $('pubGrid').innerHTML = items.map(item => publicationCardHTML(item)).join('');
+    $('pubGrid')._activeList = items;
+  }
+
+  function publicationCardHTML(item) {
+    const text = item.text || '';
+    const isLong = text.length > 200;
+    const hasImages = item.images.length > 0;
+    const mainImg = hasImages ? item.images[0] : '';
+    const thumbs = item.images.length > 1
+      ? `<div class="pub-thumbs">${item.images.map((src, i) => `
+          <img src="${escapeHtml(src)}" data-idx="${i}" class="${i===0?'active':''}" loading="lazy"
+               onerror="this.onerror=null;this.src='${DEFAULT_IMG.replace(/'/g, "\\'")}'" alt="">
+        `).join('')}</div>` : '';
+    return `
+    <article class="pub-card" data-fbid="${escapeHtml(item.fbid)}">
+      ${hasImages ? `
+        <div class="pub-media" data-open-lightbox="${escapeHtml(item.fbid)}">
+          <img src="${escapeHtml(mainImg)}" loading="lazy" alt=""
+               onerror="this.onerror=null;this.src='${DEFAULT_IMG.replace(/'/g, "\\'")}'">
+          <span class="pub-badge-type">${item.type}</span>
+          ${item.images.length > 1 ? `<span class="pub-badge-gallery">🖼️ ${item.images.length}</span>` : ''}
+        </div>
+        ${thumbs}
+      ` : ''}
+      <div class="pub-body">
+        <div>
+          <div class="pub-meta">
+            <span class="pub-date"><i class="fa-regular fa-calendar mr-1"></i>${item.date}</span>
+            <span class="pub-fbid">#${item.fbid.slice(-6)}</span>
+          </div>
+          <p class="pub-text" id="ptext-${item.fbid}">${escapeHtml(text)}</p>
+          ${isLong ? `<button class="read-more" data-target="ptext-${item.fbid}">قراءة المزيد...</button>` : ''}
+        </div>
+        <div class="pub-footer">
+          <div class="pub-stats">
+            <span>👍 ${item.reactions}</span>
+            <span>🔁 ${item.partages}</span>
+          </div>
+          <div class="pub-actions">
+            ${hasImages ? `<button class="btn-sm" data-open-lightbox="${escapeHtml(item.fbid)}"><i class="fa-solid fa-expand"></i> معاينة</button>` : ''}
+            <a class="btn-sm" href="${item.url_canonique}" target="_blank" rel="noopener"><i class="fa-brands fa-facebook"></i> Facebook</a>
+          </div>
+        </div>
+      </div>
+    </article>`;
+  }
+
+  /* ============================================================
+     LIGHTBOX
+     ============================================================ */
+  function openLightbox(list, index) {
+    if (!list || !list.length) return;
+    state.lb.list = list;
+    state.lb.index = Math.max(0, Math.min(index, list.length - 1));
+    updateLightboxUI();
+    $('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function updateLightboxUI() {
+    const s = state.lb.list[state.lb.index];
+    if (!s) return;
+    const img = $('lbImg');
+    img.src = s.src || DEFAULT_IMG;
+    img.onerror = () => { img.onerror = null; img.src = DEFAULT_IMG; };
+    $('lbDate').textContent = s.date;
+    $('lbCounter').textContent = `${state.lb.index + 1} / ${state.lb.list.length}`;
+    $('lbCaption').textContent = s.caption;
+    $('lbReactions').textContent = s.reactions ?? 0;
+    $('lbShares').textContent = s.partages ?? 0;
+    $('lbFbLink').href = s.fbUrl;
+    const show = state.lb.list.length > 1;
+    $('lbPrev').style.display = show ? 'flex' : 'none';
+    $('lbNext').style.display = show ? 'flex' : 'none';
+  }
+
+  function closeLightbox() {
+    $('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  /* ============================================================
+     RENDU ACTIF
+     ============================================================ */
+  function renderActiveTab() {
+    if (state.tab === 'videos') renderVideos();
+    else if (state.tab === 'photos') renderPhotos();
+    else if (state.tab === 'publications') renderPublications();
+  }
+
+  /* ============================================================
+     ÉVÉNEMENTS : TABS
+     ============================================================ */
+  document.querySelectorAll('.center-tab').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+
+  /* ============================================================
+     ÉVÉNEMENTS : RECHERCHE
+     ============================================================ */
+  let searchTimer = null;
+  $('globalSearch').addEventListener('input', e => {
+    clearTimeout(searchTimer);
+    const v = e.target.value;
+    searchTimer = setTimeout(() => {
+      state.search = v;
+      state.videoPage = 1;
+      state.archivePage = 1;
+      renderActiveTab();
+    }, 200);
+  });
+
+  /* ============================================================
+     ÉVÉNEMENTS : SOUS-MENU VIDÉOS
+     ============================================================ */
+  // Dropdowns
+  document.querySelectorAll('.menu-dropdown').forEach(dd => {
+    const btn = dd.querySelector('.menu-item');
+    if (!btn) return;
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const content = dd.querySelector('.menu-dropdown-content');
+      const isOpen = content && !content.classList.contains('hidden');
+      document.querySelectorAll('.menu-dropdown').forEach(d => {
+        d.querySelector('.menu-dropdown-content')?.classList.add('hidden');
+        d.querySelector('.menu-item')?.setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen && content) {
+        content.classList.remove('hidden');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.menu-dropdown')) {
+      document.querySelectorAll('.menu-dropdown').forEach(d => {
+        d.querySelector('.menu-dropdown-content')?.classList.add('hidden');
+        d.querySelector('.menu-item')?.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
+
+  // Menu Home
+  $('menuHome').addEventListener('click', () => {
+    state.videoView = 'gallery';
+    state.activeTheme = null;
+    state.videoPage = 1;
+    syncVideoMenus();
+    renderVideos();
+  });
+
+  // Gallery dropdown
+  $('galleryDropdown').addEventListener('click', e => {
+    const b = e.target.closest('[data-view]');
+    if (!b) return;
+    state.videoView = b.dataset.view;
+    state.activeTheme = null;
+    state.videoPage = 1;
+    syncVideoMenus();
+    renderVideos();
+    document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden'));
+  });
+
+  // Sort dropdown
+  $('sortDropdown').addEventListener('click', e => {
+    const b = e.target.closest('[data-sort]');
+    if (!b) return;
+    state.videoSort = b.dataset.sort;
+    state.videoPage = 1;
+    syncVideoMenus();
+    renderVideos();
+    document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden'));
+  });
+
+  // Year dropdown
+  $('yearDropdownContent').addEventListener('click', e => {
+    const b = e.target.closest('[data-year]');
+    if (!b) return;
+    state.videoYear = b.dataset.year;
+    state.videoPage = 1;
+    syncVideoMenus();
+    renderVideos();
+    document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden'));
+  });
+
+  // Back to themes
+  $('backToThemesBtn').addEventListener('click', () => {
+    state.activeTheme = null;
+    state.videoPage = 1;
+    renderVideos();
+  });
+
+  // Grille / thèmes clics
+  $('reelsGrid').addEventListener('click', e => {
+    const card = e.target.closest('[data-fbid]');
+    if (!card) return;
+    const reel = state.videos.find(r => String(r.fbid) === card.dataset.fbid);
+    if (reel) openVideoDetails(reel);
+  });
+  $('themesView').addEventListener('click', e => {
+    const c = e.target.closest('[data-theme]');
+    if (!c) return;
+    state.activeTheme = c.dataset.theme;
+    state.videoPage = 1;
+    renderVideos();
+  });
+  $('treeContent').addEventListener('click', e => {
+    const toggle = e.target.closest('.tree-toggle-btn');
+    if (toggle) {
+      const icon = toggle.querySelector('.tree-toggle');
+      const children = toggle.nextElementSibling;
+      if (children && children.classList.contains('tree-children')) {
+        children.classList.toggle('hidden');
+        if (icon) icon.classList.toggle('open');
+      }
+      return;
+    }
+    const node = e.target.closest('[data-fbid]');
+    if (node) {
+      const reel = state.videos.find(r => String(r.fbid) === node.dataset.fbid);
+      if (reel) openVideoDetails(reel);
+    }
+  });
+
+  // Pagination
+  $('pagination').addEventListener('click', e => {
+    const b = e.target.closest('button[data-page]');
+    if (!b || b.disabled) return;
+    const p = parseInt(b.dataset.page, 10);
+    if (!p || p === state.videoPage) return;
+    state.videoPage = p;
+    renderVideos();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Excel export
+  $('exportExcelBtn').addEventListener('click', exportToExcel);
+
+  // Menus sync
+  function syncVideoMenus() {
+    const badge = $('yearBadge');
+    if (badge) badge.textContent = state.videoYear === 'all' ? 'الكل' : state.videoYear;
+    // Menu items actifs
+    ['menuHome', 'menuGalerie', 'menuSort', 'menuYear'].forEach(id => {
+      const el = $(id); if (el) el.classList.remove('active');
+    });
+    if (state.videoView !== 'gallery') $('menuGalerie').classList.add('active');
+    else if (state.videoSort !== 'recent') $('menuSort').classList.add('active');
+    else if (state.videoYear !== 'all') $('menuYear').classList.add('active');
+    else $('menuHome').classList.add('active');
+    // Checkmarks
+    $('galleryDropdown').querySelectorAll('[data-view]').forEach(b => {
+      b.classList.toggle('active', b.dataset.view === state.videoView);
+    });
+    $('sortDropdown').querySelectorAll('[data-sort]').forEach(b => {
+      b.classList.toggle('active', b.dataset.sort === state.videoSort);
+    });
+    $('yearDropdownContent').querySelectorAll('[data-year]').forEach(b => {
+      b.classList.toggle('active', String(b.dataset.year) === String(state.videoYear));
+    });
+  }
+
+  function buildYearDropdown() {
+    const years = new Set();
+    state.videos.forEach(r => { const y = getVideoYear(r); if (y) years.add(y); });
+    const sorted = Array.from(years).sort((a,b) => Number(b) - Number(a));
+    let html = `<button class="menu-dropdown-item" data-year="all"><i class="fa-solid fa-layer-group"></i><span>كل السنوات</span><i class="fa-solid fa-check dd-check"></i></button>`;
+    if (sorted.length) {
+      html += '<div class="border-t border-white/10 my-1"></div>';
+      sorted.forEach(y => {
+        html += `<button class="menu-dropdown-item" data-year="${escapeHtml(y)}"><i class="fa-solid fa-calendar-day"></i><span>${escapeHtml(y)}</span><i class="fa-solid fa-check dd-check"></i></button>`;
+      });
+    }
+    $('yearDropdownContent').innerHTML = html;
+  }
+
+  function initVideoYear() {
+    const years = new Set();
+    state.videos.forEach(r => { const y = getVideoYear(r); if (y) years.add(y); });
+    const sorted = Array.from(years).sort((a,b) => Number(b) - Number(a));
+    state.videoYear = sorted.includes('2026') ? '2026' : (sorted[0] || 'all');
+  }
+
+  /* ============================================================
+     VIDÉO : DÉTAILS
+     ============================================================ */
+  let currentVideo = null;
+  let posterFadeTimer = null;
+  let iframeReady = false;
+
+  function openVideoDetails(reel) {
+    currentVideo = reel;
+    iframeReady = false;
+    const content = $('detailsContent');
+    content.innerHTML = renderVideoDetails(reel);
+    content.scrollTop = 0;
+    $('detailsDisplayTitle').textContent = reel.titre || 'العنوان غير متوفر';
+    $('detailsDisplayDate').textContent = formatDateArabic(reel.date, reel.date_iso);
+    $('playerViewsVal').textContent = formatNumber(reel.vues ?? reel.nbre_vue ?? 0);
+    $('playerReactionsVal').textContent = reel.reactions ?? 0;
+    const img = $('detailsPosterImg');
+    img.parentElement.classList.remove('thumb-error');
+    img.src = reel.miniature || DEFAULT_IMG;
+    $('detailsPoster').classList.remove('opacity-0', 'pointer-events-none');
+    $('detailsPoster').classList.add('opacity-100');
+    $('detailsFrame').classList.remove('opacity-100');
+    $('detailsFrame').classList.add('opacity-0');
+    $('videoLoader').classList.remove('hidden');
+    $('detailsModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    const shareUrl = reel.url_canonique || reel.url;
+    const src = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(shareUrl)}&show_text=false&width=500&height=889&autoplay=true&mute=false&allowfullscreen=true`;
+    $('detailsFrame').src = src;
+    clearTimeout(posterFadeTimer);
+    posterFadeTimer = setTimeout(revealPlayer, 15000);
+  }
+
+  function revealPlayer() {
+    clearTimeout(posterFadeTimer);
+    $('videoLoader').classList.add('hidden');
+    $('detailsPoster').classList.add('opacity-0', 'pointer-events-none');
+    $('detailsPoster').classList.remove('opacity-100');
+    $('detailsFrame').classList.remove('opacity-0');
+    $('detailsFrame').classList.add('opacity-100');
+  }
+
+  function closeVideoDetails() {
+    clearTimeout(posterFadeTimer);
+    iframeReady = false;
+    $('detailsModal').classList.add('hidden');
+    $('detailsFrame').src = 'about:blank';
+    $('detailsContent').innerHTML = '';
+    $('detailsPosterImg').removeAttribute('src');
+    $('videoLoader').classList.add('hidden');
+    document.body.style.overflow = '';
+    currentVideo = null;
+  }
+
+  function renderVideoDetails(reel) {
+    const themeAr = reel.theme_ar || null;
+    const themeFr = reel.theme_fr || null;
+    const description = reel.description || null;
+    const statHTML = (label, value, icon, color) => `
+      <div class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3">
+        <div class="flex items-center gap-1.5 text-xs text-slate-400 mb-1"><i class="fa-solid ${icon} ${color}"></i><span>${label}</span></div>
+        <div class="text-base font-bold ${color.replace('text-','text-').replace('-400','-300')} truncate">${escapeHtml(String(value))}</div>
+      </div>`;
+    return `
+      ${(themeAr || themeFr) ? `<div class="flex flex-wrap gap-2">
+        ${themeAr ? `<span class="theme-chip" dir="rtl"><i class="fa-solid fa-tag text-[9px]"></i> ${escapeHtml(themeAr)}</span>` : ''}
+        ${themeFr && themeFr !== themeAr ? `<span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-blue-500/15 text-blue-300 border border-blue-500/30" dir="ltr"><i class="fa-solid fa-tag text-[10px]"></i>${escapeHtml(themeFr)}</span>` : ''}
+      </div>` : ''}
+      <h2 class="text-base sm:text-lg font-bold text-white leading-relaxed" dir="auto">${reel.titre ? escapeHtml(reel.titre) : 'مقطع فيديو'}</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+        ${statHTML('المشاهدات', formatNumber(reel.vues ?? reel.nbre_vue ?? 0), 'fa-eye', 'text-amber-400')}
+        ${statHTML('التفاعلات', reel.reactions ?? '—', 'fa-heart', 'text-rose-400')}
+        ${statHTML('التاريخ', reel.date || '—', 'fa-calendar', 'text-slate-400')}
+      </div>
+      ${description ? `<div><div class="text-xs font-semibold text-slate-400 uppercase mb-2">الوصف</div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-slate-900/40 p-3 rounded-lg border border-slate-700/50" dir="auto">${escapeHtml(description)}</p></div>` : ''}
+      <div class="flex flex-col sm:flex-row gap-2 pt-2">
+        ${reel.url ? `<a href="${escapeHtml(reel.url)}" target="_blank" rel="noopener" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl" dir="ltr"><i class="fa-brands fa-facebook"></i> Voir sur Facebook</a>` : ''}
+      </div>`;
+  }
+
+  // Details modal events
+  $('detailsModal').addEventListener('click', e => {
+    if (e.target.closest('[data-close-details]')) closeVideoDetails();
+  });
+  $('detailsPlayBtn').addEventListener('click', () => {
+    if (!currentVideo) return;
+    if (iframeReady) revealPlayer();
+  });
+  $('detailsFrame').addEventListener('load', () => {
+    if ($('detailsModal').classList.contains('hidden')) return;
+    if (!$('detailsFrame').src || $('detailsFrame').src === 'about:blank') return;
+    iframeReady = true;
+    $('videoLoader').classList.add('hidden');
+    clearTimeout(posterFadeTimer);
+    posterFadeTimer = setTimeout(revealPlayer, 500);
+  });
+  $('fullscreenBtn').addEventListener('click', async () => {
+    const el = $('playerZone');
+    try {
+      const isFs = document.fullscreenElement || document.webkitFullscreenElement;
+      if (!isFs) {
+        if (el.requestFullscreen) await el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      } else {
+        if (document.exitFullscreen) await document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      }
+    } catch (e) { console.warn(e); }
+  });
+
+  /* ============================================================
+     EXCEL EXPORT
+     ============================================================ */
+  function exportToExcel() {
+    if (typeof XLSX === 'undefined') { alert('SheetJS non chargé'); return; }
+    const items = getFilteredVideos();
+    if (!items.length) { alert('لا توجد بيانات'); return; }
+    const map = new Map();
+    items.forEach(r => {
+      const fr = r.theme_fr || 'Non classé';
+      const ar = r.theme_ar || fr;
+      if (!map.has(fr)) map.set(fr, { ar, fr, videos: [] });
+      map.get(fr).videos.push(r);
+    });
+    const wb = XLSX.utils.book_new();
+    const used = new Set();
+    const entries = Array.from(map.values()).sort((a,b) => b.videos.length - a.videos.length);
+    entries.forEach(meta => {
+      let base = String(meta.ar || meta.fr).replace(/[\\\/\?\*\[\]:]/g, '_').substring(0, 31) || 'Sans';
+      let name = base, i = 2;
+      while (used.has(name.toLowerCase())) { name = base.substring(0, 28) + '_' + i; i++; }
+      used.add(name.toLowerCase());
+      const rows = [['العنوان', 'الوصف', 'FBID']];
+      meta.videos.forEach(v => rows.push([v.titre || '', v.description || '', String(v.fbid || '')]));
+      const ws = XLSX.utils.aoa_to_sheet(rows);
+      ws['!cols'] = [{wch:60},{wch:90},{wch:22}];
+      XLSX.utils.book_append_sheet(wb, ws, name);
+    });
+    const summary = [['الموضوع (FR)', 'الموضوع (AR)', 'العدد']];
+    entries.forEach(m => summary.push([m.fr, m.ar, m.videos.length]));
+    summary.push(['المجموع', '', items.length]);
+    const wsSum = XLSX.utils.aoa_to_sheet(summary);
+    wsSum['!cols'] = [{wch:40},{wch:40},{wch:18}];
+    XLSX.utils.book_append_sheet(wb, wsSum, '_ملخص');
+    XLSX.writeFile(wb, `Galerie_Videos_${new Date().toISOString().slice(0,10)}.xlsx`);
+  }
+
+  /* ============================================================
+     LIGHTBOX EVENTS
+     ============================================================ */
+  $('lbClose').addEventListener('click', closeLightbox);
+  $('lightbox').addEventListener('click', e => {
+    if (e.target.id === 'lightbox') closeLightbox();
+  });
+  $('lbPrev').addEventListener('click', () => {
+    state.lb.index = (state.lb.index - 1 + state.lb.list.length) % state.lb.list.length;
+    updateLightboxUI();
+  });
+  $('lbNext').addEventListener('click', () => {
+    state.lb.index = (state.lb.index + 1) % state.lb.list.length;
+    updateLightboxUI();
+  });
+
+  // Photos click
+  $('photosGrid').addEventListener('click', e => {
+    const tile = e.target.closest('.photo-tile');
+    if (!tile) return;
+    const list = $('photosGrid')._activeList || [];
+    const idx = parseInt(tile.dataset.photoIdx, 10);
+    if (list.length) openLightbox(list, idx);
+  });
+
+  // Publications click
+  $('pubGrid').addEventListener('click', e => {
+    const readMore = e.target.closest('.read-more');
+    if (readMore) {
+      const p = $(readMore.dataset.target);
+      if (p) {
+        const expanded = p.classList.toggle('expanded');
+        readMore.textContent = expanded ? 'طي النص' : 'قراءة المزيد...';
+      }
+      return;
+    }
+    const lbTrigger = e.target.closest('[data-open-lightbox]');
+    if (lbTrigger) {
+      const fbid = lbTrigger.dataset.openLightbox;
+      const item = ARCHIVE_DATA.find(i => i.fbid === fbid);
+      if (item && item.images.length) {
+        const slides = item.images.map((src, i) => ({
+          src, fallback: DEFAULT_IMG, date: item.date, caption: item.text,
+          reactions: item.reactions, partages: item.partages, fbUrl: item.url_canonique
+        }));
+        openLightbox(slides, 0);
+      }
+      return;
+    }
+    // Thumb swap
+    const thumb = e.target.closest('.pub-thumbs img');
+    if (thumb) {
+      const card = thumb.closest('.pub-card');
+      const main = card.querySelector('.pub-media img');
+      const idx = parseInt(thumb.dataset.idx, 10);
+      const fbid = card.dataset.fbid;
+      const item = ARCHIVE_DATA.find(i => i.fbid === fbid);
+      if (main && item && item.images[idx]) {
+        main.src = item.images[idx];
+        card.querySelectorAll('.pub-thumbs img').forEach(t => t.classList.remove('active'));
+        thumb.classList.add('active');
+      }
+    }
+  });
+
+  /* ============================================================
+     REMARKS / EXIT / ÉCHAP
+     ============================================================ */
+  function showEmailStatus(type, text) {
+    const el = $('emailRemarkStatus');
+    if (!el) return;
+    el.classList.remove('hidden');
+    el.className = 'rounded-lg px-3 py-2 text-sm ' + (
+      type === 'success' ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' :
+      type === 'error' ? 'bg-rose-500/15 text-rose-300 border border-rose-500/30' :
+      'bg-slate-700/50 text-slate-300 border border-slate-600'
+    );
+    el.textContent = text;
+  }
+  $('openRemarksBtn').addEventListener('click', () => {
+    $('remarksModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    $('emailRemarkStatus').classList.add('hidden');
+    $('emailRemarkBtn').disabled = false;
+    setTimeout(() => $('emailRemarkText').focus(), 80);
+  });
+  function closeRemarks() {
+    $('remarksModal').classList.add('hidden');
+    document.body.style.overflow = '';
+    $('emailRemarkStatus').classList.add('hidden');
+    $('emailRemarkBtn').disabled = false;
+  }
+  $('remarksModal').addEventListener('click', e => {
+    if (e.target.closest('[data-close-remarks]')) closeRemarks();
+  });
+  $('emailRemarkForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const btn = $('emailRemarkBtn');
+    if (btn.disabled) return;
+    const text = $('emailRemarkText').value.trim();
+    if (!text) { showEmailStatus('error', 'الرجاء كتابة ملاحظتك'); return; }
+    btn.disabled = true;
+    showEmailStatus('pending', 'جارٍ الإرسال…');
+    fetch(EMAIL_REMARK_SCRIPT_URL, { method: 'POST', body: new FormData(e.target), redirect: 'follow' })
+      .then(r => {
+        if (!r.ok) throw new Error('Fail');
+        showEmailStatus('success', 'تم الإرسال بنجاح');
+        e.target.reset();
+        setTimeout(closeRemarks, 1500);
+      })
+      .catch(() => showEmailStatus('error', 'حدث خطأ'))
+      .finally(() => { btn.disabled = false; });
+  });
+
+  // Exit trap (simplifié)
+  let exitTrapActive = false, allowExit = false, exitDialogOpen = false;
+  function activateExitTrap() {
+    if (exitTrapActive) return;
+    exitTrapActive = true;
+    try { history.pushState({ g: true }, '', location.href); } catch (e) {}
+  }
+  function showExitDialog() {
+    if (exitDialogOpen) return;
+    exitDialogOpen = true;
+    $('exitConfirmModal').classList.remove('hidden');
+  }
+  function hideExitDialog() {
+    $('exitConfirmModal').classList.add('hidden');
+    exitDialogOpen = false;
+  }
+  function performConfirmedExit() {
+    allowExit = true;
+    hideExitDialog();
+    if (history.length >= 3) history.go(-2);
+    else if (history.length >= 2) history.back();
+    else window.close();
+  }
+  window.addEventListener('beforeunload', e => {
+    if (allowExit || !exitTrapActive) return;
+    e.preventDefault();
+    e.returnValue = 'مغادرة المعرض؟';
+    return e.returnValue;
+  });
+  window.addEventListener('popstate', () => {
+    if (allowExit || !exitTrapActive) return;
+    try { history.pushState({ g: true }, '', location.href); } catch (e) {}
+    if (!exitDialogOpen) showExitDialog();
+  });
+  window.addEventListener('click', activateExitTrap, { once: true, capture: true });
+  $('exitConfirmModal').addEventListener('click', e => {
+    if (e.target.closest('[data-exit-cancel]')) { hideExitDialog(); return; }
+    if (e.target.closest('[data-exit-confirm]')) { performConfirmedExit(); return; }
+  });
+
+  // Échap
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      const openDD = document.querySelector('.menu-dropdown-content:not(.hidden)');
+      if (openDD) { document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden')); return; }
+      if ($('lightbox').classList.contains('open')) { closeLightbox(); return; }
+      if (!$('detailsModal').classList.contains('hidden')) { closeVideoDetails(); return; }
+      if (!$('remarksModal').classList.contains('hidden')) { closeRemarks(); return; }
+      if (exitDialogOpen) { hideExitDialog(); return; }
+    }
+    if ($('lightbox').classList.contains('open')) {
+      if (e.key === 'ArrowRight') $('lbPrev').click();
+      if (e.key === 'ArrowLeft') $('lbNext').click();
+    }
+  });
+
+  /* ============================================================
+     BOOT
+     ============================================================ */
+  function boot(videoData) {
+    state.videos = Array.isArray(videoData) ? videoData : [];
+    buildYearDropdown();
+    initVideoYear();
+    syncVideoMenus();
+    updateTabCounts();
+    renderVideos();
+  }
+
+  // Attendre les données vidéo (chargement asynchrone externe)
+  if (Array.isArray(window.reelsData) && window.reelsData.length > 0) {
+    boot(window.reelsData);
+  } else {
+    window.addEventListener('videotheque:data-ready', () => boot(window.reelsData || []), { once: true });
+  }
+
+})();
+</script>
+
+<!-- ============ CHARGEMENT DONNÉES EXTERNES ============ -->
+<script>
+window.reelsData = [];
+window.tabeleau_url_content = [];
+
+const REELS_DATA_URL = "https://marocnetmail.github.io/125/json/reelsData.json";
+const URL_CONTENT_URL = "https://marocnetmail.github.io/125/json/url_content.json";
+
+window.videothequeDataReady = Promise.all([
+  fetch(REELS_DATA_URL, { cache: "no-store" }).then(r => {
+    if (!r.ok) throw new Error('Failed reelsData');
+    return r.json();
+  }),
+  fetch(URL_CONTENT_URL, { cache: "no-store" }).then(r => {
+    if (!r.ok) throw new Error('Failed url_content');
+    return r.json();
+  })
+]).then(([reels, content]) => {
+  window.reelsData = Array.isArray(reels) ? reels : [];
+  window.tabeleau_url_content = Array.isArray(content) ? content : [];
+  console.log("✅ Vidéothèque chargée:", window.reelsData.length, "vidéos");
+  return { reelsData: window.reelsData, tabeleau_url_content: window.tabeleau_url_content };
+}).catch(err => {
+  console.error("❌ Erreur chargement:", err);
+  return { reelsData: window.reelsData, tabeleau_url_content: window.tabeleau_url_content };
+}).finally(() => {
+  window.dispatchEvent(new Event("videotheque:data-ready"));
+});
+</script>
+
+</body>
+</html>
