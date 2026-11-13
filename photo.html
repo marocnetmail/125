@@ -47,8 +47,8 @@
   /* ============ SOUS-MENU VIDÉOS ============ */
   .sub-menu-row{display:none;background:#0b3559;border-top:1px solid rgba(255,255,255,.08);border-bottom:2px solid rgba(197,155,69,.4)}
   .sub-menu-row.visible{display:block}
-  .sub-menu-inner{max-width:1440px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;padding:.4rem .75rem;overflow-x:auto;scrollbar-width:none}
-  .sub-menu-inner::-webkit-scrollbar{display:none}
+  /* FIX : suppression de overflow-x:auto (qui rognait les dropdowns verticalement) */
+  .sub-menu-inner{max-width:1440px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;padding:.4rem .75rem}
   .sub-menu-inner>*{flex-shrink:0}
   .menu-item{display:flex;align-items:center;gap:.4rem;padding:.55rem .85rem;font-size:.82rem;font-weight:600;color:#e2e8f0;background:transparent;border:none;cursor:pointer;border-radius:8px;transition:all .2s;font-family:inherit;white-space:nowrap}
   .menu-item:hover{background:rgba(255,255,255,.08);color:#93c5fd}
@@ -64,6 +64,9 @@
   .menu-dropdown-item .dd-check{margin-right:auto;font-size:.68rem;opacity:0}
   .menu-dropdown-item.active .dd-check{opacity:1}
   .menu-badge{display:inline-block;background:rgba(59,130,246,.3);color:#bfdbfe;font-size:.65rem;font-weight:700;padding:.05rem .45rem;border-radius:999px;border:1px solid rgba(59,130,246,.5)}
+  /* FIX : rotation du chevron à l'ouverture */
+  .dd-chevron{transition:transform .2s}
+  .menu-item[aria-expanded="true"] .dd-chevron{transform:rotate(180deg)}
 
   /* ============ MAIN ============ */
   main{max-width:1440px;margin:0 auto;padding:1rem .75rem 2rem;flex:1;width:100%}
@@ -708,17 +711,14 @@
   const state = {
     tab: 'videos',
     search: '',
-    // Vidéos
     videos: [],
-    videoView: 'gallery', // gallery | themes | tree
+    videoView: 'gallery',
     videoSort: 'recent',
     videoYear: 'all',
     videoPage: 1,
     activeTheme: null,
     contentMatchSet: new Set(),
-    // Archive
-    archivePage: 1, // photos + publications page
-    // Lightbox
+    archivePage: 1,
     lb: { list: [], index: 0 }
   };
 
@@ -734,21 +734,16 @@
   function switchTab(tab) {
     if (!TAB_SECTIONS[tab]) tab = 'videos';
     state.tab = tab;
-    // Menus
     document.querySelectorAll('.center-tab').forEach(b => {
       b.classList.toggle('active', b.dataset.tab === tab);
       b.setAttribute('aria-selected', b.dataset.tab === tab ? 'true' : 'false');
     });
-    // Sections
     Object.values(TAB_SECTIONS).forEach(id => $(id).classList.add('hidden'));
     $(TAB_SECTIONS[tab]).classList.remove('hidden');
-    // Submenu vidéos
     const sub = $('videoSubMenu');
     if (sub) sub.classList.toggle('visible', tab === 'videos');
-    // Search
     const s = $('globalSearch');
     if (s) s.value = state.search;
-    // Re-render de la section
     renderActiveTab();
   }
 
@@ -794,7 +789,6 @@
 
   function renderVideos() {
     const items = getFilteredVideos();
-    // Reset visibility
     $('reelsGrid').classList.add('hidden');
     $('themesView').classList.add('hidden');
     $('treeView').classList.add('hidden');
@@ -827,7 +821,6 @@
     const views = formatNumber(r.vues ?? r.nbre_vue ?? 0);
     const reactions = r.reactions != null ? String(r.reactions) : '0';
     const themeAr = r.theme_ar || r.theme_fr || 'غير مصنف';
-    const themeFr = r.theme_fr || '';
     return `
     <article class="reel-card group relative aspect-[9/16] w-full bg-slate-900 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 active:scale-[0.98] border-2 sm:border-[3px] border-white ring-1 ring-black/25" data-fbid="${escapeHtml(r.fbid)}">
       ${thumbMarkup(r.miniature, 'lazy', 'absolute inset-0')}
@@ -1047,7 +1040,6 @@
         <span class="photo-badge">${photo.index + 1}/${photo.total}</span>
       </div>
     `).join('');
-    // Stocke la liste active pour le lightbox
     $('photosGrid')._activeList = items;
   }
 
@@ -1175,6 +1167,17 @@
   /* ============================================================
      ÉVÉNEMENTS : SOUS-MENU VIDÉOS
      ============================================================ */
+
+  // FIX : ferme tous les menus + reset aria-expanded
+  function closeAllDropdowns() {
+    document.querySelectorAll('.menu-dropdown').forEach(d => {
+      const content = d.querySelector('.menu-dropdown-content');
+      const btn = d.querySelector('.menu-item');
+      if (content) content.classList.add('hidden');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    });
+  }
+
   // Dropdowns
   document.querySelectorAll('.menu-dropdown').forEach(dd => {
     const btn = dd.querySelector('.menu-item');
@@ -1183,10 +1186,7 @@
       e.stopPropagation();
       const content = dd.querySelector('.menu-dropdown-content');
       const isOpen = content && !content.classList.contains('hidden');
-      document.querySelectorAll('.menu-dropdown').forEach(d => {
-        d.querySelector('.menu-dropdown-content')?.classList.add('hidden');
-        d.querySelector('.menu-item')?.setAttribute('aria-expanded', 'false');
-      });
+      closeAllDropdowns();
       if (!isOpen && content) {
         content.classList.remove('hidden');
         btn.setAttribute('aria-expanded', 'true');
@@ -1194,12 +1194,7 @@
     });
   });
   document.addEventListener('click', e => {
-    if (!e.target.closest('.menu-dropdown')) {
-      document.querySelectorAll('.menu-dropdown').forEach(d => {
-        d.querySelector('.menu-dropdown-content')?.classList.add('hidden');
-        d.querySelector('.menu-item')?.setAttribute('aria-expanded', 'false');
-      });
-    }
+    if (!e.target.closest('.menu-dropdown')) closeAllDropdowns();
   });
 
   // Menu Home
@@ -1220,7 +1215,7 @@
     state.videoPage = 1;
     syncVideoMenus();
     renderVideos();
-    document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden'));
+    closeAllDropdowns();
   });
 
   // Sort dropdown
@@ -1231,7 +1226,7 @@
     state.videoPage = 1;
     syncVideoMenus();
     renderVideos();
-    document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden'));
+    closeAllDropdowns();
   });
 
   // Year dropdown
@@ -1242,7 +1237,7 @@
     state.videoPage = 1;
     syncVideoMenus();
     renderVideos();
-    document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden'));
+    closeAllDropdowns();
   });
 
   // Back to themes
@@ -1302,7 +1297,6 @@
   function syncVideoMenus() {
     const badge = $('yearBadge');
     if (badge) badge.textContent = state.videoYear === 'all' ? 'الكل' : state.videoYear;
-    // Menu items actifs
     ['menuHome', 'menuGalerie', 'menuSort', 'menuYear'].forEach(id => {
       const el = $(id); if (el) el.classList.remove('active');
     });
@@ -1310,7 +1304,6 @@
     else if (state.videoSort !== 'recent') $('menuSort').classList.add('active');
     else if (state.videoYear !== 'all') $('menuYear').classList.add('active');
     else $('menuHome').classList.add('active');
-    // Checkmarks
     $('galleryDropdown').querySelectorAll('[data-view]').forEach(b => {
       b.classList.toggle('active', b.dataset.view === state.videoView);
     });
@@ -1605,7 +1598,7 @@
       .finally(() => { btn.disabled = false; });
   });
 
-  // Exit trap (simplifié)
+  // Exit trap
   let exitTrapActive = false, allowExit = false, exitDialogOpen = false;
   function activateExitTrap() {
     if (exitTrapActive) return;
@@ -1645,11 +1638,11 @@
     if (e.target.closest('[data-exit-confirm]')) { performConfirmedExit(); return; }
   });
 
-  // Échap
+  // Échap — utilise closeAllDropdowns (reset aria-expanded)
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       const openDD = document.querySelector('.menu-dropdown-content:not(.hidden)');
-      if (openDD) { document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden')); return; }
+      if (openDD) { closeAllDropdowns(); return; }
       if ($('lightbox').classList.contains('open')) { closeLightbox(); return; }
       if (!$('detailsModal').classList.contains('hidden')) { closeVideoDetails(); return; }
       if (!$('remarksModal').classList.contains('hidden')) { closeRemarks(); return; }
@@ -1673,7 +1666,6 @@
     renderVideos();
   }
 
-  // Attendre les données vidéo (chargement asynchrone externe)
   if (Array.isArray(window.reelsData) && window.reelsData.length > 0) {
     boot(window.reelsData);
   } else {
