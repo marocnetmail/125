@@ -208,14 +208,14 @@
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
 
-<!-- ============ PROGRESS OVERLAY (vidéos) ============ -->
+<!-- ============ PROGRESS OVERLAY (vérification des images) ============ -->
 <div id="progressOverlay" class="hidden fixed inset-0 z-[100] bg-slate-900/95 backdrop-blur-md flex items-center justify-center">
   <div class="w-full max-w-md px-6">
     <div class="text-center mb-6">
       <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/20 mb-4">
         <i class="fa-solid fa-images text-3xl text-blue-400 animate-pulse"></i>
       </div>
-      <h2 class="text-lg font-bold text-white mb-1">جارٍ تحميل الصور المصغرة…</h2>
+      <h2 class="text-lg font-bold text-white mb-1">جارٍ التحقق من الصور…</h2>
       <p id="progressCount" class="text-xs text-slate-400">جارٍ التحضير…</p>
     </div>
     <div class="h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
@@ -518,7 +518,8 @@
   const PAGE_SIZE_VIDEOS = 20;
   const EMAIL_REMARK_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwRllGpkxkBllOBnu9U7gZfH5Lg1qS-Iz-jf_rz_S1VKLydL0juENf-OfUI56mWQ_ojMA/exec';
 
-  // Image par défaut (SVG data-URI)
+  // Image par défaut (SVG data-URI) — utilisée UNIQUEMENT pour les vidéos,
+  // jamais pour les images d'archive (photos/publications).
   const DEFAULT_IMG = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">' +
     '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
@@ -634,8 +635,8 @@
     return `images/pub_${fbid}_${String(idx).padStart(2,'0')}.webp`;
   }
 
-  // Construit l'archive complète
-  const ARCHIVE_DATA = ARCHIVE_COMPACT.map(([fbid, date_iso, imgCount, text]) => {
+  // Archive brute (avant validation)
+  const ARCHIVE_RAW = ARCHIVE_COMPACT.map(([fbid, date_iso, imgCount, text]) => {
     const [y, m, d] = date_iso.split('-');
     const stats = generateStats(fbid, text);
     const images = Array.from({ length: imgCount }, (_, i) => imagePath(fbid, i));
@@ -649,18 +650,9 @@
     };
   });
 
-  // Liste plate de toutes les images
-  const ALL_PHOTOS = [];
-  ARCHIVE_DATA.forEach(item => {
-    item.images.forEach((src, i) => {
-      ALL_PHOTOS.push({
-        src, fallback: DEFAULT_IMG, date: item.date,
-        caption: item.text, reactions: item.reactions, partages: item.partages,
-        fbUrl: item.url_canonique, fbid: item.fbid,
-        index: i, total: item.images.length
-      });
-    });
-  });
+  // Remplis par initArchive() après vérification réelle des images
+  let ARCHIVE_DATA = [];
+  let ALL_PHOTOS = [];
 
   /* ============================================================
      UTILITAIRES TEXTE
@@ -717,7 +709,8 @@
     activeTheme: null,
     contentMatchSet: new Set(),
     // Archive
-    archivePage: 1, // photos + publications page
+    archivePage: 1,
+    archiveInitialized: false,
     // Lightbox
     lb: { list: [], index: 0 }
   };
@@ -734,21 +727,16 @@
   function switchTab(tab) {
     if (!TAB_SECTIONS[tab]) tab = 'videos';
     state.tab = tab;
-    // Menus
     document.querySelectorAll('.center-tab').forEach(b => {
       b.classList.toggle('active', b.dataset.tab === tab);
       b.setAttribute('aria-selected', b.dataset.tab === tab ? 'true' : 'false');
     });
-    // Sections
     Object.values(TAB_SECTIONS).forEach(id => $(id).classList.add('hidden'));
     $(TAB_SECTIONS[tab]).classList.remove('hidden');
-    // Submenu vidéos
     const sub = $('videoSubMenu');
     if (sub) sub.classList.toggle('visible', tab === 'videos');
-    // Search
     const s = $('globalSearch');
     if (s) s.value = state.search;
-    // Re-render de la section
     renderActiveTab();
   }
 
@@ -759,7 +747,7 @@
   }
 
   /* ============================================================
-     MODULE VIDÉOS
+     MODULE VIDÉOS (inchangé fonctionnellement)
      ============================================================ */
   function getVideoYear(r) {
     if (r && r.annee != null && !isNaN(Number(r.annee))) return String(Number(r.annee));
@@ -800,7 +788,6 @@
 
   function renderVideos() {
     const items = getFilteredVideos();
-    // Reset visibility
     $('reelsGrid').classList.add('hidden');
     $('themesView').classList.add('hidden');
     $('treeView').classList.add('hidden');
@@ -823,7 +810,7 @@
     const start = (state.videoPage - 1) * PAGE_SIZE_VIDEOS;
     const pageItems = items.slice(start, start + PAGE_SIZE_VIDEOS);
     $('reelsGrid').innerHTML = pageItems.map(videoCardHTML).join('');
-    renderPagination(totalPages, 'videos');
+    renderPagination(totalPages);
   }
 
   function videoCardHTML(r) {
@@ -833,7 +820,6 @@
     const views = formatNumber(r.vues ?? r.nbre_vue ?? 0);
     const reactions = r.reactions != null ? String(r.reactions) : '0';
     const themeAr = r.theme_ar || r.theme_fr || 'غير مصنف';
-    const themeFr = r.theme_fr || '';
     return `
     <article class="reel-card group relative aspect-[9/16] w-full bg-slate-900 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 active:scale-[0.98] border-2 sm:border-[3px] border-white ring-1 ring-black/25" data-fbid="${escapeHtml(r.fbid)}">
       ${thumbMarkup(r.miniature, 'lazy', 'absolute inset-0')}
@@ -899,7 +885,7 @@
       if (state.videoPage > totalPages) state.videoPage = totalPages;
       const start = (state.videoPage - 1) * PAGE_SIZE_VIDEOS;
       $('reelsGrid').innerHTML = themeItems.slice(start, start + PAGE_SIZE_VIDEOS).map(themeVideoCardHTML).join('');
-      renderPagination(totalPages, 'videos');
+      renderPagination(totalPages);
     } else {
       $('themesView').classList.remove('hidden');
       const map = new Map();
@@ -978,7 +964,7 @@
     $('treeContent').innerHTML = html;
   }
 
-  function renderPagination(totalPages, type) {
+  function renderPagination(totalPages) {
     const pag = $('pagination');
     if (totalPages <= 1) { pag.innerHTML = ''; return; }
     const page = state.videoPage;
@@ -1001,6 +987,7 @@
     pag.innerHTML = html;
   }
 
+  // Utilisé UNIQUEMENT pour les vidéos (miniatures distantes non validées).
   function thumbMarkup(url, loadingAttr, extraClass = '') {
     return `
       <div class="thumb-wrap ${extraClass}">
@@ -1012,16 +999,143 @@
   }
 
   /* ============================================================
+     VALIDATION ASYNCHRONE DES IMAGES D'ARCHIVE
+     ============================================================ */
+  function probeImage(url, timeoutMs = 8000) {
+    return new Promise((resolve) => {
+      if (!url) { resolve(false); return; }
+      const img = new Image();
+      let resolved = false;
+      const done = (ok) => {
+        if (resolved) return;
+        resolved = true;
+        img.onload = null;
+        img.onerror = null;
+        resolve(ok);
+      };
+      const timer = setTimeout(() => done(false), timeoutMs);
+      img.onload = () => {
+        clearTimeout(timer);
+        done(img.naturalWidth > 0 && img.naturalHeight > 0);
+      };
+      img.onerror = () => {
+        clearTimeout(timer);
+        done(false);
+      };
+      img.src = url;
+    });
+  }
+
+  async function validateImagesBatch(urls, onProgress, concurrency = 6) {
+    const validSet = new Set();
+    if (!urls.length) return validSet;
+    let done = 0;
+    let cursor = 0;
+    const total = urls.length;
+
+    async function worker() {
+      while (true) {
+        const i = cursor++;
+        if (i >= total) return;
+        const ok = await probeImage(urls[i]);
+        if (ok) validSet.add(urls[i]);
+        done++;
+        if (onProgress) {
+          try { onProgress(done, total); } catch (_) { /* ignore */ }
+        }
+      }
+    }
+
+    const workers = Array.from({ length: Math.min(concurrency, total) }, () => worker());
+    await Promise.all(workers);
+    return validSet;
+  }
+
+  async function initArchive() {
+    if (state.archiveInitialized) return;
+    state.archiveInitialized = true;
+
+    // 1) Collecte unique des URLs
+    const uniqueUrls = new Set();
+    ARCHIVE_RAW.forEach(item => item.images.forEach(u => uniqueUrls.add(u)));
+    const urlList = Array.from(uniqueUrls);
+
+    // 2) Affichage overlay + progression
+    const overlay = $('progressOverlay');
+    const bar = $('progressBar');
+    const pctEl = $('progressPercent');
+    const countEl = $('progressCount');
+    if (overlay) {
+      overlay.classList.remove('hidden');
+      if (bar) bar.style.width = '0%';
+      if (pctEl) pctEl.textContent = '0%';
+      if (countEl) countEl.textContent = `0 / ${urlList.length}`;
+    }
+
+    // 3) Vérification réelle
+    let validSet = new Set();
+    try {
+      validSet = await validateImagesBatch(urlList, (done, total) => {
+        const pct = total ? Math.round((done / total) * 100) : 100;
+        if (bar) bar.style.width = pct + '%';
+        if (pctEl) pctEl.textContent = pct + '%';
+        if (countEl) countEl.textContent = `${done} / ${total}`;
+      }, 6);
+    } catch (e) {
+      console.error('Erreur validation images:', e);
+    } finally {
+      if (overlay) overlay.classList.add('hidden');
+    }
+
+    // 4) Filtrage des publications
+    const filtered = [];
+    ARCHIVE_RAW.forEach(item => {
+      const validImages = item.images.filter(u => validSet.has(u));
+      if (validImages.length > 0) {
+        filtered.push({ ...item, images: validImages, type: 'PHOTO' });
+      }
+    });
+    ARCHIVE_DATA = filtered;
+
+    // 5) Reconstruction de ALL_PHOTOS
+    ALL_PHOTOS = [];
+    ARCHIVE_DATA.forEach(item => {
+      item.images.forEach((src, i) => {
+        ALL_PHOTOS.push({
+          src,
+          date: item.date,
+          caption: item.text,
+          reactions: item.reactions,
+          partages: item.partages,
+          fbUrl: item.url_canonique,
+          fbid: item.fbid,
+          index: i,
+          total: item.images.length
+        });
+      });
+    });
+
+    // 6) Bilan console
+    const totalRefs = ARCHIVE_RAW.reduce((s, i) => s + i.images.length, 0);
+    const validRefs = ARCHIVE_DATA.reduce((s, i) => s + i.images.length, 0);
+    console.group('%c📊 Bilan de vérification des images', 'color:#c59b45;font-weight:bold');
+    console.log(`Publications analysées : ${ARCHIVE_RAW.length}`);
+    console.log(`Publications conservées : ${ARCHIVE_DATA.length}`);
+    console.log(`Publications exclues : ${ARCHIVE_RAW.length - ARCHIVE_DATA.length}`);
+    console.log(`Images uniques vérifiées : ${urlList.length}`);
+    console.log(`Images uniques valides : ${validSet.size}`);
+    console.log(`Images uniques invalides : ${urlList.length - validSet.size}`);
+    console.log(`Références d'images totales : ${totalRefs}`);
+    console.log(`Références d'images valides : ${validRefs}`);
+    console.groupEnd();
+  }
+
+  /* ============================================================
      MODULE ARCHIVE (photos + publications)
      ============================================================ */
   function getFilteredArchive() {
-    const q = state.search.trim();
-    if (!q) return [...ARCHIVE_DATA];
-    const nq = normalizeArabic(q);
-    return ARCHIVE_DATA.filter(item => {
-      const hay = normalizeArabic([item.text, item.date, item.fbid, item.type].join(' '));
-      return hay.includes(nq);
-    });
+    // ARCHIVE_DATA ne contient déjà que des publications avec images validées.
+    return ARCHIVE_DATA;
   }
 
   function getFilteredPhotos() {
@@ -1036,25 +1150,40 @@
 
   function renderPhotos() {
     const items = getFilteredPhotos();
+    const grid = $('photosGrid');
+    const empty = $('photosEmpty');
+    grid.innerHTML = '';
+
     if (items.length === 0) {
-      $('photosGrid').innerHTML = '';
-      $('photosEmpty').classList.remove('hidden');
+      empty.classList.remove('hidden');
+      grid._activeList = [];
       return;
     }
-    $('photosEmpty').classList.add('hidden');
-    $('photosGrid').innerHTML = items.map((photo, idx) => `
-      <div class="photo-tile" data-photo-idx="${idx}">
-        <img src="${escapeHtml(photo.src)}" alt="" loading="lazy" decoding="async"
-             onerror="this.onerror=null;this.src='${DEFAULT_IMG.replace(/'/g, "\\'")}'">
-        <div class="photo-hover">
-          <div class="photo-hover-date">${photo.date}</div>
-          <div class="photo-hover-text">${escapeHtml(photo.caption)}</div>
-        </div>
-        <span class="photo-badge">${photo.index + 1}/${photo.total}</span>
-      </div>
-    `).join('');
-    // Stocke la liste active pour le lightbox
-    $('photosGrid')._activeList = items;
+    empty.classList.add('hidden');
+
+    items.forEach((photo, idx) => {
+      const tile = document.createElement('div');
+      tile.className = 'photo-tile';
+      tile.dataset.photoIdx = idx;
+
+      const img = document.createElement('img');
+      img.src = photo.src;
+      img.alt = '';
+      img.loading = 'lazy';
+      // Pas de fallback fictif : si l'image échoue malgré la validation,
+      // on retire la tuile. Si la grille devient vide, on affiche l'état vide.
+      img.addEventListener('error', () => {
+        tile.remove();
+        if (!grid.querySelector('.photo-tile')) {
+          empty.classList.remove('hidden');
+        }
+      }, { once: true });
+
+      tile.appendChild(img);
+      grid.appendChild(tile);
+    });
+
+    grid._activeList = items;
   }
 
   function renderPublications() {
@@ -1076,15 +1205,13 @@
     const mainImg = hasImages ? item.images[0] : '';
     const thumbs = item.images.length > 1
       ? `<div class="pub-thumbs">${item.images.map((src, i) => `
-          <img src="${escapeHtml(src)}" data-idx="${i}" class="${i===0?'active':''}" loading="lazy"
-               onerror="this.onerror=null;this.src='${DEFAULT_IMG.replace(/'/g, "\\'")}'" alt="">
+          <img src="${escapeHtml(src)}" data-idx="${i}" class="${i===0?'active':''}" loading="lazy" alt="">
         `).join('')}</div>` : '';
     return `
     <article class="pub-card" data-fbid="${escapeHtml(item.fbid)}">
       ${hasImages ? `
         <div class="pub-media" data-open-lightbox="${escapeHtml(item.fbid)}">
-          <img src="${escapeHtml(mainImg)}" loading="lazy" alt=""
-               onerror="this.onerror=null;this.src='${DEFAULT_IMG.replace(/'/g, "\\'")}'">
+          <img src="${escapeHtml(mainImg)}" loading="lazy" alt="">
           <span class="pub-badge-type">${item.type}</span>
           ${item.images.length > 1 ? `<span class="pub-badge-gallery">🖼️ ${item.images.length}</span>` : ''}
         </div>
@@ -1114,11 +1241,11 @@
   }
 
   /* ============================================================
-     LIGHTBOX
+     LIGHTBOX (sans DEFAULT_IMG)
      ============================================================ */
   function openLightbox(list, index) {
     if (!list || !list.length) return;
-    state.lb.list = list;
+    state.lb.list = list.slice();
     state.lb.index = Math.max(0, Math.min(index, list.length - 1));
     updateLightboxUI();
     $('lightbox').classList.add('open');
@@ -1127,10 +1254,16 @@
 
   function updateLightboxUI() {
     const s = state.lb.list[state.lb.index];
-    if (!s) return;
+    if (!s) { closeLightbox(); return; }
     const img = $('lbImg');
-    img.src = s.src || DEFAULT_IMG;
-    img.onerror = () => { img.onerror = null; img.src = DEFAULT_IMG; };
+    img.onerror = () => {
+      // Retirer l'image invalide et passer à la suivante
+      state.lb.list.splice(state.lb.index, 1);
+      if (state.lb.list.length === 0) { closeLightbox(); return; }
+      if (state.lb.index >= state.lb.list.length) state.lb.index = 0;
+      updateLightboxUI();
+    };
+    img.src = s.src;
     $('lbDate').textContent = s.date;
     $('lbCounter').textContent = `${state.lb.index + 1} / ${state.lb.list.length}`;
     $('lbCaption').textContent = s.caption;
@@ -1145,7 +1278,64 @@
   function closeLightbox() {
     $('lightbox').classList.remove('open');
     document.body.style.overflow = '';
+    const img = $('lbImg');
+    if (img) img.onerror = null;
   }
+
+  /* ============================================================
+     DÉLÉGATION GLOBALE DES ERREURS D'IMAGE (phase capture)
+     ============================================================ */
+  document.addEventListener('error', (e) => {
+    const img = e.target;
+    if (!(img instanceof HTMLImageElement)) return;
+
+    // Ignorer les miniatures vidéo (thumb-wrap), gérées séparément
+    if (img.closest('.thumb-wrap')) return;
+
+    // Lightbox
+    if (img.id === 'lbImg') {
+      // géré par updateLightboxUI
+      return;
+    }
+
+    // Tuile photo
+    const tile = img.closest('.photo-tile');
+    if (tile) {
+      const grid = tile.parentElement;
+      tile.remove();
+      if (grid && grid.id === 'photosGrid' && !grid.querySelector('.photo-tile')) {
+        $('photosEmpty').classList.remove('hidden');
+      }
+      return;
+    }
+
+    // Miniature de publication
+    if (img.closest('.pub-thumbs')) {
+      img.remove();
+      return;
+    }
+
+    // Image principale de publication
+    const media = img.closest('.pub-media');
+    if (media) {
+      const card = media.closest('.pub-card');
+      const thumbs = card ? card.querySelectorAll('.pub-thumbs img') : [];
+      let swapped = false;
+      for (const t of thumbs) {
+        if (t !== img && t.complete && t.naturalWidth > 0) {
+          img.src = t.src;
+          swapped = true;
+          break;
+        }
+      }
+      if (!swapped) {
+        media.remove();
+        if (card && !card.querySelector('.pub-media') && !card.querySelector('.pub-thumbs img')) {
+          card.remove();
+        }
+      }
+    }
+  }, true);
 
   /* ============================================================
      RENDU ACTIF
@@ -1181,7 +1371,6 @@
   /* ============================================================
      ÉVÉNEMENTS : SOUS-MENU VIDÉOS
      ============================================================ */
-  // Dropdowns
   document.querySelectorAll('.menu-dropdown').forEach(dd => {
     const btn = dd.querySelector('.menu-item');
     if (!btn) return;
@@ -1208,7 +1397,6 @@
     }
   });
 
-  // Menu Home
   $('menuHome').addEventListener('click', () => {
     state.videoView = 'gallery';
     state.activeTheme = null;
@@ -1217,7 +1405,6 @@
     renderVideos();
   });
 
-  // Gallery dropdown
   $('galleryDropdown').addEventListener('click', e => {
     const b = e.target.closest('[data-view]');
     if (!b) return;
@@ -1229,7 +1416,6 @@
     document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden'));
   });
 
-  // Sort dropdown
   $('sortDropdown').addEventListener('click', e => {
     const b = e.target.closest('[data-sort]');
     if (!b) return;
@@ -1240,7 +1426,6 @@
     document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden'));
   });
 
-  // Year dropdown
   $('yearDropdownContent').addEventListener('click', e => {
     const b = e.target.closest('[data-year]');
     if (!b) return;
@@ -1251,14 +1436,12 @@
     document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden'));
   });
 
-  // Back to themes
   $('backToThemesBtn').addEventListener('click', () => {
     state.activeTheme = null;
     state.videoPage = 1;
     renderVideos();
   });
 
-  // Grille / thèmes clics
   $('reelsGrid').addEventListener('click', e => {
     const card = e.target.closest('[data-fbid]');
     if (!card) return;
@@ -1290,7 +1473,6 @@
     }
   });
 
-  // Pagination
   $('pagination').addEventListener('click', e => {
     const b = e.target.closest('button[data-page]');
     if (!b || b.disabled) return;
@@ -1301,14 +1483,11 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  // Excel export
   $('exportExcelBtn').addEventListener('click', exportToExcel);
 
-  // Menus sync
   function syncVideoMenus() {
     const badge = $('yearBadge');
     if (badge) badge.textContent = state.videoYear === 'all' ? 'الكل' : state.videoYear;
-    // Menu items actifs
     ['menuHome', 'menuGalerie', 'menuSort', 'menuYear'].forEach(id => {
       const el = $(id); if (el) el.classList.remove('active');
     });
@@ -1316,7 +1495,6 @@
     else if (state.videoSort !== 'recent') $('menuSort').classList.add('active');
     else if (state.videoYear !== 'all') $('menuYear').classList.add('active');
     else $('menuHome').classList.add('active');
-    // Checkmarks
     $('galleryDropdown').querySelectorAll('[data-view]').forEach(b => {
       b.classList.toggle('active', b.dataset.view === state.videoView);
     });
@@ -1411,7 +1589,7 @@
     const statHTML = (label, value, icon, color) => `
       <div class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3">
         <div class="flex items-center gap-1.5 text-xs text-slate-400 mb-1"><i class="fa-solid ${icon} ${color}"></i><span>${label}</span></div>
-        <div class="text-base font-bold ${color.replace('text-','text-').replace('-400','-300')} truncate">${escapeHtml(String(value))}</div>
+        <div class="text-base font-bold ${color} truncate">${escapeHtml(String(value))}</div>
       </div>`;
     return `
       ${(themeAr || themeFr) ? `<div class="flex flex-wrap gap-2">
@@ -1430,7 +1608,6 @@
       </div>`;
   }
 
-  // Details modal events
   $('detailsModal').addEventListener('click', e => {
     if (e.target.closest('[data-close-details]')) closeVideoDetails();
   });
@@ -1513,7 +1690,6 @@
     updateLightboxUI();
   });
 
-  // Photos click
   $('photosGrid').addEventListener('click', e => {
     const tile = e.target.closest('.photo-tile');
     if (!tile) return;
@@ -1522,7 +1698,6 @@
     if (list.length) openLightbox(list, idx);
   });
 
-  // Publications click
   $('pubGrid').addEventListener('click', e => {
     const readMore = e.target.closest('.read-more');
     if (readMore) {
@@ -1538,15 +1713,14 @@
       const fbid = lbTrigger.dataset.openLightbox;
       const item = ARCHIVE_DATA.find(i => i.fbid === fbid);
       if (item && item.images.length) {
-        const slides = item.images.map((src, i) => ({
-          src, fallback: DEFAULT_IMG, date: item.date, caption: item.text,
+        const slides = item.images.map(src => ({
+          src, date: item.date, caption: item.text,
           reactions: item.reactions, partages: item.partages, fbUrl: item.url_canonique
         }));
         openLightbox(slides, 0);
       }
       return;
     }
-    // Thumb swap
     const thumb = e.target.closest('.pub-thumbs img');
     if (thumb) {
       const card = thumb.closest('.pub-card');
@@ -1611,7 +1785,6 @@
       .finally(() => { btn.disabled = false; });
   });
 
-  // Exit trap (simplifié)
   let exitTrapActive = false, allowExit = false, exitDialogOpen = false;
   function activateExitTrap() {
     if (exitTrapActive) return;
@@ -1651,7 +1824,6 @@
     if (e.target.closest('[data-exit-confirm]')) { performConfirmedExit(); return; }
   });
 
-  // Échap
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       const openDD = document.querySelector('.menu-dropdown-content:not(.hidden)');
@@ -1668,14 +1840,26 @@
   });
 
   /* ============================================================
-     BOOT
+     BOOT (ordre strict)
      ============================================================ */
-  function boot(videoData) {
+  async function boot(videoData) {
+    // 1) Charger les vidéos
     state.videos = Array.isArray(videoData) ? videoData : [];
     buildYearDropdown();
     initVideoYear();
     syncVideoMenus();
+
+    // 2-5) Vérifier les images, filtrer, reconstruire, compter
+    try {
+      await initArchive();
+    } catch (e) {
+      console.error('Erreur initArchive:', e);
+    }
+
+    // 6) Mettre à jour les compteurs (reflètent uniquement le contenu valide)
     updateTabCounts();
+
+    // 7) Afficher la galerie vidéo (onglet actif par défaut)
     renderVideos();
   }
 
