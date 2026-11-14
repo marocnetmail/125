@@ -34,7 +34,6 @@
   .center-tab:hover{color:#fff;background:rgba(255,255,255,.08)}
   .center-tab.active{color:#092c4c;background:linear-gradient(135deg,#c59b45 0%,#e0b55a 100%);box-shadow:0 2px 8px rgba(197,155,69,.4);font-weight:800}
   .center-tab i{font-size:.78rem}
-  /* Libellé TOUJOURS visible (mobile inclus) */
   .center-tab .tab-label{display:inline}
   .center-tab .count-badge{background:rgba(0,0,0,.2);color:inherit;font-size:.58rem;font-weight:700;padding:.02rem .3rem;border-radius:999px;line-height:1.4}
   .center-tab.active .count-badge{background:rgba(9,44,76,.25);color:#092c4c}
@@ -314,10 +313,11 @@
         </div>
       </div>
 
+      <!-- Année : défaut ٢٠٢٦, libellés en chiffres arabes -->
       <div class="menu-dropdown" data-dropdown="year">
         <button type="button" class="menu-item" id="menuYear" aria-haspopup="true" aria-expanded="false">
           <i class="fa-solid fa-calendar"></i><span>السنوات</span>
-          <span class="menu-badge" id="yearBadge">2026</span>
+          <span class="menu-badge" id="yearBadge">٢٠٢٦</span>
           <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-70 dd-chevron"></i>
         </button>
         <div class="menu-dropdown-content hidden" id="yearDropdownContent" role="menu"></div>
@@ -526,8 +526,6 @@
   const PAGE_SIZE_VIDEOS = 20;
   const EMAIL_REMARK_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwRllGpkxkBllOBnu9U7gZfH5Lg1qS-Iz-jf_rz_S1VKLydL0juENf-OfUI56mWQ_ojMA/exec';
 
-  // Image par défaut (SVG data-URI) — utilisée UNIQUEMENT pour les vidéos,
-  // jamais pour les images d'archive (photos/publications).
   const DEFAULT_IMG = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">' +
     '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
@@ -543,8 +541,15 @@
   const $ = (id) => document.getElementById(id);
 
   /* ============================================================
+     CONVERSION CHIFFRES ARABES (٠١٢٣٤٥٦٧٨٩)
+     ============================================================ */
+  function toArabicNumerals(input) {
+    const map = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+    return String(input).replace(/[0-9]/g, d => map[+d]);
+  }
+
+  /* ============================================================
      ARCHIVE DATA (photos + publications) — format compact
-     [fbid, date_iso, nb_images, texte]
      ============================================================ */
   const ARCHIVE_COMPACT = [
     ["1794529729805","2026-08-20",4,"من تهيئة الأحياء وتعزيز البنيات التحتية، إلى تأهيل المجال القروي ودعم الجماعات الترابية، تتواصل دينامية التنمية بجهة كلميم واد نون في إطار مشاريع سياسة المدينة."],
@@ -680,6 +685,7 @@
       .replace(/\s+/g, ' ').trim();
   }
 
+  // Dates : année convertie en chiffres arabes (ex. "الأحد 20 غشت ٢٠٢٦")
   function formatDateArabic(dateStr, dateIso) {
     if (!dateIso) return dateStr || '';
     try {
@@ -688,7 +694,7 @@
       if (isNaN(dt.getTime())) return dateStr || '';
       const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
       const months = ['يناير','فبراير','مارس','أبريل','ماي','يونيو','يوليوز','غشت','شتنبر','أكتوبر','نونبر','دجنبر'];
-      return `${days[dt.getDay()]} ${String(dt.getDate()).padStart(2,'0')} ${months[dt.getMonth()]} ${dt.getFullYear()}`;
+      return `${days[dt.getDay()]} ${String(dt.getDate()).padStart(2,'0')} ${months[dt.getMonth()]} ${toArabicNumerals(dt.getFullYear())}`;
     } catch (e) { return dateStr || ''; }
   }
 
@@ -709,7 +715,7 @@
     videos: [],
     videoView: 'gallery',
     videoSort: 'recent',
-    videoYear: 'all',
+    videoYear: '2026', // défaut 2026 (valeur interne latine)
     videoPage: 1,
     activeTheme: null,
     contentMatchSet: new Set(),
@@ -1234,7 +1240,7 @@
   }
 
   /* ============================================================
-     LIGHTBOX (sans DEFAULT_IMG)
+     LIGHTBOX
      ============================================================ */
   function openLightbox(list, index) {
     if (!list || !list.length) return;
@@ -1282,7 +1288,6 @@
     if (!(img instanceof HTMLImageElement)) return;
 
     if (img.closest('.thumb-wrap')) return;
-
     if (img.id === 'lbImg') return;
 
     const tile = img.closest('.photo-tile');
@@ -1350,536 +1355,3 @@
       state.archivePage = 1;
       renderActiveTab();
     }, 200);
-  });
-
-  /* ============================================================
-     ÉVÉNEMENTS : SOUS-MENU VIDÉOS
-     ============================================================ */
-  document.querySelectorAll('.menu-dropdown').forEach(dd => {
-    const btn = dd.querySelector('.menu-item');
-    if (!btn) return;
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      const content = dd.querySelector('.menu-dropdown-content');
-      const isOpen = content && !content.classList.contains('hidden');
-      document.querySelectorAll('.menu-dropdown').forEach(d => {
-        d.querySelector('.menu-dropdown-content')?.classList.add('hidden');
-        d.querySelector('.menu-item')?.setAttribute('aria-expanded', 'false');
-      });
-      if (!isOpen && content) {
-        content.classList.remove('hidden');
-        btn.setAttribute('aria-expanded', 'true');
-      }
-    });
-  });
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.menu-dropdown')) {
-      document.querySelectorAll('.menu-dropdown').forEach(d => {
-        d.querySelector('.menu-dropdown-content')?.classList.add('hidden');
-        d.querySelector('.menu-item')?.setAttribute('aria-expanded', 'false');
-      });
-    }
-  });
-
-  $('menuHome').addEventListener('click', () => {
-    state.videoView = 'gallery';
-    state.activeTheme = null;
-    state.videoPage = 1;
-    syncVideoMenus();
-    renderVideos();
-  });
-
-  $('galleryDropdown').addEventListener('click', e => {
-    const b = e.target.closest('[data-view]');
-    if (!b) return;
-    state.videoView = b.dataset.view;
-    state.activeTheme = null;
-    state.videoPage = 1;
-    syncVideoMenus();
-    renderVideos();
-    document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden'));
-  });
-
-  $('sortDropdown').addEventListener('click', e => {
-    const b = e.target.closest('[data-sort]');
-    if (!b) return;
-    state.videoSort = b.dataset.sort;
-    state.videoPage = 1;
-    syncVideoMenus();
-    renderVideos();
-    document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden'));
-  });
-
-  $('yearDropdownContent').addEventListener('click', e => {
-    const b = e.target.closest('[data-year]');
-    if (!b) return;
-    state.videoYear = b.dataset.year;
-    state.videoPage = 1;
-    syncVideoMenus();
-    renderVideos();
-    document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden'));
-  });
-
-  $('backToThemesBtn').addEventListener('click', () => {
-    state.activeTheme = null;
-    state.videoPage = 1;
-    renderVideos();
-  });
-
-  $('reelsGrid').addEventListener('click', e => {
-    const card = e.target.closest('[data-fbid]');
-    if (!card) return;
-    const reel = state.videos.find(r => String(r.fbid) === card.dataset.fbid);
-    if (reel) openVideoDetails(reel);
-  });
-  $('themesView').addEventListener('click', e => {
-    const c = e.target.closest('[data-theme]');
-    if (!c) return;
-    state.activeTheme = c.dataset.theme;
-    state.videoPage = 1;
-    renderVideos();
-  });
-  $('treeContent').addEventListener('click', e => {
-    const toggle = e.target.closest('.tree-toggle-btn');
-    if (toggle) {
-      const icon = toggle.querySelector('.tree-toggle');
-      const children = toggle.nextElementSibling;
-      if (children && children.classList.contains('tree-children')) {
-        children.classList.toggle('hidden');
-        if (icon) icon.classList.toggle('open');
-      }
-      return;
-    }
-    const node = e.target.closest('[data-fbid]');
-    if (node) {
-      const reel = state.videos.find(r => String(r.fbid) === node.dataset.fbid);
-      if (reel) openVideoDetails(reel);
-    }
-  });
-
-  $('pagination').addEventListener('click', e => {
-    const b = e.target.closest('button[data-page]');
-    if (!b || b.disabled) return;
-    const p = parseInt(b.dataset.page, 10);
-    if (!p || p === state.videoPage) return;
-    state.videoPage = p;
-    renderVideos();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  $('exportExcelBtn').addEventListener('click', exportToExcel);
-
-  function syncVideoMenus() {
-    const badge = $('yearBadge');
-    if (badge) badge.textContent = state.videoYear === 'all' ? 'الكل' : state.videoYear;
-    ['menuHome', 'menuGalerie', 'menuSort', 'menuYear'].forEach(id => {
-      const el = $(id); if (el) el.classList.remove('active');
-    });
-    if (state.videoView !== 'gallery') $('menuGalerie').classList.add('active');
-    else if (state.videoSort !== 'recent') $('menuSort').classList.add('active');
-    else if (state.videoYear !== 'all') $('menuYear').classList.add('active');
-    else $('menuHome').classList.add('active');
-    $('galleryDropdown').querySelectorAll('[data-view]').forEach(b => {
-      b.classList.toggle('active', b.dataset.view === state.videoView);
-    });
-    $('sortDropdown').querySelectorAll('[data-sort]').forEach(b => {
-      b.classList.toggle('active', b.dataset.sort === state.videoSort);
-    });
-    $('yearDropdownContent').querySelectorAll('[data-year]').forEach(b => {
-      b.classList.toggle('active', String(b.dataset.year) === String(state.videoYear));
-    });
-  }
-
-  function buildYearDropdown() {
-    const years = new Set();
-    state.videos.forEach(r => { const y = getVideoYear(r); if (y) years.add(y); });
-    const sorted = Array.from(years).sort((a,b) => Number(b) - Number(a));
-    let html = `<button class="menu-dropdown-item" data-year="all"><i class="fa-solid fa-layer-group"></i><span>كل السنوات</span><i class="fa-solid fa-check dd-check"></i></button>`;
-    if (sorted.length) {
-      html += '<div class="border-t border-white/10 my-1"></div>';
-      sorted.forEach(y => {
-        html += `<button class="menu-dropdown-item" data-year="${escapeHtml(y)}"><i class="fa-solid fa-calendar-day"></i><span>${escapeHtml(y)}</span><i class="fa-solid fa-check dd-check"></i></button>`;
-      });
-    }
-    $('yearDropdownContent').innerHTML = html;
-  }
-
-  function initVideoYear() {
-    const years = new Set();
-    state.videos.forEach(r => { const y = getVideoYear(r); if (y) years.add(y); });
-    const sorted = Array.from(years).sort((a,b) => Number(b) - Number(a));
-    state.videoYear = sorted.includes('2026') ? '2026' : (sorted[0] || 'all');
-  }
-
-  /* ============================================================
-     VIDÉO : DÉTAILS
-     ============================================================ */
-  let currentVideo = null;
-  let posterFadeTimer = null;
-  let iframeReady = false;
-
-  function openVideoDetails(reel) {
-    currentVideo = reel;
-    iframeReady = false;
-    const content = $('detailsContent');
-    content.innerHTML = renderVideoDetails(reel);
-    content.scrollTop = 0;
-    $('detailsDisplayTitle').textContent = reel.titre || 'العنوان غير متوفر';
-    $('detailsDisplayDate').textContent = formatDateArabic(reel.date, reel.date_iso);
-    $('playerViewsVal').textContent = formatNumber(reel.vues ?? reel.nbre_vue ?? 0);
-    $('playerReactionsVal').textContent = reel.reactions ?? 0;
-    const img = $('detailsPosterImg');
-    img.parentElement.classList.remove('thumb-error');
-    img.src = reel.miniature || DEFAULT_IMG;
-    $('detailsPoster').classList.remove('opacity-0', 'pointer-events-none');
-    $('detailsPoster').classList.add('opacity-100');
-    $('detailsFrame').classList.remove('opacity-100');
-    $('detailsFrame').classList.add('opacity-0');
-    $('videoLoader').classList.remove('hidden');
-    $('detailsModal').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-    const shareUrl = reel.url_canonique || reel.url;
-    const src = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(shareUrl)}&show_text=false&width=500&height=889&autoplay=true&mute=false&allowfullscreen=true`;
-    $('detailsFrame').src = src;
-    clearTimeout(posterFadeTimer);
-    posterFadeTimer = setTimeout(revealPlayer, 15000);
-  }
-
-  function revealPlayer() {
-    clearTimeout(posterFadeTimer);
-    $('videoLoader').classList.add('hidden');
-    $('detailsPoster').classList.add('opacity-0', 'pointer-events-none');
-    $('detailsPoster').classList.remove('opacity-100');
-    $('detailsFrame').classList.remove('opacity-0');
-    $('detailsFrame').classList.add('opacity-100');
-  }
-
-  function closeVideoDetails() {
-    clearTimeout(posterFadeTimer);
-    iframeReady = false;
-    $('detailsModal').classList.add('hidden');
-    $('detailsFrame').src = 'about:blank';
-    $('detailsContent').innerHTML = '';
-    $('detailsPosterImg').removeAttribute('src');
-    $('videoLoader').classList.add('hidden');
-    document.body.style.overflow = '';
-    currentVideo = null;
-  }
-
-  function renderVideoDetails(reel) {
-    const themeAr = reel.theme_ar || null;
-    const themeFr = reel.theme_fr || null;
-    const description = reel.description || null;
-    const statHTML = (label, value, icon, color) => `
-      <div class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3">
-        <div class="flex items-center gap-1.5 text-xs text-slate-400 mb-1"><i class="fa-solid ${icon} ${color}"></i><span>${label}</span></div>
-        <div class="text-base font-bold ${color} truncate">${escapeHtml(String(value))}</div>
-      </div>`;
-    return `
-      ${(themeAr || themeFr) ? `<div class="flex flex-wrap gap-2">
-        ${themeAr ? `<span class="theme-chip" dir="rtl"><i class="fa-solid fa-tag text-[9px]"></i> ${escapeHtml(themeAr)}</span>` : ''}
-        ${themeFr && themeFr !== themeAr ? `<span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-blue-500/15 text-blue-300 border border-blue-500/30" dir="ltr"><i class="fa-solid fa-tag text-[10px]"></i>${escapeHtml(themeFr)}</span>` : ''}
-      </div>` : ''}
-      <h2 class="text-base sm:text-lg font-bold text-white leading-relaxed" dir="auto">${reel.titre ? escapeHtml(reel.titre) : 'مقطع فيديو'}</h2>
-      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-        ${statHTML('المشاهدات', formatNumber(reel.vues ?? reel.nbre_vue ?? 0), 'fa-eye', 'text-amber-400')}
-        ${statHTML('التفاعلات', reel.reactions ?? '—', 'fa-heart', 'text-rose-400')}
-        ${statHTML('التاريخ', reel.date || '—', 'fa-calendar', 'text-slate-400')}
-      </div>
-      ${description ? `<div><div class="text-xs font-semibold text-slate-400 uppercase mb-2">الوصف</div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-slate-900/40 p-3 rounded-lg border border-slate-700/50" dir="auto">${escapeHtml(description)}</p></div>` : ''}
-      <div class="flex flex-col sm:flex-row gap-2 pt-2">
-        ${reel.url ? `<a href="${escapeHtml(reel.url)}" target="_blank" rel="noopener" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl" dir="ltr"><i class="fa-brands fa-facebook"></i> Voir sur Facebook</a>` : ''}
-      </div>`;
-  }
-
-  $('detailsModal').addEventListener('click', e => {
-    if (e.target.closest('[data-close-details]')) closeVideoDetails();
-  });
-  $('detailsPlayBtn').addEventListener('click', () => {
-    if (!currentVideo) return;
-    if (iframeReady) revealPlayer();
-  });
-  $('detailsFrame').addEventListener('load', () => {
-    if ($('detailsModal').classList.contains('hidden')) return;
-    if (!$('detailsFrame').src || $('detailsFrame').src === 'about:blank') return;
-    iframeReady = true;
-    $('videoLoader').classList.add('hidden');
-    clearTimeout(posterFadeTimer);
-    posterFadeTimer = setTimeout(revealPlayer, 500);
-  });
-  $('fullscreenBtn').addEventListener('click', async () => {
-    const el = $('playerZone');
-    try {
-      const isFs = document.fullscreenElement || document.webkitFullscreenElement;
-      if (!isFs) {
-        if (el.requestFullscreen) await el.requestFullscreen();
-        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-      } else {
-        if (document.exitFullscreen) await document.exitFullscreen();
-        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-      }
-    } catch (e) { console.warn(e); }
-  });
-
-  /* ============================================================
-     EXCEL EXPORT
-     ============================================================ */
-  function exportToExcel() {
-    if (typeof XLSX === 'undefined') { alert('SheetJS non chargé'); return; }
-    const items = getFilteredVideos();
-    if (!items.length) { alert('لا توجد بيانات'); return; }
-    const map = new Map();
-    items.forEach(r => {
-      const fr = r.theme_fr || 'Non classé';
-      const ar = r.theme_ar || fr;
-      if (!map.has(fr)) map.set(fr, { ar, fr, videos: [] });
-      map.get(fr).videos.push(r);
-    });
-    const wb = XLSX.utils.book_new();
-    const used = new Set();
-    const entries = Array.from(map.values()).sort((a,b) => b.videos.length - a.videos.length);
-    entries.forEach(meta => {
-      let base = String(meta.ar || meta.fr).replace(/[\\\/\?\*\[\]:]/g, '_').substring(0, 31) || 'Sans';
-      let name = base, i = 2;
-      while (used.has(name.toLowerCase())) { name = base.substring(0, 28) + '_' + i; i++; }
-      used.add(name.toLowerCase());
-      const rows = [['العنوان', 'الوصف', 'FBID']];
-      meta.videos.forEach(v => rows.push([v.titre || '', v.description || '', String(v.fbid || '')]));
-      const ws = XLSX.utils.aoa_to_sheet(rows);
-      ws['!cols'] = [{wch:60},{wch:90},{wch:22}];
-      XLSX.utils.book_append_sheet(wb, ws, name);
-    });
-    const summary = [['الموضوع (FR)', 'الموضوع (AR)', 'العدد']];
-    entries.forEach(m => summary.push([m.fr, m.ar, m.videos.length]));
-    summary.push(['المجموع', '', items.length]);
-    const wsSum = XLSX.utils.aoa_to_sheet(summary);
-    wsSum['!cols'] = [{wch:40},{wch:40},{wch:18}];
-    XLSX.utils.book_append_sheet(wb, wsSum, '_ملخص');
-    XLSX.writeFile(wb, `Galerie_Videos_${new Date().toISOString().slice(0,10)}.xlsx`);
-  }
-
-  /* ============================================================
-     LIGHTBOX EVENTS
-     ============================================================ */
-  $('lbClose').addEventListener('click', closeLightbox);
-  $('lightbox').addEventListener('click', e => {
-    if (e.target.id === 'lightbox') closeLightbox();
-  });
-  $('lbPrev').addEventListener('click', () => {
-    state.lb.index = (state.lb.index - 1 + state.lb.list.length) % state.lb.list.length;
-    updateLightboxUI();
-  });
-  $('lbNext').addEventListener('click', () => {
-    state.lb.index = (state.lb.index + 1) % state.lb.list.length;
-    updateLightboxUI();
-  });
-
-  $('photosGrid').addEventListener('click', e => {
-    const tile = e.target.closest('.photo-tile');
-    if (!tile) return;
-    const list = $('photosGrid')._activeList || [];
-    const idx = parseInt(tile.dataset.photoIdx, 10);
-    if (list.length) openLightbox(list, idx);
-  });
-
-  $('pubGrid').addEventListener('click', e => {
-    const readMore = e.target.closest('.read-more');
-    if (readMore) {
-      const p = $(readMore.dataset.target);
-      if (p) {
-        const expanded = p.classList.toggle('expanded');
-        readMore.textContent = expanded ? 'طي النص' : 'قراءة المزيد...';
-      }
-      return;
-    }
-    const lbTrigger = e.target.closest('[data-open-lightbox]');
-    if (lbTrigger) {
-      const fbid = lbTrigger.dataset.openLightbox;
-      const item = ARCHIVE_DATA.find(i => i.fbid === fbid);
-      if (item && item.images.length) {
-        const slides = item.images.map(src => ({
-          src, date: item.date, caption: item.text,
-          reactions: item.reactions, partages: item.partages, fbUrl: item.url_canonique
-        }));
-        openLightbox(slides, 0);
-      }
-      return;
-    }
-    const thumb = e.target.closest('.pub-thumbs img');
-    if (thumb) {
-      const card = thumb.closest('.pub-card');
-      const main = card.querySelector('.pub-media img');
-      const idx = parseInt(thumb.dataset.idx, 10);
-      const fbid = card.dataset.fbid;
-      const item = ARCHIVE_DATA.find(i => i.fbid === fbid);
-      if (main && item && item.images[idx]) {
-        main.src = item.images[idx];
-        card.querySelectorAll('.pub-thumbs img').forEach(t => t.classList.remove('active'));
-        thumb.classList.add('active');
-      }
-    }
-  });
-
-  /* ============================================================
-     REMARKS / EXIT / ÉCHAP
-     ============================================================ */
-  function showEmailStatus(type, text) {
-    const el = $('emailRemarkStatus');
-    if (!el) return;
-    el.classList.remove('hidden');
-    el.className = 'rounded-lg px-3 py-2 text-sm ' + (
-      type === 'success' ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' :
-      type === 'error' ? 'bg-rose-500/15 text-rose-300 border border-rose-500/30' :
-      'bg-slate-700/50 text-slate-300 border border-slate-600'
-    );
-    el.textContent = text;
-  }
-  $('openRemarksBtn').addEventListener('click', () => {
-    $('remarksModal').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-    $('emailRemarkStatus').classList.add('hidden');
-    $('emailRemarkBtn').disabled = false;
-    setTimeout(() => $('emailRemarkText').focus(), 80);
-  });
-  function closeRemarks() {
-    $('remarksModal').classList.add('hidden');
-    document.body.style.overflow = '';
-    $('emailRemarkStatus').classList.add('hidden');
-    $('emailRemarkBtn').disabled = false;
-  }
-  $('remarksModal').addEventListener('click', e => {
-    if (e.target.closest('[data-close-remarks]')) closeRemarks();
-  });
-  $('emailRemarkForm').addEventListener('submit', e => {
-    e.preventDefault();
-    const btn = $('emailRemarkBtn');
-    if (btn.disabled) return;
-    const text = $('emailRemarkText').value.trim();
-    if (!text) { showEmailStatus('error', 'الرجاء كتابة ملاحظتك'); return; }
-    btn.disabled = true;
-    showEmailStatus('pending', 'جارٍ الإرسال…');
-    fetch(EMAIL_REMARK_SCRIPT_URL, { method: 'POST', body: new FormData(e.target), redirect: 'follow' })
-      .then(r => {
-        if (!r.ok) throw new Error('Fail');
-        showEmailStatus('success', 'تم الإرسال بنجاح');
-        e.target.reset();
-        setTimeout(closeRemarks, 1500);
-      })
-      .catch(() => showEmailStatus('error', 'حدث خطأ'))
-      .finally(() => { btn.disabled = false; });
-  });
-
-  let exitTrapActive = false, allowExit = false, exitDialogOpen = false;
-  function activateExitTrap() {
-    if (exitTrapActive) return;
-    exitTrapActive = true;
-    try { history.pushState({ g: true }, '', location.href); } catch (e) {}
-  }
-  function showExitDialog() {
-    if (exitDialogOpen) return;
-    exitDialogOpen = true;
-    $('exitConfirmModal').classList.remove('hidden');
-  }
-  function hideExitDialog() {
-    $('exitConfirmModal').classList.add('hidden');
-    exitDialogOpen = false;
-  }
-  function performConfirmedExit() {
-    allowExit = true;
-    hideExitDialog();
-    if (history.length >= 3) history.go(-2);
-    else if (history.length >= 2) history.back();
-    else window.close();
-  }
-  window.addEventListener('beforeunload', e => {
-    if (allowExit || !exitTrapActive) return;
-    e.preventDefault();
-    e.returnValue = 'مغادرة المعرض؟';
-    return e.returnValue;
-  });
-  window.addEventListener('popstate', () => {
-    if (allowExit || !exitTrapActive) return;
-    try { history.pushState({ g: true }, '', location.href); } catch (e) {}
-    if (!exitDialogOpen) showExitDialog();
-  });
-  window.addEventListener('click', activateExitTrap, { once: true, capture: true });
-  $('exitConfirmModal').addEventListener('click', e => {
-    if (e.target.closest('[data-exit-cancel]')) { hideExitDialog(); return; }
-    if (e.target.closest('[data-exit-confirm]')) { performConfirmedExit(); return; }
-  });
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      const openDD = document.querySelector('.menu-dropdown-content:not(.hidden)');
-      if (openDD) { document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden')); return; }
-      if ($('lightbox').classList.contains('open')) { closeLightbox(); return; }
-      if (!$('detailsModal').classList.contains('hidden')) { closeVideoDetails(); return; }
-      if (!$('remarksModal').classList.contains('hidden')) { closeRemarks(); return; }
-      if (exitDialogOpen) { hideExitDialog(); return; }
-    }
-    if ($('lightbox').classList.contains('open')) {
-      if (e.key === 'ArrowRight') $('lbPrev').click();
-      if (e.key === 'ArrowLeft') $('lbNext').click();
-    }
-  });
-
-  /* ============================================================
-     BOOT (ordre strict)
-     ============================================================ */
-  async function boot(videoData) {
-    state.videos = Array.isArray(videoData) ? videoData : [];
-    buildYearDropdown();
-    initVideoYear();
-    syncVideoMenus();
-
-    try {
-      await initArchive();
-    } catch (e) {
-      console.error('Erreur initArchive:', e);
-    }
-
-    updateTabCounts();
-    renderVideos();
-  }
-
-  if (Array.isArray(window.reelsData) && window.reelsData.length > 0) {
-    boot(window.reelsData);
-  } else {
-    window.addEventListener('videotheque:data-ready', () => boot(window.reelsData || []), { once: true });
-  }
-
-})();
-</script>
-
-<!-- ============ CHARGEMENT DONNÉES EXTERNES ============ -->
-<script>
-window.reelsData = [];
-window.tabeleau_url_content = [];
-
-const REELS_DATA_URL = "https://marocnetmail.github.io/125/json/reelsData.json";
-const URL_CONTENT_URL = "https://marocnetmail.github.io/125/json/url_content.json";
-
-window.videothequeDataReady = Promise.all([
-  fetch(REELS_DATA_URL, { cache: "no-store" }).then(r => {
-    if (!r.ok) throw new Error('Failed reelsData');
-    return r.json();
-  }),
-  fetch(URL_CONTENT_URL, { cache: "no-store" }).then(r => {
-    if (!r.ok) throw new Error('Failed url_content');
-    return r.json();
-  })
-]).then(([reels, content]) => {
-  window.reelsData = Array.isArray(reels) ? reels : [];
-  window.tabeleau_url_content = Array.isArray(content) ? content : [];
-  console.log("✅ Vidéothèque chargée:", window.reelsData.length, "vidéos");
-  return { reelsData: window.reelsData, tabeleau_url_content: window.tabeleau_url_content };
-}).catch(err => {
-  console.error("❌ Erreur chargement:", err);
-  return { reelsData: window.reelsData, tabeleau_url_content: window.tabeleau_url_content };
-}).finally(() => {
-  window.dispatchEvent(new Event("videotheque:data-ready"));
-});
-</script>
-
-</body>
-</html>
