@@ -20,7 +20,7 @@
 
   /* ============ HEADER PRINCIPAL (sticky) ============ */
   .app-header{position:sticky;top:0;z-index:40;background:rgba(9,44,76,.98);backdrop-filter:blur(10px);box-shadow:0 2px 12px rgba(0,0,0,.4);border-bottom:1px solid rgba(255,255,255,.1)}
-  .header-row{max-width:1440px;margin:0 auto;display:flex;align-items:center;gap:.75rem;padding:.5rem .75rem;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .header-row{max-width:1440px;margin:0 auto;display:flex;align-items:center;gap:.5rem;padding:.5rem .6rem;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
   .header-row::-webkit-scrollbar{display:none}
   .header-row>*{flex-shrink:0}
   .brand{display:flex;align-items:center;gap:.55rem;color:#fff}
@@ -29,20 +29,29 @@
   .brand-text p{display:none;font-size:.7rem;color:#94a3b8;white-space:nowrap}
 
   /* ============ MENU CENTRAL (tabs) ============ */
-  .center-tabs{display:flex;gap:.35rem;background:rgba(0,0,0,.3);padding:.35rem;border-radius:12px;margin-inline:auto;border:1px solid rgba(255,255,255,.1)}
-  .center-tab{display:flex;align-items:center;gap:.4rem;padding:.5rem .9rem;border-radius:9px;font-size:.85rem;font-weight:700;color:#94a3b8;background:transparent;border:none;cursor:pointer;transition:all .2s;white-space:nowrap;font-family:inherit}
+  .center-tabs{display:flex;gap:.25rem;background:rgba(0,0,0,.3);padding:.28rem;border-radius:12px;margin-inline:auto;border:1px solid rgba(255,255,255,.1)}
+  .center-tab{display:flex;align-items:center;gap:.3rem;padding:.42rem .55rem;border-radius:9px;font-size:.72rem;font-weight:700;color:#94a3b8;background:transparent;border:none;cursor:pointer;transition:all .2s;white-space:nowrap;font-family:inherit}
   .center-tab:hover{color:#fff;background:rgba(255,255,255,.08)}
   .center-tab.active{color:#092c4c;background:linear-gradient(135deg,#c59b45 0%,#e0b55a 100%);box-shadow:0 2px 8px rgba(197,155,69,.4);font-weight:800}
-  .center-tab .count-badge{background:rgba(0,0,0,.2);color:inherit;font-size:.68rem;font-weight:700;padding:.05rem .45rem;border-radius:999px;line-height:1.4}
+  .center-tab i{font-size:.78rem}
+  .center-tab .tab-label{display:inline}
+  .center-tab .count-badge{background:rgba(0,0,0,.2);color:inherit;font-size:.58rem;font-weight:700;padding:.02rem .3rem;border-radius:999px;line-height:1.4}
   .center-tab.active .count-badge{background:rgba(9,44,76,.25);color:#092c4c}
-  .center-tab .tab-label{display:none}
 
   /* ============ SEARCH ============ */
-  .search-wrap{position:relative;flex:0 1 240px;min-width:150px}
-  .search-wrap input{width:100%;padding:.5rem 2.2rem .5rem .75rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:10px;color:#fff;font-size:14px;font-family:inherit;outline:none;transition:all .2s}
+  .search-wrap{position:relative;flex:0 1 200px;min-width:110px}
+  .search-wrap input{width:100%;padding:.5rem 2rem .5rem .7rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:10px;color:#fff;font-size:14px;font-family:inherit;outline:none;transition:all .2s}
   .search-wrap input::placeholder{color:rgba(255,255,255,.5)}
   .search-wrap input:focus{background:rgba(255,255,255,.15);border-color:rgba(197,155,69,.6)}
-  .search-wrap .search-icon{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.55);font-size:.85rem;pointer-events:none}
+  .search-wrap .search-icon{position:absolute;right:.7rem;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.55);font-size:.85rem;pointer-events:none}
+
+  /* ============ ANNÉE EN LIGNE (header) ============ */
+  .year-inline{display:flex;position:relative}
+  .year-inline .menu-item{padding:.5rem .6rem;font-size:.8rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:10px;gap:.35rem;color:#e2e8f0;transition:all .2s}
+  .year-inline .menu-item:hover{background:rgba(255,255,255,.15);border-color:rgba(197,155,69,.6);color:#fff}
+  .year-inline .menu-item[aria-expanded="true"]{background:rgba(197,155,69,.15);border-color:rgba(197,155,69,.55);color:#fcd34d}
+  .year-inline .menu-item i.fa-calendar{color:#c59b45;font-size:.8rem}
+  .year-inline .menu-badge{background:linear-gradient(135deg,rgba(197,155,69,.35) 0%,rgba(224,181,90,.35) 100%);color:#fcd34d;border:1px solid rgba(197,155,69,.6);font-size:.72rem;font-weight:800;padding:.12rem .5rem;border-radius:999px;letter-spacing:.02em}
 
   /* ============ SOUS-MENU VIDÉOS ============ */
   .sub-menu-row{display:none;background:#0b3559;border-top:1px solid rgba(255,255,255,.08);border-bottom:2px solid rgba(197,155,69,.4)}
@@ -54,7 +63,8 @@
   .menu-item:hover{background:rgba(255,255,255,.08);color:#93c5fd}
   .menu-item.active,.menu-item[aria-expanded="true"]{background:rgba(59,130,246,.2);color:#bfdbfe;border:1px solid rgba(59,130,246,.4)}
   .menu-dropdown{position:relative;display:flex}
-  .menu-dropdown-content{position:absolute;top:calc(100% + .3rem);right:0;min-width:230px;background:#0b3559;border:1px solid rgba(255,255,255,.18);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.5);z-index:60;padding:.35rem;animation:ddFade .15s ease-out}
+  /* Dropdowns : position fixe pour échapper au clipping des ancêtres à overflow-x:auto */
+  .menu-dropdown-content{position:fixed;min-width:230px;background:#0b3559;border:1px solid rgba(255,255,255,.18);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.5);z-index:60;padding:.35rem;animation:ddFade .15s ease-out;top:0;right:0}
   .menu-dropdown-content.hidden{display:none}
   @keyframes ddFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
   .menu-dropdown-item{display:flex;align-items:center;gap:.5rem;width:100%;padding:.55rem .75rem;color:#e2e8f0;font-size:.82rem;font-weight:500;text-align:right;background:transparent;border:none;cursor:pointer;border-radius:7px;transition:background .15s;white-space:nowrap;font-family:inherit}
@@ -156,7 +166,7 @@
   .lb-caption{font-size:.92rem;color:#cbd5e1;line-height:1.75;white-space:pre-line;margin-bottom:.75rem}
   .lb-footer{border-top:1px solid #334155;padding-top:.75rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
 
-  /* ============ MODALS v3 (détails vidéo, remarks, exit) ============ */
+  /* ============ MODALS v3 ============ */
   #detailsContent::-webkit-scrollbar{width:6px}
   #detailsContent::-webkit-scrollbar-thumb{background:rgba(100,116,139,.4);border-radius:3px}
   #playerZone{position:relative;background:#0f172a}
@@ -174,8 +184,13 @@
     .brand-text p{display:block}
     .brand-text h1{font-size:1.1rem}
     .brand-badge{width:44px;height:44px;font-size:1.15rem}
-    .center-tab{padding:.55rem 1.1rem;font-size:.9rem}
-    .center-tab .tab-label{display:inline}
+    .center-tab{padding:.55rem 1.1rem;font-size:.9rem;gap:.4rem}
+    .center-tab i{font-size:1rem}
+    .center-tab .count-badge{font-size:.68rem;padding:.05rem .45rem}
+    .header-row{gap:.75rem;padding:.5rem .75rem}
+    .search-wrap{flex:0 1 240px;min-width:150px}
+    .year-inline .menu-item{padding:.55rem .7rem;font-size:.85rem}
+    .year-inline .menu-badge{font-size:.78rem;padding:.15rem .6rem}
     .pub-grid{grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.2rem}
     .photos-grid{grid-template-columns:repeat(3,1fr);gap:8px}
     .lb-content{display:grid;grid-template-columns:1.4fr 1fr;max-height:88vh}
@@ -197,8 +212,13 @@
     main{padding:1.5rem 2rem 3rem}
   }
   @media (max-width:380px){
-    .center-tab{padding:.4rem .55rem;font-size:.75rem;gap:.25rem}
-    .search-wrap{flex-basis:130px;min-width:0}
+    .center-tab{padding:.34rem .42rem;font-size:.62rem;gap:.16rem}
+    .center-tab i{font-size:.68rem}
+    .center-tab .count-badge{font-size:.5rem;padding:0 .25rem}
+    .search-wrap{flex-basis:100px;min-width:0}
+    .year-inline .menu-item{padding:.42rem .5rem;font-size:.7rem;gap:.25rem}
+    .year-inline .menu-badge{font-size:.62rem;padding:.1rem .35rem}
+    .header-row{gap:.35rem;padding:.4rem .5rem}
   }
 
   .safe-bottom{padding-bottom:max(1rem,env(safe-area-inset-bottom))}
@@ -208,7 +228,7 @@
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
 
-<!-- ============ PROGRESS OVERLAY (vérification des images) ============ -->
+<!-- ============ PROGRESS OVERLAY ============ -->
 <div id="progressOverlay" class="hidden fixed inset-0 z-[100] bg-slate-900/95 backdrop-blur-md flex items-center justify-center">
   <div class="w-full max-w-md px-6">
     <div class="text-center mb-6">
@@ -225,7 +245,7 @@
   </div>
 </div>
 
-<!-- ============ BANNIÈRE INSTITUTIONNELLE ============ -->
+<!-- ============ BANNIÈRE ============ -->
 <div class="institutional-banner" role="banner">
   <img src="https://marocnetmail.github.io/125/images/logo2.png" alt="الشعار المؤسساتي" loading="eager">
 </div>
@@ -234,11 +254,10 @@
 <header class="app-header" dir="rtl">
   <div class="header-row">
     <div class="brand">
-      <div class="brand-text">
-      </div>
+      <div class="brand-text"></div>
     </div>
 
-    <!-- ====== MENU CENTRAL (tabs) ====== -->
+    <!-- Menu central -->
     <nav class="center-tabs" role="tablist" aria-label="القائمة الرئيسية">
       <button class="center-tab active" data-tab="videos" role="tab" aria-selected="true">
         <i class="fa-solid fa-film"></i>
@@ -257,13 +276,24 @@
       </button>
     </nav>
 
+    <!-- Année — à côté de la recherche, sur une seule ligne -->
+    <div class="menu-dropdown year-inline" data-dropdown="year">
+      <button type="button" class="menu-item" id="menuYear" title="تصفية حسب السنة" aria-label="تصفية حسب السنة" aria-haspopup="true" aria-expanded="false">
+        <i class="fa-solid fa-calendar"></i>
+        <span class="menu-badge" id="yearBadge">٢٠٢٦</span>
+        <i class="fa-solid fa-chevron-down text-[10px] opacity-70 dd-chevron"></i>
+      </button>
+      <div class="menu-dropdown-content hidden" id="yearDropdownContent" role="menu"></div>
+    </div>
+
+    <!-- Recherche -->
     <div class="search-wrap">
       <i class="fa-solid fa-magnifying-glass search-icon"></i>
       <input type="text" id="globalSearch" inputmode="search" placeholder="البحث في المحتوى…" aria-label="البحث في المحتوى" dir="rtl">
     </div>
   </div>
 
-  <!-- ====== SOUS-MENU VIDÉOS (visible uniquement onglet vidéos) ====== -->
+  <!-- Sous-menu vidéos (Home / Galerie / Tri) -->
   <div class="sub-menu-row visible" id="videoSubMenu">
     <div class="sub-menu-inner">
       <button type="button" class="menu-item" id="menuHome" aria-label="الرئيسية">
@@ -305,22 +335,12 @@
           </button>
         </div>
       </div>
-
-      <div class="menu-dropdown" data-dropdown="year">
-        <button type="button" class="menu-item" id="menuYear" aria-haspopup="true" aria-expanded="false">
-          <i class="fa-solid fa-calendar"></i><span>السنوات</span>
-          <span class="menu-badge" id="yearBadge">2026</span>
-          <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-70 dd-chevron"></i>
-        </button>
-        <div class="menu-dropdown-content hidden" id="yearDropdownContent" role="menu"></div>
-      </div>
     </div>
   </div>
 </header>
 
 <!-- ============ MAIN CONTENT ============ -->
 <main>
-  <!-- ====== VIDEOS SECTION ====== -->
   <section id="videosSection">
     <div id="backNavigation" class="hidden mb-3">
       <button id="backToThemesBtn" type="button" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium border border-slate-700 transition-colors" dir="rtl">
@@ -349,7 +369,6 @@
     <nav id="pagination" class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-6 safe-bottom"></nav>
   </section>
 
-  <!-- ====== PHOTOS SECTION ====== -->
   <section id="photosSection" class="hidden">
     <div class="photos-album-container bg-slate-800/40 rounded-2xl border border-slate-700 p-2 sm:p-3">
       <div id="photosGrid" class="photos-grid"></div>
@@ -360,7 +379,6 @@
     </div>
   </section>
 
-  <!-- ====== PUBLICATIONS SECTION ====== -->
   <section id="publicationsSection" class="hidden">
     <div id="pubGrid" class="pub-grid"></div>
     <div id="pubEmpty" class="hidden text-center py-16 bg-slate-800/30 rounded-2xl border border-dashed border-slate-700 mt-4">
@@ -379,7 +397,7 @@
   </div>
 </footer>
 
-<!-- ============ VIDEO DETAILS MODAL (v3) ============ -->
+<!-- ============ VIDEO DETAILS MODAL ============ -->
 <div id="detailsModal" class="fixed inset-0 z-50 hidden">
   <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" data-close-details></div>
   <div class="relative z-10 w-full h-full flex items-center justify-center p-2 sm:p-4">
@@ -423,7 +441,7 @@
   </div>
 </div>
 
-<!-- ============ LIGHTBOX PARTAGÉE (photos + publications) ============ -->
+<!-- ============ LIGHTBOX ============ -->
 <div class="lb-backdrop" id="lightbox">
   <button class="lb-close" id="lbClose" aria-label="إغلاق"><i class="fa-solid fa-xmark"></i></button>
   <div class="lb-content">
@@ -451,7 +469,7 @@
   </div>
 </div>
 
-<!-- ============ REMARKS MODAL (v3) ============ -->
+<!-- ============ REMARKS MODAL ============ -->
 <div id="remarksModal" class="fixed inset-0 z-50 hidden">
   <div class="absolute inset-0 bg-black/85 backdrop-blur-sm" data-close-remarks></div>
   <div class="relative z-10 w-full h-full flex items-center justify-center p-3 sm:p-4">
@@ -483,7 +501,7 @@
   </div>
 </div>
 
-<!-- ============ EXIT CONFIRM (v3) ============ -->
+<!-- ============ EXIT CONFIRM ============ -->
 <div id="exitConfirmModal" class="fixed inset-0 z-[80] hidden">
   <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" data-exit-cancel></div>
   <div class="relative z-10 w-full h-full flex items-center justify-center p-4">
@@ -518,8 +536,6 @@
   const PAGE_SIZE_VIDEOS = 20;
   const EMAIL_REMARK_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwRllGpkxkBllOBnu9U7gZfH5Lg1qS-Iz-jf_rz_S1VKLydL0juENf-OfUI56mWQ_ojMA/exec';
 
-  // Image par défaut (SVG data-URI) — utilisée UNIQUEMENT pour les vidéos,
-  // jamais pour les images d'archive (photos/publications).
   const DEFAULT_IMG = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">' +
     '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
@@ -535,8 +551,15 @@
   const $ = (id) => document.getElementById(id);
 
   /* ============================================================
-     ARCHIVE DATA (photos + publications) — format compact
-     [fbid, date_iso, nb_images, texte]
+     CONVERSION CHIFFRES ARABES
+     ============================================================ */
+  function toArabicNumerals(input) {
+    const map = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+    return String(input).replace(/[0-9]/g, d => map[+d]);
+  }
+
+  /* ============================================================
+     ARCHIVE DATA
      ============================================================ */
   const ARCHIVE_COMPACT = [
     ["1794529729805","2026-08-20",4,"من تهيئة الأحياء وتعزيز البنيات التحتية، إلى تأهيل المجال القروي ودعم الجماعات الترابية، تتواصل دينامية التنمية بجهة كلميم واد نون في إطار مشاريع سياسة المدينة."],
@@ -635,7 +658,6 @@
     return `images/pub_${fbid}_${String(idx).padStart(2,'0')}.webp`;
   }
 
-  // Archive brute (avant validation)
   const ARCHIVE_RAW = ARCHIVE_COMPACT.map(([fbid, date_iso, imgCount, text]) => {
     const [y, m, d] = date_iso.split('-');
     const stats = generateStats(fbid, text);
@@ -650,7 +672,6 @@
     };
   });
 
-  // Remplis par initArchive() après vérification réelle des images
   let ARCHIVE_DATA = [];
   let ALL_PHOTOS = [];
 
@@ -682,7 +703,7 @@
       if (isNaN(dt.getTime())) return dateStr || '';
       const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
       const months = ['يناير','فبراير','مارس','أبريل','ماي','يونيو','يوليوز','غشت','شتنبر','أكتوبر','نونبر','دجنبر'];
-      return `${days[dt.getDay()]} ${String(dt.getDate()).padStart(2,'0')} ${months[dt.getMonth()]} ${dt.getFullYear()}`;
+      return `${days[dt.getDay()]} ${String(dt.getDate()).padStart(2,'0')} ${months[dt.getMonth()]} ${toArabicNumerals(dt.getFullYear())}`;
     } catch (e) { return dateStr || ''; }
   }
 
@@ -700,18 +721,15 @@
   const state = {
     tab: 'videos',
     search: '',
-    // Vidéos
     videos: [],
-    videoView: 'gallery', // gallery | themes | tree
+    videoView: 'gallery',
     videoSort: 'recent',
-    videoYear: 'all',
+    videoYear: '2026',
     videoPage: 1,
     activeTheme: null,
     contentMatchSet: new Set(),
-    // Archive
     archivePage: 1,
     archiveInitialized: false,
-    // Lightbox
     lb: { list: [], index: 0 }
   };
 
@@ -747,7 +765,7 @@
   }
 
   /* ============================================================
-     MODULE VIDÉOS (inchangé fonctionnellement)
+     MODULE VIDÉOS
      ============================================================ */
   function getVideoYear(r) {
     if (r && r.annee != null && !isNaN(Number(r.annee))) return String(Number(r.annee));
@@ -987,7 +1005,6 @@
     pag.innerHTML = html;
   }
 
-  // Utilisé UNIQUEMENT pour les vidéos (miniatures distantes non validées).
   function thumbMarkup(url, loadingAttr, extraClass = '') {
     return `
       <div class="thumb-wrap ${extraClass}">
@@ -999,7 +1016,7 @@
   }
 
   /* ============================================================
-     VALIDATION ASYNCHRONE DES IMAGES D'ARCHIVE
+     VALIDATION ASYNCHRONE DES IMAGES
      ============================================================ */
   function probeImage(url, timeoutMs = 8000) {
     return new Promise((resolve) => {
@@ -1055,12 +1072,10 @@
     if (state.archiveInitialized) return;
     state.archiveInitialized = true;
 
-    // 1) Collecte unique des URLs
     const uniqueUrls = new Set();
     ARCHIVE_RAW.forEach(item => item.images.forEach(u => uniqueUrls.add(u)));
     const urlList = Array.from(uniqueUrls);
 
-    // 2) Affichage overlay + progression
     const overlay = $('progressOverlay');
     const bar = $('progressBar');
     const pctEl = $('progressPercent');
@@ -1072,7 +1087,6 @@
       if (countEl) countEl.textContent = `0 / ${urlList.length}`;
     }
 
-    // 3) Vérification réelle
     let validSet = new Set();
     try {
       validSet = await validateImagesBatch(urlList, (done, total) => {
@@ -1087,7 +1101,6 @@
       if (overlay) overlay.classList.add('hidden');
     }
 
-    // 4) Filtrage des publications
     const filtered = [];
     ARCHIVE_RAW.forEach(item => {
       const validImages = item.images.filter(u => validSet.has(u));
@@ -1097,7 +1110,6 @@
     });
     ARCHIVE_DATA = filtered;
 
-    // 5) Reconstruction de ALL_PHOTOS
     ALL_PHOTOS = [];
     ARCHIVE_DATA.forEach(item => {
       item.images.forEach((src, i) => {
@@ -1115,7 +1127,6 @@
       });
     });
 
-    // 6) Bilan console
     const totalRefs = ARCHIVE_RAW.reduce((s, i) => s + i.images.length, 0);
     const validRefs = ARCHIVE_DATA.reduce((s, i) => s + i.images.length, 0);
     console.group('%c📊 Bilan de vérification des images', 'color:#c59b45;font-weight:bold');
@@ -1131,10 +1142,9 @@
   }
 
   /* ============================================================
-     MODULE ARCHIVE (photos + publications)
+     MODULE ARCHIVE
      ============================================================ */
   function getFilteredArchive() {
-    // ARCHIVE_DATA ne contient déjà que des publications avec images validées.
     return ARCHIVE_DATA;
   }
 
@@ -1170,8 +1180,6 @@
       img.src = photo.src;
       img.alt = '';
       img.loading = 'lazy';
-      // Pas de fallback fictif : si l'image échoue malgré la validation,
-      // on retire la tuile. Si la grille devient vide, on affiche l'état vide.
       img.addEventListener('error', () => {
         tile.remove();
         if (!grid.querySelector('.photo-tile')) {
@@ -1241,7 +1249,7 @@
   }
 
   /* ============================================================
-     LIGHTBOX (sans DEFAULT_IMG)
+     LIGHTBOX
      ============================================================ */
   function openLightbox(list, index) {
     if (!list || !list.length) return;
@@ -1257,7 +1265,6 @@
     if (!s) { closeLightbox(); return; }
     const img = $('lbImg');
     img.onerror = () => {
-      // Retirer l'image invalide et passer à la suivante
       state.lb.list.splice(state.lb.index, 1);
       if (state.lb.list.length === 0) { closeLightbox(); return; }
       if (state.lb.index >= state.lb.list.length) state.lb.index = 0;
@@ -1283,22 +1290,14 @@
   }
 
   /* ============================================================
-     DÉLÉGATION GLOBALE DES ERREURS D'IMAGE (phase capture)
+     DÉLÉGATION ERREURS IMAGES
      ============================================================ */
   document.addEventListener('error', (e) => {
     const img = e.target;
     if (!(img instanceof HTMLImageElement)) return;
-
-    // Ignorer les miniatures vidéo (thumb-wrap), gérées séparément
     if (img.closest('.thumb-wrap')) return;
+    if (img.id === 'lbImg') return;
 
-    // Lightbox
-    if (img.id === 'lbImg') {
-      // géré par updateLightboxUI
-      return;
-    }
-
-    // Tuile photo
     const tile = img.closest('.photo-tile');
     if (tile) {
       const grid = tile.parentElement;
@@ -1309,13 +1308,8 @@
       return;
     }
 
-    // Miniature de publication
-    if (img.closest('.pub-thumbs')) {
-      img.remove();
-      return;
-    }
+    if (img.closest('.pub-thumbs')) { img.remove(); return; }
 
-    // Image principale de publication
     const media = img.closest('.pub-media');
     if (media) {
       const card = media.closest('.pub-card');
@@ -1347,6 +1341,78 @@
   }
 
   /* ============================================================
+     MENU DROPDOWN — helpers
+     ============================================================ */
+  function closeAllDropdowns() {
+    document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden'));
+    document.querySelectorAll('.menu-dropdown .menu-item').forEach(b => b.setAttribute('aria-expanded', 'false'));
+  }
+
+  /**
+   * Positionne un .menu-dropdown-content (position: fixed) sous son trigger.
+   * Le containing block est .app-header (backdrop-filter), donc on calcule
+   * des coordonnées relatives à ce conteneur, pas au viewport.
+   */
+  function positionDropdown(btn, content) {
+    if (!btn || !content) return;
+    const rect = btn.getBoundingClientRect();
+    const header = btn.closest('.app-header');
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const ddW = content.offsetWidth || 230;
+    const ddH = content.offsetHeight || 100;
+
+    let top, right;
+    if (header) {
+      const hRect = header.getBoundingClientRect();
+      top = rect.bottom - hRect.top + 4;
+      right = hRect.right - rect.right;
+    } else {
+      top = rect.bottom + 4;
+      right = vw - rect.right;
+    }
+
+    // Empêcher le débordement à gauche
+    if (vw - right - ddW < 8) right = Math.max(8, vw - ddW - 8);
+    // Empêcher le débordement en bas (ouvrir au-dessus si nécessaire)
+    const bottomLimit = header ? (header.getBoundingClientRect().height) : vh;
+    if (top + ddH > vh - 8 && rect.top - ddH - 4 > 8) {
+      top = (header ? (rect.top - header.getBoundingClientRect().top) : rect.top) - ddH - 4;
+    }
+
+    content.style.top = top + 'px';
+    content.style.right = right + 'px';
+    content.style.left = 'auto';
+    void bottomLimit; // silence unused
+  }
+
+  // Ouverture des dropdowns
+  document.querySelectorAll('.menu-dropdown').forEach(dd => {
+    const btn = dd.querySelector('.menu-item');
+    if (!btn) return;
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const content = dd.querySelector('.menu-dropdown-content');
+      const isOpen = content && !content.classList.contains('hidden');
+      closeAllDropdowns();
+      if (!isOpen && content) {
+        content.classList.remove('hidden');
+        positionDropdown(btn, content);
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  // Fermer en cliquant à l'extérieur
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.menu-dropdown')) closeAllDropdowns();
+  });
+
+  // Fermer sur scroll / resize (position: fixed ne suit pas le scroll horizontal du header-row)
+  window.addEventListener('scroll', closeAllDropdowns, { capture: true, passive: true });
+  window.addEventListener('resize', closeAllDropdowns);
+
+  /* ============================================================
      ÉVÉNEMENTS : TABS
      ============================================================ */
   document.querySelectorAll('.center-tab').forEach(btn => {
@@ -1369,34 +1435,8 @@
   });
 
   /* ============================================================
-     ÉVÉNEMENTS : SOUS-MENU VIDÉOS
+     ÉVÉNEMENTS : MENU VIDÉOS
      ============================================================ */
-  document.querySelectorAll('.menu-dropdown').forEach(dd => {
-    const btn = dd.querySelector('.menu-item');
-    if (!btn) return;
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      const content = dd.querySelector('.menu-dropdown-content');
-      const isOpen = content && !content.classList.contains('hidden');
-      document.querySelectorAll('.menu-dropdown').forEach(d => {
-        d.querySelector('.menu-dropdown-content')?.classList.add('hidden');
-        d.querySelector('.menu-item')?.setAttribute('aria-expanded', 'false');
-      });
-      if (!isOpen && content) {
-        content.classList.remove('hidden');
-        btn.setAttribute('aria-expanded', 'true');
-      }
-    });
-  });
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.menu-dropdown')) {
-      document.querySelectorAll('.menu-dropdown').forEach(d => {
-        d.querySelector('.menu-dropdown-content')?.classList.add('hidden');
-        d.querySelector('.menu-item')?.setAttribute('aria-expanded', 'false');
-      });
-    }
-  });
-
   $('menuHome').addEventListener('click', () => {
     state.videoView = 'gallery';
     state.activeTheme = null;
@@ -1413,7 +1453,7 @@
     state.videoPage = 1;
     syncVideoMenus();
     renderVideos();
-    document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden'));
+    closeAllDropdowns();
   });
 
   $('sortDropdown').addEventListener('click', e => {
@@ -1423,17 +1463,18 @@
     state.videoPage = 1;
     syncVideoMenus();
     renderVideos();
-    document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden'));
+    closeAllDropdowns();
   });
 
+  // Année (dans le header)
   $('yearDropdownContent').addEventListener('click', e => {
     const b = e.target.closest('[data-year]');
     if (!b) return;
     state.videoYear = b.dataset.year;
     state.videoPage = 1;
     syncVideoMenus();
-    renderVideos();
-    document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden'));
+    if (state.tab === 'videos') renderVideos();
+    closeAllDropdowns();
   });
 
   $('backToThemesBtn').addEventListener('click', () => {
@@ -1485,16 +1526,19 @@
 
   $('exportExcelBtn').addEventListener('click', exportToExcel);
 
+  // syncVideoMenus : mutex uniquement pour home/gallery/sort.
+  // L'année est indépendante (dans le header) et reflète juste l'état.
   function syncVideoMenus() {
     const badge = $('yearBadge');
-    if (badge) badge.textContent = state.videoYear === 'all' ? 'الكل' : state.videoYear;
-    ['menuHome', 'menuGalerie', 'menuSort', 'menuYear'].forEach(id => {
+    if (badge) badge.textContent = state.videoYear === 'all' ? 'الكل' : toArabicNumerals(state.videoYear);
+
+    ['menuHome', 'menuGalerie', 'menuSort'].forEach(id => {
       const el = $(id); if (el) el.classList.remove('active');
     });
     if (state.videoView !== 'gallery') $('menuGalerie').classList.add('active');
     else if (state.videoSort !== 'recent') $('menuSort').classList.add('active');
-    else if (state.videoYear !== 'all') $('menuYear').classList.add('active');
     else $('menuHome').classList.add('active');
+
     $('galleryDropdown').querySelectorAll('[data-view]').forEach(b => {
       b.classList.toggle('active', b.dataset.view === state.videoView);
     });
@@ -1514,7 +1558,7 @@
     if (sorted.length) {
       html += '<div class="border-t border-white/10 my-1"></div>';
       sorted.forEach(y => {
-        html += `<button class="menu-dropdown-item" data-year="${escapeHtml(y)}"><i class="fa-solid fa-calendar-day"></i><span>${escapeHtml(y)}</span><i class="fa-solid fa-check dd-check"></i></button>`;
+        html += `<button class="menu-dropdown-item" data-year="${escapeHtml(y)}"><i class="fa-solid fa-calendar-day"></i><span>${escapeHtml(toArabicNumerals(y))}</span><i class="fa-solid fa-check dd-check"></i></button>`;
       });
     }
     $('yearDropdownContent').innerHTML = html;
@@ -1600,7 +1644,7 @@
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
         ${statHTML('المشاهدات', formatNumber(reel.vues ?? reel.nbre_vue ?? 0), 'fa-eye', 'text-amber-400')}
         ${statHTML('التفاعلات', reel.reactions ?? '—', 'fa-heart', 'text-rose-400')}
-        ${statHTML('التاريخ', reel.date || '—', 'fa-calendar', 'text-slate-400')}
+        ${statHTML('التاريخ', formatDateArabic(reel.date, reel.date_iso) || '—', 'fa-calendar', 'text-slate-400')}
       </div>
       ${description ? `<div><div class="text-xs font-semibold text-slate-400 uppercase mb-2">الوصف</div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-slate-900/40 p-3 rounded-lg border border-slate-700/50" dir="auto">${escapeHtml(description)}</p></div>` : ''}
       <div class="flex flex-col sm:flex-row gap-2 pt-2">
@@ -1827,7 +1871,7 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       const openDD = document.querySelector('.menu-dropdown-content:not(.hidden)');
-      if (openDD) { document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden')); return; }
+      if (openDD) { closeAllDropdowns(); return; }
       if ($('lightbox').classList.contains('open')) { closeLightbox(); return; }
       if (!$('detailsModal').classList.contains('hidden')) { closeVideoDetails(); return; }
       if (!$('remarksModal').classList.contains('hidden')) { closeRemarks(); return; }
@@ -1840,30 +1884,21 @@
   });
 
   /* ============================================================
-     BOOT (ordre strict)
+     BOOT
      ============================================================ */
   async function boot(videoData) {
-    // 1) Charger les vidéos
     state.videos = Array.isArray(videoData) ? videoData : [];
     buildYearDropdown();
     initVideoYear();
     syncVideoMenus();
 
-    // 2-5) Vérifier les images, filtrer, reconstruire, compter
-    try {
-      await initArchive();
-    } catch (e) {
-      console.error('Erreur initArchive:', e);
-    }
+    try { await initArchive(); }
+    catch (e) { console.error('Erreur initArchive:', e); }
 
-    // 6) Mettre à jour les compteurs (reflètent uniquement le contenu valide)
     updateTabCounts();
-
-    // 7) Afficher la galerie vidéo (onglet actif par défaut)
     renderVideos();
   }
 
-  // Attendre les données vidéo (chargement asynchrone externe)
   if (Array.isArray(window.reelsData) && window.reelsData.length > 0) {
     boot(window.reelsData);
   } else {
