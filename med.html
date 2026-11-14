@@ -63,7 +63,6 @@
   .menu-item:hover{background:rgba(255,255,255,.08);color:#93c5fd}
   .menu-item.active,.menu-item[aria-expanded="true"]{background:rgba(59,130,246,.2);color:#bfdbfe;border:1px solid rgba(59,130,246,.4)}
   .menu-dropdown{position:relative;display:flex}
-  /* Dropdowns : position fixe pour échapper au clipping des ancêtres à overflow-x:auto */
   .menu-dropdown-content{position:fixed;min-width:230px;background:#0b3559;border:1px solid rgba(255,255,255,.18);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.5);z-index:60;padding:.35rem;animation:ddFade .15s ease-out;top:0;right:0}
   .menu-dropdown-content.hidden{display:none}
   @keyframes ddFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
@@ -78,7 +77,7 @@
   /* ============ MAIN ============ */
   main{max-width:1440px;margin:0 auto;padding:1rem .75rem 2rem;flex:1;width:100%}
 
-  /* ============ CARTES VIDÉO (v3) ============ */
+  /* ============ CARTES VIDÉO ============ */
   .reel-card{position:relative}
   .thumb-gradient{background:linear-gradient(to top,rgba(0,0,0,.88) 0%,rgba(0,0,0,.55) 22%,rgba(0,0,0,.18) 42%,transparent 60%)}
   .video-title{display:block;width:100%;white-space:normal;word-wrap:break-word;overflow-wrap:anywhere;line-height:1.3}
@@ -91,7 +90,7 @@
   .date-display{display:inline-block;white-space:nowrap;direction:rtl;unicode-bidi:isolate;max-width:100%}
   .theme-chip{display:inline-block;background:#FFF9DB;color:#78350F;border:1px solid #FCD34D;border-radius:9999px;padding:2px 8px;font-size:9px;font-weight:700;line-height:1.4;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:rtl;text-align:right;box-shadow:0 1px 2px rgba(0,0,0,.12);vertical-align:middle}
 
-  /* ============ THEME CARDS / TREE (v3) ============ */
+  /* ============ THEME CARDS / TREE ============ */
   .theme-card-new{background-color:#FFF9DB;border:1px solid #FCD34D;color:#78350F;border-radius:14px;transition:all .25s;box-shadow:0 1px 3px rgba(0,0,0,.08)}
   .theme-card-new:hover{background-color:#FEF3C7;border-color:#F59E0B;box-shadow:0 6px 16px rgba(245,158,11,.2);transform:translateY(-2px)}
   .theme-card-new .theme-card-icon{background-color:#FCD34D;color:#78350F}
@@ -166,7 +165,7 @@
   .lb-caption{font-size:.92rem;color:#cbd5e1;line-height:1.75;white-space:pre-line;margin-bottom:.75rem}
   .lb-footer{border-top:1px solid #334155;padding-top:.75rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
 
-  /* ============ MODALS v3 ============ */
+  /* ============ MODALS ============ */
   #detailsContent::-webkit-scrollbar{width:6px}
   #detailsContent::-webkit-scrollbar-thumb{background:rgba(100,116,139,.4);border-radius:3px}
   #playerZone{position:relative;background:#0f172a}
@@ -177,9 +176,71 @@
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
   @keyframes fadeOut{from{opacity:1}to{opacity:0}}
   #exitConfirmModal{animation:fadeIn .2s}
-  .content-match-badge{position:absolute;top:0;right:0;z-index:4;background:rgba(245,158,11,.95);color:#1c1917;font-size:8px;font-weight:800;padding:2px 6px;border-bottom-left-radius:8px}
 
-  /* ============ RESPONSIVE ============ */
+  /* ============ MOBILE LAYOUT (<= 639px) ============ */
+  /* Objectif : recherche en 1er, année (en français) juste après, sur une seule ligne ;
+     les onglets passent en 2e ligne pleine largeur. */
+  @media (max-width: 639px){
+    .header-row{
+      flex-wrap: wrap;
+      gap: .35rem;
+      padding: .45rem .5rem;
+      overflow-x: visible;
+    }
+    .brand{ display: none; }
+
+    /* Ligne 1 : recherche (1er) + année (2e) */
+    .search-wrap{
+      order: 1;
+      flex: 1 1 auto;
+      min-width: 0;
+      max-width: none;
+    }
+    .search-wrap input{
+      padding: .45rem 1.9rem .45rem .6rem;
+      font-size: 13px;
+    }
+    .search-wrap .search-icon{
+      right: .55rem;
+      font-size: .78rem;
+    }
+
+    .year-inline{
+      order: 2;
+      flex-shrink: 0;
+    }
+    .year-inline .menu-item{
+      padding: .42rem .5rem;
+      font-size: .72rem;
+      gap: .25rem;
+    }
+    .year-inline .menu-item i.fa-calendar{ font-size: .72rem; }
+    .year-inline .menu-badge{
+      font-size: .65rem;
+      padding: .08rem .4rem;
+    }
+
+    /* Ligne 2 : onglets pleine largeur */
+    .center-tabs{
+      order: 3;
+      flex-basis: 100%;
+      margin: .35rem 0 0 0;
+      justify-content: center;
+    }
+  }
+
+  /* ============ MOBILE TRÈS ÉTROIT (<= 380px) ============ */
+  @media (max-width: 380px){
+    .center-tab{padding:.34rem .42rem;font-size:.62rem;gap:.16rem}
+    .center-tab i{font-size:.68rem}
+    .center-tab .count-badge{font-size:.5rem;padding:0 .25rem}
+    .year-inline .menu-item{padding:.38rem .42rem;font-size:.68rem;gap:.2rem}
+    .year-inline .menu-badge{font-size:.6rem;padding:.06rem .3rem}
+    .search-wrap input{padding:.42rem 1.8rem .42rem .55rem;font-size:12.5px}
+    .header-row{gap:.3rem;padding:.4rem .45rem}
+  }
+
+  /* ============ DESKTOP ============ */
   @media (min-width:640px){
     .brand-text p{display:block}
     .brand-text h1{font-size:1.1rem}
@@ -210,15 +271,6 @@
     .header-row{padding:.65rem 2rem}
     .sub-menu-inner{padding:.5rem 2rem}
     main{padding:1.5rem 2rem 3rem}
-  }
-  @media (max-width:380px){
-    .center-tab{padding:.34rem .42rem;font-size:.62rem;gap:.16rem}
-    .center-tab i{font-size:.68rem}
-    .center-tab .count-badge{font-size:.5rem;padding:0 .25rem}
-    .search-wrap{flex-basis:100px;min-width:0}
-    .year-inline .menu-item{padding:.42rem .5rem;font-size:.7rem;gap:.25rem}
-    .year-inline .menu-badge{font-size:.62rem;padding:.1rem .35rem}
-    .header-row{gap:.35rem;padding:.4rem .5rem}
   }
 
   .safe-bottom{padding-bottom:max(1rem,env(safe-area-inset-bottom))}
@@ -276,7 +328,7 @@
       </button>
     </nav>
 
-    <!-- Année — à côté de la recherche, sur une seule ligne -->
+    <!-- Année -->
     <div class="menu-dropdown year-inline" data-dropdown="year">
       <button type="button" class="menu-item" id="menuYear" title="تصفية حسب السنة" aria-label="تصفية حسب السنة" aria-haspopup="true" aria-expanded="false">
         <i class="fa-solid fa-calendar"></i>
@@ -293,7 +345,7 @@
     </div>
   </div>
 
-  <!-- Sous-menu vidéos (Home / Galerie / Tri) -->
+  <!-- Sous-menu vidéos -->
   <div class="sub-menu-row visible" id="videoSubMenu">
     <div class="sub-menu-inner">
       <button type="button" class="menu-item" id="menuHome" aria-label="الرئيسية">
@@ -556,6 +608,20 @@
   function toArabicNumerals(input) {
     const map = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
     return String(input).replace(/[0-9]/g, d => map[+d]);
+  }
+
+  /* ============================================================
+     MEDIA QUERY MOBILE + LABEL D'ANNÉE
+     Sur mobile, la zone de date s'affiche en français (chiffres latins, "Toutes")
+     Sur desktop, en arabe (chiffres arabes, "كل السنوات")
+     ============================================================ */
+  const mobileMq = window.matchMedia('(max-width: 639px)');
+
+  function yearLabel(value) {
+    if (mobileMq.matches) {
+      return value === 'all' ? 'Toutes' : String(value);
+    }
+    return value === 'all' ? 'كل السنوات' : toArabicNumerals(value);
   }
 
   /* ============================================================
@@ -1144,9 +1210,7 @@
   /* ============================================================
      MODULE ARCHIVE
      ============================================================ */
-  function getFilteredArchive() {
-    return ARCHIVE_DATA;
-  }
+  function getFilteredArchive() { return ARCHIVE_DATA; }
 
   function getFilteredPhotos() {
     const q = state.search.trim();
@@ -1182,9 +1246,7 @@
       img.loading = 'lazy';
       img.addEventListener('error', () => {
         tile.remove();
-        if (!grid.querySelector('.photo-tile')) {
-          empty.classList.remove('hidden');
-        }
+        if (!grid.querySelector('.photo-tile')) empty.classList.remove('hidden');
       }, { once: true });
 
       tile.appendChild(img);
@@ -1348,11 +1410,6 @@
     document.querySelectorAll('.menu-dropdown .menu-item').forEach(b => b.setAttribute('aria-expanded', 'false'));
   }
 
-  /**
-   * Positionne un .menu-dropdown-content (position: fixed) sous son trigger.
-   * Le containing block est .app-header (backdrop-filter), donc on calcule
-   * des coordonnées relatives à ce conteneur, pas au viewport.
-   */
   function positionDropdown(btn, content) {
     if (!btn || !content) return;
     const rect = btn.getBoundingClientRect();
@@ -1371,22 +1428,15 @@
       top = rect.bottom + 4;
       right = vw - rect.right;
     }
-
-    // Empêcher le débordement à gauche
     if (vw - right - ddW < 8) right = Math.max(8, vw - ddW - 8);
-    // Empêcher le débordement en bas (ouvrir au-dessus si nécessaire)
-    const bottomLimit = header ? (header.getBoundingClientRect().height) : vh;
     if (top + ddH > vh - 8 && rect.top - ddH - 4 > 8) {
       top = (header ? (rect.top - header.getBoundingClientRect().top) : rect.top) - ddH - 4;
     }
-
     content.style.top = top + 'px';
     content.style.right = right + 'px';
     content.style.left = 'auto';
-    void bottomLimit; // silence unused
   }
 
-  // Ouverture des dropdowns
   document.querySelectorAll('.menu-dropdown').forEach(dd => {
     const btn = dd.querySelector('.menu-item');
     if (!btn) return;
@@ -1403,12 +1453,9 @@
     });
   });
 
-  // Fermer en cliquant à l'extérieur
   document.addEventListener('click', e => {
     if (!e.target.closest('.menu-dropdown')) closeAllDropdowns();
   });
-
-  // Fermer sur scroll / resize (position: fixed ne suit pas le scroll horizontal du header-row)
   window.addEventListener('scroll', closeAllDropdowns, { capture: true, passive: true });
   window.addEventListener('resize', closeAllDropdowns);
 
@@ -1466,7 +1513,6 @@
     closeAllDropdowns();
   });
 
-  // Année (dans le header)
   $('yearDropdownContent').addEventListener('click', e => {
     const b = e.target.closest('[data-year]');
     if (!b) return;
@@ -1526,11 +1572,11 @@
 
   $('exportExcelBtn').addEventListener('click', exportToExcel);
 
-  // syncVideoMenus : mutex uniquement pour home/gallery/sort.
-  // L'année est indépendante (dans le header) et reflète juste l'état.
+  // Sync menus : mutex home/gallery/sort ; l'année reflète juste son état.
+  // Le libellé passe par yearLabel() → français sur mobile, arabe sur desktop.
   function syncVideoMenus() {
     const badge = $('yearBadge');
-    if (badge) badge.textContent = state.videoYear === 'all' ? 'الكل' : toArabicNumerals(state.videoYear);
+    if (badge) badge.textContent = yearLabel(state.videoYear);
 
     ['menuHome', 'menuGalerie', 'menuSort'].forEach(id => {
       const el = $(id); if (el) el.classList.remove('active');
@@ -1554,11 +1600,13 @@
     const years = new Set();
     state.videos.forEach(r => { const y = getVideoYear(r); if (y) years.add(y); });
     const sorted = Array.from(years).sort((a,b) => Number(b) - Number(a));
-    let html = `<button class="menu-dropdown-item" data-year="all"><i class="fa-solid fa-layer-group"></i><span>كل السنوات</span><i class="fa-solid fa-check dd-check"></i></button>`;
+    // Libellé "all" + années via yearLabel() (FR sur mobile, AR sur desktop).
+    let html = `<button class="menu-dropdown-item" data-year="all"><i class="fa-solid fa-layer-group"></i><span>${escapeHtml(yearLabel('all'))}</span><i class="fa-solid fa-check dd-check"></i></button>`;
     if (sorted.length) {
       html += '<div class="border-t border-white/10 my-1"></div>';
       sorted.forEach(y => {
-        html += `<button class="menu-dropdown-item" data-year="${escapeHtml(y)}"><i class="fa-solid fa-calendar-day"></i><span>${escapeHtml(toArabicNumerals(y))}</span><i class="fa-solid fa-check dd-check"></i></button>`;
+        // data-year reste en Latin (filtrage) ; libellé via yearLabel().
+        html += `<button class="menu-dropdown-item" data-year="${escapeHtml(y)}"><i class="fa-solid fa-calendar-day"></i><span>${escapeHtml(yearLabel(y))}</span><i class="fa-solid fa-check dd-check"></i></button>`;
       });
     }
     $('yearDropdownContent').innerHTML = html;
@@ -1570,6 +1618,14 @@
     const sorted = Array.from(years).sort((a,b) => Number(b) - Number(a));
     state.videoYear = sorted.includes('2026') ? '2026' : (sorted[0] || 'all');
   }
+
+  // Re-render year label si on change de viewport mobile ↔ desktop
+  function handleMqChange() {
+    syncVideoMenus();
+    buildYearDropdown();
+  }
+  if (mobileMq.addEventListener) mobileMq.addEventListener('change', handleMqChange);
+  else if (mobileMq.addListener) mobileMq.addListener(handleMqChange);
 
   /* ============================================================
      VIDÉO : DÉTAILS
