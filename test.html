@@ -487,8 +487,6 @@
 (function () {
   'use strict';
 
-  // ============ CONFIGURATION ============
-  // ✅ Nouvelle source de données : reelsData.json
   const DATA_URL = 'https://marocnetmail.github.io/125/json/reelsData.json';
   const BASE_URL = 'https://marocnetmail.github.io/125/';
 
@@ -526,7 +524,6 @@
   let ARCHIVE_DATA = [];
   let ALL_PHOTOS = [];
 
-  // ✅ Résolution des chemins d'images relatifs
   function resolveImageUrl(path) {
     if (!path) return DEFAULT_IMG;
     if (/^https?:\/\//i.test(path)) return path;
@@ -623,8 +620,7 @@
 
   function getVideoScore(r) {
     const reactions = r.reactions ?? r.reactions_total ?? 0;
-    const comments = r.commentaires ?? 0;
-    return Number(reactions) + Number(comments);
+    return Number(reactions);
   }
 
   function getFilteredVideos() {
@@ -863,6 +859,53 @@
       </div>`;
   }
 
+  // ✅ CORRECTION CLÉ : construction de la liste des photos avec FALLBACK sur `miniature`
+  // et déduplication par URL pour éviter les doublons.
+  function buildAllPhotos() {
+    ALL_PHOTOS = [];
+    const seenSrcs = new Set();
+
+    ARCHIVE_DATA.forEach(item => {
+      const sources = [];
+
+      // Priorité 1 : tableau `images` (galeries multi-images)
+      if (Array.isArray(item.images) && item.images.length > 0) {
+        item.images.forEach(img => {
+          if (img && img.chemin) {
+            const src = resolveImageUrl(img.chemin);
+            if (src && src !== DEFAULT_IMG && !seenSrcs.has(src)) {
+              sources.push(src);
+              seenSrcs.add(src);
+            }
+          }
+        });
+      }
+
+      // Priorité 2 (fallback) : `miniature` si aucune image dans le tableau
+      if (sources.length === 0 && item.miniature) {
+        const src = resolveImageUrl(item.miniature);
+        if (src && src !== DEFAULT_IMG && !seenSrcs.has(src)) {
+          sources.push(src);
+          seenSrcs.add(src);
+        }
+      }
+
+      sources.forEach((src, i) => {
+        ALL_PHOTOS.push({
+          src,
+          date: item.date,
+          caption: item.description || item.titre || '',
+          reactions: item.reactions,
+          partages: item.partages,
+          fbUrl: item.url_canonique || item.url,
+          fbid: item.fbid,
+          index: i,
+          total: sources.length
+        });
+      });
+    });
+  }
+
   function getFilteredArchive() { return ARCHIVE_DATA; }
 
   function getFilteredPhotos() {
@@ -915,7 +958,8 @@
       grid.appendChild(tile);
     });
 
-    grid._activeList = pageItems;
+    // On stocke la liste LIMITÉE (toutes les photos filtrées, pas seulement la page)
+    grid._activeList = limitedItems;
     renderPhotosPagination(totalPages, pagination);
   }
 
@@ -952,18 +996,18 @@
     const text = item.description || item.titre || '';
     const isLong = text.length > 200;
     const hasImages = item.images && item.images.length > 0;
-    const mainImg = hasImages ? resolveImageUrl(item.images[0].chemin) : '';
+    const mainImg = hasImages ? resolveImageUrl(item.images[0].chemin) : (item.miniature ? resolveImageUrl(item.miniature) : '');
     const thumbs = hasImages && item.images.length > 1
       ? `<div class="pub-thumbs">${item.images.map((img, i) => `
           <img src="${escapeHtml(resolveImageUrl(img.chemin))}" data-idx="${i}" class="${i===0?'active':''}" loading="lazy" alt="">
         `).join('')}</div>` : '';
     return `
     <article class="pub-card" data-fbid="${escapeHtml(item.fbid)}">
-      ${hasImages ? `
+      ${mainImg ? `
         <div class="pub-media" data-open-lightbox="${escapeHtml(item.fbid)}">
           <img src="${escapeHtml(mainImg)}" loading="lazy" alt="">
           <span class="pub-badge-type">${item.type || 'PHOTO'}</span>
-          ${item.images.length > 1 ? `<span class="pub-badge-gallery">🖼️ ${item.images.length}</span>` : ''}
+          ${hasImages && item.images.length > 1 ? `<span class="pub-badge-gallery">🖼️ ${item.images.length}</span>` : ''}
         </div>
         ${thumbs}
       ` : ''}
@@ -982,7 +1026,7 @@
             <span>🔁 ${item.partages ?? 0}</span>
           </div>
           <div class="pub-actions">
-            ${hasImages ? `<button class="btn-sm" data-open-lightbox="${escapeHtml(item.fbid)}"><i class="fa-solid fa-expand"></i> معاينة</button>` : ''}
+            ${mainImg ? `<button class="btn-sm" data-open-lightbox="${escapeHtml(item.fbid)}"><i class="fa-solid fa-expand"></i> معاينة</button>` : ''}
             <a class="btn-sm" href="${escapeHtml(item.url_canonique || item.url || '#')}" target="_blank" rel="noopener"><i class="fa-brands fa-facebook"></i> Facebook</a>
           </div>
         </div>
@@ -1578,12 +1622,20 @@
     }
   });
 
+  // ✅ CORRECTION : clic sur une photo → ouvre le lightbox avec TOUTES les photos filtrées
+  // (pas seulement celles de la page courante), en calculant l'index global correct.
   $('photosGrid').addEventListener('click', (e) => {
     const tile = e.target.closest('.photo-tile');
     if (!tile) return;
-    const idx = parseInt(tile.dataset.photoIdx, 10);
-    const list = $('photosGrid')._activeList;
-    if (Array.isArray(list) && list.length) openLightbox(list, idx);
+    const pageIdx = parseInt(tile.dataset.photoIdx, 10);
+    if (!Number.isFinite(pageIdx)) return;
+
+    const allPhotos = getFilteredPhotos();
+    const limited = allPhotos.slice(0, PAGE_SIZE_PHOTOS * MAX_PHOTOS_PAGES);
+    const start = (state.photosPage - 1) * PAGE_SIZE_PHOTOS;
+    const globalIdx = start + pageIdx;
+
+    if (limited.length) openLightbox(limited, globalIdx);
   });
 
   $('pubGrid').addEventListener('click', (e) => {
@@ -1609,15 +1661,24 @@
     if (lb) {
       const fbid = lb.dataset.openLightbox;
       const item = ARCHIVE_DATA.find(x => x.fbid === fbid);
-      if (item && item.images && item.images.length) {
-        const list = item.images.map((img, i) => ({
-          src: resolveImageUrl(img.chemin),
-          date: item.date, caption: item.description || item.titre || '',
-          reactions: item.reactions, partages: item.partages,
-          fbUrl: item.url_canonique || item.url,
-          fbid: item.fbid, index: i, total: item.images.length
-        }));
-        openLightbox(list, 0);
+      if (item) {
+        const sources = [];
+        if (Array.isArray(item.images) && item.images.length > 0) {
+          item.images.forEach(img => { if (img && img.chemin) sources.push(resolveImageUrl(img.chemin)); });
+        }
+        if (sources.length === 0 && item.miniature) {
+          sources.push(resolveImageUrl(item.miniature));
+        }
+        if (sources.length) {
+          const list = sources.map((src, i) => ({
+            src, date: item.date,
+            caption: item.description || item.titre || '',
+            reactions: item.reactions, partages: item.partages,
+            fbUrl: item.url_canonique || item.url,
+            fbid: item.fbid, index: i, total: sources.length
+          }));
+          openLightbox(list, 0);
+        }
       }
     }
   });
@@ -1718,7 +1779,6 @@
     return true;
   }
 
-  // ✅ Initialisation : chargement direct de reelsData.json
   function init() {
     fetch(DATA_URL)
       .then(response => {
@@ -1728,7 +1788,6 @@
       .then(data => {
         validateData(data);
 
-        // Déduplication par fbid (le fichier peut contenir des doublons)
         const unique = new Map();
         data.forEach(item => {
           if (item && item.fbid && !unique.has(String(item.fbid))) {
@@ -1737,27 +1796,9 @@
         });
         ARCHIVE_DATA = Array.from(unique.values());
 
-        // Construction de la liste des photos (uniquement pour les éléments avec images)
-        ALL_PHOTOS = [];
-        ARCHIVE_DATA.forEach(item => {
-          if (Array.isArray(item.images)) {
-            item.images.forEach((img, i) => {
-              ALL_PHOTOS.push({
-                src: resolveImageUrl(img.chemin),
-                date: item.date,
-                caption: item.description || item.titre || '',
-                reactions: item.reactions,
-                partages: item.partages,
-                fbUrl: item.url_canonique || item.url,
-                fbid: item.fbid,
-                index: i,
-                total: item.images.length
-              });
-            });
-          }
-        });
+        // ✅ CORRECTION : construction des photos avec fallback sur `miniature`
+        buildAllPhotos();
 
-        // Alimentation de state.videos
         state.videos = ARCHIVE_DATA.map(r => ({
           ...r,
           miniature: r.miniature ? resolveImageUrl(r.miniature) : (r.images && r.images[0] ? resolveImageUrl(r.images[0].chemin) : null),
