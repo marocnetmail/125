@@ -5,23 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
 <title>الأرشيف المؤسساتي | فيديوهات · صور · منشورات</title>
-
-<!-- ============ BIBLIOTHÈQUES EXTERNES ============ -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config = { darkMode: 'class' };</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-
 <style>
   html{-webkit-text-size-adjust:100%}
   body{font-family:'Cairo',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
-
-  /* ============ LAYOUT / STRUCTURE ============ */
   .institutional-banner{width:100%;background:#fff;border-bottom:1px solid #dbe3ed;line-height:0}
   .institutional-banner img{display:block;width:100%;height:auto;max-height:380px;object-fit:cover;object-position:center}
-
-  /* ============ HEADER PRINCIPAL (sticky) ============ */
   .app-header{position:sticky;top:0;z-index:40;background:rgba(9,44,76,.98);backdrop-filter:blur(10px);box-shadow:0 2px 12px rgba(0,0,0,.4);border-bottom:1px solid rgba(255,255,255,.1)}
   .header-row{max-width:1440px;margin:0 auto;display:flex;align-items:center;gap:.5rem;padding:.5rem .6rem;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
   .header-row::-webkit-scrollbar{display:none}
@@ -30,33 +23,24 @@
   .brand-badge{width:38px;height:38px;border-radius:10px;background:rgba(197,155,69,.15);border:1px solid rgba(197,155,69,.6);display:flex;align-items:center;justify-content:center;font-size:1rem;color:#c59b45;font-weight:800;flex-shrink:0}
   .brand-text h1{font-size:1rem;font-weight:800;white-space:nowrap;line-height:1.2}
   .brand-text p{display:none;font-size:.7rem;color:#94a3b8;white-space:nowrap}
-
-  /* ============ MENU CENTRAL (tabs) ============ */
   .center-tabs{display:flex;gap:.25rem;background:rgba(0,0,0,.3);padding:.28rem;border-radius:12px;margin-inline:auto;border:1px solid rgba(255,255,255,.1)}
   .center-tab{display:flex;align-items:center;gap:.3rem;padding:.42rem .55rem;border-radius:9px;font-size:.72rem;font-weight:700;color:#94a3b8;background:transparent;border:none;cursor:pointer;transition:all .2s;white-space:nowrap;font-family:inherit}
   .center-tab:hover{color:#fff;background:rgba(255,255,255,.08)}
   .center-tab.active{color:#092c4c;background:linear-gradient(135deg,#c59b45 0%,#e0b55a 100%);box-shadow:0 2px 8px rgba(197,155,69,.4);font-weight:800}
   .center-tab i{font-size:.78rem}
-  .center-tab .tab-label{display:inline}
   .center-tab .count-badge{background:rgba(0,0,0,.2);color:inherit;font-size:.58rem;font-weight:700;padding:.02rem .3rem;border-radius:999px;line-height:1.4}
   .center-tab.active .count-badge{background:rgba(9,44,76,.25);color:#092c4c}
-
-  /* ============ SEARCH ============ */
   .search-wrap{position:relative;flex:0 1 200px;min-width:110px}
   .search-wrap input{width:100%;padding:.5rem 2rem .5rem .7rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:10px;color:#fff;font-size:14px;font-family:inherit;outline:none;transition:all .2s}
   .search-wrap input::placeholder{color:rgba(255,255,255,.5)}
   .search-wrap input:focus{background:rgba(255,255,255,.15);border-color:rgba(197,155,69,.6)}
   .search-wrap .search-icon{position:absolute;right:.7rem;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.55);font-size:.85rem;pointer-events:none}
-
-  /* ============ ANNÉE EN LIGNE (header) ============ */
   .year-inline{display:flex;position:relative}
   .year-inline .menu-item{padding:.5rem .6rem;font-size:.8rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:10px;gap:.35rem;color:#e2e8f0;transition:all .2s}
   .year-inline .menu-item:hover{background:rgba(255,255,255,.15);border-color:rgba(197,155,69,.6);color:#fff}
   .year-inline .menu-item[aria-expanded="true"]{background:rgba(197,155,69,.15);border-color:rgba(197,155,69,.55);color:#fcd34d}
   .year-inline .menu-item i.fa-calendar{color:#c59b45;font-size:.8rem}
   .year-inline .menu-badge{background:linear-gradient(135deg,rgba(197,155,69,.35) 0%,rgba(224,181,90,.35) 100%);color:#fcd34d;border:1px solid rgba(197,155,69,.6);font-size:.72rem;font-weight:800;padding:.12rem .5rem;border-radius:999px;letter-spacing:.02em}
-
-  /* ============ SOUS-MENU VIDÉOS ============ */
   .sub-menu-row{display:none;background:#0b3559;border-top:1px solid rgba(255,255,255,.08);border-bottom:2px solid rgba(197,155,69,.4)}
   .sub-menu-row.visible{display:block}
   .sub-menu-inner{max-width:1440px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;padding:.4rem .75rem;overflow-x:auto;scrollbar-width:none}
@@ -76,11 +60,7 @@
   .menu-dropdown-item .dd-check{margin-right:auto;font-size:.68rem;opacity:0}
   .menu-dropdown-item.active .dd-check{opacity:1}
   .menu-badge{display:inline-block;background:rgba(59,130,246,.3);color:#bfdbfe;font-size:.65rem;font-weight:700;padding:.05rem .45rem;border-radius:999px;border:1px solid rgba(59,130,246,.5)}
-
-  /* ============ MAIN ============ */
   main{max-width:1440px;margin:0 auto;padding:1rem .75rem 2rem;flex:1;width:100%}
-
-  /* ============ CARTES VIDÉO ============ */
   .reel-card{position:relative}
   .thumb-gradient{background:linear-gradient(to top,rgba(0,0,0,.88) 0%,rgba(0,0,0,.55) 22%,rgba(0,0,0,.18) 42%,transparent 60%)}
   .video-title{display:block;width:100%;white-space:normal;word-wrap:break-word;overflow-wrap:anywhere;line-height:1.3}
@@ -92,8 +72,6 @@
   .thumb-wrap .thumb-fallback i{font-size:22px;color:#475569}
   .date-display{display:inline-block;white-space:nowrap;direction:rtl;unicode-bidi:isolate;max-width:100%}
   .theme-chip{display:inline-block;background:#FFF9DB;color:#78350F;border:1px solid #FCD34D;border-radius:9999px;padding:2px 8px;font-size:9px;font-weight:700;line-height:1.4;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:rtl;text-align:right;box-shadow:0 1px 2px rgba(0,0,0,.12);vertical-align:middle}
-
-  /* ============ THEME CARDS / TREE ============ */
   .theme-card-new{background-color:#FFF9DB;border:1px solid #FCD34D;color:#78350F;border-radius:14px;transition:all .25s;box-shadow:0 1px 3px rgba(0,0,0,.08)}
   .theme-card-new:hover{background-color:#FEF3C7;border-color:#F59E0B;box-shadow:0 6px 16px rgba(245,158,11,.2);transform:translateY(-2px)}
   .theme-card-new .theme-card-icon{background-color:#FCD34D;color:#78350F}
@@ -101,7 +79,6 @@
   .theme-folder-row{background-color:#FFF9DB;border:1px solid #FCD34D;border-radius:10px;color:#78350F;transition:all .2s}
   .theme-folder-row:hover{background-color:#FEF3C7;border-color:#F59E0B;box-shadow:0 2px 8px rgba(245,158,11,.15)}
   .theme-folder-row .folder-icon{color:#B45309}
-  .theme-folder-row .chevron-icon{color:#92400E}
   .theme-folder-row .count-badge{background-color:#FCD34D;color:#78350F;border:1px solid #F59E0B}
   .tree-list{list-style:none;padding:0;margin:0}
   .tree-list .tree-list{padding-right:1.5rem;border-right:2px dashed #475569;margin-right:.75rem}
@@ -110,19 +87,10 @@
   .tree-toggle{transition:transform .2s}
   .tree-toggle.open{transform:rotate(-90deg)}
   .tree-video-title{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-
-  /* ============ PHOTOS GRID ============ */
   .photos-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
   .photo-tile{position:relative;aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#1e293b,#0f172a);cursor:pointer;border:1px solid rgba(255,255,255,.06);transition:transform .2s}
   .photo-tile:hover{transform:scale(1.02);border-color:rgba(197,155,69,.5)}
   .photo-tile img{width:100%;height:100%;object-fit:cover;display:block}
-  .photo-tile .photo-hover{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 50%);opacity:0;transition:opacity .2s;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;color:#fff;font-size:.72rem;line-height:1.35}
-  .photo-tile:hover .photo-hover{opacity:1}
-  .photo-hover-date{font-weight:700;color:#fcd34d;font-size:.68rem;margin-bottom:2px}
-  .photo-hover-text{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .photo-badge{position:absolute;top:6px;right:6px;background:rgba(197,155,69,.92);color:#092c4c;font-size:.65rem;font-weight:800;padding:2px 6px;border-radius:5px}
-
-  /* ============ PUBLICATIONS CARDS ============ */
   .pub-grid{display:grid;grid-template-columns:1fr;gap:1rem}
   .pub-card{background:#1e293b;border:1px solid #334155;border-radius:14px;overflow:hidden;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column}
   .pub-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.4);border-color:rgba(197,155,69,.4)}
@@ -149,8 +117,6 @@
   .pub-actions{display:flex;gap:.4rem}
   .btn-sm{padding:.38rem .75rem;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;border:1px solid #475569;background:#0f172a;color:#cbd5e1;transition:all .15s;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem;min-height:32px}
   .btn-sm:hover{background:#c59b45;color:#092c4c;border-color:#c59b45}
-
-  /* ============ LIGHTBOX ============ */
   .lb-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.95);backdrop-filter:blur(8px);z-index:90;display:none;align-items:center;justify-content:center;padding:.5rem}
   .lb-backdrop.open{display:flex}
   .lb-content{background:#1e293b;border-radius:14px;max-width:1080px;width:100%;max-height:94vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.6);position:relative;border:1px solid #334155}
@@ -166,21 +132,15 @@
   .lb-date{font-weight:700;color:#c59b45;font-size:.85rem}
   .lb-counter{font-size:.8rem;color:#94a3b8;font-weight:700;font-family:ui-monospace,monospace}
   .lb-caption{font-size:.92rem;color:#cbd5e1;line-height:1.75;white-space:pre-line;margin-bottom:.75rem}
-  .lb-footer{border-top:1px solid #334155;padding-top:.75rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
-
-  /* ============ MODALS ============ */
+  .lb-footer{border-top:1px solid #334155;padding-top:.75rem;display:flex;justify-content:flex-end;align-items:center;gap:.5rem;flex-wrap:wrap}
   #detailsContent::-webkit-scrollbar{width:6px}
   #detailsContent::-webkit-scrollbar-thumb{background:rgba(100,116,139,.4);border-radius:3px}
   #playerZone{position:relative;background:#0f172a}
   #playerZone iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
   #playerZone:fullscreen,#playerZone:-webkit-full-screen{width:100vw!important;height:100vh!important;max-width:none!important;margin:0!important;padding:0!important;background:#000!important}
   #progressOverlay{animation:fadeIn .3s}
-  #progressOverlay.fade-out{animation:fadeOut .4s forwards}
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-  @keyframes fadeOut{from{opacity:1}to{opacity:0}}
   #exitConfirmModal{animation:fadeIn .2s}
-
-  /* ============ MOBILE LAYOUT (<= 639px) ============ */
   @media (max-width: 639px){
     .header-row{flex-wrap: wrap;gap: .35rem;padding: .45rem .5rem;overflow-x: visible;}
     .brand{ display: none; }
@@ -193,8 +153,6 @@
     .year-inline .menu-badge{font-size: .65rem;padding: .08rem .4rem;}
     .center-tabs{order: 3;flex-basis: 100%;margin: .35rem 0 0 0;justify-content: center;}
   }
-
-  /* ============ MOBILE TRÈS ÉTROIT (<= 380px) ============ */
   @media (max-width: 380px){
     .center-tab{padding:.34rem .42rem;font-size:.62rem;gap:.16rem}
     .center-tab i{font-size:.68rem}
@@ -204,8 +162,6 @@
     .search-wrap input{padding:.42rem 1.8rem .42rem .55rem;font-size:12.5px}
     .header-row{gap:.3rem;padding:.4rem .45rem}
   }
-
-  /* ============ DESKTOP ============ */
   @media (min-width:640px){
     .brand-text p{display:block}
     .brand-text h1{font-size:1.1rem}
@@ -237,7 +193,6 @@
     .sub-menu-inner{padding:.5rem 2rem}
     main{padding:1.5rem 2rem 3rem}
   }
-
   .safe-bottom{padding-bottom:max(1rem,env(safe-area-inset-bottom))}
   .hidden{display:none!important}
 </style>
@@ -251,7 +206,7 @@
       <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/20 mb-4">
         <i class="fa-solid fa-images text-3xl text-blue-400 animate-pulse"></i>
       </div>
-      <h2 id="progressTitle" class="text-lg font-bold text-white mb-1">جارٍ التحقق من الصور…</h2>
+      <h2 id="progressTitle" class="text-lg font-bold text-white mb-1">جارٍ التحميل…</h2>
       <p id="progressCount" class="text-xs text-slate-400">جارٍ التحضير…</p>
     </div>
     <div class="h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
@@ -391,6 +346,7 @@
   </div>
 </footer>
 
+<!-- Modal vidéo (uniquement si video_url existe) -->
 <div id="detailsModal" class="fixed inset-0 z-50 hidden">
   <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" data-close-details></div>
   <div class="relative z-10 w-full h-full flex items-center justify-center p-2 sm:p-4">
@@ -425,7 +381,7 @@
           </div>
         </div>
         <iframe id="detailsFrame" class="border-0 opacity-0 transition-opacity duration-500" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen" scrolling="no" frameborder="0"></iframe>
-        <button id="fullscreenBtn" type="button" class="absolute top-3 left-3 z-40 w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-black/60 hover:bg-black/80 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center shadow-lg" aria-label="ملء الشاشة">
+        <button id="fullscreenBtn" type="button" class="hidden absolute top-3 left-3 z-40 w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-black/60 hover:bg-black/80 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center shadow-lg" aria-label="ملء الشاشة">
           <i class="fa-solid fa-expand text-sm"></i>
         </button>
       </div>
@@ -434,6 +390,7 @@
   </div>
 </div>
 
+<!-- Lightbox (galerie photos) -->
 <div class="lb-backdrop" id="lightbox">
   <button class="lb-close" id="lbClose" aria-label="إغلاق"><i class="fa-solid fa-xmark"></i></button>
   <div class="lb-content">
@@ -453,9 +410,6 @@
           <span>👍 <strong id="lbReactions">0</strong></span>
           <span>🔁 <strong id="lbShares">0</strong></span>
         </div>
-        <a id="lbFbLink" href="#" target="_blank" rel="noopener" class="btn-sm">
-          <i class="fa-brands fa-facebook"></i> Facebook
-        </a>
       </div>
     </div>
   </div>
@@ -492,37 +446,20 @@
   </div>
 </div>
 
-<div id="exitConfirmModal" class="fixed inset-0 z-[80] hidden">
-  <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" data-exit-cancel></div>
-  <div class="relative z-10 w-full h-full flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
-      <div class="p-5 sm:p-6 text-center">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-500/15 mb-4">
-          <i class="fa-solid fa-right-from-bracket text-2xl text-amber-400"></i>
-        </div>
-        <h2 class="text-lg font-bold text-white mb-2">مغادرة المعرض؟</h2>
-        <p class="text-sm text-slate-300">هل تريد فعلاً مغادرة الأرشيف المؤسساتي؟</p>
-      </div>
-      <div class="flex flex-col sm:flex-row gap-2 p-4 bg-slate-900/40 border-t border-slate-700">
-        <button type="button" data-exit-cancel class="flex-1 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2">
-          <i class="fa-solid fa-arrow-right"></i><span>البقاء</span>
-        </button>
-        <button type="button" data-exit-confirm class="flex-1 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2">
-          <i class="fa-solid fa-right-from-bracket"></i><span>مغادرة</span>
-        </button>
-      </div>
-    </div>
-  </div>
+<div id="noContentToast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[80] hidden bg-slate-800 border border-amber-500/40 text-amber-200 px-5 py-3 rounded-xl shadow-2xl text-sm font-semibold flex items-center gap-2">
+  <i class="fa-solid fa-circle-info"></i><span>لا يوجد محتوى مرئي لهذا المنشور</span>
 </div>
 
 <script>
 (function () {
   'use strict';
 
+  // ============ CONFIG ============
   const DATA_URL = 'https://marocnetmail.github.io/125/json/data_pub.json';
+  const IMG_BASE = 'https://marocnetmail.github.io/125/images/';
   const PAGE_SIZE_VIDEOS = 20;
   const PAGE_SIZE_PHOTOS = 30;
-  const MAX_PHOTOS_PAGES = 2;
+  const MAX_PHOTOS_PAGES = 40;
   const EMAIL_REMARK_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwRllGpkxkBllOBnu9U7gZfH5Lg1qS-Iz-jf_rz_S1VKLydL0juENf-OfUI56mWQ_ojMA/exec';
 
   const DEFAULT_IMG = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
@@ -538,6 +475,20 @@
   );
 
   const $ = (id) => document.getElementById(id);
+
+  // Fallback cascade pour thumbnails
+  window.__thumbFallback = function(img) {
+    const wrap = img.closest('.thumb-wrap');
+    if (!wrap) return;
+    const urls = JSON.parse(wrap.dataset.fallbackUrls || '[]');
+    const idx = parseInt(wrap.dataset.fallbackIdx || '0', 10) + 1;
+    if (idx < urls.length) {
+      wrap.dataset.fallbackIdx = String(idx);
+      img.src = urls[idx];
+    } else {
+      wrap.classList.add('thumb-error');
+    }
+  };
 
   function toArabicNumerals(input) {
     const map = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
@@ -574,20 +525,19 @@
     return { reactions: 25 + (h % 350), partages: 1 + (h % 10) };
   }
 
-// Base absolue dérivée de DATA_URL (dossier /125/)
-const IMG_BASE = "https://marocnetmail.github.io/125/json/images/';
-//   → 'https://marocnetmail.github.io/125/images/'
+  function imagePath(fbid, idx) {
+    return `${IMG_BASE}pub_${fbid}_${String(idx).padStart(2,'0')}.webp`;
+  }
 
-function imagePath(fbid, idx) {
-  return `${IMG_BASE}pub_${fbid}_${String(idx).padStart(2,'0')}.webp`;
-}
   function buildArchiveRaw() {
-    ARCHIVE_RAW = ARCHIVE_COMPACT.map(({ fbid, date_iso, imgCount, text }) => {
+    ARCHIVE_RAW = ARCHIVE_COMPACT.map(({ fbid, date_iso, imgCount, text, video_url }) => {
       const [y, m, d] = date_iso.split('-');
       const stats = generateStats(fbid, text);
       const images = Array.from({ length: imgCount }, (_, i) => imagePath(fbid, i));
       return {
-        fbid, type: imgCount > 0 ? 'PHOTO' : 'POST',
+        fbid,
+        type: video_url ? 'VIDEO' : (imgCount > 0 ? 'PHOTO' : 'POST'),
+        video_url: video_url || null,
         url_canonique: `https://web.facebook.com/MATUHPV/posts/${fbid}`,
         titre: text, description: text, text,
         images,
@@ -605,12 +555,8 @@ function imagePath(fbid, idx) {
     return String(s || '').toLowerCase().normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/[\u064B-\u0652]/g, '')
-      .replace(/[أإآٱ]/g, 'ا')
-      .replace(/ة/g, 'ه')
-      .replace(/ى/g, 'ي')
-      .replace(/ؤ/g, 'و')
-      .replace(/ئ/g, 'ي')
-      .replace(/ـ/g, '')
+      .replace(/[أإآٱ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي')
+      .replace(/ؤ/g, 'و').replace(/ئ/g, 'ي').replace(/ـ/g, '')
       .replace(/\s+/g, ' ').trim();
   }
 
@@ -643,18 +589,12 @@ function imagePath(fbid, idx) {
     videoYear: '2026',
     videoPage: 1,
     activeTheme: null,
-    contentMatchSet: new Set(),
-    archivePage: 1,
     photosPage: 1,
     archiveInitialized: false,
     lb: { list: [], index: 0 }
   };
 
-  const TAB_SECTIONS = {
-    videos: 'videosSection',
-    photos: 'photosSection',
-    publications: 'publicationsSection'
-  };
+  const TAB_SECTIONS = { videos: 'videosSection', photos: 'photosSection', publications: 'publicationsSection' };
 
   function switchTab(tab) {
     if (!TAB_SECTIONS[tab]) tab = 'videos';
@@ -688,16 +628,12 @@ function imagePath(fbid, idx) {
   }
 
   function getVideoScore(r) {
-    const reactions = r.reactions ?? r.nbre_reactions ?? 0;
-    const comments = r.commentaires ?? r.comments ?? r.nbre_commentaires ?? 0;
-    return Number(reactions) + Number(comments);
+    return Number(r.reactions ?? 0) + Number(r.commentaires ?? r.comments ?? 0);
   }
 
   function getFilteredVideos() {
     const q = state.search.trim();
     let result = state.videos;
-    state.contentMatchSet = new Set();
-
     if (state.videoYear !== 'all') {
       result = result.filter(r => getVideoYear(r) === String(state.videoYear));
     }
@@ -709,7 +645,7 @@ function imagePath(fbid, idx) {
       });
     }
     result = [...result];
-    if (state.videoSort === 'views') result.sort((a,b) => (b.vues ?? b.nbre_vue ?? 0) - (a.vues ?? a.nbre_vue ?? 0));
+    if (state.videoSort === 'views') result.sort((a,b) => (b.vues ?? 0) - (a.vues ?? 0));
     else if (state.videoSort === 'reactions') result.sort((a,b) => getVideoScore(b) - getVideoScore(a));
     else result.sort((a,b) => String(b.date_iso || '').localeCompare(String(a.date_iso || '')));
     return result;
@@ -723,9 +659,7 @@ function imagePath(fbid, idx) {
     $('pagination').classList.add('hidden');
     $('backNavigation').classList.add('hidden');
     $('emptyState').classList.add('hidden');
-
     if (items.length === 0) { $('emptyState').classList.remove('hidden'); return; }
-
     if (state.videoView === 'themes') renderThemes(items);
     else if (state.videoView === 'tree') renderTree(items);
     else renderVideoGallery(items);
@@ -737,57 +671,39 @@ function imagePath(fbid, idx) {
     const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE_VIDEOS));
     if (state.videoPage > totalPages) state.videoPage = totalPages;
     const start = (state.videoPage - 1) * PAGE_SIZE_VIDEOS;
-    const pageItems = items.slice(start, start + PAGE_SIZE_VIDEOS);
-    $('reelsGrid').innerHTML = pageItems.map(videoCardHTML).join('');
+    $('reelsGrid').innerHTML = items.slice(start, start + PAGE_SIZE_VIDEOS).map(videoCardHTML).join('');
     renderPagination(totalPages);
   }
 
+  // ✅ CARTE : PAS d'icône Facebook. Affiche type (صور/فيديو) + compteur album.
   function videoCardHTML(r) {
     const rawTitle = r.titre || 'العنوان غير متوفر';
     const truncTitle = rawTitle.length > 40 ? rawTitle.substring(0, 40) + '...' : rawTitle;
     const dateFormatted = formatDateArabic(r.date, r.date_iso);
-    const views = formatNumber(r.vues ?? r.nbre_vue ?? 0);
     const reactions = r.reactions != null ? String(r.reactions) : '0';
     const themeAr = r.theme_ar || r.theme_fr || 'غير مصنف';
+    const isVideo = !!r.video_url;
+    const imgCount = r.images ? r.images.length : 0;
     return `
     <article class="reel-card group relative aspect-[9/16] w-full bg-slate-900 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 active:scale-[0.98] border-2 sm:border-[3px] border-white ring-1 ring-black/25" data-fbid="${escapeHtml(r.fbid)}">
-      ${thumbMarkup(r.miniature, 'lazy', 'absolute inset-0')}
+      ${thumbMarkup(r.images, 'lazy', 'absolute inset-0')}
       <div class="thumb-gradient absolute inset-x-0 bottom-0 h-[75%] pointer-events-none z-[1]"></div>
-      <div class="absolute top-2 left-2 z-[3]">
+      <div class="absolute top-2 left-2 z-[3] flex flex-col gap-1 items-start">
         <span class="theme-chip" dir="rtl">${escapeHtml(themeAr)}</span>
+        ${imgCount > 1 ? `<span class="theme-chip" style="background:#DBEAFE;border-color:#60A5FA;color:#1E3A8A;" dir="ltr"><i class="fa-solid fa-images"></i> ${imgCount}</span>` : ''}
       </div>
       <div class="absolute bottom-0 inset-x-0 p-2 sm:p-3 flex flex-col z-[2]">
         <div class="flex items-end justify-between gap-2 w-full mb-1.5">
           <div class="flex flex-col items-start gap-1.5 flex-shrink-0">
             <div class="flex items-center gap-1 text-[9px] sm:text-[10px] text-white/90 font-bold drop-shadow-md">
-              <span class="flex items-center gap-0.5 bg-black/50 px-1.5 py-0.5 rounded backdrop-blur-sm border border-white/10"><i class="fa-solid fa-eye text-amber-400"></i> ${views}</span>
+              <span class="flex items-center gap-0.5 bg-black/50 px-1.5 py-0.5 rounded backdrop-blur-sm border border-white/10">
+                <i class="fa-solid ${isVideo ? 'fa-circle-play text-rose-400' : 'fa-camera text-sky-400'}"></i> ${isVideo ? 'فيديو' : 'صور'}
+              </span>
               <span class="flex items-center gap-0.5 bg-black/50 px-1.5 py-0.5 rounded backdrop-blur-sm border border-white/10"><i class="fa-solid fa-heart text-rose-400"></i> ${reactions}</span>
             </div>
             <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white flex items-center justify-center bg-black/30 backdrop-blur-sm group-hover:bg-white/20 transition-all">
-              <i class="fa-solid fa-play text-white text-[10px] sm:text-xs ml-0.5 drop-shadow-md"></i>
+              <i class="fa-solid ${isVideo ? 'fa-play' : 'fa-expand'} text-white text-[10px] sm:text-xs ml-0.5 drop-shadow-md"></i>
             </div>
-          </div>
-        </div>
-        <div class="w-full text-center mb-1">
-          <span class="date-display text-white/95 text-[9px] sm:text-[10px] font-semibold drop-shadow-md">${dateFormatted}</span>
-        </div>
-        <h3 class="video-title text-white text-xs sm:text-sm font-bold drop-shadow-md leading-snug break-words" dir="auto">${escapeHtml(truncTitle)}</h3>
-      </div>
-    </article>`;
-  }
-
-  function themeVideoCardHTML(r) {
-    const rawTitle = r.titre || '';
-    const truncTitle = rawTitle.length > 40 ? rawTitle.substring(0, 40) + '...' : rawTitle;
-    const dateFormatted = formatDateArabic(r.date, r.date_iso);
-    return `
-    <article class="reel-card group relative aspect-[9/16] w-full bg-slate-900 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 active:scale-[0.98] border-2 sm:border-[3px] border-white ring-1 ring-black/25" data-fbid="${escapeHtml(r.fbid)}">
-      ${thumbMarkup(r.miniature, 'lazy', 'absolute inset-0')}
-      <div class="thumb-gradient absolute inset-x-0 bottom-0 h-[75%] pointer-events-none z-[1]"></div>
-      <div class="absolute bottom-0 inset-x-0 p-2 sm:p-3 flex flex-col z-[2]">
-        <div class="flex items-center justify-end w-full mb-1.5">
-          <div class="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white bg-black/30 backdrop-blur-sm group-hover:bg-white/20 transition-all flex-shrink-0">
-            <i class="fa-solid fa-play text-white text-[10px] sm:text-xs ml-0.5 drop-shadow-md"></i>
           </div>
         </div>
         <div class="w-full text-center mb-1">
@@ -813,7 +729,7 @@ function imagePath(fbid, idx) {
       const totalPages = Math.max(1, Math.ceil(themeItems.length / PAGE_SIZE_VIDEOS));
       if (state.videoPage > totalPages) state.videoPage = totalPages;
       const start = (state.videoPage - 1) * PAGE_SIZE_VIDEOS;
-      $('reelsGrid').innerHTML = themeItems.slice(start, start + PAGE_SIZE_VIDEOS).map(themeVideoCardHTML).join('');
+      $('reelsGrid').innerHTML = themeItems.slice(start, start + PAGE_SIZE_VIDEOS).map(videoCardHTML).join('');
       renderPagination(totalPages);
     } else {
       $('themesView').classList.remove('hidden');
@@ -832,7 +748,7 @@ function imagePath(fbid, idx) {
             <div class="theme-card-icon w-12 h-12 rounded-full flex items-center justify-center mb-1"><i class="fa-solid fa-folder-open text-xl"></i></div>
             <h3 class="font-bold text-sm sm:text-base leading-tight">${escapeHtml(meta.ar)}</h3>
             <p class="text-[10px] leading-tight opacity-75" dir="ltr">${escapeHtml(fr)}</p>
-            <span class="theme-card-count text-xs font-semibold px-2.5 py-0.5 rounded-full mt-1">${meta.count} فيديو</span>
+            <span class="theme-card-count text-xs font-semibold px-2.5 py-0.5 rounded-full mt-1">${meta.count} عنصر</span>
           </div>`;
       });
       html += '</div>';
@@ -840,6 +756,7 @@ function imagePath(fbid, idx) {
     }
   }
 
+  // ✅ ARBRE : pas de bouton FB
   function renderTree(items) {
     $('treeView').classList.remove('hidden');
     const map = new Map();
@@ -868,18 +785,13 @@ function imagePath(fbid, idx) {
               <li class="tree-item">
                 <div class="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-700/60 cursor-pointer transition-colors border border-transparent hover:border-slate-600" data-fbid="${escapeHtml(v.fbid)}" dir="rtl">
                   <div class="flex-shrink-0 w-11 h-[60px] rounded-md overflow-hidden border border-slate-600">
-                    ${thumbMarkup(v.miniature, 'lazy')}
+                    ${thumbMarkup(v.images, 'lazy')}
                   </div>
                   <div class="flex-1 min-w-0 text-right">
                     <div class="text-xs sm:text-sm text-slate-200 font-medium leading-snug tree-video-title" dir="auto">${escapeHtml(v.titre || 'بدون عنوان')}</div>
                     <div class="flex flex-wrap items-center gap-1.5 mt-1.5 text-[10px]">
                       <span class="inline-flex items-center gap-1 bg-slate-900/70 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700/60">
-                        <i class="fa-regular fa-calendar text-slate-500"></i>
-                        <span class="date-display">${dateFmt}</span>
-                      </span>
-                      <span class="inline-flex items-center gap-1 bg-slate-900/70 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700/60 font-mono" dir="ltr">
-                        <i class="fa-solid fa-hashtag text-slate-500 text-[9px]"></i>
-                        <span>${escapeHtml(String(v.fbid || ''))}</span>
+                        <i class="fa-regular fa-calendar text-slate-500"></i><span class="date-display">${dateFmt}</span>
                       </span>
                     </div>
                   </div>
@@ -893,6 +805,13 @@ function imagePath(fbid, idx) {
     $('treeContent').innerHTML = html;
   }
 
+  function getPagesArray(cur, tot) {
+    if (tot <= 7) return Array.from({length: tot}, (_, i) => i + 1);
+    if (cur <= 4) return [1,2,3,4,5,'…',tot];
+    if (cur >= tot - 3) return [1,'…',tot-4,tot-3,tot-2,tot-1,tot];
+    return [1,'…',cur-1,cur,cur+1,'…',tot];
+  }
+
   function renderPagination(totalPages) {
     const pag = $('pagination');
     if (totalPages <= 1) { pag.innerHTML = ''; return; }
@@ -901,14 +820,8 @@ function imagePath(fbid, idx) {
     const active = 'bg-blue-600 text-white shadow-lg';
     const inactive = 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700';
     const disabled = 'bg-slate-800 text-slate-600 border border-slate-700 cursor-not-allowed';
-    function getPages(cur, tot) {
-      if (tot <= 7) return Array.from({length: tot}, (_, i) => i + 1);
-      if (cur <= 4) return [1,2,3,4,5,'…',tot];
-      if (cur >= tot - 3) return [1,'…',tot-4,tot-3,tot-2,tot-1,tot];
-      return [1,'…',cur-1,cur,cur+1,'…',tot];
-    }
     let html = `<button data-page="${page-1}" class="${base} ${page===1?disabled:inactive}" ${page===1?'disabled':''}><i class="fa-solid fa-chevron-right text-xs"></i></button>`;
-    getPages(page, totalPages).forEach(p => {
+    getPagesArray(page, totalPages).forEach(p => {
       if (p === '…') html += `<span class="${base} ${inactive} select-none">…</span>`;
       else html += `<button data-page="${p}" class="${base} ${p===page?active:inactive}">${p}</button>`;
     });
@@ -916,139 +829,35 @@ function imagePath(fbid, idx) {
     pag.innerHTML = html;
   }
 
-  function thumbMarkup(url, loadingAttr, extraClass = '') {
+  function thumbMarkup(urls, loadingAttr, extraClass = '') {
+    const list = Array.isArray(urls) ? urls.filter(Boolean) : (urls ? [urls] : []);
+    const first = list[0] || DEFAULT_IMG;
+    const safeListJson = JSON.stringify(list).replace(/'/g, '&#39;');
     return `
-      <div class="thumb-wrap ${extraClass}">
-        <img src="${escapeHtml(url || DEFAULT_IMG)}" alt="" loading="${loadingAttr}" decoding="async" referrerpolicy="no-referrer"
+      <div class="thumb-wrap ${extraClass}" data-fallback-urls='${safeListJson}' data-fallback-idx="0">
+        <img src="${escapeHtml(first)}" alt="" loading="${loadingAttr}" decoding="async" referrerpolicy="no-referrer"
              onload="this.parentElement.classList.remove('thumb-error')"
-             onerror="this.parentElement.classList.add('thumb-error')">
+             onerror="window.__thumbFallback(this)">
         <div class="thumb-fallback"><i class="fa-regular fa-image"></i><span>الصورة غير متوفرة</span></div>
       </div>`;
   }
 
-  function probeImage(url, timeoutMs = 8000) {
-    return new Promise((resolve) => {
-      if (!url) { resolve(false); return; }
-      const img = new Image();
-      let resolved = false;
-      const done = (ok) => {
-        if (resolved) return;
-        resolved = true;
-        img.onload = null;
-        img.onerror = null;
-        resolve(ok);
-      };
-      const timer = setTimeout(() => done(false), timeoutMs);
-      img.onload = () => {
-        clearTimeout(timer);
-        done(img.naturalWidth > 0 && img.naturalHeight > 0);
-      };
-      img.onerror = () => {
-        clearTimeout(timer);
-        done(false);
-      };
-      img.src = url;
-    });
-  }
-
-  async function validateImagesBatch(urls, onProgress, concurrency = 6) {
-    const validSet = new Set();
-    if (!urls.length) return validSet;
-    let done = 0;
-    let cursor = 0;
-    const total = urls.length;
-
-    async function worker() {
-      while (true) {
-        const i = cursor++;
-        if (i >= total) return;
-        const ok = await probeImage(urls[i]);
-        if (ok) validSet.add(urls[i]);
-        done++;
-        if (onProgress) {
-          try { onProgress(done, total); } catch (_) { /* ignore */ }
-        }
-      }
-    }
-
-    const workers = Array.from({ length: Math.min(concurrency, total) }, () => worker());
-    await Promise.all(workers);
-    return validSet;
-  }
-
-  async function initArchive() {
+  function initArchive() {
     if (state.archiveInitialized) return;
     state.archiveInitialized = true;
-
-    const uniqueUrls = new Set();
-    ARCHIVE_RAW.forEach(item => item.images.forEach(u => uniqueUrls.add(u)));
-    const urlList = Array.from(uniqueUrls);
-
-    const overlay = $('progressOverlay');
-    const bar = $('progressBar');
-    const pctEl = $('progressPercent');
-    const countEl = $('progressCount');
-    const titleEl = $('progressTitle');
-    if (overlay) {
-      overlay.classList.remove('hidden');
-      if (titleEl) titleEl.textContent = 'جارٍ التحقق من الصور…';
-      if (bar) bar.style.width = '0%';
-      if (pctEl) pctEl.textContent = '0%';
-      if (countEl) countEl.textContent = `0 / ${urlList.length}`;
-    }
-
-    let validSet = new Set();
-    try {
-      validSet = await validateImagesBatch(urlList, (done, total) => {
-        const pct = total ? Math.round((done / total) * 100) : 100;
-        if (bar) bar.style.width = pct + '%';
-        if (pctEl) pctEl.textContent = pct + '%';
-        if (countEl) countEl.textContent = `${done} / ${total}`;
-      }, 6);
-    } catch (e) {
-      console.error('Erreur validation images:', e);
-    } finally {
-      if (overlay) overlay.classList.add('hidden');
-    }
-
-    const filtered = [];
-    ARCHIVE_RAW.forEach(item => {
-      const validImages = item.images.filter(u => validSet.has(u));
-      if (validImages.length > 0) {
-        filtered.push({ ...item, images: validImages, type: 'PHOTO' });
-      }
-    });
-    ARCHIVE_DATA = filtered;
-
+    ARCHIVE_DATA = ARCHIVE_RAW.slice();
     ALL_PHOTOS = [];
     ARCHIVE_DATA.forEach(item => {
       item.images.forEach((src, i) => {
         ALL_PHOTOS.push({
-          src,
-          date: item.date,
-          caption: item.text,
-          reactions: item.reactions,
-          partages: item.partages,
-          fbUrl: item.url_canonique,
-          fbid: item.fbid,
-          index: i,
-          total: item.images.length
+          src, date: item.date, caption: item.text,
+          reactions: item.reactions, partages: item.partages,
+          fbUrl: item.url_canonique, fbid: item.fbid,
+          index: i, total: item.images.length
         });
       });
     });
-
-    const totalRefs = ARCHIVE_RAW.reduce((s, i) => s + i.images.length, 0);
-    const validRefs = ARCHIVE_DATA.reduce((s, i) => s + i.images.length, 0);
-    console.group('%c📊 Bilan de vérification des images', 'color:#c59b45;font-weight:bold');
-    console.log(`Publications analysées : ${ARCHIVE_RAW.length}`);
-    console.log(`Publications conservées : ${ARCHIVE_DATA.length}`);
-    console.log(`Publications exclues : ${ARCHIVE_RAW.length - ARCHIVE_DATA.length}`);
-    console.log(`Images uniques vérifiées : ${urlList.length}`);
-    console.log(`Images uniques valides : ${validSet.size}`);
-    console.log(`Images uniques invalides : ${urlList.length - validSet.size}`);
-    console.log(`Références d'images totales : ${totalRefs}`);
-    console.log(`Références d'images valides : ${validRefs}`);
-    console.groupEnd();
+    console.log(`📊 Chargé : ${ARCHIVE_DATA.length} publications, ${ALL_PHOTOS.length} photos`);
   }
 
   function getFilteredArchive() { return ARCHIVE_DATA; }
@@ -1069,7 +878,6 @@ function imagePath(fbid, idx) {
     const empty = $('photosEmpty');
     const pagination = $('photosPagination');
     grid.innerHTML = '';
-
     if (items.length === 0) {
       empty.classList.remove('hidden');
       if (pagination) pagination.innerHTML = '';
@@ -1077,22 +885,17 @@ function imagePath(fbid, idx) {
       return;
     }
     empty.classList.add('hidden');
-
     const maxItems = PAGE_SIZE_PHOTOS * MAX_PHOTOS_PAGES;
     const limitedItems = items.slice(0, maxItems);
-
     const totalPages = Math.max(1, Math.ceil(limitedItems.length / PAGE_SIZE_PHOTOS));
     if (state.photosPage > totalPages) state.photosPage = totalPages;
     if (state.photosPage < 1) state.photosPage = 1;
-
     const start = (state.photosPage - 1) * PAGE_SIZE_PHOTOS;
     const pageItems = limitedItems.slice(start, start + PAGE_SIZE_PHOTOS);
-
     pageItems.forEach((photo, idx) => {
       const tile = document.createElement('div');
       tile.className = 'photo-tile';
       tile.dataset.photoIdx = idx;
-
       const img = document.createElement('img');
       img.src = photo.src;
       img.alt = '';
@@ -1101,11 +904,9 @@ function imagePath(fbid, idx) {
         tile.remove();
         if (!grid.querySelector('.photo-tile')) empty.classList.remove('hidden');
       }, { once: true });
-
       tile.appendChild(img);
       grid.appendChild(tile);
     });
-
     grid._activeList = pageItems;
     renderPhotosPagination(totalPages, pagination);
   }
@@ -1119,13 +920,15 @@ function imagePath(fbid, idx) {
     const inactive = 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700';
     const disabled = 'bg-slate-800 text-slate-600 border border-slate-700 cursor-not-allowed';
     let html = `<button data-photo-page="${page-1}" class="${base} ${page===1?disabled:inactive}" ${page===1?'disabled':''}><i class="fa-solid fa-chevron-right text-xs"></i></button>`;
-    for (let p = 1; p <= totalPages; p++) {
-      html += `<button data-photo-page="${p}" class="${base} ${p===page?active:inactive}">${p}</button>`;
-    }
+    getPagesArray(page, totalPages).forEach(p => {
+      if (p === '…') html += `<span class="${base} ${inactive} select-none">…</span>`;
+      else html += `<button data-photo-page="${p}" class="${base} ${p===page?active:inactive}">${p}</button>`;
+    });
     html += `<button data-photo-page="${page+1}" class="${base} ${page===totalPages?disabled:inactive}" ${page===totalPages?'disabled':''}><i class="fa-solid fa-chevron-left text-xs"></i></button>`;
     pag.innerHTML = html;
   }
 
+  // ✅ PUBLICATION : pas de bouton Facebook
   function renderPublications() {
     const items = getFilteredArchive();
     if (items.length === 0) {
@@ -1173,7 +976,6 @@ function imagePath(fbid, idx) {
           </div>
           <div class="pub-actions">
             ${hasImages ? `<button class="btn-sm" data-open-lightbox="${escapeHtml(item.fbid)}"><i class="fa-solid fa-expand"></i> معاينة</button>` : ''}
-            <a class="btn-sm" href="${item.url_canonique}" target="_blank" rel="noopener"><i class="fa-brands fa-facebook"></i> Facebook</a>
           </div>
         </div>
       </div>
@@ -1205,7 +1007,6 @@ function imagePath(fbid, idx) {
     $('lbCaption').textContent = s.caption;
     $('lbReactions').textContent = s.reactions ?? 0;
     $('lbShares').textContent = s.partages ?? 0;
-    $('lbFbLink').href = s.fbUrl;
     const show = state.lb.list.length > 1;
     $('lbPrev').style.display = show ? 'flex' : 'none';
     $('lbNext').style.display = show ? 'flex' : 'none';
@@ -1223,7 +1024,6 @@ function imagePath(fbid, idx) {
     if (!(img instanceof HTMLImageElement)) return;
     if (img.closest('.thumb-wrap')) return;
     if (img.id === 'lbImg') return;
-
     const tile = img.closest('.photo-tile');
     if (tile) {
       const grid = tile.parentElement;
@@ -1233,27 +1033,16 @@ function imagePath(fbid, idx) {
       }
       return;
     }
-
     if (img.closest('.pub-thumbs')) { img.remove(); return; }
-
     const media = img.closest('.pub-media');
     if (media) {
       const card = media.closest('.pub-card');
       const thumbs = card ? card.querySelectorAll('.pub-thumbs img') : [];
       let swapped = false;
       for (const t of thumbs) {
-        if (t !== img && t.complete && t.naturalWidth > 0) {
-          img.src = t.src;
-          swapped = true;
-          break;
-        }
+        if (t !== img && t.complete && t.naturalWidth > 0) { img.src = t.src; swapped = true; break; }
       }
-      if (!swapped) {
-        media.remove();
-        if (card && !card.querySelector('.pub-media') && !card.querySelector('.pub-thumbs img')) {
-          card.remove();
-        }
-      }
+      if (!swapped) media.remove();
     }
   }, true);
 
@@ -1276,7 +1065,6 @@ function imagePath(fbid, idx) {
     const vh = window.innerHeight;
     const ddW = content.offsetWidth || 230;
     const ddH = content.offsetHeight || 100;
-
     let top, right;
     if (header) {
       const hRect = header.getBoundingClientRect();
@@ -1328,7 +1116,6 @@ function imagePath(fbid, idx) {
     searchTimer = setTimeout(() => {
       state.search = v;
       state.videoPage = 1;
-      state.archivePage = 1;
       state.photosPage = 1;
       renderActiveTab();
     }, 200);
@@ -1379,12 +1166,14 @@ function imagePath(fbid, idx) {
     renderVideos();
   });
 
+  // ✅ Clic carte : lightbox OU player vidéo. Jamais de Facebook.
   $('reelsGrid').addEventListener('click', e => {
     const card = e.target.closest('[data-fbid]');
     if (!card) return;
     const reel = state.videos.find(r => String(r.fbid) === card.dataset.fbid);
-    if (reel) openVideoDetails(reel);
+    if (reel) openPost(reel);
   });
+
   $('themesView').addEventListener('click', e => {
     const c = e.target.closest('[data-theme]');
     if (!c) return;
@@ -1392,6 +1181,7 @@ function imagePath(fbid, idx) {
     state.videoPage = 1;
     renderVideos();
   });
+
   $('treeContent').addEventListener('click', e => {
     const toggle = e.target.closest('.tree-toggle-btn');
     if (toggle) {
@@ -1406,7 +1196,7 @@ function imagePath(fbid, idx) {
     const node = e.target.closest('[data-fbid]');
     if (node) {
       const reel = state.videos.find(r => String(r.fbid) === node.dataset.fbid);
-      if (reel) openVideoDetails(reel);
+      if (reel) openPost(reel);
     }
   });
 
@@ -1438,14 +1228,12 @@ function imagePath(fbid, idx) {
   function syncVideoMenus() {
     const badge = $('yearBadge');
     if (badge) badge.textContent = yearLabel(state.videoYear);
-
     ['menuHome', 'menuGalerie', 'menuSort'].forEach(id => {
       const el = $(id); if (el) el.classList.remove('active');
     });
     if (state.videoView !== 'gallery') $('menuGalerie').classList.add('active');
     else if (state.videoSort !== 'recent') $('menuSort').classList.add('active');
     else $('menuHome').classList.add('active');
-
     $('galleryDropdown').querySelectorAll('[data-view]').forEach(b => {
       b.classList.toggle('active', b.dataset.view === state.videoView);
     });
@@ -1478,18 +1266,44 @@ function imagePath(fbid, idx) {
     state.videoYear = sorted.includes('2026') ? '2026' : (sorted[0] || 'all');
   }
 
-  function handleMqChange() {
-    syncVideoMenus();
-    buildYearDropdown();
-  }
+  function handleMqChange() { syncVideoMenus(); buildYearDropdown(); }
   if (mobileMq.addEventListener) mobileMq.addEventListener('change', handleMqChange);
   else if (mobileMq.addListener) mobileMq.addListener(handleMqChange);
 
+  // ============ ROUTEUR DE CLIC ============
   let currentVideo = null;
   let posterFadeTimer = null;
   let iframeReady = false;
 
-  function openVideoDetails(reel) {
+  function showNoContentToast() {
+    const t = $('noContentToast');
+    if (!t) return;
+    t.classList.remove('hidden');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.add('hidden'), 2500);
+  }
+
+  function openPost(reel) {
+    if (reel.video_url) { openVideoPlayer(reel); return; }
+    if (reel.images && reel.images.length > 0) {
+      const list = reel.images.map((src, i) => ({
+        src,
+        date: formatDateArabic(reel.date, reel.date_iso),
+        caption: reel.titre || reel.text || '',
+        reactions: reel.reactions,
+        partages: reel.partages,
+        fbUrl: reel.url_canonique,
+        fbid: reel.fbid,
+        index: i,
+        total: reel.images.length
+      }));
+      openLightbox(list, 0);
+      return;
+    }
+    showNoContentToast();
+  }
+
+  function openVideoPlayer(reel) {
     currentVideo = reel;
     iframeReady = false;
     const content = $('detailsContent');
@@ -1497,20 +1311,20 @@ function imagePath(fbid, idx) {
     content.scrollTop = 0;
     $('detailsDisplayTitle').textContent = reel.titre || 'العنوان غير متوفر';
     $('detailsDisplayDate').textContent = formatDateArabic(reel.date, reel.date_iso);
-    $('playerViewsVal').textContent = formatNumber(reel.vues ?? reel.nbre_vue ?? 0);
+    $('playerViewsVal').textContent = formatNumber(reel.vues ?? 0);
     $('playerReactionsVal').textContent = reel.reactions ?? 0;
     const img = $('detailsPosterImg');
     img.parentElement.classList.remove('thumb-error');
-    img.src = reel.miniature || DEFAULT_IMG;
+    img.src = reel.images[0] || DEFAULT_IMG;
     $('detailsPoster').classList.remove('opacity-0', 'pointer-events-none');
     $('detailsPoster').classList.add('opacity-100');
     $('detailsFrame').classList.remove('opacity-100');
     $('detailsFrame').classList.add('opacity-0');
     $('videoLoader').classList.remove('hidden');
+    $('fullscreenBtn').classList.remove('hidden');
     $('detailsModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
-    const shareUrl = reel.url_canonique || reel.url;
-    const src = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(shareUrl)}&show_text=false&width=500&height=889&autoplay=true&mute=false&allowfullscreen=true`;
+    const src = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(reel.video_url)}&show_text=false&width=500&height=889&autoplay=true&mute=false&allowfullscreen=true`;
     $('detailsFrame').src = src;
     clearTimeout(posterFadeTimer);
     posterFadeTimer = setTimeout(revealPlayer, 15000);
@@ -1533,13 +1347,14 @@ function imagePath(fbid, idx) {
     $('detailsContent').innerHTML = '';
     $('detailsPosterImg').removeAttribute('src');
     $('videoLoader').classList.add('hidden');
+    $('fullscreenBtn').classList.add('hidden');
     document.body.style.overflow = '';
     currentVideo = null;
   }
 
+  // ✅ renderVideoDetails : plus de bouton Facebook
   function renderVideoDetails(reel) {
     const themeAr = reel.theme_ar || null;
-    const themeFr = reel.theme_fr || null;
     const description = reel.description || null;
     const statHTML = (label, value, icon, color) => `
       <div class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3">
@@ -1547,29 +1362,20 @@ function imagePath(fbid, idx) {
         <div class="text-base font-bold ${color} truncate">${escapeHtml(String(value))}</div>
       </div>`;
     return `
-      ${(themeAr || themeFr) ? `<div class="flex flex-wrap gap-2">
-        ${themeAr ? `<span class="theme-chip" dir="rtl"><i class="fa-solid fa-tag text-[9px]"></i> ${escapeHtml(themeAr)}</span>` : ''}
-        ${themeFr && themeFr !== themeAr ? `<span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-blue-500/15 text-blue-300 border border-blue-500/30" dir="ltr"><i class="fa-solid fa-tag text-[10px]"></i>${escapeHtml(themeFr)}</span>` : ''}
-      </div>` : ''}
+      ${themeAr ? `<div class="flex flex-wrap gap-2"><span class="theme-chip" dir="rtl"><i class="fa-solid fa-tag text-[9px]"></i> ${escapeHtml(themeAr)}</span></div>` : ''}
       <h2 class="text-base sm:text-lg font-bold text-white leading-relaxed" dir="auto">${reel.titre ? escapeHtml(reel.titre) : 'مقطع فيديو'}</h2>
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-        ${statHTML('المشاهدات', formatNumber(reel.vues ?? reel.nbre_vue ?? 0), 'fa-eye', 'text-amber-400')}
+        ${statHTML('المشاهدات', formatNumber(reel.vues ?? 0), 'fa-eye', 'text-amber-400')}
         ${statHTML('التفاعلات', reel.reactions ?? '—', 'fa-heart', 'text-rose-400')}
         ${statHTML('التاريخ', formatDateArabic(reel.date, reel.date_iso) || '—', 'fa-calendar', 'text-slate-400')}
       </div>
-      ${description ? `<div><div class="text-xs font-semibold text-slate-400 uppercase mb-2">الوصف</div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-slate-900/40 p-3 rounded-lg border border-slate-700/50" dir="auto">${escapeHtml(description)}</p></div>` : ''}
-      <div class="flex flex-col sm:flex-row gap-2 pt-2">
-        ${reel.url ? `<a href="${escapeHtml(reel.url)}" target="_blank" rel="noopener" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl" dir="ltr"><i class="fa-brands fa-facebook"></i> Voir sur Facebook</a>` : ''}
-      </div>`;
+      ${description ? `<div><div class="text-xs font-semibold text-slate-400 uppercase mb-2">الوصف</div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-slate-900/40 p-3 rounded-lg border border-slate-700/50" dir="auto">${escapeHtml(description)}</p></div>` : ''}`;
   }
 
   $('detailsModal').addEventListener('click', e => {
     if (e.target.closest('[data-close-details]')) closeVideoDetails();
   });
-  $('detailsPlayBtn').addEventListener('click', () => {
-    if (!currentVideo) return;
-    if (iframeReady) revealPlayer();
-  });
+
   $('detailsFrame').addEventListener('load', () => {
     if ($('detailsModal').classList.contains('hidden')) return;
     if (!$('detailsFrame').src || $('detailsFrame').src === 'about:blank') return;
@@ -1578,6 +1384,11 @@ function imagePath(fbid, idx) {
     clearTimeout(posterFadeTimer);
     posterFadeTimer = setTimeout(revealPlayer, 500);
   });
+
+  $('detailsPlayBtn').addEventListener('click', () => {
+    if (iframeReady) revealPlayer();
+  });
+
   $('fullscreenBtn').addEventListener('click', async () => {
     const el = $('playerZone');
     try {
@@ -1681,14 +1492,9 @@ function imagePath(fbid, idx) {
     status.textContent = 'جارٍ الإرسال...';
     try {
       await fetch(EMAIL_REMARK_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
+        method: 'POST', mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          text: text,
-          page: location.href,
-          timestamp: new Date().toISOString()
-        })
+        body: JSON.stringify({ text, page: location.href, timestamp: new Date().toISOString() })
       });
       status.className = 'rounded-lg px-3 py-2 text-sm bg-emerald-500/15 text-emerald-300 border border-emerald-500/30';
       status.textContent = 'تم إرسال ملاحظتك بنجاح. شكراً لك!';
@@ -1696,55 +1502,22 @@ function imagePath(fbid, idx) {
     } catch (err) {
       status.className = 'rounded-lg px-3 py-2 text-sm bg-rose-500/15 text-rose-300 border border-rose-500/30';
       status.textContent = 'تعذّر إرسال الملاحظة. حاول مرة أخرى.';
-    } finally {
-      btn.disabled = false;
-    }
+    } finally { btn.disabled = false; }
   });
 
   function exportToExcel() {
     if (!state.videos.length) return;
     try {
       const rows = state.videos.map(v => ({
-        'المعرف': v.fbid,
-        'التاريخ': v.date,
-        'السنة': v.annee,
-        'العنوان': v.titre || '',
-        'المحور (FR)': v.theme_fr || '',
-        'المحور (AR)': v.theme_ar || '',
-        'المشاهدات': v.vues ?? v.nbre_vue ?? 0,
-        'التفاعلات': v.reactions ?? 0,
-        'الرابط': v.url_canonique || v.url || ''
+        'المعرف': v.fbid, 'التاريخ': v.date, 'السنة': v.annee,
+        'العنوان': v.titre || '', 'المحور (FR)': v.theme_fr || '', 'المحور (AR)': v.theme_ar || '',
+        'التفاعلات': v.reactions ?? 0
       }));
       const ws = XLSX.utils.json_to_sheet(rows);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'الفيديوهات');
-      XLSX.writeFile(wb, `archive_videos_${new Date().toISOString().slice(0,10)}.xlsx`);
+      XLSX.writeFile(wb, `archive_${new Date().toISOString().slice(0,10)}.xlsx`);
     } catch (err) { console.error('Excel export failed:', err); }
-  }
-
-  document.querySelectorAll('[data-exit-cancel]').forEach(b => {
-    b.addEventListener('click', () => $('exitConfirmModal').classList.add('hidden'));
-  });
-  document.querySelectorAll('[data-exit-confirm]').forEach(b => {
-    b.addEventListener('click', () => {
-      $('exitConfirmModal').classList.add('hidden');
-      try { window.close(); } catch (_) {}
-      try { window.location.replace('about:blank'); } catch (_) {}
-    });
-  });
-
-  function showLoading(msg) {
-    const overlay = $('progressOverlay');
-    if (!overlay) return;
-    overlay.classList.remove('hidden');
-    const t = $('progressTitle');
-    if (t) t.textContent = msg;
-    const bar = $('progressBar');
-    if (bar) bar.style.width = '0%';
-    const pct = $('progressPercent');
-    if (pct) pct.textContent = '0%';
-    const cnt = $('progressCount');
-    if (cnt) cnt.textContent = '';
   }
 
   function showFatalError(msg) {
@@ -1767,9 +1540,7 @@ function imagePath(fbid, idx) {
   }
 
   function validateData(data) {
-    if (!Array.isArray(data)) {
-      throw new Error('Format JSON invalide : un tableau est attendu.');
-    }
+    if (!Array.isArray(data)) throw new Error('Format JSON invalide : un tableau est attendu.');
     const required = ['fbid', 'date_iso', 'imgCount', 'text'];
     for (let i = 0; i < data.length; i++) {
       for (const k of required) {
@@ -1780,27 +1551,21 @@ function imagePath(fbid, idx) {
   }
 
   function init() {
-    showLoading('جارٍ تحميل البيانات…');
-
-    fetch('https://marocnetmail.github.io/125/json/data_pub.json')
+    fetch(DATA_URL)
       .then(response => {
-        if (!response.ok) {
-          throw new Error(`Erreur de chargement des données JSON (HTTP ${response.status})`);
-        }
+        if (!response.ok) throw new Error(`Erreur JSON (HTTP ${response.status}) — ${DATA_URL}`);
         return response.json();
       })
       .then(data => {
         validateData(data);
         ARCHIVE_COMPACT = data;
         buildArchiveRaw();
-
         return initArchive().then(() => {
-          state.videos = ARCHIVE_RAW.map(r => ({
+          state.videos = ARCHIVE_DATA.map(r => ({
             ...r,
             miniature: r.images[0] || null,
             url: r.url_canonique
           }));
-
           initVideoYear();
           buildYearDropdown();
           syncVideoMenus();
@@ -1816,9 +1581,7 @@ function imagePath(fbid, idx) {
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  } else { init(); }
 
 })();
 </script>
