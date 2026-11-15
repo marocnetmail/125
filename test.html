@@ -5,11 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
 <title>الأرشيف المؤسساتي | فيديوهات · صور · منشورات</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config = { darkMode: 'class' };</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
 <style>
   html{-webkit-text-size-adjust:100%}
   body{font-family:'Cairo',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
@@ -79,6 +81,7 @@
   .theme-folder-row{background-color:#FFF9DB;border:1px solid #FCD34D;border-radius:10px;color:#78350F;transition:all .2s}
   .theme-folder-row:hover{background-color:#FEF3C7;border-color:#F59E0B;box-shadow:0 2px 8px rgba(245,158,11,.15)}
   .theme-folder-row .folder-icon{color:#B45309}
+  .theme-folder-row .chevron-icon{color:#92400E}
   .theme-folder-row .count-badge{background-color:#FCD34D;color:#78350F;border:1px solid #F59E0B}
   .tree-list{list-style:none;padding:0;margin:0}
   .tree-list .tree-list{padding-right:1.5rem;border-right:2px dashed #475569;margin-right:.75rem}
@@ -91,6 +94,11 @@
   .photo-tile{position:relative;aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#1e293b,#0f172a);cursor:pointer;border:1px solid rgba(255,255,255,.06);transition:transform .2s}
   .photo-tile:hover{transform:scale(1.02);border-color:rgba(197,155,69,.5)}
   .photo-tile img{width:100%;height:100%;object-fit:cover;display:block}
+  .photo-tile .photo-hover{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 50%);opacity:0;transition:opacity .2s;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;color:#fff;font-size:.72rem;line-height:1.35}
+  .photo-tile:hover .photo-hover{opacity:1}
+  .photo-hover-date{font-weight:700;color:#fcd34d;font-size:.68rem;margin-bottom:2px}
+  .photo-hover-text{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .photo-badge{position:absolute;top:6px;right:6px;background:rgba(197,155,69,.92);color:#092c4c;font-size:.65rem;font-weight:800;padding:2px 6px;border-radius:5px}
   .pub-grid{display:grid;grid-template-columns:1fr;gap:1rem}
   .pub-card{background:#1e293b;border:1px solid #334155;border-radius:14px;overflow:hidden;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column}
   .pub-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.4);border-color:rgba(197,155,69,.4)}
@@ -132,7 +140,7 @@
   .lb-date{font-weight:700;color:#c59b45;font-size:.85rem}
   .lb-counter{font-size:.8rem;color:#94a3b8;font-weight:700;font-family:ui-monospace,monospace}
   .lb-caption{font-size:.92rem;color:#cbd5e1;line-height:1.75;white-space:pre-line;margin-bottom:.75rem}
-  .lb-footer{border-top:1px solid #334155;padding-top:.75rem;display:flex;justify-content:flex-end;align-items:center;gap:.5rem;flex-wrap:wrap}
+  .lb-footer{border-top:1px solid #334155;padding-top:.75rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
   #detailsContent::-webkit-scrollbar{width:6px}
   #detailsContent::-webkit-scrollbar-thumb{background:rgba(100,116,139,.4);border-radius:3px}
   #playerZone{position:relative;background:#0f172a}
@@ -141,6 +149,10 @@
   #progressOverlay{animation:fadeIn .3s}
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
   #exitConfirmModal{animation:fadeIn .2s}
+  .url-details summary{list-style:none}
+  .url-details summary::-webkit-details-marker{display:none}
+  .url-details[open] .url-chevron{transform:rotate(180deg)}
+  .url-chevron{transition:transform .2s}
   @media (max-width: 639px){
     .header-row{flex-wrap: wrap;gap: .35rem;padding: .45rem .5rem;overflow-x: visible;}
     .brand{ display: none; }
@@ -206,7 +218,7 @@
       <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/20 mb-4">
         <i class="fa-solid fa-images text-3xl text-blue-400 animate-pulse"></i>
       </div>
-      <h2 id="progressTitle" class="text-lg font-bold text-white mb-1">جارٍ التحميل…</h2>
+      <h2 id="progressTitle" class="text-lg font-bold text-white mb-1">جارٍ التحقق من الصور…</h2>
       <p id="progressCount" class="text-xs text-slate-400">جارٍ التحضير…</p>
     </div>
     <div class="h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
@@ -346,7 +358,6 @@
   </div>
 </footer>
 
-<!-- Modal vidéo (uniquement si video_url existe) -->
 <div id="detailsModal" class="fixed inset-0 z-50 hidden">
   <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" data-close-details></div>
   <div class="relative z-10 w-full h-full flex items-center justify-center p-2 sm:p-4">
@@ -381,16 +392,16 @@
           </div>
         </div>
         <iframe id="detailsFrame" class="border-0 opacity-0 transition-opacity duration-500" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen" scrolling="no" frameborder="0"></iframe>
-        <button id="fullscreenBtn" type="button" class="hidden absolute top-3 left-3 z-40 w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-black/60 hover:bg-black/80 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center shadow-lg" aria-label="ملء الشاشة">
+        <button id="fullscreenBtn" type="button" class="absolute top-3 left-3 z-40 w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-black/60 hover:bg-black/80 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center shadow-lg" aria-label="ملء الشاشة">
           <i class="fa-solid fa-expand text-sm"></i>
         </button>
+        <div id="videoFallbackNote" class="hidden absolute bottom-2 left-2 right-2 text-center text-[11px] text-slate-300 bg-slate-900/80 backdrop-blur-sm rounded-lg px-2 py-1.5 z-30"></div>
       </div>
       <div id="detailsContent" class="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6 space-y-5 bg-slate-800 safe-bottom"></div>
     </div>
   </div>
 </div>
 
-<!-- Lightbox (galerie photos) -->
 <div class="lb-backdrop" id="lightbox">
   <button class="lb-close" id="lbClose" aria-label="إغلاق"><i class="fa-solid fa-xmark"></i></button>
   <div class="lb-content">
@@ -410,6 +421,9 @@
           <span>👍 <strong id="lbReactions">0</strong></span>
           <span>🔁 <strong id="lbShares">0</strong></span>
         </div>
+        <a id="lbFbLink" href="#" target="_blank" rel="noopener" class="btn-sm">
+          <i class="fa-brands fa-facebook"></i> Facebook
+        </a>
       </div>
     </div>
   </div>
@@ -446,17 +460,38 @@
   </div>
 </div>
 
-<div id="noContentToast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[80] hidden bg-slate-800 border border-amber-500/40 text-amber-200 px-5 py-3 rounded-xl shadow-2xl text-sm font-semibold flex items-center gap-2">
-  <i class="fa-solid fa-circle-info"></i><span>لا يوجد محتوى مرئي لهذا المنشور</span>
+<div id="exitConfirmModal" class="fixed inset-0 z-[80] hidden">
+  <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" data-exit-cancel></div>
+  <div class="relative z-10 w-full h-full flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
+      <div class="p-5 sm:p-6 text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-500/15 mb-4">
+          <i class="fa-solid fa-right-from-bracket text-2xl text-amber-400"></i>
+        </div>
+        <h2 class="text-lg font-bold text-white mb-2">مغادرة المعرض؟</h2>
+        <p class="text-sm text-slate-300">هل تريد فعلاً مغادرة الأرشيف المؤسساتي؟</p>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-2 p-4 bg-slate-900/40 border-t border-slate-700">
+        <button type="button" data-exit-cancel class="flex-1 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2">
+          <i class="fa-solid fa-arrow-right"></i><span>البقاء</span>
+        </button>
+        <button type="button" data-exit-confirm class="flex-1 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2">
+          <i class="fa-solid fa-right-from-bracket"></i><span>مغادرة</span>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
 (function () {
   'use strict';
 
-  // ============ CONFIG ============
-  const DATA_URL = 'https://marocnetmail.github.io/125/json/data_pub.json';
-  const IMG_BASE = 'https://marocnetmail.github.io/125/images/';
+  // ============ CONFIGURATION ============
+  // ✅ Nouvelle source de données : reelsData.json
+  const DATA_URL = 'https://marocnetmail.github.io/125/json/reelsData.json';
+  const BASE_URL = 'https://marocnetmail.github.io/125/';
+
   const PAGE_SIZE_VIDEOS = 20;
   const PAGE_SIZE_PHOTOS = 30;
   const MAX_PHOTOS_PAGES = 40;
@@ -476,20 +511,6 @@
 
   const $ = (id) => document.getElementById(id);
 
-  // Fallback cascade pour thumbnails
-  window.__thumbFallback = function(img) {
-    const wrap = img.closest('.thumb-wrap');
-    if (!wrap) return;
-    const urls = JSON.parse(wrap.dataset.fallbackUrls || '[]');
-    const idx = parseInt(wrap.dataset.fallbackIdx || '0', 10) + 1;
-    if (idx < urls.length) {
-      wrap.dataset.fallbackIdx = String(idx);
-      img.src = urls[idx];
-    } else {
-      wrap.classList.add('thumb-error');
-    }
-  };
-
   function toArabicNumerals(input) {
     const map = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
     return String(input).replace(/[0-9]/g, d => map[+d]);
@@ -502,49 +523,14 @@
     return value === 'all' ? 'كل السنوات' : toArabicNumerals(value);
   }
 
-  let ARCHIVE_COMPACT = [];
-  let ARCHIVE_RAW = [];
   let ARCHIVE_DATA = [];
   let ALL_PHOTOS = [];
 
-  function hashSeed(str) {
-    let h = 0;
-    for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) | 0;
-    return Math.abs(h);
-  }
-
-  function generateStats(fbid, text) {
-    const h = hashSeed(String(fbid));
-    const t = text || '';
-    if (/عيد|الملك|جلالة|المنصوري|أمير المؤمنين|الملك محمد/.test(t))
-      return { reactions: 2000 + (h % 3500), partages: 25 + (h % 90) };
-    if (/قانون|مجلس|مصادقة|النواب|المستشارين|قراءة/.test(t))
-      return { reactions: 150 + (h % 900), partages: 4 + (h % 28) };
-    if (/جهة|إقليم|تنمية|مشاريع|تهيئة/.test(t))
-      return { reactions: 60 + (h % 450), partages: 2 + (h % 15) };
-    return { reactions: 25 + (h % 350), partages: 1 + (h % 10) };
-  }
-
-  function imagePath(fbid, idx) {
-    return `${IMG_BASE}pub_${fbid}_${String(idx).padStart(2,'0')}.webp`;
-  }
-
-  function buildArchiveRaw() {
-    ARCHIVE_RAW = ARCHIVE_COMPACT.map(({ fbid, date_iso, imgCount, text, video_url }) => {
-      const [y, m, d] = date_iso.split('-');
-      const stats = generateStats(fbid, text);
-      const images = Array.from({ length: imgCount }, (_, i) => imagePath(fbid, i));
-      return {
-        fbid,
-        type: video_url ? 'VIDEO' : (imgCount > 0 ? 'PHOTO' : 'POST'),
-        video_url: video_url || null,
-        url_canonique: `https://web.facebook.com/MATUHPV/posts/${fbid}`,
-        titre: text, description: text, text,
-        images,
-        date: `${d}/${m}/${y}`, date_iso, annee: parseInt(y),
-        reactions: stats.reactions, partages: stats.partages
-      };
-    });
+  // ✅ Résolution des chemins d'images relatifs
+  function resolveImageUrl(path) {
+    if (!path) return DEFAULT_IMG;
+    if (/^https?:\/\//i.test(path)) return path;
+    return BASE_URL + path.replace(/^\/+/, '');
   }
 
   function escapeHtml(s) {
@@ -555,8 +541,12 @@
     return String(s || '').toLowerCase().normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/[\u064B-\u0652]/g, '')
-      .replace(/[أإآٱ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي')
-      .replace(/ؤ/g, 'و').replace(/ئ/g, 'ي').replace(/ـ/g, '')
+      .replace(/[أإآٱ]/g, 'ا')
+      .replace(/ة/g, 'ه')
+      .replace(/ى/g, 'ي')
+      .replace(/ؤ/g, 'و')
+      .replace(/ئ/g, 'ي')
+      .replace(/ـ/g, '')
       .replace(/\s+/g, ' ').trim();
   }
 
@@ -589,12 +579,16 @@
     videoYear: '2026',
     videoPage: 1,
     activeTheme: null,
+    archivePage: 1,
     photosPage: 1,
-    archiveInitialized: false,
     lb: { list: [], index: 0 }
   };
 
-  const TAB_SECTIONS = { videos: 'videosSection', photos: 'photosSection', publications: 'publicationsSection' };
+  const TAB_SECTIONS = {
+    videos: 'videosSection',
+    photos: 'photosSection',
+    publications: 'publicationsSection'
+  };
 
   function switchTab(tab) {
     if (!TAB_SECTIONS[tab]) tab = 'videos';
@@ -628,12 +622,15 @@
   }
 
   function getVideoScore(r) {
-    return Number(r.reactions ?? 0) + Number(r.commentaires ?? r.comments ?? 0);
+    const reactions = r.reactions ?? r.reactions_total ?? 0;
+    const comments = r.commentaires ?? 0;
+    return Number(reactions) + Number(comments);
   }
 
   function getFilteredVideos() {
     const q = state.search.trim();
     let result = state.videos;
+
     if (state.videoYear !== 'all') {
       result = result.filter(r => getVideoYear(r) === String(state.videoYear));
     }
@@ -659,7 +656,9 @@
     $('pagination').classList.add('hidden');
     $('backNavigation').classList.add('hidden');
     $('emptyState').classList.add('hidden');
+
     if (items.length === 0) { $('emptyState').classList.remove('hidden'); return; }
+
     if (state.videoView === 'themes') renderThemes(items);
     else if (state.videoView === 'tree') renderTree(items);
     else renderVideoGallery(items);
@@ -671,39 +670,59 @@
     const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE_VIDEOS));
     if (state.videoPage > totalPages) state.videoPage = totalPages;
     const start = (state.videoPage - 1) * PAGE_SIZE_VIDEOS;
-    $('reelsGrid').innerHTML = items.slice(start, start + PAGE_SIZE_VIDEOS).map(videoCardHTML).join('');
+    const pageItems = items.slice(start, start + PAGE_SIZE_VIDEOS);
+    $('reelsGrid').innerHTML = pageItems.map(videoCardHTML).join('');
     renderPagination(totalPages);
   }
 
-  // ✅ CARTE : PAS d'icône Facebook. Affiche type (صور/فيديو) + compteur album.
   function videoCardHTML(r) {
     const rawTitle = r.titre || 'العنوان غير متوفر';
     const truncTitle = rawTitle.length > 40 ? rawTitle.substring(0, 40) + '...' : rawTitle;
     const dateFormatted = formatDateArabic(r.date, r.date_iso);
+    const views = formatNumber(r.vues ?? 0);
     const reactions = r.reactions != null ? String(r.reactions) : '0';
     const themeAr = r.theme_ar || r.theme_fr || 'غير مصنف';
-    const isVideo = !!r.video_url;
-    const imgCount = r.images ? r.images.length : 0;
+    const thumbUrl = r.miniature ? resolveImageUrl(r.miniature) : (r.images && r.images[0] ? resolveImageUrl(r.images[0].chemin) : DEFAULT_IMG);
     return `
     <article class="reel-card group relative aspect-[9/16] w-full bg-slate-900 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 active:scale-[0.98] border-2 sm:border-[3px] border-white ring-1 ring-black/25" data-fbid="${escapeHtml(r.fbid)}">
-      ${thumbMarkup(r.images, 'lazy', 'absolute inset-0')}
+      ${thumbMarkup(thumbUrl, 'lazy', 'absolute inset-0')}
       <div class="thumb-gradient absolute inset-x-0 bottom-0 h-[75%] pointer-events-none z-[1]"></div>
-      <div class="absolute top-2 left-2 z-[3] flex flex-col gap-1 items-start">
+      <div class="absolute top-2 left-2 z-[3]">
         <span class="theme-chip" dir="rtl">${escapeHtml(themeAr)}</span>
-        ${imgCount > 1 ? `<span class="theme-chip" style="background:#DBEAFE;border-color:#60A5FA;color:#1E3A8A;" dir="ltr"><i class="fa-solid fa-images"></i> ${imgCount}</span>` : ''}
       </div>
       <div class="absolute bottom-0 inset-x-0 p-2 sm:p-3 flex flex-col z-[2]">
         <div class="flex items-end justify-between gap-2 w-full mb-1.5">
           <div class="flex flex-col items-start gap-1.5 flex-shrink-0">
             <div class="flex items-center gap-1 text-[9px] sm:text-[10px] text-white/90 font-bold drop-shadow-md">
-              <span class="flex items-center gap-0.5 bg-black/50 px-1.5 py-0.5 rounded backdrop-blur-sm border border-white/10">
-                <i class="fa-solid ${isVideo ? 'fa-circle-play text-rose-400' : 'fa-camera text-sky-400'}"></i> ${isVideo ? 'فيديو' : 'صور'}
-              </span>
+              <span class="flex items-center gap-0.5 bg-black/50 px-1.5 py-0.5 rounded backdrop-blur-sm border border-white/10"><i class="fa-solid fa-eye text-amber-400"></i> ${views}</span>
               <span class="flex items-center gap-0.5 bg-black/50 px-1.5 py-0.5 rounded backdrop-blur-sm border border-white/10"><i class="fa-solid fa-heart text-rose-400"></i> ${reactions}</span>
             </div>
             <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white flex items-center justify-center bg-black/30 backdrop-blur-sm group-hover:bg-white/20 transition-all">
-              <i class="fa-solid ${isVideo ? 'fa-play' : 'fa-expand'} text-white text-[10px] sm:text-xs ml-0.5 drop-shadow-md"></i>
+              <i class="fa-solid fa-play text-white text-[10px] sm:text-xs ml-0.5 drop-shadow-md"></i>
             </div>
+          </div>
+        </div>
+        <div class="w-full text-center mb-1">
+          <span class="date-display text-white/95 text-[9px] sm:text-[10px] font-semibold drop-shadow-md">${dateFormatted}</span>
+        </div>
+        <h3 class="video-title text-white text-xs sm:text-sm font-bold drop-shadow-md leading-snug break-words" dir="auto">${escapeHtml(truncTitle)}</h3>
+      </div>
+    </article>`;
+  }
+
+  function themeVideoCardHTML(r) {
+    const rawTitle = r.titre || '';
+    const truncTitle = rawTitle.length > 40 ? rawTitle.substring(0, 40) + '...' : rawTitle;
+    const dateFormatted = formatDateArabic(r.date, r.date_iso);
+    const thumbUrl = r.miniature ? resolveImageUrl(r.miniature) : (r.images && r.images[0] ? resolveImageUrl(r.images[0].chemin) : DEFAULT_IMG);
+    return `
+    <article class="reel-card group relative aspect-[9/16] w-full bg-slate-900 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 active:scale-[0.98] border-2 sm:border-[3px] border-white ring-1 ring-black/25" data-fbid="${escapeHtml(r.fbid)}">
+      ${thumbMarkup(thumbUrl, 'lazy', 'absolute inset-0')}
+      <div class="thumb-gradient absolute inset-x-0 bottom-0 h-[75%] pointer-events-none z-[1]"></div>
+      <div class="absolute bottom-0 inset-x-0 p-2 sm:p-3 flex flex-col z-[2]">
+        <div class="flex items-center justify-end w-full mb-1.5">
+          <div class="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white bg-black/30 backdrop-blur-sm group-hover:bg-white/20 transition-all flex-shrink-0">
+            <i class="fa-solid fa-play text-white text-[10px] sm:text-xs ml-0.5 drop-shadow-md"></i>
           </div>
         </div>
         <div class="w-full text-center mb-1">
@@ -729,7 +748,7 @@
       const totalPages = Math.max(1, Math.ceil(themeItems.length / PAGE_SIZE_VIDEOS));
       if (state.videoPage > totalPages) state.videoPage = totalPages;
       const start = (state.videoPage - 1) * PAGE_SIZE_VIDEOS;
-      $('reelsGrid').innerHTML = themeItems.slice(start, start + PAGE_SIZE_VIDEOS).map(videoCardHTML).join('');
+      $('reelsGrid').innerHTML = themeItems.slice(start, start + PAGE_SIZE_VIDEOS).map(themeVideoCardHTML).join('');
       renderPagination(totalPages);
     } else {
       $('themesView').classList.remove('hidden');
@@ -748,7 +767,7 @@
             <div class="theme-card-icon w-12 h-12 rounded-full flex items-center justify-center mb-1"><i class="fa-solid fa-folder-open text-xl"></i></div>
             <h3 class="font-bold text-sm sm:text-base leading-tight">${escapeHtml(meta.ar)}</h3>
             <p class="text-[10px] leading-tight opacity-75" dir="ltr">${escapeHtml(fr)}</p>
-            <span class="theme-card-count text-xs font-semibold px-2.5 py-0.5 rounded-full mt-1">${meta.count} عنصر</span>
+            <span class="theme-card-count text-xs font-semibold px-2.5 py-0.5 rounded-full mt-1">${meta.count} فيديو</span>
           </div>`;
       });
       html += '</div>';
@@ -756,7 +775,6 @@
     }
   }
 
-  // ✅ ARBRE : pas de bouton FB
   function renderTree(items) {
     $('treeView').classList.remove('hidden');
     const map = new Map();
@@ -781,17 +799,23 @@
           <ul class="tree-list tree-children hidden mt-1">
             ${meta.videos.map(v => {
               const dateFmt = formatDateArabic(v.date, v.date_iso);
+              const thumbUrl = v.miniature ? resolveImageUrl(v.miniature) : (v.images && v.images[0] ? resolveImageUrl(v.images[0].chemin) : DEFAULT_IMG);
               return `
               <li class="tree-item">
                 <div class="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-700/60 cursor-pointer transition-colors border border-transparent hover:border-slate-600" data-fbid="${escapeHtml(v.fbid)}" dir="rtl">
                   <div class="flex-shrink-0 w-11 h-[60px] rounded-md overflow-hidden border border-slate-600">
-                    ${thumbMarkup(v.images, 'lazy')}
+                    ${thumbMarkup(thumbUrl, 'lazy')}
                   </div>
                   <div class="flex-1 min-w-0 text-right">
                     <div class="text-xs sm:text-sm text-slate-200 font-medium leading-snug tree-video-title" dir="auto">${escapeHtml(v.titre || 'بدون عنوان')}</div>
                     <div class="flex flex-wrap items-center gap-1.5 mt-1.5 text-[10px]">
                       <span class="inline-flex items-center gap-1 bg-slate-900/70 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700/60">
-                        <i class="fa-regular fa-calendar text-slate-500"></i><span class="date-display">${dateFmt}</span>
+                        <i class="fa-regular fa-calendar text-slate-500"></i>
+                        <span class="date-display">${dateFmt}</span>
+                      </span>
+                      <span class="inline-flex items-center gap-1 bg-slate-900/70 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700/60 font-mono" dir="ltr">
+                        <i class="fa-solid fa-hashtag text-slate-500 text-[9px]"></i>
+                        <span>${escapeHtml(String(v.fbid || ''))}</span>
                       </span>
                     </div>
                   </div>
@@ -829,35 +853,14 @@
     pag.innerHTML = html;
   }
 
-  function thumbMarkup(urls, loadingAttr, extraClass = '') {
-    const list = Array.isArray(urls) ? urls.filter(Boolean) : (urls ? [urls] : []);
-    const first = list[0] || DEFAULT_IMG;
-    const safeListJson = JSON.stringify(list).replace(/'/g, '&#39;');
+  function thumbMarkup(url, loadingAttr, extraClass = '') {
     return `
-      <div class="thumb-wrap ${extraClass}" data-fallback-urls='${safeListJson}' data-fallback-idx="0">
-        <img src="${escapeHtml(first)}" alt="" loading="${loadingAttr}" decoding="async" referrerpolicy="no-referrer"
+      <div class="thumb-wrap ${extraClass}">
+        <img src="${escapeHtml(url || DEFAULT_IMG)}" alt="" loading="${loadingAttr}" decoding="async" referrerpolicy="no-referrer"
              onload="this.parentElement.classList.remove('thumb-error')"
-             onerror="window.__thumbFallback(this)">
+             onerror="this.parentElement.classList.add('thumb-error')">
         <div class="thumb-fallback"><i class="fa-regular fa-image"></i><span>الصورة غير متوفرة</span></div>
       </div>`;
-  }
-
-  function initArchive() {
-    if (state.archiveInitialized) return;
-    state.archiveInitialized = true;
-    ARCHIVE_DATA = ARCHIVE_RAW.slice();
-    ALL_PHOTOS = [];
-    ARCHIVE_DATA.forEach(item => {
-      item.images.forEach((src, i) => {
-        ALL_PHOTOS.push({
-          src, date: item.date, caption: item.text,
-          reactions: item.reactions, partages: item.partages,
-          fbUrl: item.url_canonique, fbid: item.fbid,
-          index: i, total: item.images.length
-        });
-      });
-    });
-    console.log(`📊 Chargé : ${ARCHIVE_DATA.length} publications, ${ALL_PHOTOS.length} photos`);
   }
 
   function getFilteredArchive() { return ARCHIVE_DATA; }
@@ -878,6 +881,7 @@
     const empty = $('photosEmpty');
     const pagination = $('photosPagination');
     grid.innerHTML = '';
+
     if (items.length === 0) {
       empty.classList.remove('hidden');
       if (pagination) pagination.innerHTML = '';
@@ -885,13 +889,16 @@
       return;
     }
     empty.classList.add('hidden');
+
     const maxItems = PAGE_SIZE_PHOTOS * MAX_PHOTOS_PAGES;
     const limitedItems = items.slice(0, maxItems);
     const totalPages = Math.max(1, Math.ceil(limitedItems.length / PAGE_SIZE_PHOTOS));
     if (state.photosPage > totalPages) state.photosPage = totalPages;
     if (state.photosPage < 1) state.photosPage = 1;
+
     const start = (state.photosPage - 1) * PAGE_SIZE_PHOTOS;
     const pageItems = limitedItems.slice(start, start + PAGE_SIZE_PHOTOS);
+
     pageItems.forEach((photo, idx) => {
       const tile = document.createElement('div');
       tile.className = 'photo-tile';
@@ -907,6 +914,7 @@
       tile.appendChild(img);
       grid.appendChild(tile);
     });
+
     grid._activeList = pageItems;
     renderPhotosPagination(totalPages, pagination);
   }
@@ -928,7 +936,6 @@
     pag.innerHTML = html;
   }
 
-  // ✅ PUBLICATION : pas de bouton Facebook
   function renderPublications() {
     const items = getFilteredArchive();
     if (items.length === 0) {
@@ -942,20 +949,20 @@
   }
 
   function publicationCardHTML(item) {
-    const text = item.text || '';
+    const text = item.description || item.titre || '';
     const isLong = text.length > 200;
-    const hasImages = item.images.length > 0;
-    const mainImg = hasImages ? item.images[0] : '';
-    const thumbs = item.images.length > 1
-      ? `<div class="pub-thumbs">${item.images.map((src, i) => `
-          <img src="${escapeHtml(src)}" data-idx="${i}" class="${i===0?'active':''}" loading="lazy" alt="">
+    const hasImages = item.images && item.images.length > 0;
+    const mainImg = hasImages ? resolveImageUrl(item.images[0].chemin) : '';
+    const thumbs = hasImages && item.images.length > 1
+      ? `<div class="pub-thumbs">${item.images.map((img, i) => `
+          <img src="${escapeHtml(resolveImageUrl(img.chemin))}" data-idx="${i}" class="${i===0?'active':''}" loading="lazy" alt="">
         `).join('')}</div>` : '';
     return `
     <article class="pub-card" data-fbid="${escapeHtml(item.fbid)}">
       ${hasImages ? `
         <div class="pub-media" data-open-lightbox="${escapeHtml(item.fbid)}">
           <img src="${escapeHtml(mainImg)}" loading="lazy" alt="">
-          <span class="pub-badge-type">${item.type}</span>
+          <span class="pub-badge-type">${item.type || 'PHOTO'}</span>
           ${item.images.length > 1 ? `<span class="pub-badge-gallery">🖼️ ${item.images.length}</span>` : ''}
         </div>
         ${thumbs}
@@ -963,19 +970,20 @@
       <div class="pub-body">
         <div>
           <div class="pub-meta">
-            <span class="pub-date"><i class="fa-regular fa-calendar mr-1"></i>${item.date}</span>
-            <span class="pub-fbid">#${item.fbid.slice(-6)}</span>
+            <span class="pub-date"><i class="fa-regular fa-calendar mr-1"></i>${item.date || ''}</span>
+            <span class="pub-fbid">#${(item.fbid || '').slice(-6)}</span>
           </div>
           <p class="pub-text" id="ptext-${item.fbid}">${escapeHtml(text)}</p>
           ${isLong ? `<button class="read-more" data-target="ptext-${item.fbid}">قراءة المزيد...</button>` : ''}
         </div>
         <div class="pub-footer">
           <div class="pub-stats">
-            <span>👍 ${item.reactions}</span>
-            <span>🔁 ${item.partages}</span>
+            <span>👍 ${item.reactions ?? 0}</span>
+            <span>🔁 ${item.partages ?? 0}</span>
           </div>
           <div class="pub-actions">
             ${hasImages ? `<button class="btn-sm" data-open-lightbox="${escapeHtml(item.fbid)}"><i class="fa-solid fa-expand"></i> معاينة</button>` : ''}
+            <a class="btn-sm" href="${escapeHtml(item.url_canonique || item.url || '#')}" target="_blank" rel="noopener"><i class="fa-brands fa-facebook"></i> Facebook</a>
           </div>
         </div>
       </div>
@@ -1007,6 +1015,7 @@
     $('lbCaption').textContent = s.caption;
     $('lbReactions').textContent = s.reactions ?? 0;
     $('lbShares').textContent = s.partages ?? 0;
+    $('lbFbLink').href = s.fbUrl;
     const show = state.lb.list.length > 1;
     $('lbPrev').style.display = show ? 'flex' : 'none';
     $('lbNext').style.display = show ? 'flex' : 'none';
@@ -1024,6 +1033,7 @@
     if (!(img instanceof HTMLImageElement)) return;
     if (img.closest('.thumb-wrap')) return;
     if (img.id === 'lbImg') return;
+
     const tile = img.closest('.photo-tile');
     if (tile) {
       const grid = tile.parentElement;
@@ -1040,9 +1050,16 @@
       const thumbs = card ? card.querySelectorAll('.pub-thumbs img') : [];
       let swapped = false;
       for (const t of thumbs) {
-        if (t !== img && t.complete && t.naturalWidth > 0) { img.src = t.src; swapped = true; break; }
+        if (t !== img && t.complete && t.naturalWidth > 0) {
+          img.src = t.src; swapped = true; break;
+        }
       }
-      if (!swapped) media.remove();
+      if (!swapped) {
+        media.remove();
+        if (card && !card.querySelector('.pub-media') && !card.querySelector('.pub-thumbs img')) {
+          card.remove();
+        }
+      }
     }
   }, true);
 
@@ -1065,6 +1082,7 @@
     const vh = window.innerHeight;
     const ddW = content.offsetWidth || 230;
     const ddH = content.offsetHeight || 100;
+
     let top, right;
     if (header) {
       const hRect = header.getBoundingClientRect();
@@ -1116,6 +1134,7 @@
     searchTimer = setTimeout(() => {
       state.search = v;
       state.videoPage = 1;
+      state.archivePage = 1;
       state.photosPage = 1;
       renderActiveTab();
     }, 200);
@@ -1166,14 +1185,12 @@
     renderVideos();
   });
 
-  // ✅ Clic carte : lightbox OU player vidéo. Jamais de Facebook.
   $('reelsGrid').addEventListener('click', e => {
     const card = e.target.closest('[data-fbid]');
     if (!card) return;
     const reel = state.videos.find(r => String(r.fbid) === card.dataset.fbid);
-    if (reel) openPost(reel);
+    if (reel) openVideoDetails(reel);
   });
-
   $('themesView').addEventListener('click', e => {
     const c = e.target.closest('[data-theme]');
     if (!c) return;
@@ -1181,7 +1198,6 @@
     state.videoPage = 1;
     renderVideos();
   });
-
   $('treeContent').addEventListener('click', e => {
     const toggle = e.target.closest('.tree-toggle-btn');
     if (toggle) {
@@ -1196,7 +1212,7 @@
     const node = e.target.closest('[data-fbid]');
     if (node) {
       const reel = state.videos.find(r => String(r.fbid) === node.dataset.fbid);
-      if (reel) openPost(reel);
+      if (reel) openVideoDetails(reel);
     }
   });
 
@@ -1228,12 +1244,14 @@
   function syncVideoMenus() {
     const badge = $('yearBadge');
     if (badge) badge.textContent = yearLabel(state.videoYear);
+
     ['menuHome', 'menuGalerie', 'menuSort'].forEach(id => {
       const el = $(id); if (el) el.classList.remove('active');
     });
     if (state.videoView !== 'gallery') $('menuGalerie').classList.add('active');
     else if (state.videoSort !== 'recent') $('menuSort').classList.add('active');
     else $('menuHome').classList.add('active');
+
     $('galleryDropdown').querySelectorAll('[data-view]').forEach(b => {
       b.classList.toggle('active', b.dataset.view === state.videoView);
     });
@@ -1266,68 +1284,69 @@
     state.videoYear = sorted.includes('2026') ? '2026' : (sorted[0] || 'all');
   }
 
-  function handleMqChange() { syncVideoMenus(); buildYearDropdown(); }
+  function handleMqChange() {
+    syncVideoMenus();
+    buildYearDropdown();
+  }
   if (mobileMq.addEventListener) mobileMq.addEventListener('change', handleMqChange);
   else if (mobileMq.addListener) mobileMq.addListener(handleMqChange);
 
-  // ============ ROUTEUR DE CLIC ============
+  // ====================================================================
+  // LECTEUR VIDÉO
+  // ====================================================================
   let currentVideo = null;
   let posterFadeTimer = null;
+  let iframeLoadTimer = null;
   let iframeReady = false;
 
-  function showNoContentToast() {
-    const t = $('noContentToast');
-    if (!t) return;
-    t.classList.remove('hidden');
-    clearTimeout(t._timer);
-    t._timer = setTimeout(() => t.classList.add('hidden'), 2500);
+  function buildEmbedUrl(shareUrl) {
+    if (!shareUrl) return '';
+    const clean = String(shareUrl).split('#')[0];
+    return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(clean)}&show_text=false&width=500&height=889&autoplay=true&mute=false&allowfullscreen=true`;
   }
 
-  function openPost(reel) {
-    if (reel.video_url) { openVideoPlayer(reel); return; }
-    if (reel.images && reel.images.length > 0) {
-      const list = reel.images.map((src, i) => ({
-        src,
-        date: formatDateArabic(reel.date, reel.date_iso),
-        caption: reel.titre || reel.text || '',
-        reactions: reel.reactions,
-        partages: reel.partages,
-        fbUrl: reel.url_canonique,
-        fbid: reel.fbid,
-        index: i,
-        total: reel.images.length
-      }));
-      openLightbox(list, 0);
+  function loadVideoWithAutoplay(reel) {
+    if (!reel) return;
+    const shareUrl = reel.url_canonique || reel.url;
+    if (!shareUrl || !/^https?:\/\//i.test(shareUrl)) {
+      showVideoError("L'URL de cette vidéo est invalide ou manquante.");
       return;
     }
-    showNoContentToast();
+    const src = buildEmbedUrl(shareUrl);
+    $('detailsFrame').src = src;
+
+    clearTimeout(iframeLoadTimer);
+    iframeLoadTimer = setTimeout(() => {
+      if (!iframeReady) {
+        showVideoError("Le lecteur Facebook met trop de temps à répondre. La vidéo est peut-être indisponible ou restreinte.");
+      }
+    }, 10000);
   }
 
-  function openVideoPlayer(reel) {
-    currentVideo = reel;
-    iframeReady = false;
-    const content = $('detailsContent');
-    content.innerHTML = renderVideoDetails(reel);
-    content.scrollTop = 0;
-    $('detailsDisplayTitle').textContent = reel.titre || 'العنوان غير متوفر';
-    $('detailsDisplayDate').textContent = formatDateArabic(reel.date, reel.date_iso);
-    $('playerViewsVal').textContent = formatNumber(reel.vues ?? 0);
-    $('playerReactionsVal').textContent = reel.reactions ?? 0;
-    const img = $('detailsPosterImg');
-    img.parentElement.classList.remove('thumb-error');
-    img.src = reel.images[0] || DEFAULT_IMG;
-    $('detailsPoster').classList.remove('opacity-0', 'pointer-events-none');
-    $('detailsPoster').classList.add('opacity-100');
-    $('detailsFrame').classList.remove('opacity-100');
-    $('detailsFrame').classList.add('opacity-0');
-    $('videoLoader').classList.remove('hidden');
-    $('fullscreenBtn').classList.remove('hidden');
-    $('detailsModal').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-    const src = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(reel.video_url)}&show_text=false&width=500&height=889&autoplay=true&mute=false&allowfullscreen=true`;
-    $('detailsFrame').src = src;
+  function showVideoError(message) {
+    const loader = $('videoLoader');
+    if (loader) loader.classList.add('hidden');
+
+    const fallback = $('videoFallbackNote');
+    if (!fallback) return;
+
+    const url = (currentVideo && (currentVideo.url_canonique || currentVideo.url)) || '#';
+    fallback.innerHTML = `
+      <div class="flex flex-col items-center gap-1.5">
+        <span class="text-rose-300 font-semibold">${escapeHtml(message)}</span>
+        <a href="${escapeHtml(url)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-blue-400 underline font-semibold">
+          <i class="fa-brands fa-facebook"></i> Ouvrir la publication sur Facebook
+        </a>
+      </div>`;
+    fallback.classList.remove('hidden');
+  }
+
+  function schedulePosterFade(delay) {
     clearTimeout(posterFadeTimer);
-    posterFadeTimer = setTimeout(revealPlayer, 15000);
+    posterFadeTimer = setTimeout(() => {
+      if ($('detailsModal').classList.contains('hidden')) return;
+      revealPlayer();
+    }, delay);
   }
 
   function revealPlayer() {
@@ -1339,54 +1358,179 @@
     $('detailsFrame').classList.add('opacity-100');
   }
 
-  function closeVideoDetails() {
-    clearTimeout(posterFadeTimer);
+  function openVideoDetails(reel) {
+    currentVideo = reel;
     iframeReady = false;
-    $('detailsModal').classList.add('hidden');
-    $('detailsFrame').src = 'about:blank';
-    $('detailsContent').innerHTML = '';
-    $('detailsPosterImg').removeAttribute('src');
-    $('videoLoader').classList.add('hidden');
-    $('fullscreenBtn').classList.add('hidden');
-    document.body.style.overflow = '';
-    currentVideo = null;
+    closeVideoDetails(true);
+
+    const content = $('detailsContent');
+    content.innerHTML = renderVideoDetails(reel);
+    content.scrollTop = 0;
+    $('detailsDisplayTitle').textContent = reel.titre || 'العنوان غير متوفر';
+    $('detailsDisplayDate').textContent = formatDateArabic(reel.date, reel.date_iso);
+    $('playerViewsVal').textContent = formatNumber(reel.vues ?? 0);
+    $('playerReactionsVal').textContent = reel.reactions ?? 0;
+    const thumbUrl = reel.miniature ? resolveImageUrl(reel.miniature) : (reel.images && reel.images[0] ? resolveImageUrl(reel.images[0].chemin) : DEFAULT_IMG);
+    const img = $('detailsPosterImg');
+    img.parentElement.classList.remove('thumb-error');
+    img.src = thumbUrl;
+    $('detailsPoster').classList.remove('opacity-0', 'pointer-events-none');
+    $('detailsPoster').classList.add('opacity-100');
+    $('detailsFrame').classList.remove('opacity-100');
+    $('detailsFrame').classList.add('opacity-0');
+    $('videoLoader').classList.remove('hidden');
+    $('detailsModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
+    const fallback = $('videoFallbackNote');
+    if (fallback) {
+      fallback.innerHTML = `La vidéo ne se lance pas ? <a href="${escapeHtml(reel.url_canonique || reel.url)}" target="_blank" rel="noopener" class="text-blue-400 underline">Ouvrir sur Facebook</a>`;
+      fallback.classList.remove('hidden');
+    }
+
+    loadVideoWithAutoplay(reel);
   }
 
-  // ✅ renderVideoDetails : plus de bouton Facebook
+  function closeVideoDetails(reopen) {
+    clearTimeout(posterFadeTimer);
+    clearTimeout(iframeLoadTimer);
+    iframeReady = false;
+
+    if (!reopen) {
+      $('detailsModal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    const frame = $('detailsFrame');
+    frame.src = 'about:blank';
+    frame.classList.remove('opacity-100');
+    frame.classList.add('opacity-0');
+    $('detailsPoster').classList.add('opacity-0', 'pointer-events-none');
+    $('detailsPoster').classList.remove('opacity-100');
+    $('detailsPosterImg').removeAttribute('src');
+    $('detailsContent').innerHTML = '';
+    $('videoLoader').classList.add('hidden');
+
+    const fallback = $('videoFallbackNote');
+    if (fallback) fallback.classList.add('hidden');
+
+    if (!reopen) currentVideo = null;
+  }
+
   function renderVideoDetails(reel) {
     const themeAr = reel.theme_ar || null;
+    const themeFr = reel.theme_fr || null;
     const description = reel.description || null;
+    const shareUrl = reel.url_canonique || reel.url || '';
+    const embedUrl = buildEmbedUrl(shareUrl);
     const statHTML = (label, value, icon, color) => `
       <div class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3">
         <div class="flex items-center gap-1.5 text-xs text-slate-400 mb-1"><i class="fa-solid ${icon} ${color}"></i><span>${label}</span></div>
         <div class="text-base font-bold ${color} truncate">${escapeHtml(String(value))}</div>
       </div>`;
+
     return `
-      ${themeAr ? `<div class="flex flex-wrap gap-2"><span class="theme-chip" dir="rtl"><i class="fa-solid fa-tag text-[9px]"></i> ${escapeHtml(themeAr)}</span></div>` : ''}
+      ${(themeAr || themeFr) ? `<div class="flex flex-wrap gap-2">
+        ${themeAr ? `<span class="theme-chip" dir="rtl"><i class="fa-solid fa-tag text-[9px]"></i> ${escapeHtml(themeAr)}</span>` : ''}
+        ${themeFr && themeFr !== themeAr ? `<span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-blue-500/15 text-blue-300 border border-blue-500/30" dir="ltr"><i class="fa-solid fa-tag text-[10px]"></i>${escapeHtml(themeFr)}</span>` : ''}
+      </div>` : ''}
       <h2 class="text-base sm:text-lg font-bold text-white leading-relaxed" dir="auto">${reel.titre ? escapeHtml(reel.titre) : 'مقطع فيديو'}</h2>
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
         ${statHTML('المشاهدات', formatNumber(reel.vues ?? 0), 'fa-eye', 'text-amber-400')}
         ${statHTML('التفاعلات', reel.reactions ?? '—', 'fa-heart', 'text-rose-400')}
         ${statHTML('التاريخ', formatDateArabic(reel.date, reel.date_iso) || '—', 'fa-calendar', 'text-slate-400')}
       </div>
-      ${description ? `<div><div class="text-xs font-semibold text-slate-400 uppercase mb-2">الوصف</div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-slate-900/40 p-3 rounded-lg border border-slate-700/50" dir="auto">${escapeHtml(description)}</p></div>` : ''}`;
+      ${description ? `<div><div class="text-xs font-semibold text-slate-400 uppercase mb-2">الوصف</div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-slate-900/40 p-3 rounded-lg border border-slate-700/50" dir="auto">${escapeHtml(description)}</p></div>` : ''}
+
+      <details class="url-details pt-1 bg-slate-900/60 border border-slate-700/60 rounded-lg overflow-hidden">
+        <summary class="cursor-pointer px-3 py-2 text-xs font-semibold text-slate-300 hover:text-white flex items-center gap-2 select-none">
+          <i class="fa-solid fa-link text-amber-400"></i>
+          <span>Chemins de lecture (URL complet)</span>
+          <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-60 url-chevron"></i>
+        </summary>
+        <div class="px-3 pb-3 pt-1 space-y-3">
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-[10px] uppercase tracking-wider text-slate-500">URL de la publication</span>
+              <button type="button" class="text-blue-400 hover:text-blue-300 text-[10px] font-bold inline-flex items-center gap-1" data-copy-url="${escapeHtml(shareUrl)}">
+                <i class="fa-regular fa-copy"></i> Copier
+              </button>
+            </div>
+            <div class="font-mono text-[11px] break-all bg-slate-950/80 p-2 rounded border border-slate-800 text-slate-300" dir="ltr">${escapeHtml(shareUrl || '—')}</div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-[10px] uppercase tracking-wider text-slate-500">URL d'intégration (iframe src)</span>
+              <button type="button" class="text-amber-400 hover:text-amber-300 text-[10px] font-bold inline-flex items-center gap-1" data-copy-url="${escapeHtml(embedUrl)}">
+                <i class="fa-regular fa-copy"></i> Copier
+              </button>
+            </div>
+            <div class="font-mono text-[11px] break-all bg-slate-950/80 p-2 rounded border border-slate-800 text-amber-300" dir="ltr">${escapeHtml(embedUrl || '—')}</div>
+          </div>
+        </div>
+      </details>
+
+      <div class="flex flex-col sm:flex-row gap-2 pt-2">
+        ${reel.url ? `<a href="${escapeHtml(reel.url)}" target="_blank" rel="noopener" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl" dir="ltr"><i class="fa-brands fa-facebook"></i> Voir sur Facebook</a>` : ''}
+      </div>`;
   }
 
-  $('detailsModal').addEventListener('click', e => {
-    if (e.target.closest('[data-close-details]')) closeVideoDetails();
+  $('detailsContent').addEventListener('click', e => {
+    const btn = e.target.closest('[data-copy-url]');
+    if (!btn) return;
+    const url = btn.getAttribute('data-copy-url');
+    if (!url || url === '—') return;
+    const original = btn.innerHTML;
+    const success = () => {
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Copié';
+      setTimeout(() => { btn.innerHTML = original; }, 1500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(success).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = url;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); success(); } catch (_) {}
+        document.body.removeChild(ta);
+      });
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); success(); } catch (_) {}
+      document.body.removeChild(ta);
+    }
   });
 
   $('detailsFrame').addEventListener('load', () => {
     if ($('detailsModal').classList.contains('hidden')) return;
-    if (!$('detailsFrame').src || $('detailsFrame').src === 'about:blank') return;
+    const src = $('detailsFrame').src;
+    if (!src || src === 'about:blank') return;
+
+    clearTimeout(iframeLoadTimer);
     iframeReady = true;
     $('videoLoader').classList.add('hidden');
-    clearTimeout(posterFadeTimer);
-    posterFadeTimer = setTimeout(revealPlayer, 500);
+    schedulePosterFade(800);
   });
 
   $('detailsPlayBtn').addEventListener('click', () => {
-    if (iframeReady) revealPlayer();
+    if (!currentVideo) return;
+    if (!currentVideo.url_canonique && !currentVideo.url) {
+      showVideoError("Cette publication ne contient pas de vidéo lisible.");
+      return;
+    }
+    const frameSrc = $('detailsFrame').src;
+    if (!frameSrc || frameSrc === 'about:blank') {
+      loadVideoWithAutoplay(currentVideo);
+      return;
+    }
+    revealPlayer();
+  });
+
+  $('detailsModal').addEventListener('click', e => {
+    if (e.target.closest('[data-close-details]')) closeVideoDetails();
   });
 
   $('fullscreenBtn').addEventListener('click', async () => {
@@ -1420,10 +1564,18 @@
     if (e.target === $('lightbox')) closeLightbox();
   });
   document.addEventListener('keydown', (e) => {
-    if (!$('lightbox').classList.contains('open')) return;
-    if (e.key === 'Escape') closeLightbox();
-    else if (e.key === 'ArrowRight') $('lbPrev').click();
-    else if (e.key === 'ArrowLeft') $('lbNext').click();
+    if ($('lightbox').classList.contains('open')) {
+      if (e.key === 'Escape') closeLightbox();
+      else if (e.key === 'ArrowRight') $('lbPrev').click();
+      else if (e.key === 'ArrowLeft') $('lbNext').click();
+      return;
+    }
+    if (e.key === 'Escape') {
+      if (!$('detailsModal').classList.contains('hidden')) { e.preventDefault(); closeVideoDetails(); return; }
+      if (!$('remarksModal').classList.contains('hidden')) { e.preventDefault(); $('remarksModal').classList.add('hidden'); document.body.style.overflow = ''; return; }
+      const openDD = document.querySelector('.menu-dropdown-content:not(.hidden)');
+      if (openDD) { e.preventDefault(); closeAllDropdowns(); return; }
+    }
   });
 
   $('photosGrid').addEventListener('click', (e) => {
@@ -1457,12 +1609,13 @@
     if (lb) {
       const fbid = lb.dataset.openLightbox;
       const item = ARCHIVE_DATA.find(x => x.fbid === fbid);
-      if (item && item.images.length) {
-        const list = item.images.map((src, i) => ({
-          src, date: item.date, caption: item.text,
+      if (item && item.images && item.images.length) {
+        const list = item.images.map((img, i) => ({
+          src: resolveImageUrl(img.chemin),
+          date: item.date, caption: item.description || item.titre || '',
           reactions: item.reactions, partages: item.partages,
-          fbUrl: item.url_canonique, fbid: item.fbid,
-          index: i, total: item.images.length
+          fbUrl: item.url_canonique || item.url,
+          fbid: item.fbid, index: i, total: item.images.length
         }));
         openLightbox(list, 0);
       }
@@ -1492,7 +1645,8 @@
     status.textContent = 'جارٍ الإرسال...';
     try {
       await fetch(EMAIL_REMARK_SCRIPT_URL, {
-        method: 'POST', mode: 'no-cors',
+        method: 'POST',
+        mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ text, page: location.href, timestamp: new Date().toISOString() })
       });
@@ -1502,23 +1656,43 @@
     } catch (err) {
       status.className = 'rounded-lg px-3 py-2 text-sm bg-rose-500/15 text-rose-300 border border-rose-500/30';
       status.textContent = 'تعذّر إرسال الملاحظة. حاول مرة أخرى.';
-    } finally { btn.disabled = false; }
+    } finally {
+      btn.disabled = false;
+    }
   });
 
   function exportToExcel() {
     if (!state.videos.length) return;
     try {
       const rows = state.videos.map(v => ({
-        'المعرف': v.fbid, 'التاريخ': v.date, 'السنة': v.annee,
-        'العنوان': v.titre || '', 'المحور (FR)': v.theme_fr || '', 'المحور (AR)': v.theme_ar || '',
-        'التفاعلات': v.reactions ?? 0
+        'المعرف': v.fbid,
+        'التاريخ': v.date,
+        'السنة': v.annee,
+        'العنوان': v.titre || '',
+        'المحور (FR)': v.theme_fr || '',
+        'المحور (AR)': v.theme_ar || '',
+        'المشاهدات': v.vues ?? 0,
+        'التفاعلات': v.reactions ?? 0,
+        'URL de la publication': v.url_canonique || v.url || '',
+        'URL de lecture (iframe)': buildEmbedUrl(v.url_canonique || v.url)
       }));
       const ws = XLSX.utils.json_to_sheet(rows);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'الفيديوهات');
-      XLSX.writeFile(wb, `archive_${new Date().toISOString().slice(0,10)}.xlsx`);
+      XLSX.writeFile(wb, `archive_videos_${new Date().toISOString().slice(0,10)}.xlsx`);
     } catch (err) { console.error('Excel export failed:', err); }
   }
+
+  document.querySelectorAll('[data-exit-cancel]').forEach(b => {
+    b.addEventListener('click', () => $('exitConfirmModal').classList.add('hidden'));
+  });
+  document.querySelectorAll('[data-exit-confirm]').forEach(b => {
+    b.addEventListener('click', () => {
+      $('exitConfirmModal').classList.add('hidden');
+      try { window.close(); } catch (_) {}
+      try { window.location.replace('about:blank'); } catch (_) {}
+    });
+  });
 
   function showFatalError(msg) {
     const overlay = $('progressOverlay');
@@ -1541,37 +1715,62 @@
 
   function validateData(data) {
     if (!Array.isArray(data)) throw new Error('Format JSON invalide : un tableau est attendu.');
-    const required = ['fbid', 'date_iso', 'imgCount', 'text'];
-    for (let i = 0; i < data.length; i++) {
-      for (const k of required) {
-        if (!(k in data[i])) throw new Error(`Enregistrement ${i} : champ "${k}" manquant.`);
-      }
-    }
     return true;
   }
 
+  // ✅ Initialisation : chargement direct de reelsData.json
   function init() {
     fetch(DATA_URL)
       .then(response => {
-        if (!response.ok) throw new Error(`Erreur JSON (HTTP ${response.status}) — ${DATA_URL}`);
+        if (!response.ok) throw new Error(`Erreur de chargement JSON (HTTP ${response.status}) — URL: ${DATA_URL}`);
         return response.json();
       })
       .then(data => {
         validateData(data);
-        ARCHIVE_COMPACT = data;
-        buildArchiveRaw();
-        return initArchive().then(() => {
-          state.videos = ARCHIVE_DATA.map(r => ({
-            ...r,
-            miniature: r.images[0] || null,
-            url: r.url_canonique
-          }));
-          initVideoYear();
-          buildYearDropdown();
-          syncVideoMenus();
-          updateTabCounts();
-          renderActiveTab();
+
+        // Déduplication par fbid (le fichier peut contenir des doublons)
+        const unique = new Map();
+        data.forEach(item => {
+          if (item && item.fbid && !unique.has(String(item.fbid))) {
+            unique.set(String(item.fbid), item);
+          }
         });
+        ARCHIVE_DATA = Array.from(unique.values());
+
+        // Construction de la liste des photos (uniquement pour les éléments avec images)
+        ALL_PHOTOS = [];
+        ARCHIVE_DATA.forEach(item => {
+          if (Array.isArray(item.images)) {
+            item.images.forEach((img, i) => {
+              ALL_PHOTOS.push({
+                src: resolveImageUrl(img.chemin),
+                date: item.date,
+                caption: item.description || item.titre || '',
+                reactions: item.reactions,
+                partages: item.partages,
+                fbUrl: item.url_canonique || item.url,
+                fbid: item.fbid,
+                index: i,
+                total: item.images.length
+              });
+            });
+          }
+        });
+
+        // Alimentation de state.videos
+        state.videos = ARCHIVE_DATA.map(r => ({
+          ...r,
+          miniature: r.miniature ? resolveImageUrl(r.miniature) : (r.images && r.images[0] ? resolveImageUrl(r.images[0].chemin) : null),
+          url: r.url_canonique || r.url || ''
+        }));
+
+        initVideoYear();
+        buildYearDropdown();
+        syncVideoMenus();
+        updateTabCounts();
+        renderActiveTab();
+
+        console.log(`📊 reelsData.json chargé : ${ARCHIVE_DATA.length} entrées uniques, ${ALL_PHOTOS.length} photos.`);
       })
       .catch(error => {
         console.error('Erreur :', error);
@@ -1581,7 +1780,9 @@
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
-  } else { init(); }
+  } else {
+    init();
+  }
 
 })();
 </script>
