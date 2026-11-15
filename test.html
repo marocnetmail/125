@@ -1779,7 +1779,7 @@
   function init() {
     showLoading('جارٍ تحميل البيانات…');
 
-    fetch('./data/data_pub.json')
+    fetch('https://marocnetmail.github.io/125/json/data_pub.json')
       .then(response => {
         if (!response.ok) {
           throw new Error(`Erreur de chargement des données JSON (HTTP ${response.status})`);
