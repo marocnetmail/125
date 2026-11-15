@@ -574,10 +574,13 @@
     return { reactions: 25 + (h % 350), partages: 1 + (h % 10) };
   }
 
-  function imagePath(fbid, idx) {
-    return `images/pub_${fbid}_${String(idx).padStart(2,'0')}.webp`;
-  }
+// Base absolue dérivée de DATA_URL (dossier /125/)
+const IMG_BASE = "https://marocnetmail.github.io/125/json/images/';
+//   → 'https://marocnetmail.github.io/125/images/'
 
+function imagePath(fbid, idx) {
+  return `${IMG_BASE}pub_${fbid}_${String(idx).padStart(2,'0')}.webp`;
+}
   function buildArchiveRaw() {
     ARCHIVE_RAW = ARCHIVE_COMPACT.map(({ fbid, date_iso, imgCount, text }) => {
       const [y, m, d] = date_iso.split('-');
