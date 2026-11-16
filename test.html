@@ -4,213 +4,497 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
-<title>الأرشيف المؤسساتي | فيديوهات · صور · منشورات</title>
-
+<title>الفيديوتيكة المؤسساتية</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config = { darkMode: 'class' };</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-
 <style>
-  html{-webkit-text-size-adjust:100%}
-  body{font-family:'Cairo',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
-  .institutional-banner{width:100%;background:#fff;border-bottom:1px solid #dbe3ed;line-height:0}
-  .institutional-banner img{display:block;width:100%;height:auto;max-height:380px;object-fit:cover;object-position:center}
-  .app-header{position:sticky;top:0;z-index:40;background:rgba(9,44,76,.98);backdrop-filter:blur(10px);box-shadow:0 2px 12px rgba(0,0,0,.4);border-bottom:1px solid rgba(255,255,255,.1)}
-  .header-row{max-width:1440px;margin:0 auto;display:flex;align-items:center;gap:.5rem;padding:.5rem .6rem;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
-  .header-row::-webkit-scrollbar{display:none}
-  .header-row>*{flex-shrink:0}
-  .brand{display:flex;align-items:center;gap:.55rem;color:#fff}
-  .brand-badge{width:38px;height:38px;border-radius:10px;background:rgba(197,155,69,.15);border:1px solid rgba(197,155,69,.6);display:flex;align-items:center;justify-content:center;font-size:1rem;color:#c59b45;font-weight:800;flex-shrink:0}
-  .brand-text h1{font-size:1rem;font-weight:800;white-space:nowrap;line-height:1.2}
-  .brand-text p{display:none;font-size:.7rem;color:#94a3b8;white-space:nowrap}
-  .center-tabs{display:flex;gap:.25rem;background:rgba(0,0,0,.3);padding:.28rem;border-radius:12px;margin-inline:auto;border:1px solid rgba(255,255,255,.1)}
-  .center-tab{display:flex;align-items:center;gap:.3rem;padding:.42rem .55rem;border-radius:9px;font-size:.72rem;font-weight:700;color:#94a3b8;background:transparent;border:none;cursor:pointer;transition:all .2s;white-space:nowrap;font-family:inherit}
-  .center-tab:hover{color:#fff;background:rgba(255,255,255,.08)}
-  .center-tab.active{color:#092c4c;background:linear-gradient(135deg,#c59b45 0%,#e0b55a 100%);box-shadow:0 2px 8px rgba(197,155,69,.4);font-weight:800}
-  .center-tab i{font-size:.78rem}
-  .center-tab .count-badge{background:rgba(0,0,0,.2);color:inherit;font-size:.58rem;font-weight:700;padding:.02rem .3rem;border-radius:999px;line-height:1.4}
-  .center-tab.active .count-badge{background:rgba(9,44,76,.25);color:#092c4c}
-  .search-wrap{position:relative;flex:0 1 200px;min-width:110px}
-  .search-wrap input{width:100%;padding:.5rem 2rem .5rem .7rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:10px;color:#fff;font-size:14px;font-family:inherit;outline:none;transition:all .2s}
-  .search-wrap input::placeholder{color:rgba(255,255,255,.5)}
-  .search-wrap input:focus{background:rgba(255,255,255,.15);border-color:rgba(197,155,69,.6)}
-  .search-wrap .search-icon{position:absolute;right:.7rem;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.55);font-size:.85rem;pointer-events:none}
-  .year-inline{display:flex;position:relative}
-  .year-inline .menu-item{padding:.5rem .6rem;font-size:.8rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:10px;gap:.35rem;color:#e2e8f0;transition:all .2s}
-  .year-inline .menu-item:hover{background:rgba(255,255,255,.15);border-color:rgba(197,155,69,.6);color:#fff}
-  .year-inline .menu-item[aria-expanded="true"]{background:rgba(197,155,69,.15);border-color:rgba(197,155,69,.55);color:#fcd34d}
-  .year-inline .menu-item i.fa-calendar{color:#c59b45;font-size:.8rem}
-  .year-inline .menu-badge{background:linear-gradient(135deg,rgba(197,155,69,.35) 0%,rgba(224,181,90,.35) 100%);color:#fcd34d;border:1px solid rgba(197,155,69,.6);font-size:.72rem;font-weight:800;padding:.12rem .5rem;border-radius:999px;letter-spacing:.02em}
-  .sub-menu-row{display:none;background:#0b3559;border-top:1px solid rgba(255,255,255,.08);border-bottom:2px solid rgba(197,155,69,.4)}
-  .sub-menu-row.visible{display:block}
-  .sub-menu-inner{max-width:1440px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;padding:.4rem .75rem;overflow-x:auto;scrollbar-width:none}
-  .sub-menu-inner::-webkit-scrollbar{display:none}
-  .sub-menu-inner>*{flex-shrink:0}
-  .menu-item{display:flex;align-items:center;gap:.4rem;padding:.55rem .85rem;font-size:.82rem;font-weight:600;color:#e2e8f0;background:transparent;border:none;cursor:pointer;border-radius:8px;transition:all .2s;font-family:inherit;white-space:nowrap}
-  .menu-item:hover{background:rgba(255,255,255,.08);color:#93c5fd}
-  .menu-item.active,.menu-item[aria-expanded="true"]{background:rgba(59,130,246,.2);color:#bfdbfe;border:1px solid rgba(59,130,246,.4)}
-  .menu-dropdown{position:relative;display:flex}
-  .menu-dropdown-content{position:fixed;min-width:230px;background:#0b3559;border:1px solid rgba(255,255,255,.18);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.5);z-index:60;padding:.35rem;animation:ddFade .15s ease-out;top:0;right:0}
-  .menu-dropdown-content.hidden{display:none}
-  @keyframes ddFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
-  .menu-dropdown-item{display:flex;align-items:center;gap:.5rem;width:100%;padding:.55rem .75rem;color:#e2e8f0;font-size:.82rem;font-weight:500;text-align:right;background:transparent;border:none;cursor:pointer;border-radius:7px;transition:background .15s;white-space:nowrap;font-family:inherit}
-  .menu-dropdown-item:hover{background:rgba(255,255,255,.08);color:#fff}
-  .menu-dropdown-item.active{background:rgba(59,130,246,.24);color:#93c5fd;font-weight:700}
-  .menu-dropdown-item i:first-child{width:16px;text-align:center;font-size:.72rem;opacity:.85}
-  .menu-dropdown-item .dd-check{margin-right:auto;font-size:.68rem;opacity:0}
-  .menu-dropdown-item.active .dd-check{opacity:1}
-  .menu-badge{display:inline-block;background:rgba(59,130,246,.3);color:#bfdbfe;font-size:.65rem;font-weight:700;padding:.05rem .45rem;border-radius:999px;border:1px solid rgba(59,130,246,.5)}
-  main{max-width:1440px;margin:0 auto;padding:1rem .75rem 2rem;flex:1;width:100%}
-  .reel-card{position:relative}
-  .thumb-gradient{background:linear-gradient(to top,rgba(0,0,0,.88) 0%,rgba(0,0,0,.55) 22%,rgba(0,0,0,.18) 42%,transparent 60%)}
-  .video-title{display:block;width:100%;white-space:normal;word-wrap:break-word;overflow-wrap:anywhere;line-height:1.3}
-  .thumb-wrap{position:relative;width:100%;height:100%;background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);overflow:hidden}
-  .thumb-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
-  .thumb-wrap .thumb-fallback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:6px;color:#64748b;font-size:10px;text-align:center;padding:8px;direction:rtl}
-  .thumb-wrap.thumb-error img{display:none!important}
-  .thumb-wrap.thumb-error .thumb-fallback{display:flex}
-  .thumb-wrap .thumb-fallback i{font-size:22px;color:#475569}
-  .date-display{display:inline-block;white-space:nowrap;direction:rtl;unicode-bidi:isolate;max-width:100%}
-  .theme-chip{display:inline-block;background:#FFF9DB;color:#78350F;border:1px solid #FCD34D;border-radius:9999px;padding:2px 8px;font-size:9px;font-weight:700;line-height:1.4;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:rtl;text-align:right;box-shadow:0 1px 2px rgba(0,0,0,.12);vertical-align:middle}
-  .theme-card-new{background-color:#FFF9DB;border:1px solid #FCD34D;color:#78350F;border-radius:14px;transition:all .25s;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-  .theme-card-new:hover{background-color:#FEF3C7;border-color:#F59E0B;box-shadow:0 6px 16px rgba(245,158,11,.2);transform:translateY(-2px)}
-  .theme-card-new .theme-card-icon{background-color:#FCD34D;color:#78350F}
-  .theme-card-new .theme-card-count{background-color:#FEF3C7;color:#92400E;border:1px solid #FCD34D}
-  .theme-folder-row{background-color:#FFF9DB;border:1px solid #FCD34D;border-radius:10px;color:#78350F;transition:all .2s}
-  .theme-folder-row:hover{background-color:#FEF3C7;border-color:#F59E0B;box-shadow:0 2px 8px rgba(245,158,11,.15)}
-  .theme-folder-row .folder-icon{color:#B45309}
-  .theme-folder-row .chevron-icon{color:#92400E}
-  .theme-folder-row .count-badge{background-color:#FCD34D;color:#78350F;border:1px solid #F59E0B}
-  .tree-list{list-style:none;padding:0;margin:0}
-  .tree-list .tree-list{padding-right:1.5rem;border-right:2px dashed #475569;margin-right:.75rem}
-  .tree-item{position:relative;padding:.3rem 0}
-  .tree-list .tree-list .tree-item::before{content:'';position:absolute;right:-1.5rem;top:1.5rem;width:1rem;border-top:2px dashed #475569}
-  .tree-toggle{transition:transform .2s}
-  .tree-toggle.open{transform:rotate(-90deg)}
-  .tree-video-title{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .photos-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
-  .photo-tile{position:relative;aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#1e293b,#0f172a);cursor:pointer;border:1px solid rgba(255,255,255,.06);transition:transform .2s}
-  .photo-tile:hover{transform:scale(1.02);border-color:rgba(197,155,69,.5)}
-  .photo-tile img{width:100%;height:100%;object-fit:cover;display:block}
-  .photo-tile .photo-hover{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 50%);opacity:0;transition:opacity .2s;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;color:#fff;font-size:.72rem;line-height:1.35}
-  .photo-tile:hover .photo-hover{opacity:1}
-  .photo-hover-date{font-weight:700;color:#fcd34d;font-size:.68rem;margin-bottom:2px}
-  .photo-hover-text{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .photo-badge{position:absolute;top:6px;right:6px;background:rgba(197,155,69,.92);color:#092c4c;font-size:.65rem;font-weight:800;padding:2px 6px;border-radius:5px}
-  .pub-grid{display:grid;grid-template-columns:1fr;gap:1rem}
-  .pub-card{background:#1e293b;border:1px solid #334155;border-radius:14px;overflow:hidden;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column}
-  .pub-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.4);border-color:rgba(197,155,69,.4)}
-  .pub-media{position:relative;aspect-ratio:16/10;background:linear-gradient(135deg,#1e293b,#0f172a);cursor:pointer;overflow:hidden}
-  .pub-media img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
-  .pub-card:hover .pub-media img{transform:scale(1.04)}
-  .pub-badge-type{position:absolute;top:10px;right:10px;background:rgba(9,44,76,.92);color:#c59b45;padding:.2rem .6rem;border-radius:6px;font-size:.7rem;font-weight:700;border:1px solid rgba(197,155,69,.4)}
-  .pub-badge-gallery{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.8);color:#fff;padding:.2rem .55rem;border-radius:6px;font-size:.7rem;font-weight:700}
-  .pub-thumbs{display:flex;gap:4px;padding:6px 8px 0;background:#0f172a;overflow-x:auto;scrollbar-width:none}
-  .pub-thumbs::-webkit-scrollbar{display:none}
-  .pub-thumbs img{width:40px;height:40px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;opacity:.7;transition:all .15s;flex-shrink:0}
-  .pub-thumbs img.active,.pub-thumbs img:hover{border-color:#c59b45;opacity:1}
-  .pub-body{padding:1rem;flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:.75rem}
-  .pub-meta{display:flex;justify-content:space-between;align-items:center;font-size:.78rem;margin-bottom:.5rem;gap:.5rem}
-  .pub-date{font-weight:700;color:#c59b45;background:rgba(197,155,69,.1);padding:.2rem .55rem;border-radius:6px;border:1px solid rgba(197,155,69,.2);white-space:nowrap}
-  .pub-fbid{font-family:ui-monospace,monospace;font-size:.7rem;color:#64748b}
-  .pub-text{font-size:.92rem;color:#cbd5e1;line-height:1.65;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:.75rem}
-  .pub-text.expanded{-webkit-line-clamp:unset}
-  .read-more{background:none;border:none;color:#60a5fa;font-family:inherit;font-weight:700;font-size:.82rem;cursor:pointer;padding:0;margin-bottom:.6rem}
-  .read-more:hover{text-decoration:underline}
-  .pub-footer{border-top:1px solid #334155;padding-top:.7rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
-  .pub-stats{display:flex;gap:.85rem;font-size:.82rem;color:#94a3b8;font-weight:600}
-  .pub-stats span{display:inline-flex;align-items:center;gap:.25rem}
-  .pub-actions{display:flex;gap:.4rem}
-  .btn-sm{padding:.38rem .75rem;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;border:1px solid #475569;background:#0f172a;color:#cbd5e1;transition:all .15s;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem;min-height:32px}
-  .btn-sm:hover{background:#c59b45;color:#092c4c;border-color:#c59b45}
-  .lb-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.95);backdrop-filter:blur(8px);z-index:90;display:none;align-items:center;justify-content:center;padding:.5rem}
-  .lb-backdrop.open{display:flex}
-  .lb-content{background:#1e293b;border-radius:14px;max-width:1080px;width:100%;max-height:94vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.6);position:relative;border:1px solid #334155}
-  .lb-image-pane{background:#0b1120;position:relative;display:flex;align-items:center;justify-content:center;min-height:40vh;max-height:55vh;flex-shrink:0}
-  .lb-image-pane img{max-width:100%;max-height:54vh;object-fit:contain;display:block}
-  .lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.2);color:#fff;border:none;width:42px;height:42px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);transition:all .2s}
-  .lb-nav:hover{background:#c59b45;color:#092c4c}
-  .lb-prev{right:12px}.lb-next{left:12px}
-  .lb-close{position:absolute;top:12px;left:12px;z-index:10;background:rgba(15,23,42,.85);color:#fff;border:none;width:36px;height:36px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
-  .lb-close:hover{background:#dc2626}
-  .lb-details{padding:1rem 1.25rem;flex:1;overflow-y:auto;min-height:0}
-  .lb-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;gap:.5rem;flex-wrap:wrap}
-  .lb-date{font-weight:700;color:#c59b45;font-size:.85rem}
-  .lb-counter{font-size:.8rem;color:#94a3b8;font-weight:700;font-family:ui-monospace,monospace}
-  .lb-caption{font-size:.92rem;color:#cbd5e1;line-height:1.75;white-space:pre-line;margin-bottom:.75rem}
-  .lb-footer{border-top:1px solid #334155;padding-top:.75rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
-  #detailsContent::-webkit-scrollbar{width:6px}
-  #detailsContent::-webkit-scrollbar-thumb{background:rgba(100,116,139,.4);border-radius:3px}
-  #playerZone{position:relative;background:#0f172a}
-  #playerZone iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
-  #playerZone:fullscreen,#playerZone:-webkit-full-screen{width:100vw!important;height:100vh!important;max-width:none!important;margin:0!important;padding:0!important;background:#000!important}
-  #progressOverlay{animation:fadeIn .3s}
-  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-  #exitConfirmModal{animation:fadeIn .2s}
-  .url-details summary{list-style:none}
-  .url-details summary::-webkit-details-marker{display:none}
-  .url-details[open] .url-chevron{transform:rotate(180deg)}
-  .url-chevron{transition:transform .2s}
-  @media (max-width: 639px){
-    .header-row{flex-wrap: wrap;gap: .35rem;padding: .45rem .5rem;overflow-x: visible;}
-    .brand{ display: none; }
-    .search-wrap{order: 1;flex: 1 1 auto;min-width: 0;max-width: none;}
-    .search-wrap input{padding: .45rem 1.9rem .45rem .6rem;font-size: 13px;}
-    .search-wrap .search-icon{right: .55rem;font-size: .78rem;}
-    .year-inline{order: 2;flex-shrink: 0;}
-    .year-inline .menu-item{padding: .42rem .5rem;font-size: .72rem;gap: .25rem;}
-    .year-inline .menu-item i.fa-calendar{ font-size: .72rem; }
-    .year-inline .menu-badge{font-size: .65rem;padding: .08rem .4rem;}
-    .center-tabs{order: 3;flex-basis: 100%;margin: .35rem 0 0 0;justify-content: center;}
+  html { -webkit-text-size-adjust: 100%; }
+  body { -webkit-tap-highlight-color: transparent; }
+  .reel-card { position: relative; }
+  .date-display { display: inline-block; white-space: nowrap; direction: rtl; unicode-bidi: isolate; max-width: 100%; }
+  .thumb-gradient {
+    background: linear-gradient(to top,
+      rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.55) 22%,
+      rgba(0,0,0,0.18) 42%, transparent 60%);
   }
-  @media (max-width: 380px){
-    .center-tab{padding:.34rem .42rem;font-size:.62rem;gap:.16rem}
-    .center-tab i{font-size:.68rem}
-    .center-tab .count-badge{font-size:.5rem;padding:0 .25rem}
-    .year-inline .menu-item{padding:.38rem .42rem;font-size:.68rem;gap:.2rem}
-    .year-inline .menu-badge{font-size:.6rem;padding:.06rem .3rem}
-    .search-wrap input{padding:.42rem 1.8rem .42rem .55rem;font-size:12.5px}
-    .header-row{gap:.3rem;padding:.4rem .45rem}
+  .video-title {
+    display: block; width: 100%; white-space: normal;
+    word-wrap: break-word; overflow-wrap: anywhere; line-height: 1.3;
   }
-  @media (min-width:640px){
-    .brand-text p{display:block}
-    .brand-text h1{font-size:1.1rem}
-    .brand-badge{width:44px;height:44px;font-size:1.15rem}
-    .center-tab{padding:.55rem 1.1rem;font-size:.9rem;gap:.4rem}
-    .center-tab i{font-size:1rem}
-    .center-tab .count-badge{font-size:.68rem;padding:.05rem .45rem}
-    .header-row{gap:.75rem;padding:.5rem .75rem}
-    .search-wrap{flex:0 1 240px;min-width:150px}
-    .year-inline .menu-item{padding:.55rem .7rem;font-size:.85rem}
-    .year-inline .menu-badge{font-size:.78rem;padding:.15rem .6rem}
-    .pub-grid{grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.2rem}
-    .photos-grid{grid-template-columns:repeat(3,1fr);gap:8px}
-    .lb-content{display:grid;grid-template-columns:1.4fr 1fr;max-height:88vh}
-    .lb-image-pane{min-height:0;max-height:none}
-    .lb-image-pane img{max-height:88vh}
-    .lb-details{padding:1.5rem;max-height:88vh}
+  .thumb-wrap {
+    position: relative; width: 100%; height: 100%;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    overflow: hidden;
   }
-  @media (min-width:820px){
-    .header-row{padding:.6rem 1.5rem;gap:1rem}
-    .sub-menu-inner{padding:.5rem 1.5rem}
-    main{padding:1.5rem 1.5rem 2.5rem}
-    .photos-grid{grid-template-columns:repeat(4,1fr);gap:10px}
-    .pub-grid{grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:1.4rem}
+  .thumb-wrap img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; display: block; transition: transform 0.5s ease;
   }
-  @media (min-width:1100px){
-    .photos-grid{grid-template-columns:repeat(5,1fr)}
-    .header-row{padding:.65rem 2rem}
-    .sub-menu-inner{padding:.5rem 2rem}
-    main{padding:1.5rem 2rem 3rem}
+  .thumb-wrap .thumb-fallback {
+    position: absolute; inset: 0; display: none;
+    align-items: center; justify-content: center; flex-direction: column;
+    gap: 6px; color: #64748b; font-size: 9px; text-align: center;
+    padding: 8px; direction: rtl;
   }
-  .safe-bottom{padding-bottom:max(1rem,env(safe-area-inset-bottom))}
-  .hidden{display:none!important}
+  .thumb-wrap.thumb-error img { display: none !important; }
+  .thumb-wrap.thumb-error .thumb-fallback { display: flex; }
+  .thumb-wrap .thumb-fallback i { font-size: 22px; color: #475569; }
+  .theme-chip {
+    display: inline-block; background-color: #FFF9DB; color: #78350F;
+    border: 1px solid #FCD34D; border-radius: 9999px; padding: 2px 8px;
+    font-size: 9px; font-weight: 700; line-height: 1.4; max-width: 120px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    direction: rtl; text-align: right; box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+    vertical-align: middle;
+  }
+  @media (min-width: 640px) { .theme-chip { font-size: 10px; padding: 3px 10px; max-width: 150px; } }
+  .theme-card-new {
+    background-color: #FFF9DB; border: 1px solid #FCD34D; color: #78350F;
+    border-radius: 14px; transition: all 0.25s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .theme-card-new:hover {
+    background-color: #FEF3C7; border-color: #F59E0B;
+    box-shadow: 0 6px 16px rgba(245,158,11,0.20); transform: translateY(-2px);
+  }
+  .theme-card-new:active { transform: translateY(0) scale(0.98); }
+  .theme-card-new .theme-card-icon { background-color: #FCD34D; color: #78350F; }
+  .theme-card-new .theme-card-count { background-color: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
+  .theme-folder-row {
+    background-color: #FFF9DB; border: 1px solid #FCD34D; border-radius: 10px;
+    color: #78350F; transition: all 0.2s ease;
+  }
+  .theme-folder-row:hover {
+    background-color: #FEF3C7; border-color: #F59E0B;
+    box-shadow: 0 2px 8px rgba(245,158,11,0.15);
+  }
+  .theme-folder-row .folder-icon { color: #B45309; }
+  .theme-folder-row .chevron-icon { color: #92400E; }
+  .theme-folder-row .count-badge { background-color: #FCD34D; color: #78350F; border: 1px solid #F59E0B; }
+  .theme-folder-row .theme-sub { color: #92400E; opacity: 0.7; }
+  .tree-list { list-style-type: none; padding-left: 0; padding-right: 0; margin: 0; }
+  .tree-list .tree-list {
+    padding-right: 1.5rem; padding-left: 0;
+    border-right: 2px dashed #475569; border-left: none;
+    margin-right: 0.75rem; margin-left: 0;
+  }
+  .tree-item { position: relative; padding: 0.3rem 0; }
+  .tree-list .tree-list .tree-item::before {
+    content: ''; position: absolute;
+    right: -1.5rem; left: auto; top: 1.5rem; width: 1rem;
+    border-top: 2px dashed #475569;
+  }
+  .tree-toggle { cursor: pointer; transition: transform 0.2s; }
+  .tree-toggle.open { transform: rotate(-90deg); }
+  .tree-children.hidden { display: none; }
+  .tree-video-title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  #detailsContent::-webkit-scrollbar { width: 6px; }
+  #detailsContent::-webkit-scrollbar-track { background: transparent; }
+  #detailsContent::-webkit-scrollbar-thumb { background: rgba(100,116,139,.4); border-radius: 3px; }
+  @supports (padding: max(0px)) { .safe-bottom { padding-bottom: max(1rem, env(safe-area-inset-bottom)); } }
+  .theme-tooltip .tooltip-text {
+    visibility: hidden; width: max-content; max-width: 180px;
+    background-color: #1e293b; color: #fff; text-align: center;
+    border-radius: 6px; padding: 6px 10px; position: absolute; z-index: 50;
+    top: 130%; right: 0; opacity: 0; transition: opacity 0.2s;
+    border: 1px solid #334155; font-size: 11px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); pointer-events: none;
+  }
+  .theme-tooltip:hover .tooltip-text { visibility: visible; opacity: 1; }
+  #playerZone { position: relative; background: #0f172a; }
+  #playerZone iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+  #playerZone:fullscreen, #playerZone:-webkit-full-screen {
+    width: 100vw !important; height: 100vh !important;
+    max-width: none !important; max-height: none !important;
+    margin: 0 !important; padding: 0 !important; background: #000 !important;
+  }
+  #playerZone:fullscreen iframe, #playerZone:-webkit-full-screen iframe {
+    width: 100% !important; height: 100% !important;
+  }
+  #fullscreenBtn i { transition: transform 0.2s ease; }
+  #progressOverlay { animation: fadeIn 0.3s ease-in-out; }
+  #progressOverlay.fade-out { animation: fadeOut 0.4s ease-in-out forwards; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+  #exitConfirmModal { animation: fadeIn 0.2s ease-out; }
+  #exitConfirmModal .exit-dialog { animation: slideUp 0.25s ease-out; }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .content-match-badge {
+    position: absolute; top: 0; right: 0; z-index: 4;
+    background: rgba(245,158,11,0.95); color: #1c1917;
+    font-size: 8px; font-weight: 800; padding: 2px 6px;
+    border-bottom-left-radius: 8px; letter-spacing: 0.03em;
+  }
+
+  html[dir="rtl"] .play-btn-gallery { align-self: flex-end; }
+  html[dir="rtl"] .play-btn-theme-wrapper { justify-content: flex-end; }
+
+  .institutional-banner {
+    width: 100%; margin: 0; padding: 0;
+    background: #ffffff;
+    border-bottom: 1px solid #dbe3ed;
+    overflow: hidden; display: block; line-height: 0;
+  }
+  .institutional-banner img {
+    display: block; width: 100%; height: auto;
+    max-width: none; max-height: none;
+    object-fit: cover; object-position: center;
+    margin: 0; padding: 0; border: 0;
+  }
+
+  .main-menu-bar {
+    background-color: #092c4c; color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .menu-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 14px 18px; font-size: 14.5px; font-weight: 600;
+    color: #ffffff; text-decoration: none; white-space: nowrap;
+    border-bottom: 3px solid transparent; transition: all 0.2s;
+    background: transparent; cursor: pointer; line-height: 1.2;
+    font-family: inherit; border-left: none; border-right: none; border-top: none;
+  }
+  .menu-item:hover { background-color: rgba(255, 255, 255, 0.06); color: #93c5fd; }
+  .menu-item.active, .menu-item[aria-expanded="true"] {
+    border-bottom-color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.14);
+    color: #bfdbfe;
+  }
+  .menu-divider {
+    width: 1px; height: 24px;
+    background-color: rgba(255, 255, 255, 0.25);
+    margin: 0 4px;
+  }
+  .menu-search {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 9999px; color: white; font-size: 14px;
+    width: 100%; max-width: 320px; outline: none;
+    transition: all 0.2s; font-family: inherit;
+  }
+  .menu-search::placeholder { color: rgba(255, 255, 255, 0.6); }
+  .menu-search:focus { background-color: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.6); }
+
+  .menu-dropdown { position: relative; display: flex; }
+  .menu-dropdown > .menu-item { width: 100%; }
+  .menu-dropdown-content {
+    position: absolute; top: 100%; right: 0; left: auto;
+    min-width: 240px; background: #0b3559;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.5);
+    z-index: 60; padding: 6px 0; overflow: hidden;
+    animation: dropdownFade 0.15s ease-out;
+  }
+  @keyframes dropdownFade {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .menu-dropdown.align-right .menu-dropdown-content { right: auto; left: 0; }
+  .menu-dropdown-item {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    padding: 11px 18px; color: #e2e8f0; font-size: 14px; font-weight: 500;
+    text-align: right; background: transparent; border: none;
+    cursor: pointer; transition: background 0.15s, color 0.15s;
+    white-space: nowrap; font-family: inherit; direction: rtl;
+  }
+  .menu-dropdown-item:hover { background: rgba(255, 255, 255, 0.09); color: #ffffff; }
+  .menu-dropdown-item.active {
+    background: rgba(59, 130, 246, 0.24);
+    color: #93c5fd; font-weight: 700;
+  }
+  .menu-dropdown-item i {
+    width: 16px; text-align: center; font-size: 12px;
+    flex-shrink: 0; opacity: 0.88;
+  }
+  .menu-dropdown-item .dd-check {
+    margin-right: auto; margin-left: 0;
+    font-size: 11px; color: #60a5fa; opacity: 0;
+  }
+  .menu-dropdown-item.active .dd-check { opacity: 1; }
+
+  .menu-badge {
+    display: inline-block;
+    background: rgba(59, 130, 246, 0.3);
+    color: #bfdbfe; font-size: 10px; font-weight: 700;
+    padding: 1px 7px; border-radius: 9999px;
+    border: 1px solid rgba(59, 130, 246, 0.5);
+    line-height: 1.5; flex-shrink: 0; letter-spacing: 0.02em;
+  }
+
+  @media (max-width: 639px) {
+    .menu-item { padding: 11px 10px; font-size: 13px; gap: 6px; justify-content: flex-start; }
+    .menu-search { max-width: none; font-size: 13px; }
+    .menu-dropdown-content {
+      min-width: 210px; max-width: calc(100vw - 16px);
+      right: 0; left: auto;
+    }
+    .menu-dropdown.align-right .menu-dropdown-content { right: auto; left: 0; }
+    .menu-badge { font-size: 9px; padding: 0 5px; }
+    .menu-dropdown-item { padding: 10px 14px; font-size: 13px; }
+  }
+
+  .sub-menu-bar { background-color: #1e293b; border-bottom: 1px solid #334155; }
+  header.sticky { top:0; background:rgba(15,23,42,.97); border-top:3px solid #c59b45; }
+
+  /* ============================================================
+     ALBUM PHOTO — styles scopés sous #photosSection
+     ============================================================ */
+  #photosSection {
+    background: #f0f2f5;
+    color: #1c1e21;
+    min-height: 60vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  #photosSection .photo-app {
+    --photo-bg:#f0f2f5; --photo-card:#fff; --photo-text:#1c1e21; --photo-muted:#65676b;
+    --photo-accent:#1877f2; --photo-ok:#1f9d55; --photo-warn:#f7b928; --photo-danger:#d93025;
+    --photo-safe-bottom:env(safe-area-inset-bottom,0px);
+    background: var(--photo-bg);
+    color: var(--photo-text);
+    padding: 10px;
+    padding-bottom: calc(72px + var(--photo-safe-bottom));
+    min-height: 60vh;
+  }
+  #photosSection .photo-header {
+    background: rgba(240,242,245,.94);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    margin: -10px -10px 10px -10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+  }
+  #photosSection .photo-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--photo-accent);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #photosSection #photo-status {
+    font-size: 12px;
+    color: var(--photo-muted);
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+  #photosSection #photo-status .ok { color: var(--photo-ok); }
+  #photosSection #photo-status .warn { color: var(--photo-warn); }
+  #photosSection #photo-status .err { color: var(--photo-danger); }
+
+  #photosSection #photo-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    min-height: 120px;
+  }
+  @media(min-width:480px){ #photosSection #photo-gallery{ grid-template-columns:repeat(3,1fr); gap:10px } }
+  @media(min-width:700px){ #photosSection #photo-gallery{ grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px } }
+
+  #photosSection .photo-card {
+    background: var(--photo-card);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,.08);
+    display: flex;
+    flex-direction: column;
+    animation: photoFadeIn .2s ease;
+    will-change: opacity, transform;
+  }
+  @keyframes photoFadeIn { from{opacity:0} to{opacity:1} }
+  #photosSection .photo-card.removing { opacity:0; transform:scale(.85); transition:opacity .2s,transform .2s; }
+  #photosSection .photo-card a {
+    display: block;
+    text-decoration: none;
+    background: #e4e6eb;
+    cursor: zoom-in;
+    position: relative;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+  }
+  #photosSection .photo-card.placeholder a { cursor: default; }
+  #photosSection .photo-card a::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,#e4e6eb 25%,#eef0f2 50%,#e4e6eb 75%);
+    background-size: 200% 100%;
+    animation: photoShimmer 1.4s infinite;
+  }
+  @keyframes photoShimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  #photosSection .photo-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0;
+    transition: opacity .25s;
+    position: relative;
+    z-index: 1;
+  }
+  #photosSection .photo-card img.loaded { opacity: 1; }
+  #photosSection .photo-card a:has(img.loaded)::before { display: none; }
+  #photosSection .photo-card .photo-num {
+    padding: 4px 6px;
+    font-size: 11px;
+    color: var(--photo-muted);
+    text-align: center;
+    font-weight: 600;
+    background: #fafbfc;
+  }
+
+  #photosSection .photo-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--photo-muted);
+    font-size: 14px;
+  }
+  #photosSection .photo-empty .photo-empty-icon { font-size: 42px; margin-bottom: 10px; opacity: .5; }
+  #photosSection .photo-empty strong { color: var(--photo-text); display: block; margin-bottom: 8px; font-size: 16px; }
+  #photosSection .photo-empty p { max-width: 420px; margin: 6px auto 0; line-height: 1.5; font-size: 13px; }
+
+  #photosSection #photo-pagination {
+    position: sticky;
+    bottom: 0;
+    z-index: 30;
+    margin: 8px -10px -10px -10px;
+    padding: 8px;
+    padding-bottom: calc(8px + var(--photo-safe-bottom));
+    background: rgba(255,255,255,.97);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0,0,0,.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  #photosSection #photo-pagination::-webkit-scrollbar { display: none; }
+  #photosSection .photo-pg-btn {
+    flex: 0 0 auto;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 8px;
+    border: 1px solid #ccd0d5;
+    background: #fff;
+    color: var(--photo-text);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background .15s, transform .1s, opacity .2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+  #photosSection .photo-pg-btn:active:not(:disabled):not(.active) { background: #e7f3ff; transform: scale(.95); }
+  #photosSection .photo-pg-btn.active { background: var(--photo-accent); border-color: var(--photo-accent); color: #fff; cursor: default; }
+  #photosSection .photo-pg-btn:disabled { opacity: .35; }
+  #photosSection .photo-pg-btn.nav { font-size: 18px; min-width: 44px; }
+  #photosSection .photo-pg-btn.ellipsis { border: none; background: transparent; cursor: default; min-width: 16px; padding: 0 2px; opacity: .6; }
+  #photosSection .photo-pg-btn.empty { opacity: .3; background: #f5f6f7; text-decoration: line-through; text-decoration-color: rgba(0,0,0,.3); }
+
+  @media(max-width:480px){
+    #photosSection .photo-title { font-size: 15px; }
+    #photosSection #photo-status { font-size: 11px; }
+    #photosSection .photo-card .photo-num { font-size: 10px; padding: 3px 4px; }
+  }
+
+  #photo-lb {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  #photo-lb.on { display: flex; }
+  #photo-lb img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    transition: opacity .15s;
+  }
+  #photo-lb img.loading { opacity: .4; }
+  #photo-lb .photo-lb-close {
+    position: absolute;
+    top: calc(12px + env(safe-area-inset-top,0px));
+    right: calc(12px + env(safe-area-inset-right,0px));
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    touch-action: manipulation;
+  }
+  #photo-lb .photo-lb-counter {
+    position: absolute;
+    top: calc(20px + env(safe-area-inset-top,0px));
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,.85);
+    font-size: 13px;
+    font-weight: 600;
+    background: rgba(0,0,0,.5);
+    padding: 6px 12px;
+    border-radius: 20px;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  #photo-lb .photo-lb-hint {
+    position: absolute;
+    bottom: calc(16px + env(safe-area-inset-bottom,0px));
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,.7);
+    font-size: 12px;
+    background: rgba(0,0,0,.5);
+    padding: 6px 14px;
+    border-radius: 20px;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  @media(hover:hover){ #photo-lb .photo-lb-hint { display:none } }
 </style>
 <base target="_blank">
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col">
 
 <div id="progressOverlay" class="hidden fixed inset-0 z-[100] bg-slate-900/95 backdrop-blur-md flex items-center justify-center">
   <div class="w-full max-w-md px-6">
@@ -218,7 +502,7 @@
       <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/20 mb-4">
         <i class="fa-solid fa-images text-3xl text-blue-400 animate-pulse"></i>
       </div>
-      <h2 id="progressTitle" class="text-lg font-bold text-white mb-1">جارٍ التحقق من الصور…</h2>
+      <h2 class="text-lg sm:text-xl font-bold text-white mb-1">جارٍ تحميل الصور المصغرة…</h2>
       <p id="progressCount" class="text-xs text-slate-400">جارٍ التحضير…</p>
     </div>
     <div class="h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
@@ -228,131 +512,131 @@
   </div>
 </div>
 
-<div class="institutional-banner" role="banner">
+<div class="institutional-banner" role="banner" aria-label="الشعار المؤسساتي للفيديوتيكة">
   <img src="https://marocnetmail.github.io/125/images/logo2.png" alt="الشعار المؤسساتي" loading="eager">
 </div>
 
-<header class="app-header" dir="rtl">
-  <div class="header-row">
-    <div class="brand"><div class="brand-text"></div></div>
-    <nav class="center-tabs" role="tablist" aria-label="القائمة الرئيسية">
-      <button class="center-tab active" data-tab="videos" role="tab" aria-selected="true">
-        <i class="fa-solid fa-film"></i><span class="tab-label">الفيديوهات</span><span class="count-badge" id="tabCountVideos">0</span>
-      </button>
-      <button class="center-tab" data-tab="photos" role="tab" aria-selected="false">
-        <i class="fa-solid fa-images"></i><span class="tab-label">الصور</span><span class="count-badge" id="tabCountPhotos">0</span>
-      </button>
-      <button class="center-tab" data-tab="publications" role="tab" aria-selected="false">
-        <i class="fa-solid fa-newspaper"></i><span class="tab-label">المنشورات</span><span class="count-badge" id="tabCountPublications">0</span>
-      </button>
-    </nav>
-    <div class="menu-dropdown year-inline" data-dropdown="year">
-      <button type="button" class="menu-item" id="menuYear" title="تصفية حسب السنة" aria-label="تصفية حسب السنة" aria-haspopup="true" aria-expanded="false">
-        <i class="fa-solid fa-calendar"></i>
-        <span class="menu-badge" id="yearBadge">٢٠٢٦</span>
-        <i class="fa-solid fa-chevron-down text-[10px] opacity-70 dd-chevron"></i>
-      </button>
-      <div class="menu-dropdown-content hidden" id="yearDropdownContent" role="menu"></div>
-    </div>
-    <div class="search-wrap">
-      <i class="fa-solid fa-magnifying-glass search-icon"></i>
-      <input type="text" id="globalSearch" inputmode="search" placeholder="البحث في المحتوى…" aria-label="البحث في المحتوى" dir="rtl">
-    </div>
-  </div>
-  <div class="sub-menu-row visible" id="videoSubMenu">
-    <div class="sub-menu-inner">
-      <button type="button" class="menu-item" id="menuHome" aria-label="الرئيسية">
-        <i class="fa-solid fa-house"></i><span>الرئيسية</span>
-      </button>
-      <div class="menu-dropdown" data-dropdown="gallery">
-        <button type="button" class="menu-item" id="menuGalerie" aria-haspopup="true" aria-expanded="false">
-          <i class="fa-solid fa-table-cells-large"></i><span>معرض الفيديوهات</span>
-          <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-70 dd-chevron"></i>
+<nav class="main-menu-bar w-full sticky top-0 z-40 shadow-lg" dir="rtl" aria-label="القائمة الرئيسية">
+  <div class="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-8">
+    <div class="relative flex flex-col lg:flex-row items-center justify-center gap-2 py-1">
+
+      <div class="flex flex-wrap justify-center items-stretch gap-1 order-1">
+
+        <button type="button" class="menu-item" id="menuPhotos" aria-label="ألبوم الصور">
+          <i class="fa-solid fa-images"></i><span>ألبوم الصور</span>
         </button>
-        <div class="menu-dropdown-content hidden" id="galleryDropdown" role="menu">
-          <button type="button" class="menu-dropdown-item" data-view="gallery" role="menuitem">
-            <i class="fa-solid fa-table-cells-large"></i><span>عرض شبكي</span><i class="fa-solid fa-check dd-check"></i>
+
+        <div class="menu-dropdown" data-dropdown="videos">
+          <button type="button" class="menu-item" id="menuGalerie"
+                  aria-haspopup="true" aria-expanded="false" aria-controls="galleryDropdown">
+            <i class="fa-solid fa-video"></i><span>ألبوم الفيديوهات</span>
+            <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-70 dd-chevron"></i>
           </button>
-          <button type="button" class="menu-dropdown-item" data-view="themes" role="menuitem">
-            <i class="fa-solid fa-folder-open"></i><span>المحاور الموضوعاتية</span><i class="fa-solid fa-check dd-check"></i>
+          <div class="menu-dropdown-content hidden" id="galleryDropdown" role="menu" aria-label="خيارات عرض الفيديوهات">
+            <button type="button" class="menu-dropdown-item" data-view="gallery" role="menuitem">
+              <i class="fa-solid fa-table-cells-large"></i><span>كل الفيديوهات</span><i class="fa-solid fa-check dd-check"></i>
+            </button>
+            <button type="button" class="menu-dropdown-item" data-view="themes" role="menuitem">
+              <i class="fa-solid fa-folder-open"></i><span>المحاور الموضوعاتية</span><i class="fa-solid fa-check dd-check"></i>
+            </button>
+            <button type="button" class="menu-dropdown-item" data-view="tree" role="menuitem">
+              <i class="fa-solid fa-sitemap"></i><span>التنظيم الهيكلي</span><i class="fa-solid fa-check dd-check"></i>
+            </button>
+            <div class="border-t border-white/10 my-1"></div>
+            <div id="sortDropdown" role="group" aria-label="خيارات الفرز">
+              <button type="button" class="menu-dropdown-item" data-sort="recent" role="menuitem">
+                <i class="fa-solid fa-clock"></i><span>الأحدث</span><i class="fa-solid fa-check dd-check"></i>
+              </button>
+              <button type="button" class="menu-dropdown-item" data-sort="views" role="menuitem">
+                <i class="fa-solid fa-eye"></i><span>الأكثر مشاهدة</span><i class="fa-solid fa-check dd-check"></i>
+              </button>
+              <button type="button" class="menu-dropdown-item" data-sort="reactions" role="menuitem">
+                <i class="fa-solid fa-heart"></i><span>الأكثر تفاعلاً وتعليقاً</span><i class="fa-solid fa-check dd-check"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-dropdown" data-dropdown="years">
+          <button type="button" class="menu-item" id="menuYears"
+                  aria-haspopup="true" aria-expanded="false" aria-controls="yearDropdownContent">
+            <i class="fa-solid fa-calendar"></i><span>السنوات</span>
+            <span class="menu-badge" id="yearBadge">2026</span>
+            <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-70 dd-chevron"></i>
           </button>
-          <button type="button" class="menu-dropdown-item" data-view="tree" role="menuitem">
-            <i class="fa-solid fa-sitemap"></i><span>التنظيم الهيكلي</span><i class="fa-solid fa-check dd-check"></i>
-          </button>
+          <div class="menu-dropdown-content hidden" id="yearDropdownContent" role="menu" aria-label="فلتر حسب السنة"></div>
+        </div>
+
+      </div>
+
+      <div class="w-full lg:w-64 lg:absolute lg:left-3 lg:top-1/2 lg:-translate-y-1/2 flex items-center justify-center lg:justify-start order-2 lg:order-none px-2 lg:px-0 pb-2 lg:pb-0" id="searchWrap">
+        <div class="relative w-full">
+          <i class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-white/60 text-sm pointer-events-none"></i>
+          <input type="text" id="searchInput" inputmode="search" placeholder="البحث في المحتوى…"
+                 aria-label="البحث في المحتوى" class="menu-search py-2 pr-9 pl-4" dir="rtl">
         </div>
       </div>
-      <div class="menu-dropdown" data-dropdown="sort">
-        <button type="button" class="menu-item" id="menuSort" aria-haspopup="true" aria-expanded="false">
-          <i class="fa-solid fa-clock-rotate-left"></i><span>الأحدث</span>
-          <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-70 dd-chevron"></i>
-        </button>
-        <div class="menu-dropdown-content hidden" id="sortDropdown" role="menu">
-          <button type="button" class="menu-dropdown-item" data-sort="recent" role="menuitem">
-            <i class="fa-solid fa-clock"></i><span>الأحدث</span><i class="fa-solid fa-check dd-check"></i>
-          </button>
-          <button type="button" class="menu-dropdown-item" data-sort="views" role="menuitem">
-            <i class="fa-solid fa-eye"></i><span>الأكثر مشاهدة</span><i class="fa-solid fa-check dd-check"></i>
-          </button>
-          <button type="button" class="menu-dropdown-item" data-sort="reactions" role="menuitem">
-            <i class="fa-solid fa-heart"></i><span>الأكثر تفاعلاً وتعليقاً</span><i class="fa-solid fa-check dd-check"></i>
-          </button>
-        </div>
-      </div>
+
     </div>
   </div>
-</header>
+</nav>
 
-<main>
-  <section id="videosSection">
-    <div id="backNavigation" class="hidden mb-3">
-      <button id="backToThemesBtn" type="button" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium border border-slate-700 transition-colors" dir="rtl">
-        <i class="fa-solid fa-arrow-right"></i> العودة إلى المحاور
+<main id="videosSection" class="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-8 py-3 sm:py-6 flex-1 w-full relative">
+  <div id="backNavigation" class="hidden mb-3">
+    <button id="backToThemesBtn" type="button" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-slate-700" dir="rtl">
+      <i class="fa-solid fa-arrow-right"></i> العودة إلى المحاور الموضوعاتية
+    </button>
+  </div>
+  <div id="themesView" class="hidden"></div>
+  <div id="treeView" class="hidden bg-slate-800/50 p-4 sm:p-6 rounded-2xl border border-slate-700">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 pb-3 border-b border-slate-700" dir="rtl">
+      <h2 class="text-slate-200 font-bold text-base sm:text-lg flex items-center gap-2">
+        <i class="fa-solid fa-sitemap text-blue-400"></i>
+        <span>الشجرة الموضوعية</span>
+        <span class="text-xs font-normal text-slate-400">(التنظيم الهيكلي)</span>
+      </h2>
+      <button id="exportExcelBtn" type="button"
+              class="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors border border-emerald-500 shadow-sm touch-manipulation">
+        <i class="fa-solid fa-file-excel"></i>
+        <span>تصدير إلى Excel (.xlsx)</span>
       </button>
     </div>
-    <div id="themesView" class="hidden"></div>
-    <div id="treeView" class="hidden bg-slate-800/50 p-4 sm:p-6 rounded-2xl border border-slate-700">
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 pb-3 border-b border-slate-700" dir="rtl">
-        <h2 class="text-slate-200 font-bold text-base sm:text-lg flex items-center gap-2">
-          <i class="fa-solid fa-sitemap text-blue-400"></i><span>الشجرة الموضوعية</span>
-        </h2>
-        <button id="exportExcelBtn" type="button" class="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold border border-emerald-500 shadow-sm">
-          <i class="fa-solid fa-file-excel"></i><span>تصدير Excel</span>
-        </button>
-      </div>
-      <div id="treeContent"></div>
-    </div>
-    <div id="reelsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 w-full"></div>
-    <div id="emptyState" class="hidden text-center py-16 bg-slate-800/30 rounded-2xl border border-dashed border-slate-700 mt-4">
-      <i class="fa-regular fa-folder-open text-5xl text-slate-600 mb-4"></i>
-      <h3 class="text-lg font-medium text-slate-300">لا توجد نتائج</h3>
-      <p class="text-sm text-slate-500 mt-2">حاول تغيير البحث أو الفلاتر</p>
-    </div>
-    <nav id="pagination" class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-6 safe-bottom"></nav>
-  </section>
-
-  <section id="photosSection" class="hidden">
-    <div class="photos-album-container bg-slate-800/40 rounded-2xl border border-slate-700 p-2 sm:p-3">
-      <div id="photosGrid" class="photos-grid"></div>
-    </div>
-    <nav id="photosPagination" class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-6 safe-bottom"></nav>
-    <div id="photosEmpty" class="hidden text-center py-16 bg-slate-800/30 rounded-2xl border border-dashed border-slate-700 mt-4">
-      <i class="fa-regular fa-images text-5xl text-slate-600 mb-4"></i>
-      <h3 class="text-lg font-medium text-slate-300">لا توجد صور</h3>
-    </div>
-  </section>
-
-  <section id="publicationsSection" class="hidden">
-    <div id="pubGrid" class="pub-grid"></div>
-    <div id="pubEmpty" class="hidden text-center py-16 bg-slate-800/30 rounded-2xl border border-dashed border-slate-700 mt-4">
-      <i class="fa-regular fa-newspaper text-5xl text-slate-600 mb-4"></i>
-      <h3 class="text-lg font-medium text-slate-300">لا توجد منشورات</h3>
-    </div>
-  </section>
+    <div id="treeContent"></div>
+  </div>
+  <div id="reelsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 w-full"></div>
+  <div id="emptyState" class="hidden text-center py-16 bg-slate-800/30 rounded-2xl border border-dashed border-slate-700 mt-4">
+    <i class="fa-regular fa-folder-open text-5xl text-slate-600 mb-4"></i>
+    <h3 class="text-lg font-medium text-slate-300">لا توجد فيديوهات</h3>
+  </div>
+  <nav id="pagination" class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-6 safe-bottom" aria-label="ترقيم الصفحات"></nav>
 </main>
 
+<main id="photosSection" class="hidden flex-1 w-full" dir="ltr">
+  <div class="photo-app">
+    <header class="photo-header">
+      <h1 class="photo-title">📷 Photos</h1>
+      <div id="photo-status">…</div>
+    </header>
+    <div id="photo-gallery"></div>
+    <div id="photo-pagination"></div>
+  </div>
+</main>
+
+<div id="photo-lb">
+  <img alt="">
+  <div class="photo-lb-counter"></div>
+  <button class="photo-lb-close" aria-label="Fermer">×</button>
+  <div class="photo-lb-hint">← glissez · touchez le bord →</div>
+</div>
+
 <footer class="w-full max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 pt-2 pb-6 safe-bottom">
-  <div class="flex justify-center">
-    <button id="openRemarksBtn" type="button" class="cursor-pointer bg-slate-700 hover:bg-slate-600 border border-slate-600 text-sm font-medium px-5 sm:px-6 py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md">
+  <div class="flex justify-center gap-3 flex-wrap">
+    <button id="albumPhotoBtn" type="button"
+            class="cursor-pointer bg-blue-600 hover:bg-blue-500 active:bg-blue-400 border border-blue-500 text-white text-sm font-medium px-5 sm:px-6 py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 touch-manipulation shadow-md">
+      <i class="fa-solid fa-images"></i><span>ألبوم الصور</span>
+    </button>
+    <button id="openRemarksBtn" type="button"
+            class="cursor-pointer bg-slate-700 hover:bg-slate-600 active:bg-slate-500 border border-slate-600 text-sm font-medium px-5 sm:px-6 py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 touch-manipulation shadow-md">
       <i class="fa-solid fa-comment-dots text-amber-400"></i><span>الملاحظات</span>
     </button>
   </div>
@@ -362,14 +646,16 @@
   <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" data-close-details></div>
   <div class="relative z-10 w-full h-full flex items-center justify-center p-2 sm:p-4">
     <div class="relative w-full max-w-5xl h-[92vh] bg-slate-800 overflow-hidden shadow-2xl border border-slate-700 rounded-2xl flex flex-col lg:flex-row">
-      <button type="button" data-close-details class="absolute top-3 right-3 z-50 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-red-600 border border-slate-700 text-white flex items-center justify-center transition-colors shadow-lg" aria-label="إغلاق">
+      <button type="button" data-close-details
+              class="absolute top-3 right-3 z-50 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-red-600 border border-slate-700 text-white flex items-center justify-center transition-colors shadow-lg touch-manipulation"
+              aria-label="إغلاق">
         <i class="fa-solid fa-xmark text-lg"></i>
       </button>
       <div id="playerZone" class="relative w-full h-[50vh] lg:h-full lg:w-[450px] flex-shrink-0 flex items-center justify-center overflow-hidden">
         <div id="detailsPoster" class="absolute inset-0 z-10 transition-opacity duration-300">
           <div class="thumb-wrap absolute inset-0">
-            <img id="detailsPosterImg" src="" alt="" onerror="this.parentElement.classList.add('thumb-error')" onload="this.parentElement.classList.remove('thumb-error')">
-            <div class="thumb-fallback"><i class="fa-regular fa-image"></i><span>الصورة غير متوفرة</span></div>
+            <img id="detailsPosterImg" src="" alt="" onerror="this.parentElement.classList.add('thumb-error');" onload="this.parentElement.classList.remove('thumb-error');">
+            <div class="thumb-fallback"><i class="fa-regular fa-image"></i><span>الصورة المصغرة غير متوفرة</span></div>
           </div>
           <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none"></div>
           <div id="videoLoader" class="hidden pointer-events-none absolute inset-0 z-30 flex items-center justify-center">
@@ -381,7 +667,7 @@
               <div class="flex items-center gap-1.5"><i class="fa-solid fa-heart text-rose-400"></i><span id="playerReactionsVal">0</span></div>
             </div>
             <div class="flex items-end justify-between gap-4">
-              <button id="detailsPlayBtn" type="button" class="w-[70px] h-[70px] sm:w-[85px] sm:h-[85px] rounded-full border-[4px] border-white flex items-center justify-center hover:bg-white/20 transition-all active:scale-95 flex-shrink-0 backdrop-blur-sm bg-black/10 shadow-lg">
+              <button id="detailsPlayBtn" type="button" class="w-[70px] h-[70px] sm:w-[85px] sm:h-[85px] rounded-full border-[4px] border-white flex items-center justify-center hover:bg-white/20 transition-all active:scale-95 cursor-pointer flex-shrink-0 backdrop-blur-sm bg-black/10 shadow-lg">
                 <i class="fa-solid fa-play text-white text-2xl sm:text-3xl ml-1 drop-shadow-md"></i>
               </button>
               <div class="text-right flex flex-col items-end flex-1 min-w-0">
@@ -391,40 +677,16 @@
             </div>
           </div>
         </div>
-        <iframe id="detailsFrame" class="border-0 opacity-0 transition-opacity duration-500" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen" scrolling="no" frameborder="0"></iframe>
-        <button id="fullscreenBtn" type="button" class="absolute top-3 left-3 z-40 w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-black/60 hover:bg-black/80 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center shadow-lg" aria-label="ملء الشاشة">
+        <iframe id="detailsFrame" class="border-0 opacity-0 transition-opacity duration-500"
+                allowfullscreen allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen"
+                scrolling="no" frameborder="0"></iframe>
+        <button id="fullscreenBtn" type="button"
+                class="absolute top-3 left-3 z-40 w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-black/60 hover:bg-black/80 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center transition-colors shadow-lg touch-manipulation"
+                aria-label="ملء الشاشة">
           <i class="fa-solid fa-expand text-sm"></i>
         </button>
-        <div id="videoFallbackNote" class="hidden absolute bottom-2 left-2 right-2 text-center text-[11px] text-slate-300 bg-slate-900/80 backdrop-blur-sm rounded-lg px-2 py-1.5 z-30"></div>
       </div>
       <div id="detailsContent" class="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6 space-y-5 bg-slate-800 safe-bottom"></div>
-    </div>
-  </div>
-</div>
-
-<div class="lb-backdrop" id="lightbox">
-  <button class="lb-close" id="lbClose" aria-label="إغلاق"><i class="fa-solid fa-xmark"></i></button>
-  <div class="lb-content">
-    <div class="lb-image-pane">
-      <button class="lb-nav lb-prev" id="lbPrev" aria-label="السابق"><i class="fa-solid fa-chevron-right"></i></button>
-      <img id="lbImg" src="" alt="">
-      <button class="lb-nav lb-next" id="lbNext" aria-label="التالي"><i class="fa-solid fa-chevron-left"></i></button>
-    </div>
-    <div class="lb-details">
-      <div class="lb-meta">
-        <span class="lb-date" id="lbDate"></span>
-        <span class="lb-counter" id="lbCounter"></span>
-      </div>
-      <p class="lb-caption" id="lbCaption"></p>
-      <div class="lb-footer">
-        <div class="pub-stats">
-          <span>👍 <strong id="lbReactions">0</strong></span>
-          <span>🔁 <strong id="lbShares">0</strong></span>
-        </div>
-        <a id="lbFbLink" href="#" target="_blank" rel="noopener" class="btn-sm">
-          <i class="fa-brands fa-facebook"></i> Facebook
-        </a>
-      </div>
     </div>
   </div>
 </div>
@@ -437,7 +699,9 @@
         <h2 class="text-white font-bold text-base sm:text-lg flex items-center gap-2">
           <i class="fa-solid fa-comment-dots text-amber-400"></i><span>الملاحظات</span>
         </h2>
-        <button type="button" data-close-remarks class="w-9 h-9 rounded-full bg-slate-900 hover:bg-red-600 border border-slate-700 text-white flex items-center justify-center" aria-label="إغلاق">
+        <button type="button" data-close-remarks
+                class="w-9 h-9 rounded-full bg-slate-900 hover:bg-red-600 border border-slate-700 text-white flex items-center justify-center transition-colors touch-manipulation"
+                aria-label="إغلاق">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -448,12 +712,16 @@
               <i class="fa-solid fa-pen-to-square ml-1 text-slate-400"></i>
               ملاحظتك <span class="text-rose-400">*</span>
             </label>
-            <textarea id="emailRemarkText" name="monTexte" rows="5" required placeholder="اكتب ملاحظتك هنا…" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500 placeholder-slate-500 resize-y" dir="auto"></textarea>
+            <textarea id="emailRemarkText" name="monTexte" rows="5" required
+              placeholder="اكتب ملاحظتك هنا…" aria-label="ملاحظتك"
+              class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500 placeholder-slate-500 resize-y" dir="auto"></textarea>
           </div>
-          <div id="emailRemarkStatus" class="hidden rounded-lg px-3 py-2 text-sm" role="status"></div>
-          <button type="submit" id="emailRemarkBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
-            <i class="fa-solid fa-paper-plane"></i><span>إرسال</span>
+          <div id="emailRemarkStatus" class="hidden rounded-lg px-3 py-2 text-sm" role="status" aria-live="polite"></div>
+          <button type="submit" id="emailRemarkBtn"
+                  class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-colors touch-manipulation disabled:opacity-60 disabled:cursor-not-allowed">
+            <i class="fa-solid fa-paper-plane"></i><span>إرسال بالبريد الإلكتروني</span>
           </button>
+          <p class="text-[10px] text-slate-500 text-center pt-1">سيتم إرسال ملاحظتك مباشرة إلى المصلحة المختصة.</p>
         </form>
       </div>
     </div>
@@ -463,79 +731,678 @@
 <div id="exitConfirmModal" class="fixed inset-0 z-[80] hidden">
   <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" data-exit-cancel></div>
   <div class="relative z-10 w-full h-full flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
+    <div class="exit-dialog w-full max-w-md bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
+      <div class="bg-gradient-to-r from-slate-800 to-slate-700 px-5 py-3 border-b border-slate-700 flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+          <i class="fa-solid fa-building-columns text-amber-400 text-sm"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">الوزارة</p>
+          <p class="text-xs text-slate-300 truncate">الفيديوتيكة المؤسساتية</p>
+        </div>
+      </div>
       <div class="p-5 sm:p-6 text-center">
         <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-500/15 mb-4">
           <i class="fa-solid fa-right-from-bracket text-2xl text-amber-400"></i>
         </div>
         <h2 class="text-lg font-bold text-white mb-2">مغادرة المعرض؟</h2>
-        <p class="text-sm text-slate-300">هل تريد فعلاً مغادرة الأرشيف المؤسساتي؟</p>
+        <p class="text-sm text-slate-300 leading-relaxed">هل تريد فعلاً مغادرة معرض الفيديوهات التابع للوزارة؟</p>
+        <p class="text-xs text-slate-400 mt-2">سيتم فقدان سياق التصفح (الموضوع، البحث، الفلاتر).</p>
       </div>
       <div class="flex flex-col sm:flex-row gap-2 p-4 bg-slate-900/40 border-t border-slate-700">
-        <button type="button" data-exit-cancel class="flex-1 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2">
-          <i class="fa-solid fa-arrow-right"></i><span>البقاء</span>
+        <button type="button" data-exit-cancel
+                class="flex-1 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 active:bg-slate-500 text-white text-sm font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 touch-manipulation order-2 sm:order-1">
+          <i class="fa-solid fa-arrow-right"></i><span>البقاء في المعرض</span>
         </button>
-        <button type="button" data-exit-confirm class="flex-1 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2">
-          <i class="fa-solid fa-right-from-bracket"></i><span>مغادرة</span>
+        <button type="button" data-exit-confirm
+                class="flex-1 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-sm font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 touch-manipulation order-1 sm:order-2">
+          <i class="fa-solid fa-right-from-bracket"></i><span>مغادرة المعرض</span>
         </button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- ============================================================
+     ALBUM PHOTO — SCRIPT (recherche dans 2 dossiers : images/ puis images02/)
+     ============================================================ -->
 <script>
-(function () {
+(function(){
   'use strict';
 
-  const DATA_URL = 'https://marocnetmail.github.io/125/json/reelsData.json';
-  const BASE_URL = 'https://marocnetmail.github.io/125/';
+  const OWNER = 'marocnetmail', REPO = '125', BRANCH = 'main';
+  const JSON_URL   = `https://marocnetmail.github.io/${REPO}/json/data_img.json`;
+  const RAW_BASE   = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/`;
+  const PAGES_BASE = `https://marocnetmail.github.io/${REPO}/`;
+  const PER_PAGE   = 30;
 
-  const PAGE_SIZE_VIDEOS = 20;
-  const PAGE_SIZE_PHOTOS = 30;
-  const MAX_PHOTOS_PAGES = 40;
-  const EMAIL_REMARK_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwRllGpkxkBllOBnu9U7gZfH5Lg1qS-Iz-jf_rz_S1VKLydL0juENf-OfUI56mWQ_ojMA/exec';
-
-  const DEFAULT_IMG = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">' +
-    '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
-    '<stop offset="0" stop-color="#0f3d3e"/><stop offset="1" stop-color="#195e60"/>' +
-    '</linearGradient></defs>' +
-    '<rect width="400" height="400" fill="url(#g)"/>' +
-    '<circle cx="200" cy="168" r="72" fill="none" stroke="#c59b45" stroke-width="3" opacity="0.55"/>' +
-    '<text x="200" y="200" text-anchor="middle" fill="#c59b45" font-family="Arial" font-size="82" font-weight="bold">م</text>' +
-    '<text x="200" y="288" text-anchor="middle" fill="#ffffff" font-family="Arial" font-size="12" opacity="0.65" letter-spacing="3">MATNUHPV</text>' +
+  // Image de remplacement (data-URI, fiable à 100%, aucun fichier requis)
+  const PLACEHOLDER_URL = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">' +
+      '<rect fill="#e4e6eb" width="400" height="400"/>' +
+      '<g fill="none" stroke="#8a8d91" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">' +
+        '<rect x="140" y="150" width="120" height="100" rx="8"/>' +
+        '<circle cx="200" cy="200" r="22"/>' +
+        '<path d="M 160 150 L 175 130 L 225 130 L 240 150"/>' +
+      '</g>' +
+      '<text x="200" y="295" font-family="Arial,Helvetica,sans-serif" font-size="14" text-anchor="middle" fill="#65676b">Image non disponible</text>' +
     '</svg>'
   );
 
   const $ = (id) => document.getElementById(id);
+  const galleryEl    = $('photo-gallery');
+  const statusEl     = $('photo-status');
+  const paginationEl = $('photo-pagination');
+  const lbEl         = $('photo-lb');
+  const lbImg        = lbEl.querySelector('img');
+  const lbCounter    = lbEl.querySelector('.photo-lb-counter');
+  const lbClose      = lbEl.querySelector('.photo-lb-close');
 
-  function toArabicNumerals(input) {
-    const map = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-    return String(input).replace(/[0-9]/g, d => map[+d]);
+  let photos = [];
+  let currentPage = 1, totalPages = 1;
+  let pageToken = 0;
+  let navigationDirection = 1;
+  let skipDepth = 0;
+  let initialized = false;
+
+  const knownGood = new Map();
+  const knownBad  = new Set();
+  const emptyPages = new Set();
+  let preferredPattern = null;
+
+  let pageValid = [];
+  let lbPos = -1;
+
+  /* ---------- Décomposition d'une URL ---------- */
+  function parseUrl(rawUrl){
+    const clean = String(rawUrl).trim().replace(/^\/+/, '');
+    const parts = clean.split('/');
+    const filename = parts.pop() || '';
+    const dir = parts.length ? parts.join('/') + '/' : '';
+    const dot = filename.lastIndexOf('.');
+    const base = dot >= 0 ? filename.slice(0, dot) : filename;
+    const ext  = dot >= 0 ? filename.slice(dot) : '.jpg';
+    return { dir, base, ext, hasSuffix: /_\d{1,2}$/.test(base) };
   }
 
-  const mobileMq = window.matchMedia('(max-width: 639px)');
-
-  function yearLabel(value) {
-    if (mobileMq.matches) return value === 'all' ? 'Toutes' : String(value);
-    return value === 'all' ? 'كل السنوات' : toArabicNumerals(value);
+  /* ---------- Bascule images/ → images02/ dans un chemin ---------- */
+  function altDir(dir) {
+    if (!dir) return dir;
+    // Remplace la première occurrence de "images/" par "images02/"
+    return dir.replace(/(^|\/)images\//, '$1images02/');
   }
 
-  let ARCHIVE_DATA = [];
-  let ALL_PHOTOS = [];
+  /* ---------- Motifs d'URL (le paramètre dir permet de cibler le dossier) ---------- */
+  const PATTERNS = [
+    { id: 'raw_01',    make: (p, dir) => RAW_BASE   + dir + p.base + '_01' + p.ext, needSuffix: false },
+    { id: 'raw_exact', make: (p, dir) => RAW_BASE   + dir + p.base       + p.ext, needSuffix: true  },
+    { id: 'raw_1',     make: (p, dir) => RAW_BASE   + dir + p.base + '_1'  + p.ext, needSuffix: false },
+    { id: 'pg_01',     make: (p, dir) => PAGES_BASE + dir + p.base + '_01' + p.ext, needSuffix: false },
+    { id: 'pg_exact',  make: (p, dir) => PAGES_BASE + dir + p.base       + p.ext, needSuffix: true  }
+  ];
 
-  function resolveImageUrl(path) {
-    if (!path) return DEFAULT_IMG;
-    if (/^https?:\/\//i.test(path)) return path;
-    return BASE_URL + path.replace(/^\/+/, '');
+  /* ---------- Liste ordonnée des URLs à essayer ---------- */
+  function urlsFor(rawUrl){
+    const p = parseUrl(rawUrl);
+    const dir2 = altDir(p.dir);
+    const list = [], seen = new Set();
+
+    const pushPattern = (pattern, dir, tag) => {
+      if (!pattern.needSuffix && p.hasSuffix) return;
+      const u = pattern.make(p, dir);
+      if (!seen.has(u)) {
+        seen.add(u);
+        list.push({ id: tag ? tag + ':' + pattern.id : pattern.id, url: u });
+      }
+    };
+
+    // 1. Dossier principal : images/
+    PATTERNS.forEach(pat => pushPattern(pat, p.dir, null));
+
+    // 2. Dossier secondaire : images02/ (si différent)
+    if (dir2 !== p.dir) {
+      PATTERNS.forEach(pat => pushPattern(pat, dir2, 'alt'));
+    }
+
+    // 3. Priorité au motif qui a déjà fonctionné (uniquement parmi les URLs images/ d'origine)
+    if (preferredPattern) {
+      const prefIdx = list.findIndex(x => x.id === preferredPattern);
+      if (prefIdx > 0) {
+        const [pref] = list.splice(prefIdx, 1);
+        list.unshift(pref);
+      }
+    }
+
+    return list;
   }
 
-  function escapeHtml(s) {
-    return String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  /* ---------- Initialisation ---------- */
+  async function init(){
+    try{
+      statusEl.textContent = 'Chargement…';
+      const res = await fetch(JSON_URL, { cache: 'no-cache' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      let data = await res.json();
+      if (!Array.isArray(data)) data = data.images || data.data || data.photos || data.items || [];
+      if (!Array.isArray(data) || !data.length) throw new Error('JSON vide');
+
+      photos = data
+        .filter(p => p && (p.url || p.src || p.image || p.path))
+        .map(p => {
+          const u = p.url || p.src || p.image || p.path;
+          const n = p.numero ?? p.num ?? p.id ?? p.n ?? 0;
+          return { numero: Number(n) || 0, url: String(u) };
+        })
+        .sort((a, b) => a.numero - b.numero);
+
+      if (!photos.length) throw new Error('Aucune URL');
+
+      totalPages = Math.ceil(photos.length / PER_PAGE);
+      statusEl.innerHTML = `<span class="ok">${photos.length} photos</span> · ${totalPages} pages`;
+      gotoPage(1);
+    } catch(err){
+      statusEl.innerHTML = '<span class="err">Erreur : ' + err.message + '</span>';
+      console.error('[PhotoAlbum] init error:', err);
+    }
   }
 
-  function normalizeArabic(s) {
-    return String(s || '').toLowerCase().normalize('NFD')
+  /* ---------- Résolution d'une image (essaie images/ puis images02/) ---------- */
+  async function resolveImageForIdx(p, gIdx){
+    if (knownGood.has(gIdx)) return knownGood.get(gIdx);
+    if (knownBad.has(gIdx))  return null;
+    const variants = urlsFor(p.url);
+    for (const v of variants){
+      const ok = await new Promise(resolve => {
+        const img = new Image();
+        img.onload  = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = v.url;
+      });
+      if (ok){
+        knownGood.set(gIdx, v.url);
+        if (!preferredPattern){
+          // Apprend le motif (sans le préfixe "alt:")
+          preferredPattern = v.id.replace(/^alt:/, '');
+        }
+        return v.url;
+      }
+    }
+    knownBad.add(gIdx);
+    return null;
+  }
+
+  /* ---------- Test rapide d'une page ---------- */
+  async function testPageHasContent(page){
+    const start = (page - 1) * PER_PAGE;
+    const end   = Math.min(start + PER_PAGE, photos.length);
+    const slice = photos.slice(start, end);
+    if (!slice.length) return false;
+    const idxs = [...new Set([
+      0,
+      Math.floor(slice.length / 4),
+      Math.floor(slice.length / 2),
+      Math.floor(3 * slice.length / 4),
+      slice.length - 1
+    ])];
+    const results = await Promise.all(idxs.map(i => resolveImageForIdx(slice[i], start + i)));
+    return results.some(Boolean);
+  }
+
+  /* ---------- Recherche de la prochaine page non vide ---------- */
+  async function findNextNonEmptyPage(){
+    const MAX_SKIP = 50;
+    let tested = 0;
+    for (let d = 1; d <= totalPages && tested < MAX_SKIP; d++){
+      const fwd = currentPage + d * navigationDirection;
+      if (fwd >= 1 && fwd <= totalPages && !emptyPages.has(fwd)){
+        tested++;
+        if (await testPageHasContent(fwd)) return fwd;
+        emptyPages.add(fwd);
+      }
+      const bwd = currentPage - d * navigationDirection;
+      if (bwd >= 1 && bwd <= totalPages && !emptyPages.has(bwd)){
+        tested++;
+        if (await testPageHasContent(bwd)) return bwd;
+        emptyPages.add(bwd);
+      }
+    }
+    return null;
+  }
+
+  /* ---------- Changement de page ---------- */
+  function gotoPage(page, opts = {}){
+    const prevPage = currentPage;
+    currentPage = Math.max(1, Math.min(totalPages, page));
+    if (!opts.isAutoSkip){
+      if (currentPage > prevPage) navigationDirection = 1;
+      else if (currentPage < prevPage) navigationDirection = -1;
+      skipDepth = 0;
+    }
+    const token = ++pageToken;
+    const start = (currentPage - 1) * PER_PAGE;
+    const end   = Math.min(start + PER_PAGE, photos.length);
+    const slice = photos.slice(start, end);
+    const counters = { total: slice.length, resolved: 0, loaded: 0, failed: 0 };
+    pageValid = [];
+    galleryEl.innerHTML = '';
+    slice.forEach((p, i) => {
+      const gIdx = start + i;
+      if (knownBad.has(gIdx)){
+        // Connue comme introuvable dans les 2 dossiers → placeholder immédiat
+        galleryEl.appendChild(makePlaceholderCard(p));
+        counters.failed++;
+        counters.resolved++;
+        return;
+      }
+      if (knownGood.has(gIdx)){
+        const url = knownGood.get(gIdx);
+        galleryEl.appendChild(makeStaticCard(p, url, gIdx));
+        pageValid.push({ numero: p.numero, url, globalIdx: gIdx });
+        counters.loaded++;
+        counters.resolved++;
+        return;
+      }
+      galleryEl.appendChild(makeDynamicCard(p, gIdx, counters, token));
+    });
+    if (!opts.isAutoSkip){
+      renderPagination();
+      updateStatus(counters);
+    }
+    if (counters.resolved === counters.total){
+      handlePageComplete(token, counters);
+    }
+  }
+
+  /* ---------- Carte dynamique (essaie images/ puis images02/, puis placeholder) ---------- */
+  function makeDynamicCard(p, gIdx, counters, token){
+    const card = document.createElement('div');
+    card.className = 'photo-card';
+    const link = document.createElement('a');
+    link.href = '#';
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const pos = pageValid.findIndex(v => v.globalIdx === gIdx);
+      if (pos >= 0) openLightbox(pos);
+    });
+    const img = document.createElement('img');
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.alt = 'Photo n° ' + p.numero;
+    const variants = urlsFor(p.url);
+    let idx = 0, resolved = false;
+
+    const finish = () => {
+      if (token !== pageToken) return;
+      if (counters.resolved === counters.total) handlePageComplete(token, counters);
+    };
+
+    const tryNext = () => {
+      if (resolved) return;
+      if (idx >= variants.length){
+        // Échec dans images/ ET dans images02/ → placeholder
+        resolved = true;
+        knownBad.add(gIdx);
+        card.classList.add('placeholder');
+        img.src = PLACEHOLDER_URL;
+        img.classList.add('loaded');
+        counters.failed++;
+        counters.resolved++;
+        finish();
+        return;
+      }
+      const v = variants[idx++];
+      img.dataset.pattern = v.id;
+      img.src = v.url;
+    };
+
+    img.addEventListener('load', () => {
+      if (resolved) return;
+      resolved = true;
+      const usedPattern = img.dataset.pattern;
+      if (!preferredPattern && usedPattern){
+        preferredPattern = usedPattern.replace(/^alt:/, '');
+      }
+      knownGood.set(gIdx, img.currentSrc || img.src);
+      pageValid.push({ numero: p.numero, url: knownGood.get(gIdx), globalIdx: gIdx });
+      pageValid.sort((a, b) => a.globalIdx - b.globalIdx);
+      img.classList.add('loaded');
+      counters.loaded++;
+      counters.resolved++;
+      finish();
+    });
+
+    img.addEventListener('error', tryNext);
+
+    link.appendChild(img);
+    card.appendChild(link);
+    const num = document.createElement('div');
+    num.className = 'photo-num';
+    num.textContent = 'N° ' + p.numero;
+    card.appendChild(num);
+    tryNext();
+    return card;
+  }
+
+  /* ---------- Carte statique (URL déjà validée) ---------- */
+  function makeStaticCard(p, url, gIdx){
+    const card = document.createElement('div');
+    card.className = 'photo-card';
+    const link = document.createElement('a');
+    link.href = '#';
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const pos = pageValid.findIndex(v => v.globalIdx === gIdx);
+      if (pos >= 0) openLightbox(pos);
+    });
+    const img = document.createElement('img');
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.alt = 'Photo n° ' + p.numero;
+    img.src = url;
+    img.classList.add('loaded');
+    link.appendChild(img);
+    card.appendChild(link);
+    const num = document.createElement('div');
+    num.className = 'photo-num';
+    num.textContent = 'N° ' + p.numero;
+    card.appendChild(num);
+    return card;
+  }
+
+  /* ---------- Carte placeholder (image absente des 2 dossiers) ---------- */
+  function makePlaceholderCard(p){
+    const card = document.createElement('div');
+    card.className = 'photo-card placeholder';
+    const link = document.createElement('a');
+    link.href = '#';
+    link.addEventListener('click', e => e.preventDefault());
+    const img = document.createElement('img');
+    img.src = PLACEHOLDER_URL;
+    img.alt = 'Image non disponible — N° ' + p.numero;
+    img.classList.add('loaded');
+    link.appendChild(img);
+    card.appendChild(link);
+    const num = document.createElement('div');
+    num.className = 'photo-num';
+    num.textContent = 'N° ' + p.numero;
+    card.appendChild(num);
+    return card;
+  }
+
+  /* ---------- Page complète → détection page vide → auto-skip ---------- */
+  async function handlePageComplete(token, counters){
+    if (token !== pageToken) return;
+    if (counters.loaded > 0){
+      skipDepth = 0;
+      renderPagination();
+      updateStatus(counters);
+      return;
+    }
+    emptyPages.add(currentPage);
+    galleryEl.innerHTML =
+      '<div class="photo-empty">' +
+        '<div class="photo-empty-icon">🔎</div>' +
+        '<strong>Page vide</strong>' +
+        '<p>Aucune image trouvée dans <code>images/</code> ni dans <code>images02/</code>. Recherche d\'une autre page…</p>' +
+      '</div>';
+    statusEl.innerHTML = `<span class="warn">Page ${currentPage} vide · recherche…</span>`;
+    const target = await findNextNonEmptyPage();
+    if (token !== pageToken) return;
+    if (target === null){ showAllEmpty(); return; }
+    const delay = skipDepth === 0 ? 350 : 60;
+    skipDepth++;
+    gotoPage(target, { isAutoSkip: true });
+    setTimeout(() => { if (token === pageToken){} }, delay);
+  }
+
+  /* ---------- Tout vide ---------- */
+  function showAllEmpty(){
+    galleryEl.innerHTML =
+      '<div class="photo-empty">' +
+        '<div class="photo-empty-icon">📭</div>' +
+        '<strong>Aucune image disponible</strong>' +
+        '<p>Toutes les entrées du JSON ont été testées dans <code>images/</code> et <code>images02/</code>, aucun fichier correspondant n\'existe.</p>' +
+      '</div>';
+    paginationEl.innerHTML = '';
+    statusEl.innerHTML = '<span class="err">0 image</span>';
+  }
+
+  /* ---------- Statut ---------- */
+  function updateStatus(c){
+    statusEl.innerHTML =
+      `<span class="ok">P.${currentPage}/${totalPages}</span> · ` +
+      `${c.loaded}/${c.total}` +
+      (c.failed ? ` · ${c.failed} ignorée(s)` : '');
+  }
+
+  /* ---------- Lightbox ---------- */
+  function openLightbox(pos){
+    if (pos < 0 || pos >= pageValid.length) return;
+    lbPos = pos;
+    showLightboxPhoto();
+    lbEl.classList.add('on');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox(){
+    lbEl.classList.remove('on');
+    lbPos = -1;
+    document.body.style.overflow = '';
+  }
+  function showLightboxPhoto(){
+    const p = pageValid[lbPos];
+    if (!p) return;
+    lbImg.classList.add('loading');
+    lbImg.onload = () => lbImg.classList.remove('loading');
+    lbImg.src = p.url;
+    lbImg.alt = 'Photo n° ' + p.numero;
+    lbCounter.textContent = (lbPos + 1) + ' / ' + pageValid.length + '  ·  N° ' + p.numero;
+  }
+  function lbNext(){ if (lbPos < pageValid.length - 1){ lbPos++; showLightboxPhoto(); } }
+  function lbPrev(){ if (lbPos > 0){ lbPos--; showLightboxPhoto(); } }
+
+  lbEl.addEventListener('click', e => {
+    if (e.target === lbClose){ closeLightbox(); return; }
+    const rect = lbEl.getBoundingClientRect();
+    const ratio = (e.clientX - rect.left) / rect.width;
+    if (ratio < 0.33) lbPrev();
+    else if (ratio > 0.67) lbNext();
+    else closeLightbox();
+  });
+
+  let tStart = null;
+  lbEl.addEventListener('touchstart', e => {
+    if (e.touches.length !== 1) return;
+    tStart = { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now() };
+  }, { passive: true });
+
+  lbEl.addEventListener('touchend', e => {
+    if (!tStart) return;
+    const dx = e.changedTouches[0].clientX - tStart.x;
+    const dy = e.changedTouches[0].clientY - tStart.y;
+    const dt = Date.now() - tStart.t;
+    const start = tStart; tStart = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5 && dt < 600){
+      dx < 0 ? lbNext() : lbPrev();
+      return;
+    }
+    if (Math.abs(dx) < 10 && Math.abs(dy) < 10 && dt < 250){
+      const rect = lbEl.getBoundingClientRect();
+      const ratio = (start.x - rect.left) / rect.width;
+      if (ratio < 0.33) lbPrev();
+      else if (ratio > 0.67) lbNext();
+      else closeLightbox();
+    }
+  }, { passive: true });
+
+  document.addEventListener('keydown', e => {
+    if (!lbEl.classList.contains('on')) return;
+    if (e.key === 'Escape') closeLightbox();
+    else if (e.key === 'ArrowRight') lbNext();
+    else if (e.key === 'ArrowLeft') lbPrev();
+  });
+
+  /* ---------- Pagination ---------- */
+  function renderPagination(){
+    paginationEl.innerHTML = '';
+    const mk = (label, page, opts = {}) => {
+      const b = document.createElement('button');
+      b.className = 'photo-pg-btn'
+        + (opts.active ? ' active' : '')
+        + (opts.nav ? ' nav' : '')
+        + (opts.ellipsis ? ' ellipsis' : '')
+        + (opts.empty ? ' empty' : '');
+      b.textContent = label;
+      if (opts.disabled) b.disabled = true;
+      if (opts.empty) b.title = 'Page vide (aucune image)';
+      if (!opts.active && !opts.disabled && !opts.ellipsis && !opts.empty){
+        b.onclick = () => gotoPage(page);
+      }
+      return b;
+    };
+    paginationEl.appendChild(mk('‹', currentPage - 1, { nav: true, disabled: currentPage === 1 }));
+    pageNumbers(currentPage, totalPages).forEach(n => {
+      if (n === '…'){
+        paginationEl.appendChild(mk('…', 0, { ellipsis: true }));
+      } else {
+        paginationEl.appendChild(mk(String(n), n, {
+          active: n === currentPage,
+          empty: emptyPages.has(n) && n !== currentPage
+        }));
+      }
+    });
+    paginationEl.appendChild(mk('›', currentPage + 1, { nav: true, disabled: currentPage === totalPages }));
+  }
+
+  function pageNumbers(current, total){
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    if (current <= 4) return [1, 2, 3, 4, 5, '…', total];
+    if (current >= total - 3) return [1, '…', total - 4, total - 3, total - 2, total - 1, total];
+    return [1, '…', current - 1, current, current + 1, '…', total];
+  }
+
+  window.PhotoAlbum = {
+    show(){
+      if (!initialized){
+        initialized = true;
+        init().catch(err => {
+          console.error('[PhotoAlbum] init error:', err);
+          if (statusEl) statusEl.innerHTML = '<span class="err">Erreur de chargement</span>';
+        });
+      }
+    },
+    hide(){
+      if (lbEl && lbEl.classList.contains('on')) closeLightbox();
+    },
+    isLightboxOpen(){
+      return lbEl && lbEl.classList.contains('on');
+    }
+  };
+
+})();
+</script>
+
+<!-- ============================================================
+     SCRIPT PRINCIPAL — VIDÉOTHÈQUE
+     ============================================================ -->
+<script>
+(function () {
+  'use strict';
+
+  const EMAIL_REMARK_SCRIPT_URL =
+    'https://script.google.com/macros/s/AKfycbwRllGpkxkBllOBnu9U7gZfH5Lg1qS-Iz-jf_rz_S1VKLydL0juENf-OfUI56mWQ_ojMA/exec';
+
+  const PAGE_SIZE = 20;
+
+  const $ = (id) => document.getElementById(id);
+  const els = {
+    grid: $('reelsGrid'), empty: $('emptyState'), pagination: $('pagination'),
+    search: $('searchInput'), searchWrap: $('searchWrap'),
+    videosSection: $('videosSection'), photosSection: $('photosSection'),
+    detailsModal: $('detailsModal'), detailsFrame: $('detailsFrame'),
+    detailsPoster: $('detailsPoster'), detailsPosterImg: $('detailsPosterImg'),
+    detailsContent: $('detailsContent'),
+    detailsDisplayTitle: $('detailsDisplayTitle'), detailsDisplayDate: $('detailsDisplayDate'),
+    playerViewsVal: $('playerViewsVal'), playerReactionsVal: $('playerReactionsVal'),
+    videoLoader: $('videoLoader'), playerZone: $('playerZone'), fullscreenBtn: $('fullscreenBtn'),
+    themesView: $('themesView'),
+    treeView: $('treeView'), treeContent: $('treeContent'),
+    exportExcelBtn: $('exportExcelBtn'),
+    backNavigation: $('backNavigation'), backToThemesBtn: $('backToThemesBtn'),
+    remarksModal: $('remarksModal'), openRemarksBtn: $('openRemarksBtn'),
+    emailRemarkForm: $('emailRemarkForm'),
+    emailRemarkText: $('emailRemarkText'),
+    emailRemarkBtn: $('emailRemarkBtn'),
+    emailRemarkStatus: $('emailRemarkStatus'),
+    progressOverlay: $('progressOverlay'), progressBar: $('progressBar'),
+    progressPercent: $('progressPercent'), progressCount: $('progressCount'),
+    exitConfirmModal: $('exitConfirmModal'),
+    menuGalerie: $('menuGalerie'),
+    menuPhotos: $('menuPhotos'),
+    menuYears: $('menuYears'),
+    albumPhotoBtn: $('albumPhotoBtn'),
+    yearBadge: $('yearBadge'), yearDropdownContent: $('yearDropdownContent'),
+    galleryDropdown: $('galleryDropdown'), sortDropdown: $('sortDropdown')
+  };
+
+  let reels = [];
+  let byId = new Map();
+  let searchTimer = null;
+  let currentQuery = '';
+  let currentSort = 'recent';
+  let currentPage = 1;
+  let currentReel = null;
+  let posterFadeTimer = null;
+  let currentViewMode = 'gallery';
+  let activeTheme = null;
+  let selectedYear = 'all';
+
+  let isFirstLoad = true;
+  let progressTracking = { total: 0, done: 0, active: false, showTimer: null };
+
+  let exitTrapActive = false;
+  let allowExit = false;
+  let exitDialogOpen = false;
+  let exitSource = null;
+
+  let contentMatchSet = new Set();
+  let iframeReady = false;
+
+  let isPhotosTabActive = false;
+
+  const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+
+  const getViews = (r) => Number((r && (r.vues ?? r.nbre_vue)) ?? 0);
+  const getReactions = (r) => Number((r && r.reactions) ?? 0);
+
+  const formatViews = (v) => {
+    if (v == null || v === '' || isNaN(v)) return '—';
+    const n = Number(v);
+    if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + ' م';
+    if (n >= 1_000) return (n / 1_000).toFixed(1).replace(/\.0$/, '') + ' ألف';
+    return String(n);
+  };
+
+  function formatDateArabicExact(dateStr, dateIso) {
+    if (!dateIso) return dateStr || 'تاريخ غير صالح';
+    try {
+      const parts = dateIso.split('-');
+      if (parts.length !== 3) return dateStr || 'تاريخ غير صالح';
+      const y = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10) - 1;
+      const d = parseInt(parts[2], 10);
+      const date = new Date(y, m, d);
+      if (isNaN(date.getTime())) return dateStr || 'تاريخ غير صالح';
+      const daysAr = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+      const monthsAr = ['يناير', 'فبراير', 'مارس', 'أبريل', 'ماي', 'يونيو', 'يوليوز', 'غشت', 'شتنبر', 'أكتوبر', 'نونبر', 'دجنبر'];
+      return `${daysAr[date.getDay()]} ${String(date.getDate()).padStart(2, '0')} ${monthsAr[date.getMonth()]} ${date.getFullYear()}`;
+    } catch (e) { return dateStr || 'تاريخ غير صالح'; }
+  }
+
+  function normalizeSearchText(str) {
+    return String(str || '')
+      .toLowerCase().normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/[\u064B-\u0652]/g, '')
       .replace(/[أإآٱ]/g, 'ا')
@@ -547,69 +1414,19 @@
       .replace(/\s+/g, ' ').trim();
   }
 
-  function formatDateArabic(dateStr, dateIso) {
-    if (!dateIso) return dateStr || '';
-    try {
-      const [y, m, d] = dateIso.split('-').map(Number);
-      const dt = new Date(y, m - 1, d);
-      if (isNaN(dt.getTime())) return dateStr || '';
-      const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
-      const months = ['يناير','فبراير','مارس','أبريل','ماي','يونيو','يوليوز','غشت','شتنبر','أكتوبر','نونبر','دجنبر'];
-      return `${days[dt.getDay()]} ${String(dt.getDate()).padStart(2,'0')} ${months[dt.getMonth()]} ${toArabicNumerals(dt.getFullYear())}`;
-    } catch (e) { return dateStr || ''; }
+  function searchTabeleauUrlContent(query) {
+    const q = normalizeSearchText(query);
+    const matched = new Map();
+    if (!q) return matched;
+    const content = window.tabeleau_url_content || [];
+    for (const item of content) {
+      const hay = normalizeSearchText(item.contenu || '');
+      if (hay.includes(q)) matched.set(String(item.fbid), item);
+    }
+    return matched;
   }
 
-  function formatNumber(n) {
-    if (n == null || isNaN(n)) return '—';
-    const v = Number(n);
-    if (v >= 1_000_000) return (v / 1_000_000).toFixed(1).replace(/\.0$/, '') + ' م';
-    if (v >= 1_000) return (v / 1_000).toFixed(1).replace(/\.0$/, '') + ' ألف';
-    return String(v);
-  }
-
-  const state = {
-    tab: 'videos',
-    search: '',
-    videos: [],
-    videoView: 'gallery',
-    videoSort: 'recent',
-    videoYear: '2026',
-    videoPage: 1,
-    activeTheme: null,
-    archivePage: 1,
-    photosPage: 1,
-    lb: { list: [], index: 0 }
-  };
-
-  const TAB_SECTIONS = {
-    videos: 'videosSection',
-    photos: 'photosSection',
-    publications: 'publicationsSection'
-  };
-
-  function switchTab(tab) {
-    if (!TAB_SECTIONS[tab]) tab = 'videos';
-    state.tab = tab;
-    document.querySelectorAll('.center-tab').forEach(b => {
-      b.classList.toggle('active', b.dataset.tab === tab);
-      b.setAttribute('aria-selected', b.dataset.tab === tab ? 'true' : 'false');
-    });
-    Object.values(TAB_SECTIONS).forEach(id => $(id).classList.add('hidden'));
-    $(TAB_SECTIONS[tab]).classList.remove('hidden');
-    const sub = $('videoSubMenu');
-    if (sub) sub.classList.toggle('visible', tab === 'videos');
-    const s = $('globalSearch');
-    if (s) s.value = state.search;
-    renderActiveTab();
-  }
-
-  function updateTabCounts() {
-    $('tabCountVideos').textContent = state.videos.length;
-    $('tabCountPhotos').textContent = ALL_PHOTOS.length;
-    $('tabCountPublications').textContent = ARCHIVE_DATA.length;
-  }
-
-  function getVideoYear(r) {
+  function getReelYear(r) {
     if (r && r.annee != null && !isNaN(Number(r.annee))) return String(Number(r.annee));
     if (r && r.date_iso) {
       const m = String(r.date_iso).match(/^(\d{4})/);
@@ -618,73 +1435,169 @@
     return null;
   }
 
-  function getVideoScore(r) {
-    const reactions = r.reactions ?? r.reactions_total ?? 0;
-    return Number(reactions);
-  }
+  function getFilteredAndSorted() {
+    const rawQuery = currentQuery.trim();
+    let result = reels;
+    contentMatchSet = new Set();
 
-  function getFilteredVideos() {
-    const q = state.search.trim();
-    let result = state.videos;
-
-    if (state.videoYear !== 'all') {
-      result = result.filter(r => getVideoYear(r) === String(state.videoYear));
+    if (selectedYear && selectedYear !== 'all') {
+      result = result.filter(r => getReelYear(r) === String(selectedYear));
     }
-    if (q) {
-      const nq = normalizeArabic(q);
-      result = result.filter(r => {
-        const hay = normalizeArabic([r.titre, r.description, r.theme_fr, r.theme_ar, r.fbid].filter(Boolean).join(' '));
-        return hay.includes(nq);
+
+    if (rawQuery) {
+      const nq = normalizeSearchText(rawQuery);
+      const contentMatches = searchTabeleauUrlContent(rawQuery);
+      contentMatches.forEach((_v, fbid) => contentMatchSet.add(fbid));
+
+      result = result.filter((r) => {
+        const hay = normalizeSearchText(
+          [r.titre, r.description, r.theme_fr, r.theme_ar, r.fbid].filter(Boolean).join(' ')
+        );
+        if (hay.includes(nq)) return true;
+        if (contentMatches.has(String(r.fbid))) return true;
+        return false;
       });
     }
+
     result = [...result];
-    if (state.videoSort === 'views') result.sort((a,b) => (b.vues ?? 0) - (a.vues ?? 0));
-    else if (state.videoSort === 'reactions') result.sort((a,b) => getVideoScore(b) - getVideoScore(a));
-    else result.sort((a,b) => String(b.date_iso || '').localeCompare(String(a.date_iso || '')));
+    if (currentSort === 'views') result.sort((a, b) => getViews(b) - getViews(a));
+    else if (currentSort === 'reactions') result.sort((a, b) => getReactions(b) - getReactions(a));
+    else result.sort((a, b) => String(b.date_iso || '').localeCompare(String(a.date_iso || '')));
     return result;
   }
 
-  function renderVideos() {
-    const items = getFilteredVideos();
-    $('reelsGrid').classList.add('hidden');
-    $('themesView').classList.add('hidden');
-    $('treeView').classList.add('hidden');
-    $('pagination').classList.add('hidden');
-    $('backNavigation').classList.add('hidden');
-    $('emptyState').classList.add('hidden');
-
-    if (items.length === 0) { $('emptyState').classList.remove('hidden'); return; }
-
-    if (state.videoView === 'themes') renderThemes(items);
-    else if (state.videoView === 'tree') renderTree(items);
-    else renderVideoGallery(items);
+  // ====== EXIT TRAP ======
+  function activateExitTrap() {
+    if (exitTrapActive) return;
+    exitTrapActive = true;
+    try { history.pushState({ gallery: true, ts: Date.now() }, '', location.href); }
+    catch (e) { console.warn('pushState indisponible:', e); }
+  }
+  function showExitDialog(source) {
+    if (!els.exitConfirmModal) return;
+    if (exitDialogOpen) return;
+    exitDialogOpen = true; exitSource = source || 'escape';
+    els.exitConfirmModal.classList.remove('hidden');
+    setTimeout(() => { const b = els.exitConfirmModal.querySelector('[data-exit-cancel]'); if (b) b.focus(); }, 50);
+  }
+  function hideExitDialog() {
+    if (!els.exitConfirmModal) return;
+    els.exitConfirmModal.classList.add('hidden');
+    exitDialogOpen = false; exitSource = null;
+  }
+  function performConfirmedExit() {
+    allowExit = true; hideExitDialog();
+    const len = history.length;
+    if (len >= 3) { try { history.go(-2); } catch (e) {} }
+    else if (len >= 2) {
+      try { history.back(); } catch (e) {}
+      setTimeout(() => { try { window.close(); } catch (e) {} }, 150);
+      setTimeout(() => { if (!document.hidden && document.visibilityState === 'visible') allowExit = false; }, 1200);
+    } else { try { window.close(); } catch (e) {} setTimeout(() => { allowExit = false; }, 800); }
+  }
+  window.addEventListener('beforeunload', (e) => {
+    if (allowExit) return;
+    if (!exitTrapActive) return;
+    e.preventDefault();
+    e.returnValue = 'هل تريد فعلاً مغادرة معرض الفيديوهات التابع للوزارة؟';
+    return e.returnValue;
+  });
+  window.addEventListener('popstate', () => {
+    if (allowExit) return;
+    if (!exitTrapActive) return;
+    try { history.pushState({ gallery: true, ts: Date.now() }, '', location.href); } catch (e) {}
+    if (!exitDialogOpen) showExitDialog('back');
+  });
+  window.addEventListener('click', activateExitTrap, { once: true, capture: true });
+  window.addEventListener('touchstart', activateExitTrap, { once: true, capture: true, passive: true });
+  if (els.exitConfirmModal) {
+    els.exitConfirmModal.addEventListener('click', (e) => {
+      if (e.target.closest('[data-exit-cancel]')) { e.stopPropagation(); hideExitDialog(); return; }
+      if (e.target.closest('[data-exit-confirm]')) { e.stopPropagation(); performConfirmedExit(); return; }
+    });
   }
 
-  function renderVideoGallery(items) {
-    $('reelsGrid').classList.remove('hidden');
-    $('pagination').classList.remove('hidden');
-    const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE_VIDEOS));
-    if (state.videoPage > totalPages) state.videoPage = totalPages;
-    const start = (state.videoPage - 1) * PAGE_SIZE_VIDEOS;
-    const pageItems = items.slice(start, start + PAGE_SIZE_VIDEOS);
-    $('reelsGrid').innerHTML = pageItems.map(videoCardHTML).join('');
-    renderPagination(totalPages);
+  // ====== REMARQUES ======
+  function showEmailStatus(type, text) {
+    if (!els.emailRemarkStatus) return;
+    els.emailRemarkStatus.classList.remove('hidden');
+    els.emailRemarkStatus.className = 'rounded-lg px-3 py-2 text-sm ' + (
+      type === 'success' ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' :
+      type === 'error'   ? 'bg-rose-500/15 text-rose-300 border border-rose-500/30' :
+      'bg-slate-700/50 text-slate-300 border border-slate-600'
+    );
+    els.emailRemarkStatus.textContent = text;
+  }
+  function openRemarksModal() {
+    if (!els.remarksModal) return;
+    els.remarksModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    if (els.emailRemarkStatus) els.emailRemarkStatus.classList.add('hidden');
+    if (els.emailRemarkBtn) els.emailRemarkBtn.disabled = false;
+    setTimeout(() => { if (els.emailRemarkText) els.emailRemarkText.focus(); }, 80);
+  }
+  function closeRemarksModal() {
+    if (!els.remarksModal) return;
+    els.remarksModal.classList.add('hidden');
+    document.body.style.overflow = '';
+    if (els.emailRemarkStatus) els.emailRemarkStatus.classList.add('hidden');
+    if (els.emailRemarkBtn) els.emailRemarkBtn.disabled = false;
+  }
+  function initEmailRemarkForm() {
+    if (!els.emailRemarkForm || !els.emailRemarkBtn || !els.emailRemarkStatus) return;
+    els.emailRemarkForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (els.emailRemarkBtn.disabled) return;
+      const text = (els.emailRemarkText.value || '').trim();
+      if (!text) { showEmailStatus('error', 'الرجاء كتابة ملاحظتك قبل الإرسال.'); return; }
+      els.emailRemarkBtn.disabled = true;
+      showEmailStatus('pending', 'جارٍ الإرسال…');
+      const formData = new FormData(els.emailRemarkForm);
+      fetch(EMAIL_REMARK_SCRIPT_URL, { method: 'POST', body: formData, redirect: 'follow' })
+        .then(response => {
+          if (!response.ok) throw new Error('Échec (' + response.status + ')');
+          showEmailStatus('success', 'تم إرسال الملاحظة بنجاح');
+          els.emailRemarkForm.reset();
+          setTimeout(() => { closeRemarksModal(); }, 1600);
+        })
+        .catch(error => {
+          console.error('Erreur envoi e-mail :', error);
+          showEmailStatus('error', "حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.");
+        })
+        .finally(() => { els.emailRemarkBtn.disabled = false; });
+    });
   }
 
-  function videoCardHTML(r) {
+  // ====== THUMBS & CARTES ======
+  function thumbMarkup(url, loadingAttr, extraClass = '') {
+    const safeUrl = escapeHtml(url || '');
+    return `
+      <div class="thumb-wrap ${extraClass}">
+        <img src="${safeUrl}" alt="صورة مصغرة" loading="${loadingAttr}" decoding="async" referrerpolicy="no-referrer"
+             onload="this.parentElement.classList.remove('thumb-error');"
+             onerror="this.parentElement.classList.add('thumb-error');">
+        <div class="thumb-fallback"><i class="fa-regular fa-image"></i><span>الصورة المصغرة غير متوفرة</span></div>
+      </div>`;
+  }
+
+  const galleryCardHTML = (r) => {
     const rawTitle = r.titre || 'العنوان غير متوفر';
-    const truncTitle = rawTitle.length > 40 ? rawTitle.substring(0, 40) + '...' : rawTitle;
-    const dateFormatted = formatDateArabic(r.date, r.date_iso);
-    const views = formatNumber(r.vues ?? 0);
+    const truncatedTitle = rawTitle.length > 40 ? rawTitle.substring(0, 40) + '...' : rawTitle;
+    const dateFormatted = formatDateArabicExact(r.date, r.date_iso);
+    const views = formatViews(getViews(r));
     const reactions = r.reactions != null ? String(r.reactions) : '0';
     const themeAr = r.theme_ar || r.theme_fr || 'غير مصنف';
-    const thumbUrl = r.miniature ? resolveImageUrl(r.miniature) : (r.images && r.images[0] ? resolveImageUrl(r.images[0].chemin) : DEFAULT_IMG);
+    const themeFr = r.theme_fr || '';
+    const loadingAttr = isFirstLoad ? 'eager' : 'lazy';
+    const isContentMatch = contentMatchSet.has(String(r.fbid));
     return `
-    <article class="reel-card group relative aspect-[9/16] w-full bg-slate-900 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 active:scale-[0.98] border-2 sm:border-[3px] border-white ring-1 ring-black/25" data-fbid="${escapeHtml(r.fbid)}">
-      ${thumbMarkup(thumbUrl, 'lazy', 'absolute inset-0')}
+    <article class="reel-card group relative aspect-[9/16] w-full bg-slate-900 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 active:scale-[0.98] touch-manipulation border-2 sm:border-[3px] border-white ring-1 ring-black/25" data-fbid="${escapeHtml(r.fbid)}">
+      ${thumbMarkup(r.miniature, loadingAttr, 'absolute inset-0')}
+      ${isContentMatch ? '<span class="content-match-badge">مطابقة</span>' : ''}
       <div class="thumb-gradient absolute inset-x-0 bottom-0 h-[75%] pointer-events-none z-[1]"></div>
-      <div class="absolute top-2 left-2 z-[3]">
+      <div class="absolute top-2 left-2 z-[3] theme-tooltip">
         <span class="theme-chip" dir="rtl">${escapeHtml(themeAr)}</span>
+        <div class="tooltip-text" dir="auto"><strong>${escapeHtml(themeAr)}</strong>${themeFr && themeFr !== themeAr ? `<br><span style="opacity:.75">${escapeHtml(themeFr)}</span>` : ''}</div>
       </div>
       <div class="absolute bottom-0 inset-x-0 p-2 sm:p-3 flex flex-col z-[2]">
         <div class="flex items-end justify-between gap-2 w-full mb-1.5">
@@ -693,123 +1606,197 @@
               <span class="flex items-center gap-0.5 bg-black/50 px-1.5 py-0.5 rounded backdrop-blur-sm border border-white/10"><i class="fa-solid fa-eye text-amber-400"></i> ${views}</span>
               <span class="flex items-center gap-0.5 bg-black/50 px-1.5 py-0.5 rounded backdrop-blur-sm border border-white/10"><i class="fa-solid fa-heart text-rose-400"></i> ${reactions}</span>
             </div>
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white flex items-center justify-center bg-black/30 backdrop-blur-sm group-hover:bg-white/20 transition-all">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white flex items-center justify-center bg-black/30 backdrop-blur-sm group-hover:bg-white/20 transition-all play-btn-gallery">
               <i class="fa-solid fa-play text-white text-[10px] sm:text-xs ml-0.5 drop-shadow-md"></i>
             </div>
           </div>
         </div>
         <div class="w-full text-center mb-1">
-          <span class="date-display text-white/95 text-[9px] sm:text-[10px] font-semibold drop-shadow-md">${dateFormatted}</span>
+          <span class="date-display text-white/95 text-[9px] sm:text-[10px] font-semibold drop-shadow-md tracking-wide">${dateFormatted}</span>
         </div>
-        <h3 class="video-title text-white text-xs sm:text-sm font-bold drop-shadow-md leading-snug break-words" dir="auto">${escapeHtml(truncTitle)}</h3>
+        <div class="w-full">
+          <h3 class="video-title text-white text-xs sm:text-sm font-bold drop-shadow-md leading-snug break-words" dir="auto" title="${escapeHtml(rawTitle)}">${escapeHtml(truncatedTitle)}</h3>
+        </div>
       </div>
     </article>`;
-  }
+  };
 
-  function themeVideoCardHTML(r) {
-    const rawTitle = r.titre || '';
-    const truncTitle = rawTitle.length > 40 ? rawTitle.substring(0, 40) + '...' : rawTitle;
-    const dateFormatted = formatDateArabic(r.date, r.date_iso);
-    const thumbUrl = r.miniature ? resolveImageUrl(r.miniature) : (r.images && r.images[0] ? resolveImageUrl(r.images[0].chemin) : DEFAULT_IMG);
+  const themeVideoCardHTML = (r) => {
+    const rawTitle = r.titre || 'العنوان غير متوفر';
+    const truncatedTitle = rawTitle.length > 40 ? rawTitle.substring(0, 40) + '...' : rawTitle;
+    const dateFormatted = formatDateArabicExact(r.date, r.date_iso);
+    const loadingAttr = isFirstLoad ? 'eager' : 'lazy';
+    const isContentMatch = contentMatchSet.has(String(r.fbid));
     return `
-    <article class="reel-card group relative aspect-[9/16] w-full bg-slate-900 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 active:scale-[0.98] border-2 sm:border-[3px] border-white ring-1 ring-black/25" data-fbid="${escapeHtml(r.fbid)}">
-      ${thumbMarkup(thumbUrl, 'lazy', 'absolute inset-0')}
+    <article class="reel-card group relative aspect-[9/16] w-full bg-slate-900 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all duration-300 active:scale-[0.98] touch-manipulation border-2 sm:border-[3px] border-white ring-1 ring-black/25" data-fbid="${escapeHtml(r.fbid)}">
+      ${thumbMarkup(r.miniature, loadingAttr, 'absolute inset-0')}
+      ${isContentMatch ? '<span class="content-match-badge">مطابقة</span>' : ''}
       <div class="thumb-gradient absolute inset-x-0 bottom-0 h-[75%] pointer-events-none z-[1]"></div>
       <div class="absolute bottom-0 inset-x-0 p-2 sm:p-3 flex flex-col z-[2]">
-        <div class="flex items-center justify-end w-full mb-1.5">
+        <div class="flex items-center justify-start w-full mb-1.5 play-btn-theme-wrapper">
           <div class="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white bg-black/30 backdrop-blur-sm group-hover:bg-white/20 transition-all flex-shrink-0">
             <i class="fa-solid fa-play text-white text-[10px] sm:text-xs ml-0.5 drop-shadow-md"></i>
           </div>
         </div>
         <div class="w-full text-center mb-1">
-          <span class="date-display text-white/95 text-[9px] sm:text-[10px] font-semibold drop-shadow-md">${dateFormatted}</span>
+          <span class="date-display text-white/95 text-[9px] sm:text-[10px] font-semibold drop-shadow-md tracking-wide">${dateFormatted}</span>
         </div>
-        <h3 class="video-title text-white text-xs sm:text-sm font-bold drop-shadow-md leading-snug break-words" dir="auto">${escapeHtml(truncTitle)}</h3>
+        <div class="w-full">
+          <h3 class="video-title text-white text-xs sm:text-sm font-bold drop-shadow-md leading-snug break-words" dir="auto" title="${escapeHtml(rawTitle)}">${escapeHtml(truncatedTitle)}</h3>
+        </div>
       </div>
     </article>`;
+  };
+
+  // ====== PROGRESS ======
+  function updateProgressBar(done, total) {
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    if (els.progressBar) els.progressBar.style.width = pct + '%';
+    if (els.progressPercent) els.progressPercent.textContent = pct + '%';
+    if (els.progressCount) els.progressCount.textContent = `${done} / ${total} صورة مصغرة`;
+  }
+  function hideProgressOverlay() {
+    if (!els.progressOverlay) return;
+    if (els.progressOverlay.classList.contains('hidden')) return;
+    els.progressOverlay.classList.add('fade-out');
+    setTimeout(() => {
+      els.progressOverlay.classList.add('hidden');
+      els.progressOverlay.classList.remove('fade-out');
+    }, 400);
+    progressTracking.active = false;
+    clearTimeout(progressTracking.showTimer);
+  }
+  function trackThumbnails(container) {
+    if (!container) return;
+    const imgs = Array.from(container.querySelectorAll('img'));
+    const total = imgs.length;
+    if (total === 0) return;
+    progressTracking = { total, done: 0, active: true, showTimer: null };
+    progressTracking.showTimer = setTimeout(() => {
+      if (progressTracking.active && progressTracking.done < progressTracking.total) {
+        els.progressOverlay.classList.remove('hidden');
+        updateProgressBar(progressTracking.done, progressTracking.total);
+      }
+    }, 250);
+    const onDone = () => {
+      progressTracking.done++;
+      if (!els.progressOverlay.classList.contains('hidden')) updateProgressBar(progressTracking.done, progressTracking.total);
+      if (progressTracking.done >= progressTracking.total) { clearTimeout(progressTracking.showTimer); setTimeout(hideProgressOverlay, 350); }
+    };
+    imgs.forEach(img => {
+      if (img.complete) onDone();
+      else { img.addEventListener('load', onDone, { once: true }); img.addEventListener('error', onDone, { once: true }); }
+    });
+    setTimeout(() => { if (progressTracking.active) { clearTimeout(progressTracking.showTimer); hideProgressOverlay(); } }, 10000);
   }
 
+  // ====== RENDER ======
+  function render() {
+    els.grid.classList.add('hidden');
+    els.themesView.classList.add('hidden');
+    els.treeView.classList.add('hidden');
+    els.pagination.classList.add('hidden');
+    els.backNavigation.classList.add('hidden');
+    els.empty.classList.add('hidden');
+    const items = getFilteredAndSorted();
+    if (items.length === 0) { els.empty.classList.remove('hidden'); return; }
+    if (currentViewMode === 'gallery') renderGallery(items);
+    else if (currentViewMode === 'themes') renderThemes(items);
+    else if (currentViewMode === 'tree') renderTree(items);
+  }
+  function renderGallery(items) {
+    els.grid.classList.remove('hidden');
+    els.pagination.classList.remove('hidden');
+    const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const pageItems = items.slice(start, start + PAGE_SIZE);
+    els.grid.innerHTML = pageItems.map(galleryCardHTML).join('');
+    renderPagination(totalPages);
+    if (isFirstLoad) { isFirstLoad = false; setTimeout(() => trackThumbnails(els.grid), 30); }
+  }
   function renderThemes(items) {
-    if (state.activeTheme) {
-      $('backNavigation').classList.remove('hidden');
-      $('reelsGrid').classList.remove('hidden');
-      $('pagination').classList.remove('hidden');
-      const themeItems = items.filter(r => (r.theme_fr || 'Non classé') === state.activeTheme);
+    if (activeTheme) {
+      els.backNavigation.classList.remove('hidden');
+      els.grid.classList.remove('hidden');
+      els.pagination.classList.remove('hidden');
+      const themeItems = items.filter(r => (r.theme_fr || 'Non classé') === activeTheme);
       if (themeItems.length === 0) {
-        $('reelsGrid').classList.add('hidden');
-        $('pagination').classList.add('hidden');
-        $('emptyState').classList.remove('hidden');
+        els.grid.classList.add('hidden');
+        els.pagination.classList.add('hidden');
+        els.empty.classList.remove('hidden');
         return;
       }
-      const totalPages = Math.max(1, Math.ceil(themeItems.length / PAGE_SIZE_VIDEOS));
-      if (state.videoPage > totalPages) state.videoPage = totalPages;
-      const start = (state.videoPage - 1) * PAGE_SIZE_VIDEOS;
-      $('reelsGrid').innerHTML = themeItems.slice(start, start + PAGE_SIZE_VIDEOS).map(themeVideoCardHTML).join('');
+      const totalPages = Math.max(1, Math.ceil(themeItems.length / PAGE_SIZE));
+      if (currentPage > totalPages) currentPage = totalPages;
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const pageItems = themeItems.slice(start, start + PAGE_SIZE);
+      els.grid.innerHTML = pageItems.map(themeVideoCardHTML).join('');
       renderPagination(totalPages);
     } else {
-      $('themesView').classList.remove('hidden');
-      const map = new Map();
+      els.themesView.classList.remove('hidden');
+      const themesMap = new Map();
       items.forEach(r => {
         const fr = r.theme_fr || 'Non classé';
         const ar = r.theme_ar || fr;
-        if (!map.has(fr)) map.set(fr, { ar, count: 0 });
-        map.get(fr).count++;
+        if (!themesMap.has(fr)) themesMap.set(fr, { ar, count: 0 });
+        themesMap.get(fr).count++;
       });
-      const arr = Array.from(map.entries()).sort((a,b) => b[1].count - a[1].count);
-      let html = '<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">';
-      arr.forEach(([fr, meta]) => {
+      const themeArray = Array.from(themesMap.entries()).sort((a, b) => b[1].count - a[1].count);
+      let html = '<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 w-full">';
+      themeArray.forEach(([themeFr, meta]) => {
         html += `
-          <div class="theme-card-new p-4 cursor-pointer flex flex-col items-center justify-center text-center gap-2" data-theme="${escapeHtml(fr)}" dir="rtl">
+          <div class="theme-card theme-card-new p-4 cursor-pointer flex flex-col items-center justify-center text-center gap-2" data-theme="${escapeHtml(themeFr)}" dir="rtl">
             <div class="theme-card-icon w-12 h-12 rounded-full flex items-center justify-center mb-1"><i class="fa-solid fa-folder-open text-xl"></i></div>
-            <h3 class="font-bold text-sm sm:text-base leading-tight">${escapeHtml(meta.ar)}</h3>
-            <p class="text-[10px] leading-tight opacity-75" dir="ltr">${escapeHtml(fr)}</p>
+            <h3 class="font-bold text-sm sm:text-base leading-tight" dir="rtl">${escapeHtml(meta.ar)}</h3>
+            <p class="text-[10px] leading-tight opacity-75" dir="ltr" style="direction:ltr">${escapeHtml(themeFr)}</p>
             <span class="theme-card-count text-xs font-semibold px-2.5 py-0.5 rounded-full mt-1">${meta.count} فيديو</span>
           </div>`;
       });
       html += '</div>';
-      $('themesView').innerHTML = html;
+      els.themesView.innerHTML = html;
     }
   }
-
   function renderTree(items) {
-    $('treeView').classList.remove('hidden');
-    const map = new Map();
+    els.treeView.classList.remove('hidden');
+    const themesMap = new Map();
     items.forEach(r => {
       const fr = r.theme_fr || 'Non classé';
       const ar = r.theme_ar || fr;
-      if (!map.has(fr)) map.set(fr, { ar, fr, videos: [] });
-      map.get(fr).videos.push(r);
+      if (!themesMap.has(fr)) themesMap.set(fr, { ar, fr, videos: [] });
+      themesMap.get(fr).videos.push(r);
     });
-    const sorted = Array.from(map.entries()).sort((a,b) => b[1].videos.length - a[1].videos.length || a[0].localeCompare(b[0], 'fr'));
-    let html = '<ul class="tree-list" dir="rtl">';
-    sorted.forEach(([, meta]) => {
+    const sortedThemes = Array.from(themesMap.entries())
+      .sort((a, b) => b[1].videos.length - a[1].videos.length || a[0].localeCompare(b[0], 'fr'));
+    let html = '<ul class="tree-list" dir="rtl" style="direction:rtl;text-align:right;">';
+    sortedThemes.forEach(([, meta]) => {
       html += `
         <li class="tree-item">
           <div class="theme-folder-row flex items-center gap-2 cursor-pointer select-none p-2 tree-toggle-btn" dir="rtl">
-            <i class="fa-solid fa-chevron-left tree-toggle text-xs"></i>
+            <i class="fa-solid fa-chevron-left tree-toggle text-xs chevron-icon"></i>
             <i class="fa-solid fa-folder text-sm folder-icon"></i>
-            <span class="font-bold text-sm sm:text-base">${escapeHtml(meta.ar)}</span>
-            <span class="text-[10px] opacity-70 hidden sm:inline">(${escapeHtml(meta.fr)})</span>
+            <span class="font-bold text-sm sm:text-base" dir="rtl">${escapeHtml(meta.ar)}</span>
+            <span class="text-[10px] theme-sub hidden sm:inline">(${escapeHtml(meta.fr)})</span>
             <span class="text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full mr-auto count-badge">${meta.videos.length}</span>
           </div>
           <ul class="tree-list tree-children hidden mt-1">
             ${meta.videos.map(v => {
-              const dateFmt = formatDateArabic(v.date, v.date_iso);
-              const thumbUrl = v.miniature ? resolveImageUrl(v.miniature) : (v.images && v.images[0] ? resolveImageUrl(v.images[0].chemin) : DEFAULT_IMG);
+              const dateFmt = formatDateArabicExact(v.date, v.date_iso);
               return `
               <li class="tree-item">
-                <div class="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-700/60 cursor-pointer transition-colors border border-transparent hover:border-slate-600" data-fbid="${escapeHtml(v.fbid)}" dir="rtl">
-                  <div class="flex-shrink-0 w-11 h-[60px] rounded-md overflow-hidden border border-slate-600">
-                    ${thumbMarkup(thumbUrl, 'lazy')}
+                <div class="tree-video-row flex items-center gap-2 sm:gap-3 p-2 rounded-lg hover:bg-slate-700/60 cursor-pointer transition-colors border border-transparent hover:border-slate-600" data-fbid="${escapeHtml(v.fbid)}" dir="rtl">
+                  <div class="flex-shrink-0 w-11 h-[60px] sm:w-[52px] sm:h-[72px] rounded-md overflow-hidden border border-slate-600">
+                    ${thumbMarkup(v.miniature, 'lazy')}
                   </div>
                   <div class="flex-1 min-w-0 text-right">
-                    <div class="text-xs sm:text-sm text-slate-200 font-medium leading-snug tree-video-title" dir="auto">${escapeHtml(v.titre || 'بدون عنوان')}</div>
-                    <div class="flex flex-wrap items-center gap-1.5 mt-1.5 text-[10px]">
+                    <div class="tree-video-title text-xs sm:text-sm text-slate-200 font-medium leading-snug" dir="auto" title="${escapeHtml(v.titre || '')}">${escapeHtml(v.titre || 'بدون عنوان')}</div>
+                    <div class="flex flex-wrap items-center gap-1.5 mt-1.5 text-[10px] sm:text-[11px]">
                       <span class="inline-flex items-center gap-1 bg-slate-900/70 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700/60">
                         <i class="fa-regular fa-calendar text-slate-500"></i>
-                        <span class="date-display">${dateFmt}</span>
+                        <span class="date-display" dir="rtl">${dateFmt}</span>
                       </span>
-                      <span class="inline-flex items-center gap-1 bg-slate-900/70 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700/60 font-mono" dir="ltr">
+                      <span class="inline-flex items-center gap-1 bg-slate-900/70 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700/60 font-mono" dir="ltr" title="Facebook ID">
                         <i class="fa-solid fa-hashtag text-slate-500 text-[9px]"></i>
                         <span>${escapeHtml(String(v.fbid || ''))}</span>
                       </span>
@@ -822,657 +1809,113 @@
         </li>`;
     });
     html += '</ul>';
-    $('treeContent').innerHTML = html;
+    els.treeContent.innerHTML = html;
   }
 
-  function getPagesArray(cur, tot) {
-    if (tot <= 7) return Array.from({length: tot}, (_, i) => i + 1);
-    if (cur <= 4) return [1,2,3,4,5,'…',tot];
-    if (cur >= tot - 3) return [1,'…',tot-4,tot-3,tot-2,tot-1,tot];
-    return [1,'…',cur-1,cur,cur+1,'…',tot];
+  // ====== PAGINATION ======
+  function getPageNumbers(current, total) {
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    if (current <= 4) return [1, 2, 3, 4, 5, '…', total];
+    if (current >= total - 3) return [1, '…', total - 4, total - 3, total - 2, total - 1, total];
+    return [1, '…', current - 1, current, current + 1, '…', total];
   }
-
   function renderPagination(totalPages) {
-    const pag = $('pagination');
-    if (totalPages <= 1) { pag.innerHTML = ''; return; }
-    const page = state.videoPage;
-    const base = 'min-w-[2.5rem] h-10 px-3 rounded-lg font-semibold text-sm inline-flex items-center justify-center';
+    if (totalPages <= 1) { els.pagination.innerHTML = ''; return; }
+    const base = 'min-w-[2.5rem] h-10 px-3 rounded-lg font-semibold text-sm transition-colors touch-manipulation inline-flex items-center justify-center';
     const active = 'bg-blue-600 text-white shadow-lg';
-    const inactive = 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700';
+    const inactive = 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 active:bg-slate-600';
     const disabled = 'bg-slate-800 text-slate-600 border border-slate-700 cursor-not-allowed';
-    let html = `<button data-page="${page-1}" class="${base} ${page===1?disabled:inactive}" ${page===1?'disabled':''}><i class="fa-solid fa-chevron-right text-xs"></i></button>`;
-    getPagesArray(page, totalPages).forEach(p => {
+    let html = '';
+    html += `<button data-page="${currentPage - 1}" class="${base} ${currentPage === 1 ? disabled : inactive}" ${currentPage === 1 ? 'disabled' : ''} aria-label="السابق"><i class="fa-solid fa-chevron-right text-xs"></i></button>`;
+    getPageNumbers(currentPage, totalPages).forEach((p) => {
       if (p === '…') html += `<span class="${base} ${inactive} select-none">…</span>`;
-      else html += `<button data-page="${p}" class="${base} ${p===page?active:inactive}">${p}</button>`;
+      else html += `<button data-page="${p}" class="${base} ${p === currentPage ? active : inactive}" aria-label="صفحة ${p}">${p}</button>`;
     });
-    html += `<button data-page="${page+1}" class="${base} ${page===totalPages?disabled:inactive}" ${page===totalPages?'disabled':''}><i class="fa-solid fa-chevron-left text-xs"></i></button>`;
-    pag.innerHTML = html;
+    html += `<button data-page="${currentPage + 1}" class="${base} ${currentPage === totalPages ? disabled : inactive}" ${currentPage === totalPages ? 'disabled' : ''} aria-label="التالي"><i class="fa-solid fa-chevron-left text-xs"></i></button>`;
+    els.pagination.innerHTML = html;
   }
 
-  function thumbMarkup(url, loadingAttr, extraClass = '') {
-    return `
-      <div class="thumb-wrap ${extraClass}">
-        <img src="${escapeHtml(url || DEFAULT_IMG)}" alt="" loading="${loadingAttr}" decoding="async" referrerpolicy="no-referrer"
-             onload="this.parentElement.classList.remove('thumb-error')"
-             onerror="this.parentElement.classList.add('thumb-error')">
-        <div class="thumb-fallback"><i class="fa-regular fa-image"></i><span>الصورة غير متوفرة</span></div>
-      </div>`;
-  }
-
-  // ✅ CORRECTION CLÉ : construction de la liste des photos avec FALLBACK sur `miniature`
-  // et déduplication par URL pour éviter les doublons.
-  function buildAllPhotos() {
-    ALL_PHOTOS = [];
-    const seenSrcs = new Set();
-
-    ARCHIVE_DATA.forEach(item => {
-      const sources = [];
-
-      // Priorité 1 : tableau `images` (galeries multi-images)
-      if (Array.isArray(item.images) && item.images.length > 0) {
-        item.images.forEach(img => {
-          if (img && img.chemin) {
-            const src = resolveImageUrl(img.chemin);
-            if (src && src !== DEFAULT_IMG && !seenSrcs.has(src)) {
-              sources.push(src);
-              seenSrcs.add(src);
-            }
-          }
-        });
-      }
-
-      // Priorité 2 (fallback) : `miniature` si aucune image dans le tableau
-      if (sources.length === 0 && item.miniature) {
-        const src = resolveImageUrl(item.miniature);
-        if (src && src !== DEFAULT_IMG && !seenSrcs.has(src)) {
-          sources.push(src);
-          seenSrcs.add(src);
-        }
-      }
-
-      sources.forEach((src, i) => {
-        ALL_PHOTOS.push({
-          src,
-          date: item.date,
-          caption: item.description || item.titre || '',
-          reactions: item.reactions,
-          partages: item.partages,
-          fbUrl: item.url_canonique || item.url,
-          fbid: item.fbid,
-          index: i,
-          total: sources.length
-        });
-      });
-    });
-  }
-
-  function getFilteredArchive() { return ARCHIVE_DATA; }
-
-  function getFilteredPhotos() {
-    const q = state.search.trim();
-    if (!q) return [...ALL_PHOTOS];
-    const nq = normalizeArabic(q);
-    return ALL_PHOTOS.filter(p => {
-      const hay = normalizeArabic([p.caption, p.date, p.fbid].join(' '));
-      return hay.includes(nq);
-    });
-  }
-
-  function renderPhotos() {
-    const items = getFilteredPhotos();
-    const grid = $('photosGrid');
-    const empty = $('photosEmpty');
-    const pagination = $('photosPagination');
-    grid.innerHTML = '';
-
-    if (items.length === 0) {
-      empty.classList.remove('hidden');
-      if (pagination) pagination.innerHTML = '';
-      grid._activeList = [];
-      return;
-    }
-    empty.classList.add('hidden');
-
-    const maxItems = PAGE_SIZE_PHOTOS * MAX_PHOTOS_PAGES;
-    const limitedItems = items.slice(0, maxItems);
-    const totalPages = Math.max(1, Math.ceil(limitedItems.length / PAGE_SIZE_PHOTOS));
-    if (state.photosPage > totalPages) state.photosPage = totalPages;
-    if (state.photosPage < 1) state.photosPage = 1;
-
-    const start = (state.photosPage - 1) * PAGE_SIZE_PHOTOS;
-    const pageItems = limitedItems.slice(start, start + PAGE_SIZE_PHOTOS);
-
-    pageItems.forEach((photo, idx) => {
-      const tile = document.createElement('div');
-      tile.className = 'photo-tile';
-      tile.dataset.photoIdx = idx;
-      const img = document.createElement('img');
-      img.src = photo.src;
-      img.alt = '';
-      img.loading = 'lazy';
-      img.addEventListener('error', () => {
-        tile.remove();
-        if (!grid.querySelector('.photo-tile')) empty.classList.remove('hidden');
-      }, { once: true });
-      tile.appendChild(img);
-      grid.appendChild(tile);
-    });
-
-    // On stocke la liste LIMITÉE (toutes les photos filtrées, pas seulement la page)
-    grid._activeList = limitedItems;
-    renderPhotosPagination(totalPages, pagination);
-  }
-
-  function renderPhotosPagination(totalPages, pag) {
-    if (!pag) return;
-    if (totalPages <= 1) { pag.innerHTML = ''; return; }
-    const page = state.photosPage;
-    const base = 'min-w-[2.5rem] h-10 px-3 rounded-lg font-semibold text-sm inline-flex items-center justify-center';
-    const active = 'bg-amber-500 text-slate-900 shadow-lg';
-    const inactive = 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700';
-    const disabled = 'bg-slate-800 text-slate-600 border border-slate-700 cursor-not-allowed';
-    let html = `<button data-photo-page="${page-1}" class="${base} ${page===1?disabled:inactive}" ${page===1?'disabled':''}><i class="fa-solid fa-chevron-right text-xs"></i></button>`;
-    getPagesArray(page, totalPages).forEach(p => {
-      if (p === '…') html += `<span class="${base} ${inactive} select-none">…</span>`;
-      else html += `<button data-photo-page="${p}" class="${base} ${p===page?active:inactive}">${p}</button>`;
-    });
-    html += `<button data-photo-page="${page+1}" class="${base} ${page===totalPages?disabled:inactive}" ${page===totalPages?'disabled':''}><i class="fa-solid fa-chevron-left text-xs"></i></button>`;
-    pag.innerHTML = html;
-  }
-
-  function renderPublications() {
-    const items = getFilteredArchive();
-    if (items.length === 0) {
-      $('pubGrid').innerHTML = '';
-      $('pubEmpty').classList.remove('hidden');
-      return;
-    }
-    $('pubEmpty').classList.add('hidden');
-    $('pubGrid').innerHTML = items.map(item => publicationCardHTML(item)).join('');
-    $('pubGrid')._activeList = items;
-  }
-
-  function publicationCardHTML(item) {
-    const text = item.description || item.titre || '';
-    const isLong = text.length > 200;
-    const hasImages = item.images && item.images.length > 0;
-    const mainImg = hasImages ? resolveImageUrl(item.images[0].chemin) : (item.miniature ? resolveImageUrl(item.miniature) : '');
-    const thumbs = hasImages && item.images.length > 1
-      ? `<div class="pub-thumbs">${item.images.map((img, i) => `
-          <img src="${escapeHtml(resolveImageUrl(img.chemin))}" data-idx="${i}" class="${i===0?'active':''}" loading="lazy" alt="">
-        `).join('')}</div>` : '';
-    return `
-    <article class="pub-card" data-fbid="${escapeHtml(item.fbid)}">
-      ${mainImg ? `
-        <div class="pub-media" data-open-lightbox="${escapeHtml(item.fbid)}">
-          <img src="${escapeHtml(mainImg)}" loading="lazy" alt="">
-          <span class="pub-badge-type">${item.type || 'PHOTO'}</span>
-          ${hasImages && item.images.length > 1 ? `<span class="pub-badge-gallery">🖼️ ${item.images.length}</span>` : ''}
-        </div>
-        ${thumbs}
-      ` : ''}
-      <div class="pub-body">
-        <div>
-          <div class="pub-meta">
-            <span class="pub-date"><i class="fa-regular fa-calendar mr-1"></i>${item.date || ''}</span>
-            <span class="pub-fbid">#${(item.fbid || '').slice(-6)}</span>
-          </div>
-          <p class="pub-text" id="ptext-${item.fbid}">${escapeHtml(text)}</p>
-          ${isLong ? `<button class="read-more" data-target="ptext-${item.fbid}">قراءة المزيد...</button>` : ''}
-        </div>
-        <div class="pub-footer">
-          <div class="pub-stats">
-            <span>👍 ${item.reactions ?? 0}</span>
-            <span>🔁 ${item.partages ?? 0}</span>
-          </div>
-          <div class="pub-actions">
-            ${mainImg ? `<button class="btn-sm" data-open-lightbox="${escapeHtml(item.fbid)}"><i class="fa-solid fa-expand"></i> معاينة</button>` : ''}
-            <a class="btn-sm" href="${escapeHtml(item.url_canonique || item.url || '#')}" target="_blank" rel="noopener"><i class="fa-brands fa-facebook"></i> Facebook</a>
-          </div>
-        </div>
-      </div>
-    </article>`;
-  }
-
-  function openLightbox(list, index) {
-    if (!list || !list.length) return;
-    state.lb.list = list.slice();
-    state.lb.index = Math.max(0, Math.min(index, list.length - 1));
-    updateLightboxUI();
-    $('lightbox').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function updateLightboxUI() {
-    const s = state.lb.list[state.lb.index];
-    if (!s) { closeLightbox(); return; }
-    const img = $('lbImg');
-    img.onerror = () => {
-      state.lb.list.splice(state.lb.index, 1);
-      if (state.lb.list.length === 0) { closeLightbox(); return; }
-      if (state.lb.index >= state.lb.list.length) state.lb.index = 0;
-      updateLightboxUI();
-    };
-    img.src = s.src;
-    $('lbDate').textContent = s.date;
-    $('lbCounter').textContent = `${state.lb.index + 1} / ${state.lb.list.length}`;
-    $('lbCaption').textContent = s.caption;
-    $('lbReactions').textContent = s.reactions ?? 0;
-    $('lbShares').textContent = s.partages ?? 0;
-    $('lbFbLink').href = s.fbUrl;
-    const show = state.lb.list.length > 1;
-    $('lbPrev').style.display = show ? 'flex' : 'none';
-    $('lbNext').style.display = show ? 'flex' : 'none';
-  }
-
-  function closeLightbox() {
-    $('lightbox').classList.remove('open');
-    document.body.style.overflow = '';
-    const img = $('lbImg');
-    if (img) img.onerror = null;
-  }
-
-  document.addEventListener('error', (e) => {
-    const img = e.target;
-    if (!(img instanceof HTMLImageElement)) return;
-    if (img.closest('.thumb-wrap')) return;
-    if (img.id === 'lbImg') return;
-
-    const tile = img.closest('.photo-tile');
-    if (tile) {
-      const grid = tile.parentElement;
-      tile.remove();
-      if (grid && grid.id === 'photosGrid' && !grid.querySelector('.photo-tile')) {
-        $('photosEmpty').classList.remove('hidden');
-      }
-      return;
-    }
-    if (img.closest('.pub-thumbs')) { img.remove(); return; }
-    const media = img.closest('.pub-media');
-    if (media) {
-      const card = media.closest('.pub-card');
-      const thumbs = card ? card.querySelectorAll('.pub-thumbs img') : [];
-      let swapped = false;
-      for (const t of thumbs) {
-        if (t !== img && t.complete && t.naturalWidth > 0) {
-          img.src = t.src; swapped = true; break;
-        }
-      }
-      if (!swapped) {
-        media.remove();
-        if (card && !card.querySelector('.pub-media') && !card.querySelector('.pub-thumbs img')) {
-          card.remove();
-        }
-      }
-    }
-  }, true);
-
-  function renderActiveTab() {
-    if (state.tab === 'videos') renderVideos();
-    else if (state.tab === 'photos') renderPhotos();
-    else if (state.tab === 'publications') renderPublications();
-  }
-
-  function closeAllDropdowns() {
-    document.querySelectorAll('.menu-dropdown-content').forEach(c => c.classList.add('hidden'));
-    document.querySelectorAll('.menu-dropdown .menu-item').forEach(b => b.setAttribute('aria-expanded', 'false'));
-  }
-
-  function positionDropdown(btn, content) {
-    if (!btn || !content) return;
-    const rect = btn.getBoundingClientRect();
-    const header = btn.closest('.app-header');
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const ddW = content.offsetWidth || 230;
-    const ddH = content.offsetHeight || 100;
-
-    let top, right;
-    if (header) {
-      const hRect = header.getBoundingClientRect();
-      top = rect.bottom - hRect.top + 4;
-      right = hRect.right - rect.right;
-    } else {
-      top = rect.bottom + 4;
-      right = vw - rect.right;
-    }
-    if (vw - right - ddW < 8) right = Math.max(8, vw - ddW - 8);
-    if (top + ddH > vh - 8 && rect.top - ddH - 4 > 8) {
-      top = (header ? (rect.top - header.getBoundingClientRect().top) : rect.top) - ddH - 4;
-    }
-    content.style.top = top + 'px';
-    content.style.right = right + 'px';
-    content.style.left = 'auto';
-  }
-
-  document.querySelectorAll('.menu-dropdown').forEach(dd => {
-    const btn = dd.querySelector('.menu-item');
-    if (!btn) return;
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      const content = dd.querySelector('.menu-dropdown-content');
-      const isOpen = content && !content.classList.contains('hidden');
-      closeAllDropdowns();
-      if (!isOpen && content) {
-        content.classList.remove('hidden');
-        positionDropdown(btn, content);
-        btn.setAttribute('aria-expanded', 'true');
-      }
-    });
-  });
-
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.menu-dropdown')) closeAllDropdowns();
-  });
-  window.addEventListener('scroll', closeAllDropdowns, { capture: true, passive: true });
-  window.addEventListener('resize', closeAllDropdowns);
-
-  document.querySelectorAll('.center-tab').forEach(btn => {
-    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-  });
-
-  let searchTimer = null;
-  $('globalSearch').addEventListener('input', e => {
-    clearTimeout(searchTimer);
-    const v = e.target.value;
-    searchTimer = setTimeout(() => {
-      state.search = v;
-      state.videoPage = 1;
-      state.archivePage = 1;
-      state.photosPage = 1;
-      renderActiveTab();
-    }, 200);
-  });
-
-  $('menuHome').addEventListener('click', () => {
-    state.videoView = 'gallery';
-    state.activeTheme = null;
-    state.videoPage = 1;
-    syncVideoMenus();
-    renderVideos();
-  });
-
-  $('galleryDropdown').addEventListener('click', e => {
-    const b = e.target.closest('[data-view]');
-    if (!b) return;
-    state.videoView = b.dataset.view;
-    state.activeTheme = null;
-    state.videoPage = 1;
-    syncVideoMenus();
-    renderVideos();
-    closeAllDropdowns();
-  });
-
-  $('sortDropdown').addEventListener('click', e => {
-    const b = e.target.closest('[data-sort]');
-    if (!b) return;
-    state.videoSort = b.dataset.sort;
-    state.videoPage = 1;
-    syncVideoMenus();
-    renderVideos();
-    closeAllDropdowns();
-  });
-
-  $('yearDropdownContent').addEventListener('click', e => {
-    const b = e.target.closest('[data-year]');
-    if (!b) return;
-    state.videoYear = b.dataset.year;
-    state.videoPage = 1;
-    syncVideoMenus();
-    if (state.tab === 'videos') renderVideos();
-    closeAllDropdowns();
-  });
-
-  $('backToThemesBtn').addEventListener('click', () => {
-    state.activeTheme = null;
-    state.videoPage = 1;
-    renderVideos();
-  });
-
-  $('reelsGrid').addEventListener('click', e => {
-    const card = e.target.closest('[data-fbid]');
-    if (!card) return;
-    const reel = state.videos.find(r => String(r.fbid) === card.dataset.fbid);
-    if (reel) openVideoDetails(reel);
-  });
-  $('themesView').addEventListener('click', e => {
-    const c = e.target.closest('[data-theme]');
-    if (!c) return;
-    state.activeTheme = c.dataset.theme;
-    state.videoPage = 1;
-    renderVideos();
-  });
-  $('treeContent').addEventListener('click', e => {
-    const toggle = e.target.closest('.tree-toggle-btn');
-    if (toggle) {
-      const icon = toggle.querySelector('.tree-toggle');
-      const children = toggle.nextElementSibling;
-      if (children && children.classList.contains('tree-children')) {
-        children.classList.toggle('hidden');
-        if (icon) icon.classList.toggle('open');
-      }
-      return;
-    }
-    const node = e.target.closest('[data-fbid]');
-    if (node) {
-      const reel = state.videos.find(r => String(r.fbid) === node.dataset.fbid);
-      if (reel) openVideoDetails(reel);
-    }
-  });
-
-  $('pagination').addEventListener('click', e => {
-    const b = e.target.closest('button[data-page]');
-    if (!b || b.disabled) return;
-    const p = parseInt(b.dataset.page, 10);
-    if (!p || p === state.videoPage) return;
-    state.videoPage = p;
-    renderVideos();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  $('exportExcelBtn').addEventListener('click', exportToExcel);
-
-  const photosPagEl = $('photosPagination');
-  if (photosPagEl) {
-    photosPagEl.addEventListener('click', e => {
-      const b = e.target.closest('button[data-photo-page]');
-      if (!b || b.disabled) return;
-      const p = parseInt(b.dataset.photoPage, 10);
-      if (!p || p === state.photosPage) return;
-      state.photosPage = p;
-      renderPhotos();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  }
-
-  function syncVideoMenus() {
-    const badge = $('yearBadge');
-    if (badge) badge.textContent = yearLabel(state.videoYear);
-
-    ['menuHome', 'menuGalerie', 'menuSort'].forEach(id => {
-      const el = $(id); if (el) el.classList.remove('active');
-    });
-    if (state.videoView !== 'gallery') $('menuGalerie').classList.add('active');
-    else if (state.videoSort !== 'recent') $('menuSort').classList.add('active');
-    else $('menuHome').classList.add('active');
-
-    $('galleryDropdown').querySelectorAll('[data-view]').forEach(b => {
-      b.classList.toggle('active', b.dataset.view === state.videoView);
-    });
-    $('sortDropdown').querySelectorAll('[data-sort]').forEach(b => {
-      b.classList.toggle('active', b.dataset.sort === state.videoSort);
-    });
-    $('yearDropdownContent').querySelectorAll('[data-year]').forEach(b => {
-      b.classList.toggle('active', String(b.dataset.year) === String(state.videoYear));
-    });
-  }
-
-  function buildYearDropdown() {
-    const years = new Set();
-    state.videos.forEach(r => { const y = getVideoYear(r); if (y) years.add(y); });
-    const sorted = Array.from(years).sort((a,b) => Number(b) - Number(a));
-    let html = `<button class="menu-dropdown-item" data-year="all"><i class="fa-solid fa-layer-group"></i><span>${escapeHtml(yearLabel('all'))}</span><i class="fa-solid fa-check dd-check"></i></button>`;
-    if (sorted.length) {
-      html += '<div class="border-t border-white/10 my-1"></div>';
-      sorted.forEach(y => {
-        html += `<button class="menu-dropdown-item" data-year="${escapeHtml(y)}"><i class="fa-solid fa-calendar-day"></i><span>${escapeHtml(yearLabel(y))}</span><i class="fa-solid fa-check dd-check"></i></button>`;
-      });
-    }
-    $('yearDropdownContent').innerHTML = html;
-  }
-
-  function initVideoYear() {
-    const years = new Set();
-    state.videos.forEach(r => { const y = getVideoYear(r); if (y) years.add(y); });
-    const sorted = Array.from(years).sort((a,b) => Number(b) - Number(a));
-    state.videoYear = sorted.includes('2026') ? '2026' : (sorted[0] || 'all');
-  }
-
-  function handleMqChange() {
-    syncVideoMenus();
-    buildYearDropdown();
-  }
-  if (mobileMq.addEventListener) mobileMq.addEventListener('change', handleMqChange);
-  else if (mobileMq.addListener) mobileMq.addListener(handleMqChange);
-
-  // ====================================================================
-  // LECTEUR VIDÉO
-  // ====================================================================
-  let currentVideo = null;
-  let posterFadeTimer = null;
-  let iframeLoadTimer = null;
-  let iframeReady = false;
-
-  function buildEmbedUrl(shareUrl) {
-    if (!shareUrl) return '';
-    const clean = String(shareUrl).split('#')[0];
-    return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(clean)}&show_text=false&width=500&height=889&autoplay=true&mute=false&allowfullscreen=true`;
-  }
-
+  // ====== LECTEUR VIDÉO ======
   function loadVideoWithAutoplay(reel) {
     if (!reel) return;
     const shareUrl = reel.url_canonique || reel.url;
-    if (!shareUrl || !/^https?:\/\//i.test(shareUrl)) {
-      showVideoError("L'URL de cette vidéo est invalide ou manquante.");
-      return;
-    }
-    const src = buildEmbedUrl(shareUrl);
-    $('detailsFrame').src = src;
-
-    clearTimeout(iframeLoadTimer);
-    iframeLoadTimer = setTimeout(() => {
-      if (!iframeReady) {
-        showVideoError("Le lecteur Facebook met trop de temps à répondre. La vidéo est peut-être indisponible ou restreinte.");
-      }
-    }, 10000);
+    const src = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(shareUrl)}&show_text=false&width=500&height=889&autoplay=true&mute=false&allowfullscreen=true`;
+    els.detailsFrame.src = src;
   }
-
-  function showVideoError(message) {
-    const loader = $('videoLoader');
-    if (loader) loader.classList.add('hidden');
-
-    const fallback = $('videoFallbackNote');
-    if (!fallback) return;
-
-    const url = (currentVideo && (currentVideo.url_canonique || currentVideo.url)) || '#';
-    fallback.innerHTML = `
-      <div class="flex flex-col items-center gap-1.5">
-        <span class="text-rose-300 font-semibold">${escapeHtml(message)}</span>
-        <a href="${escapeHtml(url)}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-blue-400 underline font-semibold">
-          <i class="fa-brands fa-facebook"></i> Ouvrir la publication sur Facebook
-        </a>
-      </div>`;
-    fallback.classList.remove('hidden');
-  }
-
   function schedulePosterFade(delay) {
     clearTimeout(posterFadeTimer);
     posterFadeTimer = setTimeout(() => {
-      if ($('detailsModal').classList.contains('hidden')) return;
+      if (els.detailsModal.classList.contains('hidden')) return;
       revealPlayer();
     }, delay);
   }
-
   function revealPlayer() {
     clearTimeout(posterFadeTimer);
-    $('videoLoader').classList.add('hidden');
-    $('detailsPoster').classList.add('opacity-0', 'pointer-events-none');
-    $('detailsPoster').classList.remove('opacity-100');
-    $('detailsFrame').classList.remove('opacity-0');
-    $('detailsFrame').classList.add('opacity-100');
+    els.videoLoader.classList.add('hidden');
+    els.detailsPoster.classList.add('opacity-0', 'pointer-events-none');
+    els.detailsPoster.classList.remove('opacity-100');
+    els.detailsFrame.classList.remove('opacity-0');
+    els.detailsFrame.classList.add('opacity-100');
   }
-
-  function openVideoDetails(reel) {
-    currentVideo = reel;
+  function openDetails(reel) {
+    currentReel = reel;
     iframeReady = false;
-    closeVideoDetails(true);
-
-    const content = $('detailsContent');
-    content.innerHTML = renderVideoDetails(reel);
-    content.scrollTop = 0;
-    $('detailsDisplayTitle').textContent = reel.titre || 'العنوان غير متوفر';
-    $('detailsDisplayDate').textContent = formatDateArabic(reel.date, reel.date_iso);
-    $('playerViewsVal').textContent = formatNumber(reel.vues ?? 0);
-    $('playerReactionsVal').textContent = reel.reactions ?? 0;
-    const thumbUrl = reel.miniature ? resolveImageUrl(reel.miniature) : (reel.images && reel.images[0] ? resolveImageUrl(reel.images[0].chemin) : DEFAULT_IMG);
-    const img = $('detailsPosterImg');
-    img.parentElement.classList.remove('thumb-error');
-    img.src = thumbUrl;
-    $('detailsPoster').classList.remove('opacity-0', 'pointer-events-none');
-    $('detailsPoster').classList.add('opacity-100');
-    $('detailsFrame').classList.remove('opacity-100');
-    $('detailsFrame').classList.add('opacity-0');
-    $('videoLoader').classList.remove('hidden');
-    $('detailsModal').classList.remove('hidden');
+    els.detailsContent.innerHTML = renderDetails(reel);
+    els.detailsContent.scrollTop = 0;
+    els.detailsDisplayTitle.textContent = reel.titre || 'العنوان غير متوفر';
+    els.detailsDisplayDate.textContent = formatDateArabicExact(reel.date, reel.date_iso);
+    els.playerViewsVal.textContent = formatViews(getViews(reel));
+    els.playerReactionsVal.textContent = reel.reactions != null ? String(reel.reactions) : '—';
+    const wrap = els.detailsPosterImg.parentElement;
+    wrap.classList.remove('thumb-error');
+    els.detailsPosterImg.style.display = '';
+    els.detailsPosterImg.src = reel.miniature || '';
+    els.detailsPoster.classList.remove('opacity-0', 'pointer-events-none');
+    els.detailsPoster.classList.add('opacity-100');
+    els.detailsFrame.classList.remove('opacity-100');
+    els.detailsFrame.classList.add('opacity-0');
+    els.videoLoader.classList.remove('hidden');
+    els.detailsModal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
-
-    const fallback = $('videoFallbackNote');
-    if (fallback) {
-      fallback.innerHTML = `La vidéo ne se lance pas ? <a href="${escapeHtml(reel.url_canonique || reel.url)}" target="_blank" rel="noopener" class="text-blue-400 underline">Ouvrir sur Facebook</a>`;
-      fallback.classList.remove('hidden');
-    }
-
     loadVideoWithAutoplay(reel);
-  }
-
-  function closeVideoDetails(reopen) {
     clearTimeout(posterFadeTimer);
-    clearTimeout(iframeLoadTimer);
-    iframeReady = false;
-
-    if (!reopen) {
-      $('detailsModal').classList.add('hidden');
-      document.body.style.overflow = '';
-    }
-
-    const frame = $('detailsFrame');
-    frame.src = 'about:blank';
-    frame.classList.remove('opacity-100');
-    frame.classList.add('opacity-0');
-    $('detailsPoster').classList.add('opacity-0', 'pointer-events-none');
-    $('detailsPoster').classList.remove('opacity-100');
-    $('detailsPosterImg').removeAttribute('src');
-    $('detailsContent').innerHTML = '';
-    $('videoLoader').classList.add('hidden');
-
-    const fallback = $('videoFallbackNote');
-    if (fallback) fallback.classList.add('hidden');
-
-    if (!reopen) currentVideo = null;
+    posterFadeTimer = setTimeout(() => {
+      if (els.detailsModal.classList.contains('hidden')) return;
+      revealPlayer();
+    }, 15000);
   }
-
-  function renderVideoDetails(reel) {
-    const themeAr = reel.theme_ar || null;
+  function closeDetails() {
+    clearTimeout(posterFadeTimer);
+    iframeReady = false;
+    els.detailsModal.classList.add('hidden');
+    els.detailsFrame.src = 'about:blank';
+    els.detailsFrame.classList.remove('opacity-100');
+    els.detailsFrame.classList.add('opacity-0');
+    els.detailsPoster.classList.add('opacity-0', 'pointer-events-none');
+    els.detailsPoster.classList.remove('opacity-100');
+    els.detailsPosterImg.removeAttribute('src');
+    els.detailsContent.innerHTML = '';
+    els.videoLoader.classList.add('hidden');
+    document.body.style.overflow = '';
+    currentReel = null;
+  }
+  function renderDetails(reel) {
+    const views = getViews(reel);
+    const reactions = reel.reactions ?? null;
     const themeFr = reel.theme_fr || null;
+    const themeAr = reel.theme_ar || null;
+    const reelUrl = reel.url || '';
     const description = reel.description || null;
-    const shareUrl = reel.url_canonique || reel.url || '';
-    const embedUrl = buildEmbedUrl(shareUrl);
-    const statHTML = (label, value, icon, color) => `
+    const content = window.tabeleau_url_content || [];
+    const contentItem = content.find(x => String(x.fbid) === String(reel.fbid));
+    const enrichedContent = contentItem ? contentItem.contenu : null;
+    const statHTML = (label, value, icon, colorClasses) => `
       <div class="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3">
-        <div class="flex items-center gap-1.5 text-xs text-slate-400 mb-1"><i class="fa-solid ${icon} ${color}"></i><span>${label}</span></div>
-        <div class="text-base font-bold ${color} truncate">${escapeHtml(String(value))}</div>
+        <div class="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
+          <i class="fa-solid ${icon} ${colorClasses.icon}"></i><span>${label}</span>
+        </div>
+        <div class="text-base font-bold ${colorClasses.text} truncate">${escapeHtml(String(value))}</div>
       </div>`;
-
     return `
       ${(themeAr || themeFr) ? `<div class="flex flex-wrap gap-2">
         ${themeAr ? `<span class="theme-chip" dir="rtl"><i class="fa-solid fa-tag text-[9px]"></i> ${escapeHtml(themeAr)}</span>` : ''}
@@ -1480,352 +1923,463 @@
       </div>` : ''}
       <h2 class="text-base sm:text-lg font-bold text-white leading-relaxed" dir="auto">${reel.titre ? escapeHtml(reel.titre) : 'مقطع فيديو'}</h2>
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-        ${statHTML('المشاهدات', formatNumber(reel.vues ?? 0), 'fa-eye', 'text-amber-400')}
-        ${statHTML('التفاعلات', reel.reactions ?? '—', 'fa-heart', 'text-rose-400')}
-        ${statHTML('التاريخ', formatDateArabic(reel.date, reel.date_iso) || '—', 'fa-calendar', 'text-slate-400')}
+        ${statHTML('المشاهدات', formatViews(views), 'fa-eye', { icon: 'text-amber-400', text: 'text-amber-300' })}
+        ${statHTML('التفاعلات', reactions != null ? String(reactions) : '—', 'fa-heart', { icon: 'text-rose-400', text: 'text-rose-300' })}
+        ${statHTML('التاريخ', reel.date || '—', 'fa-calendar', { icon: 'text-slate-400', text: 'text-slate-200' })}
       </div>
-      ${description ? `<div><div class="text-xs font-semibold text-slate-400 uppercase mb-2">الوصف</div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-slate-900/40 p-3 rounded-lg border border-slate-700/50" dir="auto">${escapeHtml(description)}</p></div>` : ''}
-
-      <details class="url-details pt-1 bg-slate-900/60 border border-slate-700/60 rounded-lg overflow-hidden">
-        <summary class="cursor-pointer px-3 py-2 text-xs font-semibold text-slate-300 hover:text-white flex items-center gap-2 select-none">
-          <i class="fa-solid fa-link text-amber-400"></i>
-          <span>Chemins de lecture (URL complet)</span>
-          <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-60 url-chevron"></i>
-        </summary>
-        <div class="px-3 pb-3 pt-1 space-y-3">
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-[10px] uppercase tracking-wider text-slate-500">URL de la publication</span>
-              <button type="button" class="text-blue-400 hover:text-blue-300 text-[10px] font-bold inline-flex items-center gap-1" data-copy-url="${escapeHtml(shareUrl)}">
-                <i class="fa-regular fa-copy"></i> Copier
-              </button>
-            </div>
-            <div class="font-mono text-[11px] break-all bg-slate-950/80 p-2 rounded border border-slate-800 text-slate-300" dir="ltr">${escapeHtml(shareUrl || '—')}</div>
-          </div>
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <span class="text-[10px] uppercase tracking-wider text-slate-500">URL d'intégration (iframe src)</span>
-              <button type="button" class="text-amber-400 hover:text-amber-300 text-[10px] font-bold inline-flex items-center gap-1" data-copy-url="${escapeHtml(embedUrl)}">
-                <i class="fa-regular fa-copy"></i> Copier
-              </button>
-            </div>
-            <div class="font-mono text-[11px] break-all bg-slate-950/80 p-2 rounded border border-slate-800 text-amber-300" dir="ltr">${escapeHtml(embedUrl || '—')}</div>
-          </div>
-        </div>
-      </details>
-
-      <div class="flex flex-col sm:flex-row gap-2 pt-2">
-        ${reel.url ? `<a href="${escapeHtml(reel.url)}" target="_blank" rel="noopener" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl" dir="ltr"><i class="fa-brands fa-facebook"></i> Voir sur Facebook</a>` : ''}
+      ${description ? `<div class="pt-1"><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">الوصف</div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-slate-900/40 p-3 rounded-lg border border-slate-700/50" dir="auto">${escapeHtml(description)}</p></div>` : ''}
+      ${enrichedContent ? `<div class="pt-1"><div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">محتوى الفيديو</div><p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-amber-500/5 p-3 rounded-lg border border-amber-500/20" dir="auto">${escapeHtml(enrichedContent)}</p></div>` : ''}
+      <div class="flex flex-col sm:flex-row gap-2 pt-3">
+        ${reelUrl ? `<a href="${escapeHtml(reelUrl)}" target="_blank" rel="noopener" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors" dir="ltr"><i class="fa-brands fa-facebook"></i> Voir sur Facebook</a>` : ''}
       </div>`;
   }
 
-  $('detailsContent').addEventListener('click', e => {
-    const btn = e.target.closest('[data-copy-url]');
-    if (!btn) return;
-    const url = btn.getAttribute('data-copy-url');
-    if (!url || url === '—') return;
-    const original = btn.innerHTML;
-    const success = () => {
-      btn.innerHTML = '<i class="fa-solid fa-check"></i> Copié';
-      setTimeout(() => { btn.innerHTML = original; }, 1500);
-    };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(url).then(success).catch(() => {
-        const ta = document.createElement('textarea');
-        ta.value = url;
-        document.body.appendChild(ta);
-        ta.select();
-        try { document.execCommand('copy'); success(); } catch (_) {}
-        document.body.removeChild(ta);
-      });
-    } else {
-      const ta = document.createElement('textarea');
-      ta.value = url;
-      document.body.appendChild(ta);
-      ta.select();
-      try { document.execCommand('copy'); success(); } catch (_) {}
-      document.body.removeChild(ta);
-    }
-  });
-
-  $('detailsFrame').addEventListener('load', () => {
-    if ($('detailsModal').classList.contains('hidden')) return;
-    const src = $('detailsFrame').src;
-    if (!src || src === 'about:blank') return;
-
-    clearTimeout(iframeLoadTimer);
-    iframeReady = true;
-    $('videoLoader').classList.add('hidden');
-    schedulePosterFade(800);
-  });
-
-  $('detailsPlayBtn').addEventListener('click', () => {
-    if (!currentVideo) return;
-    if (!currentVideo.url_canonique && !currentVideo.url) {
-      showVideoError("Cette publication ne contient pas de vidéo lisible.");
-      return;
-    }
-    const frameSrc = $('detailsFrame').src;
-    if (!frameSrc || frameSrc === 'about:blank') {
-      loadVideoWithAutoplay(currentVideo);
-      return;
-    }
-    revealPlayer();
-  });
-
-  $('detailsModal').addEventListener('click', e => {
-    if (e.target.closest('[data-close-details]')) closeVideoDetails();
-  });
-
-  $('fullscreenBtn').addEventListener('click', async () => {
-    const el = $('playerZone');
+  // ====== PLEIN ÉCRAN ======
+  async function toggleFullscreen() {
+    const el = els.playerZone;
+    if (!el) return;
     try {
       const isFs = document.fullscreenElement || document.webkitFullscreenElement;
       if (!isFs) {
         if (el.requestFullscreen) await el.requestFullscreen();
         else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+        else if (el.msRequestFullscreen) el.msRequestFullscreen();
       } else {
         if (document.exitFullscreen) await document.exitFullscreen();
         else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        else if (document.msExitFullscreen) document.msExitFullscreen();
       }
-    } catch (e) { /* ignore */ }
-  });
-
-  $('lbClose').addEventListener('click', closeLightbox);
-  $('lbPrev').addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (!state.lb.list.length) return;
-    state.lb.index = (state.lb.index - 1 + state.lb.list.length) % state.lb.list.length;
-    updateLightboxUI();
-  });
-  $('lbNext').addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (!state.lb.list.length) return;
-    state.lb.index = (state.lb.index + 1) % state.lb.list.length;
-    updateLightboxUI();
-  });
-  $('lightbox').addEventListener('click', (e) => {
-    if (e.target === $('lightbox')) closeLightbox();
-  });
-  document.addEventListener('keydown', (e) => {
-    if ($('lightbox').classList.contains('open')) {
-      if (e.key === 'Escape') closeLightbox();
-      else if (e.key === 'ArrowRight') $('lbPrev').click();
-      else if (e.key === 'ArrowLeft') $('lbNext').click();
-      return;
-    }
-    if (e.key === 'Escape') {
-      if (!$('detailsModal').classList.contains('hidden')) { e.preventDefault(); closeVideoDetails(); return; }
-      if (!$('remarksModal').classList.contains('hidden')) { e.preventDefault(); $('remarksModal').classList.add('hidden'); document.body.style.overflow = ''; return; }
-      const openDD = document.querySelector('.menu-dropdown-content:not(.hidden)');
-      if (openDD) { e.preventDefault(); closeAllDropdowns(); return; }
-    }
-  });
-
-  // ✅ CORRECTION : clic sur une photo → ouvre le lightbox avec TOUTES les photos filtrées
-  // (pas seulement celles de la page courante), en calculant l'index global correct.
-  $('photosGrid').addEventListener('click', (e) => {
-    const tile = e.target.closest('.photo-tile');
-    if (!tile) return;
-    const pageIdx = parseInt(tile.dataset.photoIdx, 10);
-    if (!Number.isFinite(pageIdx)) return;
-
-    const allPhotos = getFilteredPhotos();
-    const limited = allPhotos.slice(0, PAGE_SIZE_PHOTOS * MAX_PHOTOS_PAGES);
-    const start = (state.photosPage - 1) * PAGE_SIZE_PHOTOS;
-    const globalIdx = start + pageIdx;
-
-    if (limited.length) openLightbox(limited, globalIdx);
-  });
-
-  $('pubGrid').addEventListener('click', (e) => {
-    const thumb = e.target.closest('.pub-thumbs img');
-    if (thumb) {
-      const card = thumb.closest('.pub-card');
-      const media = card?.querySelector('.pub-media img');
-      if (media) media.src = thumb.src;
-      card.querySelectorAll('.pub-thumbs img').forEach(t => t.classList.remove('active'));
-      thumb.classList.add('active');
-      return;
-    }
-    const rm = e.target.closest('.read-more');
-    if (rm) {
-      const t = $(rm.dataset.target);
-      if (t) {
-        const expanded = t.classList.toggle('expanded');
-        rm.textContent = expanded ? 'إظهار أقل...' : 'قراءة المزيد...';
-      }
-      return;
-    }
-    const lb = e.target.closest('[data-open-lightbox]');
-    if (lb) {
-      const fbid = lb.dataset.openLightbox;
-      const item = ARCHIVE_DATA.find(x => x.fbid === fbid);
-      if (item) {
-        const sources = [];
-        if (Array.isArray(item.images) && item.images.length > 0) {
-          item.images.forEach(img => { if (img && img.chemin) sources.push(resolveImageUrl(img.chemin)); });
-        }
-        if (sources.length === 0 && item.miniature) {
-          sources.push(resolveImageUrl(item.miniature));
-        }
-        if (sources.length) {
-          const list = sources.map((src, i) => ({
-            src, date: item.date,
-            caption: item.description || item.titre || '',
-            reactions: item.reactions, partages: item.partages,
-            fbUrl: item.url_canonique || item.url,
-            fbid: item.fbid, index: i, total: sources.length
-          }));
-          openLightbox(list, 0);
-        }
-      }
-    }
-  });
-
-  $('openRemarksBtn').addEventListener('click', () => {
-    $('remarksModal').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-  });
-  $('remarksModal').addEventListener('click', (e) => {
-    if (e.target.closest('[data-close-remarks]')) {
-      $('remarksModal').classList.add('hidden');
-      document.body.style.overflow = '';
-    }
-  });
-
-  $('emailRemarkForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const text = $('emailRemarkText').value.trim();
-    if (!text) return;
-    const btn = $('emailRemarkBtn');
-    const status = $('emailRemarkStatus');
-    btn.disabled = true;
-    status.classList.remove('hidden');
-    status.className = 'rounded-lg px-3 py-2 text-sm bg-blue-500/15 text-blue-300 border border-blue-500/30';
-    status.textContent = 'جارٍ الإرسال...';
-    try {
-      await fetch(EMAIL_REMARK_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ text, page: location.href, timestamp: new Date().toISOString() })
-      });
-      status.className = 'rounded-lg px-3 py-2 text-sm bg-emerald-500/15 text-emerald-300 border border-emerald-500/30';
-      status.textContent = 'تم إرسال ملاحظتك بنجاح. شكراً لك!';
-      $('emailRemarkText').value = '';
-    } catch (err) {
-      status.className = 'rounded-lg px-3 py-2 text-sm bg-rose-500/15 text-rose-300 border border-rose-500/30';
-      status.textContent = 'تعذّر إرسال الملاحظة. حاول مرة أخرى.';
-    } finally {
-      btn.disabled = false;
-    }
-  });
-
-  function exportToExcel() {
-    if (!state.videos.length) return;
-    try {
-      const rows = state.videos.map(v => ({
-        'المعرف': v.fbid,
-        'التاريخ': v.date,
-        'السنة': v.annee,
-        'العنوان': v.titre || '',
-        'المحور (FR)': v.theme_fr || '',
-        'المحور (AR)': v.theme_ar || '',
-        'المشاهدات': v.vues ?? 0,
-        'التفاعلات': v.reactions ?? 0,
-        'URL de la publication': v.url_canonique || v.url || '',
-        'URL de lecture (iframe)': buildEmbedUrl(v.url_canonique || v.url)
-      }));
-      const ws = XLSX.utils.json_to_sheet(rows);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'الفيديوهات');
-      XLSX.writeFile(wb, `archive_videos_${new Date().toISOString().slice(0,10)}.xlsx`);
-    } catch (err) { console.error('Excel export failed:', err); }
+    } catch (e) { console.warn('Plein écran indisponible :', e); }
+  }
+  function updateFullscreenIcon() {
+    if (!els.fullscreenBtn) return;
+    const icon = els.fullscreenBtn.querySelector('i');
+    if (!icon) return;
+    const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    icon.className = isFs ? 'fa-solid fa-compress text-sm' : 'fa-solid fa-expand text-sm';
+    els.fullscreenBtn.setAttribute('aria-label', isFs ? 'الخروج من ملء الشاشة' : 'ملء الشاشة');
   }
 
-  document.querySelectorAll('[data-exit-cancel]').forEach(b => {
-    b.addEventListener('click', () => $('exitConfirmModal').classList.add('hidden'));
-  });
-  document.querySelectorAll('[data-exit-confirm]').forEach(b => {
-    b.addEventListener('click', () => {
-      $('exitConfirmModal').classList.add('hidden');
-      try { window.close(); } catch (_) {}
-      try { window.location.replace('about:blank'); } catch (_) {}
+  // ====== EXPORT EXCEL ======
+  function sanitizeSheetName(name) {
+    if (!name) return 'Sans_titre';
+    let s = String(name).replace(/[\\\/\?\*\[\]:]/g, '_').replace(/^'+|'+$/g, '');
+    if (s.length > 31) s = s.substring(0, 31);
+    return s || 'Sans_titre';
+  }
+  function exportToExcel() {
+    if (typeof XLSX === 'undefined') { alert('لم يتم تحميل SheetJS.'); return; }
+    const items = getFilteredAndSorted();
+    if (items.length === 0) { alert('لا توجد بيانات للتصدير.'); return; }
+    const themesMap = new Map();
+    items.forEach(r => {
+      const fr = r.theme_fr || 'Non classé';
+      const ar = r.theme_ar || fr;
+      if (!themesMap.has(fr)) themesMap.set(fr, { ar, fr, videos: [] });
+      themesMap.get(fr).videos.push(r);
+    });
+    const wb = XLSX.utils.book_new();
+    const usedNames = new Set();
+    const entries = Array.from(themesMap.values())
+      .sort((a, b) => b.videos.length - a.videos.length || a.fr.localeCompare(b.fr));
+    entries.forEach(meta => {
+      let baseName = sanitizeSheetName(meta.ar || meta.fr);
+      let sheetName = baseName; let i = 2;
+      while (usedNames.has(sheetName.toLowerCase())) {
+        const suffix = `_${i}`;
+        sheetName = baseName.substring(0, Math.max(1, 31 - suffix.length)) + suffix;
+        i++;
+      }
+      usedNames.add(sheetName.toLowerCase());
+      const rows = [['العنوان', 'الوصف', 'FBID']];
+      meta.videos.forEach(v => rows.push([v.titre || '', v.description || '', String(v.fbid || '')]));
+      const ws = XLSX.utils.aoa_to_sheet(rows);
+      ws['!cols'] = [{ wch: 60 }, { wch: 90 }, { wch: 22 }];
+      ws['!views'] = [{ RTL: true }];
+      XLSX.utils.book_append_sheet(wb, ws, sheetName);
+    });
+    const summary = [['الموضوع (FR)', 'الموضوع (AR)', 'عدد الفيديوهات']];
+    entries.forEach(meta => summary.push([meta.fr, meta.ar, meta.videos.length]));
+    summary.push(['المجموع', '', items.length]);
+    const wsSum = XLSX.utils.aoa_to_sheet(summary);
+    wsSum['!cols'] = [{ wch: 40 }, { wch: 40 }, { wch: 18 }];
+    wsSum['!views'] = [{ RTL: true }];
+    let sumName = '_ملخص'; let n = 2;
+    while (usedNames.has(sumName.toLowerCase())) { sumName = `_ملخص_${n}`; n++; }
+    XLSX.utils.book_append_sheet(wb, wsSum, sumName.substring(0, 31));
+    const today = new Date().toISOString().slice(0, 10);
+    try { XLSX.writeFile(wb, `Galerie_Reels_${today}.xlsx`, { bookType: 'xlsx', compression: true }); }
+    catch (e) { console.error(e); alert('خطأ في التصدير: ' + e.message); }
+  }
+
+  // ====== MENU : CONSTRUCTION DYNAMIQUE ======
+  function buildYearDropdown() {
+    if (!els.yearDropdownContent) return;
+    const yearsSet = new Set();
+    reels.forEach(r => { const y = getReelYear(r); if (y) yearsSet.add(y); });
+    const years = Array.from(yearsSet).sort((a, b) => Number(b) - Number(a));
+
+    let html = `
+      <button type="button" class="menu-dropdown-item" data-year="all" role="menuitem">
+        <i class="fa-solid fa-layer-group"></i>
+        <span>كل السنوات</span>
+        <i class="fa-solid fa-check dd-check"></i>
+      </button>`;
+
+    if (years.length > 0) {
+      html += '<div class="border-t border-white/10 my-1"></div>';
+      years.forEach(y => {
+        html += `
+          <button type="button" class="menu-dropdown-item" data-year="${escapeHtml(y)}" role="menuitem">
+            <i class="fa-solid fa-calendar-day"></i>
+            <span>${escapeHtml(y)}</span>
+            <i class="fa-solid fa-check dd-check"></i>
+          </button>`;
+      });
+    }
+    els.yearDropdownContent.innerHTML = html;
+  }
+
+  // ====== MENU : SYNCHRONISATION ======
+  function syncMenuState() {
+    if (els.yearBadge) {
+      els.yearBadge.textContent = (selectedYear === 'all') ? 'الكل' : selectedYear;
+    }
+    if (els.menuPhotos) els.menuPhotos.classList.toggle('active', isPhotosTabActive);
+    if (els.menuGalerie) els.menuGalerie.classList.toggle('active', !isPhotosTabActive);
+    if (els.galleryDropdown) {
+      els.galleryDropdown.querySelectorAll('[data-view]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.view === currentViewMode);
+      });
+    }
+    if (els.sortDropdown) {
+      els.sortDropdown.querySelectorAll('[data-sort]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.sort === currentSort);
+      });
+    }
+    if (els.yearDropdownContent) {
+      els.yearDropdownContent.querySelectorAll('[data-year]').forEach(btn => {
+        btn.classList.toggle('active', String(btn.dataset.year) === String(selectedYear));
+      });
+    }
+  }
+
+  // ====== ANNÉE : PEUPLEMENT ======
+  function populateYearFilter() {
+    const yearsSet = new Set();
+    reels.forEach(r => {
+      const y = getReelYear(r);
+      if (y) yearsSet.add(y);
+    });
+    const years = Array.from(yearsSet).sort((a, b) => Number(b) - Number(a));
+
+    if (years.includes('2026')) {
+      selectedYear = '2026';
+    } else if (years.length > 0) {
+      selectedYear = years[0];
+    } else {
+      selectedYear = 'all';
+    }
+  }
+
+  // ====== TABS : VIDÉOS / PHOTOS ======
+  function showVideosTab() {
+    isPhotosTabActive = false;
+    if (els.videosSection) els.videosSection.classList.remove('hidden');
+    if (els.photosSection) els.photosSection.classList.add('hidden');
+    if (els.searchWrap) els.searchWrap.style.display = '';
+    if (window.PhotoAlbum && typeof window.PhotoAlbum.hide === 'function') {
+      window.PhotoAlbum.hide();
+    }
+    syncMenuState();
+  }
+  function showPhotosTab() {
+    isPhotosTabActive = true;
+    if (els.videosSection) els.videosSection.classList.add('hidden');
+    if (els.photosSection) els.photosSection.classList.remove('hidden');
+    if (els.searchWrap) els.searchWrap.style.display = 'none';
+    if (window.PhotoAlbum && typeof window.PhotoAlbum.show === 'function') {
+      window.PhotoAlbum.show();
+    }
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    syncMenuState();
+  }
+
+  // ====== INITIALISATION ======
+  function init(data) {
+    reels = Array.isArray(data) ? data : [];
+    byId = new Map(reels.map((r) => [String(r.fbid), r]));
+    populateYearFilter();
+    buildYearDropdown();
+    currentPage = 1;
+    showVideosTab();
+    render();
+  }
+
+  // ====== DROPDOWNS ======
+  function closeAllDropdowns(except) {
+    document.querySelectorAll('.menu-dropdown').forEach(dd => {
+      if (except && dd === except) return;
+      const content = dd.querySelector('.menu-dropdown-content');
+      const btn = dd.querySelector('.menu-item');
+      if (content) content.classList.add('hidden');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+      const chev = btn && btn.querySelector('.dd-chevron');
+      if (chev) chev.style.transform = '';
+    });
+  }
+  function openDropdown(dd) {
+    if (!dd) return;
+    const content = dd.querySelector('.menu-dropdown-content');
+    const btn = dd.querySelector('.menu-item');
+    if (content) content.classList.remove('hidden');
+    if (btn) btn.setAttribute('aria-expanded', 'true');
+    const chev = btn && btn.querySelector('.dd-chevron');
+    if (chev) chev.style.transform = 'rotate(180deg)';
+  }
+  function toggleDropdown(dd) {
+    if (!dd) return;
+    const content = dd.querySelector('.menu-dropdown-content');
+    const isOpen = content && !content.classList.contains('hidden');
+    closeAllDropdowns();
+    if (!isOpen) openDropdown(dd);
+  }
+
+  document.querySelectorAll('.menu-dropdown').forEach(dd => {
+    const btn = dd.querySelector('.menu-item');
+    if (!btn) return;
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (isPhotosTabActive) showVideosTab();
+      toggleDropdown(dd);
     });
   });
 
-  function showFatalError(msg) {
-    const overlay = $('progressOverlay');
-    if (!overlay) { console.error(msg); return; }
-    overlay.classList.remove('hidden');
-    overlay.innerHTML = `
-      <div class="w-full max-w-md px-6">
-        <div class="text-center mb-6">
-          <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-rose-500/20 mb-4">
-            <i class="fa-solid fa-triangle-exclamation text-3xl text-rose-400"></i>
-          </div>
-          <h2 class="text-lg font-bold text-white mb-1">تعذّر تحميل البيانات</h2>
-          <p class="text-xs text-slate-400 break-words">${escapeHtml(msg)}</p>
-        </div>
-        <button onclick="location.reload()" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center justify-center gap-2">
-          <i class="fa-solid fa-rotate-right"></i><span>إعادة المحاولة</span>
-        </button>
-      </div>`;
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.menu-dropdown')) closeAllDropdowns();
+  });
+
+  // ====== MENU : ACTIONS ======
+  if (els.menuPhotos) {
+    els.menuPhotos.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      showPhotosTab();
+    });
+  }
+  if (els.albumPhotoBtn) {
+    els.albumPhotoBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      showPhotosTab();
+    });
+  }
+  if (els.galleryDropdown) {
+    els.galleryDropdown.addEventListener('click', function (e) {
+      const btn = e.target.closest('[data-view]');
+      if (!btn) return;
+      currentViewMode = btn.dataset.view;
+      activeTheme = null;
+      currentPage = 1;
+      if (isPhotosTabActive) showVideosTab();
+      syncMenuState();
+      render();
+      closeAllDropdowns();
+    });
+  }
+  if (els.sortDropdown) {
+    els.sortDropdown.addEventListener('click', function (e) {
+      const btn = e.target.closest('[data-sort]');
+      if (!btn) return;
+      currentSort = btn.dataset.sort;
+      if (currentViewMode === 'tree') currentViewMode = 'gallery';
+      currentPage = 1;
+      if (isPhotosTabActive) showVideosTab();
+      syncMenuState();
+      render();
+      closeAllDropdowns();
+    });
+  }
+  if (els.yearDropdownContent) {
+    els.yearDropdownContent.addEventListener('click', function (e) {
+      const btn = e.target.closest('[data-year]');
+      if (!btn) return;
+      selectedYear = btn.dataset.year;
+      currentPage = 1;
+      if (isPhotosTabActive) showVideosTab();
+      syncMenuState();
+      render();
+      closeAllDropdowns();
+    });
+  }
+  if (els.backToThemesBtn) {
+    els.backToThemesBtn.addEventListener('click', () => {
+      activeTheme = null;
+      currentPage = 1;
+      render();
+    });
+  }
+  if (els.grid) {
+    els.grid.addEventListener('click', (e) => {
+      const card = e.target.closest('[data-fbid]');
+      if (!card) return;
+      const reel = byId.get(card.dataset.fbid);
+      if (reel) openDetails(reel);
+    });
+  }
+  if (els.themesView) {
+    els.themesView.addEventListener('click', (e) => {
+      const themeCard = e.target.closest('[data-theme]');
+      if (themeCard) { activeTheme = themeCard.dataset.theme; currentPage = 1; render(); }
+    });
+  }
+  if (els.treeContent) {
+    els.treeContent.addEventListener('click', (e) => {
+      const toggleBtn = e.target.closest('.tree-toggle-btn');
+      if (toggleBtn) {
+        const icon = toggleBtn.querySelector('.tree-toggle');
+        const children = toggleBtn.nextElementSibling;
+        if (children && children.classList.contains('tree-children')) {
+          children.classList.toggle('hidden');
+          if (icon) icon.classList.toggle('open');
+        }
+        return;
+      }
+      const node = e.target.closest('[data-fbid]');
+      if (node) { const reel = byId.get(node.dataset.fbid); if (reel) openDetails(reel); }
+    });
+  }
+  if (els.exportExcelBtn) els.exportExcelBtn.addEventListener('click', exportToExcel);
+  if (els.pagination) {
+    els.pagination.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-page]');
+      if (!btn || btn.disabled) return;
+      const p = parseInt(btn.dataset.page, 10);
+      if (!p || p === currentPage) return;
+      currentPage = p; render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+  if (els.search) {
+    els.search.addEventListener('input', (e) => {
+      clearTimeout(searchTimer);
+      const val = e.target.value;
+      searchTimer = setTimeout(() => { currentQuery = val; currentPage = 1; render(); }, 200);
+    });
   }
 
-  function validateData(data) {
-    if (!Array.isArray(data)) throw new Error('Format JSON invalide : un tableau est attendu.');
-    return true;
+  // ====== DETAILS / MODALS ======
+  if (els.detailsModal) {
+    els.detailsModal.addEventListener('click', (e) => {
+      if (e.target.closest('[data-close-details]')) closeDetails();
+    });
+  }
+  const playBtn = document.getElementById('detailsPlayBtn');
+  if (playBtn) playBtn.addEventListener('click', () => {
+    if (!currentReel) return;
+    if (!els.detailsFrame.src || els.detailsFrame.src === 'about:blank') {
+      loadVideoWithAutoplay(currentReel);
+      return;
+    }
+    if (iframeReady) revealPlayer();
+  });
+  if (els.detailsFrame) {
+    els.detailsFrame.addEventListener('load', () => {
+      if (els.detailsModal.classList.contains('hidden')) return;
+      if (!els.detailsFrame.src || els.detailsFrame.src === 'about:blank') return;
+      iframeReady = true;
+      els.videoLoader.classList.add('hidden');
+      schedulePosterFade(500);
+    });
+  }
+  if (els.fullscreenBtn) {
+    els.fullscreenBtn.addEventListener('click', toggleFullscreen);
+    document.addEventListener('fullscreenchange', updateFullscreenIcon);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+    document.addEventListener('msfullscreenchange', updateFullscreenIcon);
+  }
+  if (els.openRemarksBtn) els.openRemarksBtn.addEventListener('click', openRemarksModal);
+  if (els.remarksModal) {
+    els.remarksModal.addEventListener('click', (e) => {
+      if (e.target.closest('[data-close-remarks]')) closeRemarksModal();
+    });
+  }
+  initEmailRemarkForm();
+
+  // ====== ÉCHAP ======
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (window.PhotoAlbum && typeof window.PhotoAlbum.isLightboxOpen === 'function' && window.PhotoAlbum.isLightboxOpen()) return;
+    const openDD = document.querySelector('.menu-dropdown .menu-dropdown-content:not(.hidden)');
+    if (openDD) { e.preventDefault(); closeAllDropdowns(); return; }
+    if (document.fullscreenElement || document.webkitFullscreenElement) return;
+    if (els.detailsModal && !els.detailsModal.classList.contains('hidden')) { e.preventDefault(); closeDetails(); return; }
+    if (els.remarksModal && !els.remarksModal.classList.contains('hidden')) { e.preventDefault(); closeRemarksModal(); return; }
+    if (exitDialogOpen) { e.preventDefault(); hideExitDialog(); return; }
+    if (!exitTrapActive) return;
+    e.preventDefault();
+    showExitDialog('escape');
+  });
+
+  // ====== BOOT ======
+  function bootApp() {
+    try {
+      const data = Array.isArray(window.reelsData) ? window.reelsData : [];
+      init(data);
+    } catch (err) {
+      console.error('Erreur initialisation app:', err);
+    }
   }
 
-  function init() {
-    fetch(DATA_URL)
-      .then(response => {
-        if (!response.ok) throw new Error(`Erreur de chargement JSON (HTTP ${response.status}) — URL: ${DATA_URL}`);
-        return response.json();
-      })
-      .then(data => {
-        validateData(data);
-
-        const unique = new Map();
-        data.forEach(item => {
-          if (item && item.fbid && !unique.has(String(item.fbid))) {
-            unique.set(String(item.fbid), item);
-          }
-        });
-        ARCHIVE_DATA = Array.from(unique.values());
-
-        // ✅ CORRECTION : construction des photos avec fallback sur `miniature`
-        buildAllPhotos();
-
-        state.videos = ARCHIVE_DATA.map(r => ({
-          ...r,
-          miniature: r.miniature ? resolveImageUrl(r.miniature) : (r.images && r.images[0] ? resolveImageUrl(r.images[0].chemin) : null),
-          url: r.url_canonique || r.url || ''
-        }));
-
-        initVideoYear();
-        buildYearDropdown();
-        syncVideoMenus();
-        updateTabCounts();
-        renderActiveTab();
-
-        console.log(`📊 reelsData.json chargé : ${ARCHIVE_DATA.length} entrées uniques, ${ALL_PHOTOS.length} photos.`);
-      })
-      .catch(error => {
-        console.error('Erreur :', error);
-        showFatalError(error.message || 'Impossible de charger les données.');
-      });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+  if (Array.isArray(window.reelsData) && window.reelsData.length > 0) {
+    bootApp();
   } else {
-    init();
+    window.addEventListener('videotheque:data-ready', bootApp, { once: true });
   }
 
 })();
+</script>
+
+<!-- ============ CHARGEMENT DES DONNÉES EXTERNES ============ -->
+<script>
+window.reelsData = [];
+window.tabeleau_url_content = [];
+
+var REELS_DATA_URL  = "https://marocnetmail.github.io/125/json/reelsData.json";
+var URL_CONTENT_URL = "https://marocnetmail.github.io/125/json/url_content.json";
+
+window.videothequeDataReady = Promise.all([
+  fetch(REELS_DATA_URL, { cache: "no-store" }).then(function (response) {
+    if (!response.ok) {
+      throw new Error("Impossible de charger reelsData.json (" + response.status + " depuis " + REELS_DATA_URL + ")");
+    }
+    return response.json();
+  }),
+  fetch(URL_CONTENT_URL, { cache: "no-store" }).then(function (response) {
+    if (!response.ok) {
+      throw new Error("Impossible de charger url_content.json (" + response.status + " depuis " + URL_CONTENT_URL + ")");
+    }
+    return response.json();
+  })
+]).then(function (resultats) {
+  window.reelsData = Array.isArray(resultats[0]) ? resultats[0] : [];
+  window.tabeleau_url_content = Array.isArray(resultats[1]) ? resultats[1] : [];
+  console.log("Vidéothèque chargée :", {
+    videos: window.reelsData.length,
+    contenus: window.tabeleau_url_content.length,
+    reelsDataUrl: REELS_DATA_URL,
+    urlContentUrl: URL_CONTENT_URL
+  });
+  return { reelsData: window.reelsData, tabeleau_url_content: window.tabeleau_url_content };
+}).catch(function (erreur) {
+  console.error("Erreur de chargement de la vidéothèque :", erreur);
+  console.error("Vérifiez que les URLs absolues sont accessibles :", {
+    reelsData: REELS_DATA_URL,
+    urlContent: URL_CONTENT_URL
+  });
+  return { reelsData: window.reelsData, tabeleau_url_content: window.tabeleau_url_content };
+}).finally(function () {
+  window.dispatchEvent(new Event("videotheque:data-ready"));
+});
 </script>
 
 </body>
