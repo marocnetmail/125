@@ -240,6 +240,258 @@
 
   .sub-menu-bar { background-color: #1e293b; border-bottom: 1px solid #334155; }
   header.sticky { top:0; background:rgba(15,23,42,.97); border-top:3px solid #c59b45; }
+
+  /* ============================================================
+     INTÉGRATION ALBUM PHOTO — styles scopés sous #photosSection
+     pour éviter tout conflit avec la vidéothèque
+     ============================================================ */
+  #photosSection {
+    background: #f0f2f5;
+    color: #1c1e21;
+    min-height: 60vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  #photosSection .photo-app {
+    --photo-bg:#f0f2f5; --photo-card:#fff; --photo-text:#1c1e21; --photo-muted:#65676b;
+    --photo-accent:#1877f2; --photo-ok:#1f9d55; --photo-warn:#f7b928; --photo-danger:#d93025;
+    --photo-safe-bottom:env(safe-area-inset-bottom,0px);
+    background: var(--photo-bg);
+    color: var(--photo-text);
+    padding: 10px;
+    padding-bottom: calc(72px + var(--photo-safe-bottom));
+    min-height: 60vh;
+  }
+  #photosSection .photo-header {
+    background: rgba(240,242,245,.94);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    margin: -10px -10px 10px -10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+  }
+  #photosSection .photo-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--photo-accent);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #photosSection #photo-status {
+    font-size: 12px;
+    color: var(--photo-muted);
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+  #photosSection #photo-status .ok { color: var(--photo-ok); }
+  #photosSection #photo-status .warn { color: var(--photo-warn); }
+  #photosSection #photo-status .err { color: var(--photo-danger); }
+
+  #photosSection #photo-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    min-height: 120px;
+  }
+  @media(min-width:480px){ #photosSection #photo-gallery{ grid-template-columns:repeat(3,1fr); gap:10px } }
+  @media(min-width:700px){ #photosSection #photo-gallery{ grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px } }
+
+  #photosSection .photo-card {
+    background: var(--photo-card);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,.08);
+    display: flex;
+    flex-direction: column;
+    animation: photoFadeIn .2s ease;
+    will-change: opacity, transform;
+  }
+  @keyframes photoFadeIn { from{opacity:0} to{opacity:1} }
+  #photosSection .photo-card.removing { opacity:0; transform:scale(.85); transition:opacity .2s,transform .2s; }
+  #photosSection .photo-card a {
+    display: block;
+    text-decoration: none;
+    background: #e4e6eb;
+    cursor: zoom-in;
+    position: relative;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+  }
+  #photosSection .photo-card a::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,#e4e6eb 25%,#eef0f2 50%,#e4e6eb 75%);
+    background-size: 200% 100%;
+    animation: photoShimmer 1.4s infinite;
+  }
+  @keyframes photoShimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  #photosSection .photo-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0;
+    transition: opacity .25s;
+    position: relative;
+    z-index: 1;
+  }
+  #photosSection .photo-card img.loaded { opacity: 1; }
+  #photosSection .photo-card a:has(img.loaded)::before { display: none; }
+  #photosSection .photo-card .photo-num {
+    padding: 4px 6px;
+    font-size: 11px;
+    color: var(--photo-muted);
+    text-align: center;
+    font-weight: 600;
+    background: #fafbfc;
+  }
+
+  #photosSection .photo-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--photo-muted);
+    font-size: 14px;
+  }
+  #photosSection .photo-empty .photo-empty-icon { font-size: 42px; margin-bottom: 10px; opacity: .5; }
+  #photosSection .photo-empty strong { color: var(--photo-text); display: block; margin-bottom: 8px; font-size: 16px; }
+  #photosSection .photo-empty p { max-width: 420px; margin: 6px auto 0; line-height: 1.5; font-size: 13px; }
+
+  #photosSection #photo-pagination {
+    position: sticky;
+    bottom: 0;
+    z-index: 30;
+    margin: 8px -10px -10px -10px;
+    padding: 8px;
+    padding-bottom: calc(8px + var(--photo-safe-bottom));
+    background: rgba(255,255,255,.97);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0,0,0,.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  #photosSection #photo-pagination::-webkit-scrollbar { display: none; }
+  #photosSection .photo-pg-btn {
+    flex: 0 0 auto;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 8px;
+    border: 1px solid #ccd0d5;
+    background: #fff;
+    color: var(--photo-text);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background .15s, transform .1s, opacity .2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+  #photosSection .photo-pg-btn:active:not(:disabled):not(.active) { background: #e7f3ff; transform: scale(.95); }
+  #photosSection .photo-pg-btn.active { background: var(--photo-accent); border-color: var(--photo-accent); color: #fff; cursor: default; }
+  #photosSection .photo-pg-btn:disabled { opacity: .35; }
+  #photosSection .photo-pg-btn.nav { font-size: 18px; min-width: 44px; }
+  #photosSection .photo-pg-btn.ellipsis { border: none; background: transparent; cursor: default; min-width: 16px; padding: 0 2px; opacity: .6; }
+  #photosSection .photo-pg-btn.empty { opacity: .3; background: #f5f6f7; text-decoration: line-through; text-decoration-color: rgba(0,0,0,.3); }
+
+  @media(max-width:480px){
+    #photosSection .photo-title { font-size: 15px; }
+    #photosSection #photo-status { font-size: 11px; }
+    #photosSection .photo-card .photo-num { font-size: 10px; padding: 3px 4px; }
+  }
+
+  /* Lightbox photo — plein écran, hors #photosSection */
+  #photo-lb {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  #photo-lb.on { display: flex; }
+  #photo-lb img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    transition: opacity .15s;
+  }
+  #photo-lb img.loading { opacity: .4; }
+  #photo-lb .photo-lb-close {
+    position: absolute;
+    top: calc(12px + env(safe-area-inset-top,0px));
+    right: calc(12px + env(safe-area-inset-right,0px));
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    touch-action: manipulation;
+  }
+  #photo-lb .photo-lb-counter {
+    position: absolute;
+    top: calc(20px + env(safe-area-inset-top,0px));
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,.85);
+    font-size: 13px;
+    font-weight: 600;
+    background: rgba(0,0,0,.5);
+    padding: 6px 12px;
+    border-radius: 20px;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  #photo-lb .photo-lb-hint {
+    position: absolute;
+    bottom: calc(16px + env(safe-area-inset-bottom,0px));
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,.7);
+    font-size: 12px;
+    background: rgba(0,0,0,.5);
+    padding: 6px 14px;
+    border-radius: 20px;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  @media(hover:hover){ #photo-lb .photo-lb-hint { display:none } }
 </style>
 <base target="_blank">
 </head>
@@ -266,16 +518,16 @@
 </div>
 
 <!-- ============================================================
-     NAVIGATION SUPÉRIEURE — DEUX RUBRIQUES UNIQUEMENT :
-       1) فيديوهات     (avec sous-menu : affichage, tri, années)
-       2) ألبوم الصور  (lien direct vers la galerie photos)
+     NAVIGATION SUPÉRIEURE — DEUX RUBRIQUES :
+       1) فيديوهات  (Vidéothèque, avec son sous-menu de contrôles)
+       2) صور       (Album photo intégré)
      ============================================================ -->
 <nav class="main-menu-bar w-full sticky top-0 z-40 shadow-lg" dir="rtl" aria-label="القائمة الرئيسية">
   <div class="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-8">
     <div class="flex flex-col sm:flex-row sm:items-stretch gap-1 sm:gap-3">
       <div class="grid grid-cols-2 sm:flex sm:flex-row sm:items-stretch sm:flex-1 w-full">
 
-        <!-- ========== RUBRIQUE 1 : فيديوهات (Vidéos) ========== -->
+        <!-- ========== Rubrique 1 : فيديوهات (avec sous-menu) ========== -->
         <div class="menu-dropdown" data-dropdown="videos">
           <button type="button" class="menu-item" id="menuGalerie"
                   aria-haspopup="true" aria-expanded="false" aria-controls="galleryDropdown">
@@ -313,20 +565,19 @@
 
             <div class="border-t border-white/10 my-1"></div>
 
-            <!-- Filtre année (rempli dynamiquement) -->
+            <!-- Filtre année -->
             <div id="yearDropdownContent" role="group" aria-label="فلتر حسب السنة"></div>
           </div>
         </div>
 
-        <!-- ========== RUBRIQUE 2 : ألبوم الصور (Photos) ========== -->
-        <a href="https://marocnetmail.github.io/125/photo.html" id="menuPhotos"
-           class="menu-item" aria-label="ألبوم الصور">
-          <i class="fa-solid fa-images"></i><span>ألبوم الصور</span>
-        </a>
+        <!-- ========== Rubrique 2 : صور (Album photo) ========== -->
+        <button type="button" class="menu-item" id="menuPhotos" aria-label="ألبوم الصور">
+          <i class="fa-solid fa-images"></i><span>صور</span>
+        </button>
 
       </div>
       <div class="flex items-center w-full sm:w-auto pb-2 sm:pb-0">
-        <div class="relative w-full sm:w-auto">
+        <div class="relative w-full sm:w-auto" id="searchWrap">
           <i class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-white/60 text-sm pointer-events-none"></i>
           <input type="text" id="searchInput" inputmode="search" placeholder="البحث في المحتوى…"
                  aria-label="البحث في المحتوى" class="menu-search py-2 pr-9 pl-4" dir="rtl">
@@ -336,7 +587,8 @@
   </div>
 </nav>
 
-<main class="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-8 py-3 sm:py-6 flex-1 w-full relative">
+<!-- ================= SECTION VIDÉOTHÈQUE ================= -->
+<main id="videosSection" class="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-8 py-3 sm:py-6 flex-1 w-full relative">
   <div id="backNavigation" class="hidden mb-3">
     <button id="backToThemesBtn" type="button" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-slate-700" dir="rtl">
       <i class="fa-solid fa-arrow-right"></i> العودة إلى المحاور الموضوعاتية
@@ -366,8 +618,32 @@
   <nav id="pagination" class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-6 safe-bottom" aria-label="ترقيم الصفحات"></nav>
 </main>
 
+<!-- ================= SECTION ALBUM PHOTO (intégration de photo.html) ================= -->
+<main id="photosSection" class="hidden flex-1 w-full" dir="ltr">
+  <div class="photo-app">
+    <header class="photo-header">
+      <h1 class="photo-title">📷 Photos</h1>
+      <div id="photo-status">…</div>
+    </header>
+    <div id="photo-gallery"></div>
+    <div id="photo-pagination"></div>
+  </div>
+</main>
+
+<!-- Lightbox photo (hors section pour ne pas être caché par display:none) -->
+<div id="photo-lb">
+  <img alt="">
+  <div class="photo-lb-counter"></div>
+  <button class="photo-lb-close" aria-label="Fermer">×</button>
+  <div class="photo-lb-hint">← glissez · touchez le bord →</div>
+</div>
+
 <footer class="w-full max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 pt-2 pb-6 safe-bottom">
-  <div class="flex justify-center">
+  <div class="flex justify-center gap-3 flex-wrap">
+    <button id="albumPhotoBtn" type="button"
+            class="cursor-pointer bg-blue-600 hover:bg-blue-500 active:bg-blue-400 border border-blue-500 text-white text-sm font-medium px-5 sm:px-6 py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 touch-manipulation shadow-md">
+      <i class="fa-solid fa-images"></i><span>ألبوم الصور</span>
+    </button>
     <button id="openRemarksBtn" type="button"
             class="cursor-pointer bg-slate-700 hover:bg-slate-600 active:bg-slate-500 border border-slate-600 text-sm font-medium px-5 sm:px-6 py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 touch-manipulation shadow-md">
       <i class="fa-solid fa-comment-dots text-amber-400"></i><span>الملاحظات</span>
@@ -496,7 +772,476 @@
   </div>
 </div>
 
-<!-- ============ SCRIPT PRINCIPAL ============ -->
+<!-- ============================================================
+     SCRIPT — ALBUM PHOTO (intégration de photo.html, scopé IIFE)
+     Expose window.PhotoAlbum = { show, hide, isLightboxOpen }
+     ============================================================ -->
+<script>
+(function(){
+  'use strict';
+
+  const OWNER = 'marocnetmail', REPO = '125', BRANCH = 'main';
+  const JSON_URL   = `https://marocnetmail.github.io/${REPO}/json/data_img.json`;
+  const RAW_BASE   = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/`;
+  const PAGES_BASE = `https://marocnetmail.github.io/${REPO}/`;
+  const PER_PAGE   = 30;
+
+  const $ = (id) => document.getElementById(id);
+  const galleryEl    = $('photo-gallery');
+  const statusEl     = $('photo-status');
+  const paginationEl = $('photo-pagination');
+  const lbEl         = $('photo-lb');
+  const lbImg        = lbEl.querySelector('img');
+  const lbCounter    = lbEl.querySelector('.photo-lb-counter');
+  const lbClose      = lbEl.querySelector('.photo-lb-close');
+
+  let photos = [];
+  let currentPage = 1, totalPages = 1;
+  let pageToken = 0;
+  let navigationDirection = 1;
+  let skipDepth = 0;
+  let initialized = false;
+
+  const knownGood = new Map();
+  const knownBad  = new Set();
+  const emptyPages = new Set();
+  let preferredPattern = null;
+
+  let pageValid = [];
+  let lbPos = -1;
+
+  /* ---------- Décomposition d'une URL ---------- */
+  function parseUrl(rawUrl){
+    const clean = String(rawUrl).trim().replace(/^\/+/, '');
+    const parts = clean.split('/');
+    const filename = parts.pop() || '';
+    const dir = parts.length ? parts.join('/') + '/' : '';
+    const dot = filename.lastIndexOf('.');
+    const base = dot >= 0 ? filename.slice(0, dot) : filename;
+    const ext  = dot >= 0 ? filename.slice(dot) : '.jpg';
+    return { dir, base, ext, hasSuffix: /_\d{1,2}$/.test(base) };
+  }
+
+  /* ---------- Motifs d'URL ---------- */
+  const PATTERNS = [
+    { id: 'raw_01',    make: p => RAW_BASE   + p.dir + p.base + '_01' + p.ext, needSuffix: false },
+    { id: 'raw_exact', make: p => RAW_BASE   + p.dir + p.base       + p.ext, needSuffix: true  },
+    { id: 'raw_1',     make: p => RAW_BASE   + p.dir + p.base + '_1'  + p.ext, needSuffix: false },
+    { id: 'pg_01',     make: p => PAGES_BASE + p.dir + p.base + '_01' + p.ext, needSuffix: false },
+    { id: 'pg_exact',  make: p => PAGES_BASE + p.dir + p.base       + p.ext, needSuffix: true  }
+  ];
+
+  function urlsFor(rawUrl){
+    const p = parseUrl(rawUrl);
+    const list = [], seen = new Set();
+    const push = (pat) => {
+      if (!pat.needSuffix && p.hasSuffix) return;
+      const u = pat.make(p);
+      if (!seen.has(u)) { seen.add(u); list.push({ id: pat.id, url: u }); }
+    };
+    if (preferredPattern){
+      const pref = PATTERNS.find(x => x.id === preferredPattern);
+      if (pref) push(pref);
+    }
+    PATTERNS.forEach(push);
+    return list;
+  }
+
+  /* ---------- Initialisation ---------- */
+  async function init(){
+    try{
+      statusEl.textContent = 'Chargement…';
+      const res = await fetch(JSON_URL, { cache: 'no-cache' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      let data = await res.json();
+      if (!Array.isArray(data)) data = data.images || data.data || data.photos || data.items || [];
+      if (!Array.isArray(data) || !data.length) throw new Error('JSON vide');
+
+      photos = data
+        .filter(p => p && (p.url || p.src || p.image || p.path))
+        .map(p => {
+          const u = p.url || p.src || p.image || p.path;
+          const n = p.numero ?? p.num ?? p.id ?? p.n ?? 0;
+          return { numero: Number(n) || 0, url: String(u) };
+        })
+        .sort((a, b) => a.numero - b.numero);
+
+      if (!photos.length) throw new Error('Aucune URL');
+
+      totalPages = Math.ceil(photos.length / PER_PAGE);
+      statusEl.innerHTML = `<span class="ok">${photos.length} photos</span> · ${totalPages} pages`;
+      gotoPage(1);
+    } catch(err){
+      statusEl.innerHTML = '<span class="err">Erreur : ' + err.message + '</span>';
+      console.error('[PhotoAlbum] init error:', err);
+    }
+  }
+
+  /* ---------- Résolution d'une image ---------- */
+  async function resolveImageForIdx(p, gIdx){
+    if (knownGood.has(gIdx)) return knownGood.get(gIdx);
+    if (knownBad.has(gIdx))  return null;
+    const variants = urlsFor(p.url);
+    for (const v of variants){
+      const ok = await new Promise(resolve => {
+        const img = new Image();
+        img.onload  = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = v.url;
+      });
+      if (ok){
+        knownGood.set(gIdx, v.url);
+        if (!preferredPattern && v.id) preferredPattern = v.id;
+        return v.url;
+      }
+    }
+    knownBad.add(gIdx);
+    return null;
+  }
+
+  /* ---------- Test rapide d'une page ---------- */
+  async function testPageHasContent(page){
+    const start = (page - 1) * PER_PAGE;
+    const end   = Math.min(start + PER_PAGE, photos.length);
+    const slice = photos.slice(start, end);
+    if (!slice.length) return false;
+    const idxs = [...new Set([
+      0,
+      Math.floor(slice.length / 4),
+      Math.floor(slice.length / 2),
+      Math.floor(3 * slice.length / 4),
+      slice.length - 1
+    ])];
+    const results = await Promise.all(idxs.map(i => resolveImageForIdx(slice[i], start + i)));
+    return results.some(Boolean);
+  }
+
+  /* ---------- Recherche page non vide ---------- */
+  async function findNextNonEmptyPage(){
+    const MAX_SKIP = 50;
+    let tested = 0;
+    for (let d = 1; d <= totalPages && tested < MAX_SKIP; d++){
+      const fwd = currentPage + d * navigationDirection;
+      if (fwd >= 1 && fwd <= totalPages && !emptyPages.has(fwd)){
+        tested++;
+        if (await testPageHasContent(fwd)) return fwd;
+        emptyPages.add(fwd);
+      }
+      const bwd = currentPage - d * navigationDirection;
+      if (bwd >= 1 && bwd <= totalPages && !emptyPages.has(bwd)){
+        tested++;
+        if (await testPageHasContent(bwd)) return bwd;
+        emptyPages.add(bwd);
+      }
+    }
+    return null;
+  }
+
+  /* ---------- Changement de page ---------- */
+  function gotoPage(page, opts = {}){
+    const prevPage = currentPage;
+    currentPage = Math.max(1, Math.min(totalPages, page));
+    if (!opts.isAutoSkip){
+      if (currentPage > prevPage) navigationDirection = 1;
+      else if (currentPage < prevPage) navigationDirection = -1;
+      skipDepth = 0;
+    }
+    const token = ++pageToken;
+    const start = (currentPage - 1) * PER_PAGE;
+    const end   = Math.min(start + PER_PAGE, photos.length);
+    const slice = photos.slice(start, end);
+    const counters = { total: slice.length, resolved: 0, loaded: 0, failed: 0 };
+    pageValid = [];
+    galleryEl.innerHTML = '';
+    slice.forEach((p, i) => {
+      const gIdx = start + i;
+      if (knownBad.has(gIdx)){
+        counters.failed++;
+        counters.resolved++;
+        return;
+      }
+      if (knownGood.has(gIdx)){
+        const url = knownGood.get(gIdx);
+        galleryEl.appendChild(makeStaticCard(p, url, gIdx));
+        pageValid.push({ numero: p.numero, url, globalIdx: gIdx });
+        counters.loaded++;
+        counters.resolved++;
+        return;
+      }
+      galleryEl.appendChild(makeDynamicCard(p, gIdx, counters, token));
+    });
+    if (!opts.isAutoSkip){
+      renderPagination();
+      updateStatus(counters);
+    }
+    if (counters.resolved === counters.total){
+      handlePageComplete(token, counters);
+    }
+  }
+
+  /* ---------- Carte dynamique ---------- */
+  function makeDynamicCard(p, gIdx, counters, token){
+    const card = document.createElement('div');
+    card.className = 'photo-card';
+    const link = document.createElement('a');
+    link.href = '#';
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const pos = pageValid.findIndex(v => v.globalIdx === gIdx);
+      if (pos >= 0) openLightbox(pos);
+    });
+    const img = document.createElement('img');
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.alt = 'Photo n° ' + p.numero;
+    const variants = urlsFor(p.url);
+    let idx = 0, resolved = false;
+    const finish = () => {
+      if (token !== pageToken) return;
+      if (counters.resolved === counters.total) handlePageComplete(token, counters);
+    };
+    const tryNext = () => {
+      if (resolved) return;
+      if (idx >= variants.length){
+        resolved = true;
+        knownBad.add(gIdx);
+        card.classList.add('removing');
+        setTimeout(() => { card.remove(); }, 250);
+        counters.failed++;
+        counters.resolved++;
+        finish();
+        return;
+      }
+      const v = variants[idx++];
+      img.dataset.pattern = v.id;
+      img.src = v.url;
+    };
+    img.addEventListener('load', () => {
+      if (resolved) return;
+      resolved = true;
+      const usedPattern = img.dataset.pattern;
+      if (!preferredPattern && usedPattern) preferredPattern = usedPattern;
+      knownGood.set(gIdx, img.currentSrc || img.src);
+      pageValid.push({ numero: p.numero, url: knownGood.get(gIdx), globalIdx: gIdx });
+      pageValid.sort((a, b) => a.globalIdx - b.globalIdx);
+      img.classList.add('loaded');
+      counters.loaded++;
+      counters.resolved++;
+      finish();
+    });
+    img.addEventListener('error', tryNext);
+    link.appendChild(img);
+    card.appendChild(link);
+    const num = document.createElement('div');
+    num.className = 'photo-num';
+    num.textContent = 'N° ' + p.numero;
+    card.appendChild(num);
+    tryNext();
+    return card;
+  }
+
+  /* ---------- Carte statique ---------- */
+  function makeStaticCard(p, url, gIdx){
+    const card = document.createElement('div');
+    card.className = 'photo-card';
+    const link = document.createElement('a');
+    link.href = '#';
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const pos = pageValid.findIndex(v => v.globalIdx === gIdx);
+      if (pos >= 0) openLightbox(pos);
+    });
+    const img = document.createElement('img');
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.alt = 'Photo n° ' + p.numero;
+    img.src = url;
+    img.classList.add('loaded');
+    link.appendChild(img);
+    card.appendChild(link);
+    const num = document.createElement('div');
+    num.className = 'photo-num';
+    num.textContent = 'N° ' + p.numero;
+    card.appendChild(num);
+    return card;
+  }
+
+  /* ---------- Page complète ---------- */
+  async function handlePageComplete(token, counters){
+    if (token !== pageToken) return;
+    if (counters.loaded > 0){
+      skipDepth = 0;
+      renderPagination();
+      updateStatus(counters);
+      return;
+    }
+    emptyPages.add(currentPage);
+    galleryEl.innerHTML =
+      '<div class="photo-empty">' +
+        '<div class="photo-empty-icon">🔎</div>' +
+        '<strong>Page vide</strong>' +
+        '<p>Recherche d\'une page contenant des images…</p>' +
+      '</div>';
+    statusEl.innerHTML = `<span class="warn">Page ${currentPage} vide · recherche…</span>`;
+    const target = await findNextNonEmptyPage();
+    if (token !== pageToken) return;
+    if (target === null){ showAllEmpty(); return; }
+    const delay = skipDepth === 0 ? 350 : 60;
+    skipDepth++;
+    gotoPage(target, { isAutoSkip: true });
+    setTimeout(() => { if (token === pageToken){} }, delay);
+  }
+
+  /* ---------- Tout vide ---------- */
+  function showAllEmpty(){
+    galleryEl.innerHTML =
+      '<div class="photo-empty">' +
+        '<div class="photo-empty-icon">📭</div>' +
+        '<strong>Aucune image disponible</strong>' +
+        '<p>Toutes les entrées du JSON ont été testées, aucun fichier correspondant n\'existe dans le dépôt.</p>' +
+      '</div>';
+    paginationEl.innerHTML = '';
+    statusEl.innerHTML = '<span class="err">0 image</span>';
+  }
+
+  /* ---------- Statut ---------- */
+  function updateStatus(c){
+    statusEl.innerHTML =
+      `<span class="ok">P.${currentPage}/${totalPages}</span> · ` +
+      `${c.loaded}/${c.total}` +
+      (c.failed ? ` · ${c.failed} ignorée(s)` : '');
+  }
+
+  /* ---------- Lightbox ---------- */
+  function openLightbox(pos){
+    if (pos < 0 || pos >= pageValid.length) return;
+    lbPos = pos;
+    showLightboxPhoto();
+    lbEl.classList.add('on');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox(){
+    lbEl.classList.remove('on');
+    lbPos = -1;
+    document.body.style.overflow = '';
+  }
+  function showLightboxPhoto(){
+    const p = pageValid[lbPos];
+    if (!p) return;
+    lbImg.classList.add('loading');
+    lbImg.onload = () => lbImg.classList.remove('loading');
+    lbImg.src = p.url;
+    lbImg.alt = 'Photo n° ' + p.numero;
+    lbCounter.textContent = (lbPos + 1) + ' / ' + pageValid.length + '  ·  N° ' + p.numero;
+  }
+  function lbNext(){ if (lbPos < pageValid.length - 1){ lbPos++; showLightboxPhoto(); } }
+  function lbPrev(){ if (lbPos > 0){ lbPos--; showLightboxPhoto(); } }
+
+  lbEl.addEventListener('click', e => {
+    if (e.target === lbClose){ closeLightbox(); return; }
+    const rect = lbEl.getBoundingClientRect();
+    const ratio = (e.clientX - rect.left) / rect.width;
+    if (ratio < 0.33) lbPrev();
+    else if (ratio > 0.67) lbNext();
+    else closeLightbox();
+  });
+
+  let tStart = null;
+  lbEl.addEventListener('touchstart', e => {
+    if (e.touches.length !== 1) return;
+    tStart = { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now() };
+  }, { passive: true });
+
+  lbEl.addEventListener('touchend', e => {
+    if (!tStart) return;
+    const dx = e.changedTouches[0].clientX - tStart.x;
+    const dy = e.changedTouches[0].clientY - tStart.y;
+    const dt = Date.now() - tStart.t;
+    const start = tStart; tStart = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5 && dt < 600){
+      dx < 0 ? lbNext() : lbPrev();
+      return;
+    }
+    if (Math.abs(dx) < 10 && Math.abs(dy) < 10 && dt < 250){
+      const rect = lbEl.getBoundingClientRect();
+      const ratio = (start.x - rect.left) / rect.width;
+      if (ratio < 0.33) lbPrev();
+      else if (ratio > 0.67) lbNext();
+      else closeLightbox();
+    }
+  }, { passive: true });
+
+  document.addEventListener('keydown', e => {
+    if (!lbEl.classList.contains('on')) return;
+    if (e.key === 'Escape') closeLightbox();
+    else if (e.key === 'ArrowRight') lbNext();
+    else if (e.key === 'ArrowLeft') lbPrev();
+  });
+
+  /* ---------- Pagination ---------- */
+  function renderPagination(){
+    paginationEl.innerHTML = '';
+    const mk = (label, page, opts = {}) => {
+      const b = document.createElement('button');
+      b.className = 'photo-pg-btn'
+        + (opts.active ? ' active' : '')
+        + (opts.nav ? ' nav' : '')
+        + (opts.ellipsis ? ' ellipsis' : '')
+        + (opts.empty ? ' empty' : '');
+      b.textContent = label;
+      if (opts.disabled) b.disabled = true;
+      if (opts.empty) b.title = 'Page vide (aucune image)';
+      if (!opts.active && !opts.disabled && !opts.ellipsis && !opts.empty){
+        b.onclick = () => gotoPage(page);
+      }
+      return b;
+    };
+    paginationEl.appendChild(mk('‹', currentPage - 1, { nav: true, disabled: currentPage === 1 }));
+    pageNumbers(currentPage, totalPages).forEach(n => {
+      if (n === '…'){
+        paginationEl.appendChild(mk('…', 0, { ellipsis: true }));
+      } else {
+        paginationEl.appendChild(mk(String(n), n, {
+          active: n === currentPage,
+          empty: emptyPages.has(n) && n !== currentPage
+        }));
+      }
+    });
+    paginationEl.appendChild(mk('›', currentPage + 1, { nav: true, disabled: currentPage === totalPages }));
+  }
+
+  function pageNumbers(current, total){
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    if (current <= 4) return [1, 2, 3, 4, 5, '…', total];
+    if (current >= total - 3) return [1, '…', total - 4, total - 3, total - 2, total - 1, total];
+    return [1, '…', current - 1, current, current + 1, '…', total];
+  }
+
+  /* ---------- API publique ---------- */
+  window.PhotoAlbum = {
+    show(){
+      if (!initialized){
+        initialized = true;
+        init().catch(err => {
+          console.error('[PhotoAlbum] init error:', err);
+          if (statusEl) statusEl.innerHTML = '<span class="err">Erreur de chargement</span>';
+        });
+      }
+    },
+    hide(){
+      if (lbEl && lbEl.classList.contains('on')) closeLightbox();
+    },
+    isLightboxOpen(){
+      return lbEl && lbEl.classList.contains('on');
+    }
+  };
+
+})();
+</script>
+
+<!-- ============================================================
+     SCRIPT PRINCIPAL — VIDÉOTHÈQUE (avec tab switching)
+     ============================================================ -->
 <script>
 (function () {
   'use strict';
@@ -509,7 +1254,8 @@
   const $ = (id) => document.getElementById(id);
   const els = {
     grid: $('reelsGrid'), empty: $('emptyState'), pagination: $('pagination'),
-    search: $('searchInput'),
+    search: $('searchInput'), searchWrap: $('searchWrap'),
+    videosSection: $('videosSection'), photosSection: $('photosSection'),
     detailsModal: $('detailsModal'), detailsFrame: $('detailsFrame'),
     detailsPoster: $('detailsPoster'), detailsPosterImg: $('detailsPosterImg'),
     detailsContent: $('detailsContent'),
@@ -530,6 +1276,7 @@
     exitConfirmModal: $('exitConfirmModal'),
     menuGalerie: $('menuGalerie'),
     menuPhotos: $('menuPhotos'),
+    albumPhotoBtn: $('albumPhotoBtn'),
     yearBadge: $('yearBadge'), yearDropdownContent: $('yearDropdownContent'),
     galleryDropdown: $('galleryDropdown'), sortDropdown: $('sortDropdown')
   };
@@ -556,6 +1303,8 @@
 
   let contentMatchSet = new Set();
   let iframeReady = false;
+
+  let isPhotosTabActive = false;
 
   const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -1230,27 +1979,19 @@
 
   // ====== MENU : SYNCHRONISATION ======
   function syncMenuState() {
-    // Badge année sur le bouton « فيديوهات »
     if (els.yearBadge) {
       els.yearBadge.textContent = (selectedYear === 'all') ? 'الكل' : selectedYear;
     }
-
-    // La rubrique « فيديوهات » est TOUJOURS active sur cette page
-    if (els.menuGalerie) els.menuGalerie.classList.add('active');
-
-    // Sous-états : mode d'affichage
     if (els.galleryDropdown) {
       els.galleryDropdown.querySelectorAll('[data-view]').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.view === currentViewMode);
       });
     }
-    // Sous-états : tri
     if (els.sortDropdown) {
       els.sortDropdown.querySelectorAll('[data-sort]').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.sort === currentSort);
       });
     }
-    // Sous-états : année
     if (els.yearDropdownContent) {
       els.yearDropdownContent.querySelectorAll('[data-year]').forEach(btn => {
         btn.classList.toggle('active', String(btn.dataset.year) === String(selectedYear));
@@ -1276,6 +2017,31 @@
     }
   }
 
+  // ====== TABS : VIDÉOS / PHOTOS ======
+  function showVideosTab() {
+    isPhotosTabActive = false;
+    if (els.videosSection) els.videosSection.classList.remove('hidden');
+    if (els.photosSection) els.photosSection.classList.add('hidden');
+    if (els.menuGalerie) els.menuGalerie.classList.add('active');
+    if (els.menuPhotos) els.menuPhotos.classList.remove('active');
+    if (els.searchWrap) els.searchWrap.style.display = '';
+    if (window.PhotoAlbum && typeof window.PhotoAlbum.hide === 'function') {
+      window.PhotoAlbum.hide();
+    }
+  }
+  function showPhotosTab() {
+    isPhotosTabActive = true;
+    if (els.videosSection) els.videosSection.classList.add('hidden');
+    if (els.photosSection) els.photosSection.classList.remove('hidden');
+    if (els.menuGalerie) els.menuGalerie.classList.remove('active');
+    if (els.menuPhotos) els.menuPhotos.classList.add('active');
+    if (els.searchWrap) els.searchWrap.style.display = 'none';
+    if (window.PhotoAlbum && typeof window.PhotoAlbum.show === 'function') {
+      window.PhotoAlbum.show();
+    }
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
   // ====== INITIALISATION ======
   function init(data) {
     reels = Array.isArray(data) ? data : [];
@@ -1283,6 +2049,7 @@
     populateYearFilter();
     buildYearDropdown();
     currentPage = 1;
+    showVideosTab();
     syncMenuState();
     render();
   }
@@ -1321,6 +2088,10 @@
     if (!btn) return;
     btn.addEventListener('click', function (e) {
       e.stopPropagation();
+      // Si on est sur l'onglet photos et qu'on clique sur le dropdown vidéos → basculer
+      if (dd.dataset.dropdown === 'videos' && isPhotosTabActive) {
+        showVideosTab();
+      }
       toggleDropdown(dd);
     });
   });
@@ -1331,10 +2102,20 @@
 
   // ====== MENU : ACTIONS ======
 
-  // Bypass du exit-trap lors de la navigation vers l'album photos
+  // Onglet "صور" — bascule vers l'album photo intégré
   if (els.menuPhotos) {
-    els.menuPhotos.addEventListener('click', function () {
-      allowExit = true;
+    els.menuPhotos.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      showPhotosTab();
+    });
+  }
+
+  // Bouton "ألبوم الصور" du footer — même action
+  if (els.albumPhotoBtn) {
+    els.albumPhotoBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      showPhotosTab();
     });
   }
 
@@ -1479,6 +2260,8 @@
   // ====== ÉCHAP ======
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
+    // Ne pas interférer avec la lightbox photos
+    if (window.PhotoAlbum && typeof window.PhotoAlbum.isLightboxOpen === 'function' && window.PhotoAlbum.isLightboxOpen()) return;
     const openDD = document.querySelector('.menu-dropdown .menu-dropdown-content:not(.hidden)');
     if (openDD) { e.preventDefault(); closeAllDropdowns(); return; }
     if (document.fullscreenElement || document.webkitFullscreenElement) return;
@@ -1490,7 +2273,7 @@
     showExitDialog('escape');
   });
 
-  // ====== BOOT : attendre les données AVANT d'initialiser ======
+  // ====== BOOT ======
   function bootApp() {
     try {
       const data = Array.isArray(window.reelsData) ? window.reelsData : [];
