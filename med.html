@@ -243,7 +243,6 @@
 
   /* ============================================================
      INTÉGRATION ALBUM PHOTO — styles scopés sous #photosSection
-     pour éviter tout conflit avec la vidéothèque
      ============================================================ */
   #photosSection {
     background: #f0f2f5;
@@ -421,7 +420,7 @@
     #photosSection .photo-card .photo-num { font-size: 10px; padding: 3px 4px; }
   }
 
-  /* Lightbox photo — plein écran, hors #photosSection */
+  /* Lightbox photo */
   #photo-lb {
     position: fixed;
     inset: 0;
@@ -518,26 +517,31 @@
 </div>
 
 <!-- ============================================================
-     NAVIGATION SUPÉRIEURE — DEUX RUBRIQUES :
-       1) فيديوهات  (Vidéothèque, avec son sous-menu de contrôles)
-       2) صور       (Album photo intégré)
+     MENU SUPÉRIEUR — 3 éléments centrés :
+       1. ألبوم الصور
+       2. ألبوم الفيديوهات
+       3. السنوات
      ============================================================ -->
 <nav class="main-menu-bar w-full sticky top-0 z-40 shadow-lg" dir="rtl" aria-label="القائمة الرئيسية">
   <div class="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-8">
-    <div class="flex flex-col sm:flex-row sm:items-stretch gap-1 sm:gap-3">
-      <div class="grid grid-cols-2 sm:flex sm:flex-row sm:items-stretch sm:flex-1 w-full">
+    <div class="relative flex flex-col lg:flex-row items-center justify-center gap-2 py-1">
 
-        <!-- ========== Rubrique 1 : فيديوهات (avec sous-menu) ========== -->
+      <!-- ===== 3 éléments centraux ===== -->
+      <div class="flex flex-wrap justify-center items-stretch gap-1 order-1">
+
+        <!-- 1. ألبوم الصور -->
+        <button type="button" class="menu-item" id="menuPhotos" aria-label="ألبوم الصور">
+          <i class="fa-solid fa-images"></i><span>ألبوم الصور</span>
+        </button>
+
+        <!-- 2. ألبوم الفيديوهات (avec sous-menu : mode d'affichage + tri) -->
         <div class="menu-dropdown" data-dropdown="videos">
           <button type="button" class="menu-item" id="menuGalerie"
                   aria-haspopup="true" aria-expanded="false" aria-controls="galleryDropdown">
-            <i class="fa-solid fa-video"></i><span>فيديوهات</span>
-            <span class="menu-badge" id="yearBadge">2026</span>
+            <i class="fa-solid fa-video"></i><span>ألبوم الفيديوهات</span>
             <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-70 dd-chevron"></i>
           </button>
           <div class="menu-dropdown-content hidden" id="galleryDropdown" role="menu" aria-label="خيارات عرض الفيديوهات">
-
-            <!-- Modes d'affichage -->
             <button type="button" class="menu-dropdown-item" data-view="gallery" role="menuitem">
               <i class="fa-solid fa-table-cells-large"></i><span>كل الفيديوهات</span><i class="fa-solid fa-check dd-check"></i>
             </button>
@@ -547,10 +551,7 @@
             <button type="button" class="menu-dropdown-item" data-view="tree" role="menuitem">
               <i class="fa-solid fa-sitemap"></i><span>التنظيم الهيكلي</span><i class="fa-solid fa-check dd-check"></i>
             </button>
-
             <div class="border-t border-white/10 my-1"></div>
-
-            <!-- Tri -->
             <div id="sortDropdown" role="group" aria-label="خيارات الفرز">
               <button type="button" class="menu-dropdown-item" data-sort="recent" role="menuitem">
                 <i class="fa-solid fa-clock"></i><span>الأحدث</span><i class="fa-solid fa-check dd-check"></i>
@@ -562,27 +563,31 @@
                 <i class="fa-solid fa-heart"></i><span>الأكثر تفاعلاً وتعليقاً</span><i class="fa-solid fa-check dd-check"></i>
               </button>
             </div>
-
-            <div class="border-t border-white/10 my-1"></div>
-
-            <!-- Filtre année -->
-            <div id="yearDropdownContent" role="group" aria-label="فلتر حسب السنة"></div>
           </div>
         </div>
 
-        <!-- ========== Rubrique 2 : صور (Album photo) ========== -->
-        <button type="button" class="menu-item" id="menuPhotos" aria-label="ألبوم الصور">
-          <i class="fa-solid fa-images"></i><span>صور</span>
-        </button>
+        <!-- 3. السنوات -->
+        <div class="menu-dropdown" data-dropdown="years">
+          <button type="button" class="menu-item" id="menuYears"
+                  aria-haspopup="true" aria-expanded="false" aria-controls="yearDropdownContent">
+            <i class="fa-solid fa-calendar"></i><span>السنوات</span>
+            <span class="menu-badge" id="yearBadge">2026</span>
+            <i class="fa-solid fa-chevron-down text-[10px] mr-auto opacity-70 dd-chevron"></i>
+          </button>
+          <div class="menu-dropdown-content hidden" id="yearDropdownContent" role="menu" aria-label="فلتر حسب السنة"></div>
+        </div>
 
       </div>
-      <div class="flex items-center w-full sm:w-auto pb-2 sm:pb-0">
-        <div class="relative w-full sm:w-auto" id="searchWrap">
+
+      <!-- ===== Recherche ===== -->
+      <div class="w-full lg:w-64 lg:absolute lg:left-3 lg:top-1/2 lg:-translate-y-1/2 flex items-center justify-center lg:justify-start order-2 lg:order-none px-2 lg:px-0 pb-2 lg:pb-0" id="searchWrap">
+        <div class="relative w-full">
           <i class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-white/60 text-sm pointer-events-none"></i>
           <input type="text" id="searchInput" inputmode="search" placeholder="البحث في المحتوى…"
                  aria-label="البحث في المحتوى" class="menu-search py-2 pr-9 pl-4" dir="rtl">
         </div>
       </div>
+
     </div>
   </div>
 </nav>
@@ -630,7 +635,7 @@
   </div>
 </main>
 
-<!-- Lightbox photo (hors section pour ne pas être caché par display:none) -->
+<!-- Lightbox photo -->
 <div id="photo-lb">
   <img alt="">
   <div class="photo-lb-counter"></div>
@@ -773,8 +778,7 @@
 </div>
 
 <!-- ============================================================
-     SCRIPT — ALBUM PHOTO (intégration de photo.html, scopé IIFE)
-     Expose window.PhotoAlbum = { show, hide, isLightboxOpen }
+     SCRIPT — ALBUM PHOTO (intégration photo.html, scopé IIFE)
      ============================================================ -->
 <script>
 (function(){
@@ -810,7 +814,6 @@
   let pageValid = [];
   let lbPos = -1;
 
-  /* ---------- Décomposition d'une URL ---------- */
   function parseUrl(rawUrl){
     const clean = String(rawUrl).trim().replace(/^\/+/, '');
     const parts = clean.split('/');
@@ -822,7 +825,6 @@
     return { dir, base, ext, hasSuffix: /_\d{1,2}$/.test(base) };
   }
 
-  /* ---------- Motifs d'URL ---------- */
   const PATTERNS = [
     { id: 'raw_01',    make: p => RAW_BASE   + p.dir + p.base + '_01' + p.ext, needSuffix: false },
     { id: 'raw_exact', make: p => RAW_BASE   + p.dir + p.base       + p.ext, needSuffix: true  },
@@ -847,7 +849,6 @@
     return list;
   }
 
-  /* ---------- Initialisation ---------- */
   async function init(){
     try{
       statusEl.textContent = 'Chargement…';
@@ -877,7 +878,6 @@
     }
   }
 
-  /* ---------- Résolution d'une image ---------- */
   async function resolveImageForIdx(p, gIdx){
     if (knownGood.has(gIdx)) return knownGood.get(gIdx);
     if (knownBad.has(gIdx))  return null;
@@ -899,7 +899,6 @@
     return null;
   }
 
-  /* ---------- Test rapide d'une page ---------- */
   async function testPageHasContent(page){
     const start = (page - 1) * PER_PAGE;
     const end   = Math.min(start + PER_PAGE, photos.length);
@@ -916,7 +915,6 @@
     return results.some(Boolean);
   }
 
-  /* ---------- Recherche page non vide ---------- */
   async function findNextNonEmptyPage(){
     const MAX_SKIP = 50;
     let tested = 0;
@@ -937,7 +935,6 @@
     return null;
   }
 
-  /* ---------- Changement de page ---------- */
   function gotoPage(page, opts = {}){
     const prevPage = currentPage;
     currentPage = Math.max(1, Math.min(totalPages, page));
@@ -979,7 +976,6 @@
     }
   }
 
-  /* ---------- Carte dynamique ---------- */
   function makeDynamicCard(p, gIdx, counters, token){
     const card = document.createElement('div');
     card.className = 'photo-card';
@@ -1040,7 +1036,6 @@
     return card;
   }
 
-  /* ---------- Carte statique ---------- */
   function makeStaticCard(p, url, gIdx){
     const card = document.createElement('div');
     card.className = 'photo-card';
@@ -1066,7 +1061,6 @@
     return card;
   }
 
-  /* ---------- Page complète ---------- */
   async function handlePageComplete(token, counters){
     if (token !== pageToken) return;
     if (counters.loaded > 0){
@@ -1092,7 +1086,6 @@
     setTimeout(() => { if (token === pageToken){} }, delay);
   }
 
-  /* ---------- Tout vide ---------- */
   function showAllEmpty(){
     galleryEl.innerHTML =
       '<div class="photo-empty">' +
@@ -1104,7 +1097,6 @@
     statusEl.innerHTML = '<span class="err">0 image</span>';
   }
 
-  /* ---------- Statut ---------- */
   function updateStatus(c){
     statusEl.innerHTML =
       `<span class="ok">P.${currentPage}/${totalPages}</span> · ` +
@@ -1112,7 +1104,6 @@
       (c.failed ? ` · ${c.failed} ignorée(s)` : '');
   }
 
-  /* ---------- Lightbox ---------- */
   function openLightbox(pos){
     if (pos < 0 || pos >= pageValid.length) return;
     lbPos = pos;
@@ -1178,7 +1169,6 @@
     else if (e.key === 'ArrowLeft') lbPrev();
   });
 
-  /* ---------- Pagination ---------- */
   function renderPagination(){
     paginationEl.innerHTML = '';
     const mk = (label, page, opts = {}) => {
@@ -1217,7 +1207,6 @@
     return [1, '…', current - 1, current, current + 1, '…', total];
   }
 
-  /* ---------- API publique ---------- */
   window.PhotoAlbum = {
     show(){
       if (!initialized){
@@ -1240,7 +1229,7 @@
 </script>
 
 <!-- ============================================================
-     SCRIPT PRINCIPAL — VIDÉOTHÈQUE (avec tab switching)
+     SCRIPT PRINCIPAL — VIDÉOTHÈQUE
      ============================================================ -->
 <script>
 (function () {
@@ -1276,6 +1265,7 @@
     exitConfirmModal: $('exitConfirmModal'),
     menuGalerie: $('menuGalerie'),
     menuPhotos: $('menuPhotos'),
+    menuYears: $('menuYears'),
     albumPhotoBtn: $('albumPhotoBtn'),
     yearBadge: $('yearBadge'), yearDropdownContent: $('yearDropdownContent'),
     galleryDropdown: $('galleryDropdown'), sortDropdown: $('sortDropdown')
@@ -1982,6 +1972,10 @@
     if (els.yearBadge) {
       els.yearBadge.textContent = (selectedYear === 'all') ? 'الكل' : selectedYear;
     }
+    // Indicateur d'onglet actif sur les 2 boutons principaux
+    if (els.menuPhotos) els.menuPhotos.classList.toggle('active', isPhotosTabActive);
+    if (els.menuGalerie) els.menuGalerie.classList.toggle('active', !isPhotosTabActive);
+    // Sous-états
     if (els.galleryDropdown) {
       els.galleryDropdown.querySelectorAll('[data-view]').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.view === currentViewMode);
@@ -2022,24 +2016,22 @@
     isPhotosTabActive = false;
     if (els.videosSection) els.videosSection.classList.remove('hidden');
     if (els.photosSection) els.photosSection.classList.add('hidden');
-    if (els.menuGalerie) els.menuGalerie.classList.add('active');
-    if (els.menuPhotos) els.menuPhotos.classList.remove('active');
     if (els.searchWrap) els.searchWrap.style.display = '';
     if (window.PhotoAlbum && typeof window.PhotoAlbum.hide === 'function') {
       window.PhotoAlbum.hide();
     }
+    syncMenuState();
   }
   function showPhotosTab() {
     isPhotosTabActive = true;
     if (els.videosSection) els.videosSection.classList.add('hidden');
     if (els.photosSection) els.photosSection.classList.remove('hidden');
-    if (els.menuGalerie) els.menuGalerie.classList.remove('active');
-    if (els.menuPhotos) els.menuPhotos.classList.add('active');
     if (els.searchWrap) els.searchWrap.style.display = 'none';
     if (window.PhotoAlbum && typeof window.PhotoAlbum.show === 'function') {
       window.PhotoAlbum.show();
     }
     window.scrollTo({ top: 0, behavior: 'instant' });
+    syncMenuState();
   }
 
   // ====== INITIALISATION ======
@@ -2050,7 +2042,6 @@
     buildYearDropdown();
     currentPage = 1;
     showVideosTab();
-    syncMenuState();
     render();
   }
 
@@ -2088,8 +2079,9 @@
     if (!btn) return;
     btn.addEventListener('click', function (e) {
       e.stopPropagation();
-      // Si on est sur l'onglet photos et qu'on clique sur le dropdown vidéos → basculer
-      if (dd.dataset.dropdown === 'videos' && isPhotosTabActive) {
+      // Si on est sur l'onglet photos, revenir automatiquement aux vidéos
+      // (les deux dropdowns = vidéos et années, tous deux liés à la vidéothèque)
+      if (isPhotosTabActive) {
         showVideosTab();
       }
       toggleDropdown(dd);
@@ -2102,7 +2094,7 @@
 
   // ====== MENU : ACTIONS ======
 
-  // Onglet "صور" — bascule vers l'album photo intégré
+  // Onglet ألبوم الصور
   if (els.menuPhotos) {
     els.menuPhotos.addEventListener('click', function (e) {
       e.preventDefault();
@@ -2111,7 +2103,7 @@
     });
   }
 
-  // Bouton "ألبوم الصور" du footer — même action
+  // Bouton "ألبوم الصور" du footer
   if (els.albumPhotoBtn) {
     els.albumPhotoBtn.addEventListener('click', function (e) {
       e.preventDefault();
@@ -2119,7 +2111,7 @@
     });
   }
 
-  // Sous-menu فيديوهات : choix du mode d'affichage
+  // Sous-menu ألبوم الفيديوهات : choix du mode d'affichage
   if (els.galleryDropdown) {
     els.galleryDropdown.addEventListener('click', function (e) {
       const btn = e.target.closest('[data-view]');
@@ -2127,13 +2119,14 @@
       currentViewMode = btn.dataset.view;
       activeTheme = null;
       currentPage = 1;
+      if (isPhotosTabActive) showVideosTab();
       syncMenuState();
       render();
       closeAllDropdowns();
     });
   }
 
-  // Sous-menu فيديوهات : tri
+  // Sous-menu ألبوم الفيديوهات : tri
   if (els.sortDropdown) {
     els.sortDropdown.addEventListener('click', function (e) {
       const btn = e.target.closest('[data-sort]');
@@ -2141,19 +2134,21 @@
       currentSort = btn.dataset.sort;
       if (currentViewMode === 'tree') currentViewMode = 'gallery';
       currentPage = 1;
+      if (isPhotosTabActive) showVideosTab();
       syncMenuState();
       render();
       closeAllDropdowns();
     });
   }
 
-  // Sous-menu فيديوهات : année
+  // Sous-menu السنوات : filtre année
   if (els.yearDropdownContent) {
     els.yearDropdownContent.addEventListener('click', function (e) {
       const btn = e.target.closest('[data-year]');
       if (!btn) return;
       selectedYear = btn.dataset.year;
       currentPage = 1;
+      if (isPhotosTabActive) showVideosTab();
       syncMenuState();
       render();
       closeAllDropdowns();
@@ -2260,7 +2255,6 @@
   // ====== ÉCHAP ======
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
-    // Ne pas interférer avec la lightbox photos
     if (window.PhotoAlbum && typeof window.PhotoAlbum.isLightboxOpen === 'function' && window.PhotoAlbum.isLightboxOpen()) return;
     const openDD = document.querySelector('.menu-dropdown .menu-dropdown-content:not(.hidden)');
     if (openDD) { e.preventDefault(); closeAllDropdowns(); return; }
@@ -2332,8 +2326,6 @@ window.videothequeDataReady = Promise.all([
   });
   return { reelsData: window.reelsData, tabeleau_url_content: window.tabeleau_url_content };
 }).finally(function () {
-  // Toujours déclencher l'événement (succès ou échec)
-  // pour que le script principal sorte de son état « vide ».
   window.dispatchEvent(new Event("videotheque:data-ready"));
 });
 </script>
