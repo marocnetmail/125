@@ -8,7 +8,7 @@
 <style>
   :root{
     --bg:#f0f2f5; --card:#fff; --text:#1c1e21; --muted:#65676b;
-    --accent:#1877f2; --ok:#1f9d55; --warn:#f7b928;
+    --accent:#1877f2; --ok:#1f9d55; --warn:#f7b928; --danger:#d93025;
     --safe-top:env(safe-area-inset-top,0px);
     --safe-bottom:env(safe-area-inset-bottom,0px);
     --safe-left:env(safe-area-inset-left,0px);
@@ -35,9 +35,8 @@
   }
   h1{font-size:16px;font-weight:700;color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   #status{font-size:12px;color:var(--muted);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;min-width:0}
-  #status .ok{color:var(--ok)} #status .warn{color:var(--warn)}
+  #status .ok{color:var(--ok)} #status .warn{color:var(--warn)} #status .err{color:var(--danger)}
 
-  /* Grille responsive mobile-first */
   #gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;min-height:120px}
   @media(min-width:480px){#gallery{grid-template-columns:repeat(3,1fr);gap:10px}}
   @media(min-width:700px){#gallery{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}}
@@ -71,10 +70,13 @@
     text-align:center;font-weight:600;background:#fafbfc;
   }
 
-  .empty{grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--muted);font-size:14px}
-  .empty strong{color:var(--text);display:block;margin-bottom:8px;font-size:15px}
+  /* État vide (page ignorée / tout vide) */
+  .empty{grid-column:1/-1;text-align:center;padding:50px 20px;color:var(--muted);font-size:14px}
+  .empty .icon{font-size:42px;margin-bottom:10px;opacity:.5}
+  .empty strong{color:var(--text);display:block;margin-bottom:8px;font-size:16px}
+  .empty p{max-width:420px;margin:6px auto 0;line-height:1.5;font-size:13px}
   .empty button{
-    margin-top:14px;padding:12px 24px;border:none;background:var(--accent);
+    margin-top:16px;padding:12px 24px;border:none;background:var(--accent);
     color:#fff;border-radius:10px;font-size:15px;font-weight:600;
     cursor:pointer;touch-action:manipulation;
   }
@@ -95,7 +97,7 @@
     flex:0 0 auto;min-width:40px;height:40px;padding:0 8px;
     border:1px solid #ccd0d5;background:#fff;color:var(--text);
     border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;
-    transition:background .15s,transform .1s;
+    transition:background .15s,transform .1s,opacity .2s;
     display:inline-flex;align-items:center;justify-content:center;
     user-select:none;-webkit-user-select:none;touch-action:manipulation;
   }
@@ -104,8 +106,12 @@
   .pg-btn:disabled{opacity:.35}
   .pg-btn.nav{font-size:18px;min-width:44px}
   .pg-btn.ellipsis{border:none;background:transparent;cursor:default;min-width:16px;padding:0 2px;opacity:.6}
+  .pg-btn.empty{
+    opacity:.3;background:#f5f6f7;
+    text-decoration:line-through;text-decoration-color:rgba(0,0,0,.3);
+  }
 
-  /* Lightbox plein écran + swipe */
+  /* Lightbox */
   #lb{
     position:fixed;inset:0;background:#000;z-index:100;
     display:none;align-items:center;justify-content:center;
@@ -114,8 +120,7 @@
   #lb.on{display:flex}
   #lb img{
     max-width:100%;max-height:100%;object-fit:contain;
-    pointer-events:none;
-    transition:opacity .15s;
+    pointer-events:none;transition:opacity .15s;
   }
   #lb img.loading{opacity:.4}
   #lb .close{
@@ -128,17 +133,17 @@
   }
   #lb .counter{
     position:absolute;top:calc(20px + var(--safe-top));left:50%;transform:translateX(-50%);
-    color:rgba(255,255,255,.8);font-size:13px;font-weight:600;
-    background:rgba(0,0,0,.4);padding:6px 12px;border-radius:20px;
+    color:rgba(255,255,255,.85);font-size:13px;font-weight:600;
+    background:rgba(0,0,0,.5);padding:6px 12px;border-radius:20px;
     pointer-events:none;white-space:nowrap;
   }
   #lb .hint{
     position:absolute;bottom:calc(16px + var(--safe-bottom));left:50%;transform:translateX(-50%);
-    color:rgba(255,255,255,.65);font-size:12px;
-    background:rgba(0,0,0,.45);padding:6px 14px;border-radius:20px;
+    color:rgba(255,255,255,.7);font-size:12px;
+    background:rgba(0,0,0,.5);padding:6px 14px;border-radius:20px;
     pointer-events:none;white-space:nowrap;
   }
-  @media(hover:none){#lb .hint{display:none}}
+  @media(hover:hover){#lb .hint{display:none}}
 
   @media(max-width:480px){
     h1{font-size:15px} #status{font-size:11px}
@@ -182,16 +187,20 @@ const lbEl=$('lb'), lbImg=lbEl.querySelector('img');
 const lbCounter=lbEl.querySelector('.counter'), lbClose=lbEl.querySelector('.close');
 
 /* =========================================================
-   ÉTAT
+   ÉTAT GLOBAL
    ========================================================= */
 let photos=[];
 let currentPage=1, totalPages=1;
-const knownGood=new Map();     // globalIdx → url OK
-const knownBad=new Set();      // globalIdx → introuvable
-let preferredPattern=null;     // motif appris (id du pattern qui marche)
+let pageToken=0;
+let navigationDirection=1;
+let skipDepth=0;
 
-/* Photos valides de la page courante (pour la lightbox) */
-let pageValid=[];              // [{numero,url,globalIdx}] triées par globalIdx
+const knownGood=new Map();     // globalIdx → URL validée
+const knownBad =new Set();     // globalIdx → introuvable partout
+const emptyPages=new Set();    // pages dont toutes les entrées sont introuvables
+let preferredPattern=null;     // motif appris (raw_01, raw_exact, …)
+
+let pageValid=[];              // photos valides de la page courante (pour la lightbox)
 let lbPos=-1;
 
 /* =========================================================
@@ -209,8 +218,7 @@ function parseUrl(rawUrl){
 }
 
 /* =========================================================
-   MOTIFS D'URL — ordre = priorité
-   L'apprentissage du 1er succès évite 4 tests sur 5 images sur 5
+   MOTIFS D'URL (ordre = priorité)
    ========================================================= */
 const PATTERNS=[
   {id:'raw_01',    make:p=>RAW_BASE  +p.dir+p.base+'_01'+p.ext,  needSuffix:false},
@@ -222,19 +230,16 @@ const PATTERNS=[
 
 function urlsFor(rawUrl){
   const p=parseUrl(rawUrl);
-  const list=[];
-  const seen=new Set();
+  const list=[], seen=new Set();
   const push=pat=>{
     if(!pat.needSuffix && p.hasSuffix) return;
     const u=pat.make(p);
     if(!seen.has(u)){seen.add(u); list.push({id:pat.id,url:u});}
   };
-  // Motif appris en premier → un seul test dans le cas nominal
   if(preferredPattern){
     const pref=PATTERNS.find(x=>x.id===preferredPattern);
     if(pref) push(pref);
   }
-  // Puis les autres
   PATTERNS.forEach(push);
   return list;
 }
@@ -266,60 +271,141 @@ async function init(){
     statusEl.innerHTML=`<span class="ok">${photos.length} photos</span> · ${totalPages} pages`;
     gotoPage(1);
   }catch(err){
-    statusEl.innerHTML='<span class="warn">Erreur : '+err.message+'</span>';
+    statusEl.innerHTML='<span class="err">Erreur : '+err.message+'</span>';
     console.error(err);
   }
 }
 
 /* =========================================================
-   CHANGEMENT DE PAGE — INSTANTANÉ
+   VÉRIFICATION D'UNE IMAGE (avec cache)
    ========================================================= */
-function gotoPage(page){
+async function resolveImageForIdx(p,gIdx){
+  if(knownGood.has(gIdx)) return knownGood.get(gIdx);
+  if(knownBad.has(gIdx))  return null;
+
+  const variants=urlsFor(p.url);
+  for(const v of variants){
+    const ok=await new Promise(resolve=>{
+      const img=new Image();
+      img.onload =()=>resolve(true);
+      img.onerror=()=>resolve(false);
+      img.src=v.url;
+    });
+    if(ok){
+      knownGood.set(gIdx,v.url);
+      if(!preferredPattern && v.id) preferredPattern=v.id;
+      return v.url;
+    }
+  }
+  knownBad.add(gIdx);
+  return null;
+}
+
+/* Test rapide : la page a-t-elle du contenu ?
+   Échantillon de 5 images réparties → réponse en ~200ms/page */
+async function testPageHasContent(page){
+  const start=(page-1)*PER_PAGE;
+  const end  =Math.min(start+PER_PAGE,photos.length);
+  const slice=photos.slice(start,end);
+  if(!slice.length) return false;
+
+  const idxs=[...new Set([
+    0,
+    Math.floor(slice.length/4),
+    Math.floor(slice.length/2),
+    Math.floor(3*slice.length/4),
+    slice.length-1
+  ])];
+
+  const results=await Promise.all(
+    idxs.map(i=>resolveImageForIdx(slice[i],start+i))
+  );
+  return results.some(Boolean);
+}
+
+/* =========================================================
+   RECHERCHE DE LA PROCHAINE PAGE NON VIDE
+   ========================================================= */
+async function findNextNonEmptyPage(){
+  const MAX_SKIP=50;
+  let tested=0;
+
+  for(let d=1; d<=totalPages && tested<MAX_SKIP; d++){
+    const fwd=currentPage + d*navigationDirection;
+    if(fwd>=1 && fwd<=totalPages && !emptyPages.has(fwd)){
+      tested++;
+      if(await testPageHasContent(fwd)) return fwd;
+      emptyPages.add(fwd);
+    }
+    const bwd=currentPage - d*navigationDirection;
+    if(bwd>=1 && bwd<=totalPages && !emptyPages.has(bwd)){
+      tested++;
+      if(await testPageHasContent(bwd)) return bwd;
+      emptyPages.add(bwd);
+    }
+  }
+  return null;
+}
+
+/* =========================================================
+   CHANGEMENT DE PAGE
+   ========================================================= */
+function gotoPage(page, opts={}){
+  const prevPage=currentPage;
   currentPage=Math.max(1,Math.min(totalPages,page));
+
+  if(!opts.isAutoSkip){
+    if(currentPage>prevPage) navigationDirection=1;
+    else if(currentPage<prevPage) navigationDirection=-1;
+    skipDepth=0;
+  }
+
+  const token=++pageToken;
   const start=(currentPage-1)*PER_PAGE;
   const end  =Math.min(start+PER_PAGE,photos.length);
   const slice=photos.slice(start,end);
 
+  const counters={total:slice.length,resolved:0,loaded:0,failed:0};
   pageValid=[];
-  const counters={loaded:0,failed:0,total:slice.length};
-  let rendered=0;
 
   galleryEl.innerHTML='';
 
   slice.forEach((p,i)=>{
     const gIdx=start+i;
 
-    if(knownBad.has(gIdx)){ counters.failed++; return; }
+    if(knownBad.has(gIdx)){
+      counters.failed++;
+      counters.resolved++;
+      return;
+    }
 
     if(knownGood.has(gIdx)){
       const url=knownGood.get(gIdx);
       galleryEl.appendChild(makeStaticCard(p,url,gIdx));
       pageValid.push({numero:p.numero,url,globalIdx:gIdx});
       counters.loaded++;
-      rendered++;
+      counters.resolved++;
       return;
     }
 
-    rendered++;
-    const card=makeDynamicCard(p,gIdx,counters,()=>{
-      pageValid.push({numero:p.numero,url:knownGood.get(gIdx),globalIdx:gIdx});
-      pageValid.sort((a,b)=>a.globalIdx-b.globalIdx);
-      updateStatus(counters);
-    });
-    galleryEl.appendChild(card);
+    galleryEl.appendChild(makeDynamicCard(p,gIdx,counters,token));
   });
 
-  if(rendered===0) showEmptyPage(start,end);
+  if(!opts.isAutoSkip){
+    renderPagination();
+    updateStatus(counters);
+  }
 
-  renderPagination();
-  updateStatus(counters);
-  window.scrollTo({top:0,behavior:'smooth'});
+  // Toutes les entrées étaient déjà connues (succès ou échec)
+  if(counters.resolved===counters.total){
+    handlePageComplete(token,counters);
+  }
 }
 
 /* =========================================================
-   CARTE DYNAMIQUE — essaie les motifs, apprend, se supprime si échec
+   CARTE DYNAMIQUE
    ========================================================= */
-function makeDynamicCard(p,gIdx,counters,onLoaded){
+function makeDynamicCard(p,gIdx,counters,token){
   const card=document.createElement('div');
   card.className='card';
 
@@ -339,17 +425,25 @@ function makeDynamicCard(p,gIdx,counters,onLoaded){
   const variants=urlsFor(p.url);
   let idx=0, resolved=false;
 
+  const finish=()=>{
+    if(token!==pageToken) return;
+    if(counters.resolved===counters.total) handlePageComplete(token,counters);
+  };
+
   const tryNext=()=>{
     if(resolved) return;
     if(idx>=variants.length){
       resolved=true;
       knownBad.add(gIdx);
       card.classList.add('removing');
-      setTimeout(()=>{card.remove();counters.failed++;updateStatus(counters);},250);
+      setTimeout(()=>{card.remove();},250);
+      counters.failed++;
+      counters.resolved++;
+      finish();
       return;
     }
     const v=variants[idx++];
-    img.dataset.pattern=v.id;   // on mémorise le motif pour l'apprentissage
+    img.dataset.pattern=v.id;
     img.src=v.url;
   };
 
@@ -357,12 +451,14 @@ function makeDynamicCard(p,gIdx,counters,onLoaded){
     if(resolved) return;
     resolved=true;
     const usedPattern=img.dataset.pattern;
-    if(!preferredPattern && usedPattern) preferredPattern=usedPattern;  // apprend
+    if(!preferredPattern && usedPattern) preferredPattern=usedPattern;
     knownGood.set(gIdx,img.currentSrc||img.src);
+    pageValid.push({numero:p.numero,url:knownGood.get(gIdx),globalIdx:gIdx});
+    pageValid.sort((a,b)=>a.globalIdx-b.globalIdx);
     img.classList.add('loaded');
     counters.loaded++;
-    updateStatus(counters);
-    onLoaded();
+    counters.resolved++;
+    finish();
   });
 
   img.addEventListener('error',tryNext);
@@ -408,32 +504,74 @@ function makeStaticCard(p,url,gIdx){
 }
 
 /* =========================================================
+   PAGE COMPLÈTE → détection page vide → auto-skip
+   ========================================================= */
+async function handlePageComplete(token,counters){
+  if(token!==pageToken) return;
+
+  // La page a du contenu → on s'arrête
+  if(counters.loaded>0){
+    skipDepth=0;
+    renderPagination();
+    updateStatus(counters);
+    return;
+  }
+
+  // Page vide
+  emptyPages.add(currentPage);
+
+  // Affiche l'état vide et le message de recherche
+  galleryEl.innerHTML=
+    '<div class="empty">'+
+      '<div class="icon">🔎</div>'+
+      '<strong>Page vide</strong>'+
+      '<p>Recherche d\'une page contenant des images…</p>'+
+    '</div>';
+  statusEl.innerHTML=`<span class="warn">Page ${currentPage} vide · recherche…</span>`;
+
+  const target=await findNextNonEmptyPage();
+
+  if(token!==pageToken) return;   // l'utilisateur a navigué entre-temps
+
+  if(target===null){
+    showAllEmpty();
+    return;
+  }
+
+  const delay = skipDepth===0 ? 350 : 60;
+  skipDepth++;
+
+  gotoPage(target,{isAutoSkip:true});
+  setTimeout(()=>{ if(token===pageToken){} },delay);   // delay inutile ici mais garde la structure
+}
+
+/* =========================================================
+   ÉTAT : AUCUNE IMAGE NULLE PART
+   ========================================================= */
+function showAllEmpty(){
+  galleryEl.innerHTML=
+    '<div class="empty">'+
+      '<div class="icon">📭</div>'+
+      '<strong>Aucune image disponible</strong>'+
+      '<p>Toutes les entrées du JSON ont été testées, aucun fichier correspondant '+
+      'n\'existe dans le dépôt.</p>'+
+    '</div>';
+  paginationEl.innerHTML='';
+  statusEl.innerHTML='<span class="err">0 image</span>';
+}
+
+/* =========================================================
    STATUT
    ========================================================= */
 function updateStatus(c){
-  statusEl.innerHTML=`<span class="ok">P.${currentPage}/${totalPages}</span> · `+
-    `${c.loaded}/${c.total}` + (c.failed?` · ${c.failed} ignorée(s)`:'');
+  statusEl.innerHTML=
+    `<span class="ok">P.${currentPage}/${totalPages}</span> · `+
+    `${c.loaded}/${c.total}`+
+    (c.failed?` · ${c.failed} ignorée(s)`:'');
 }
 
 /* =========================================================
-   PAGE VIDE
-   ========================================================= */
-function showEmptyPage(start,end){
-  const div=document.createElement('div');
-  div.className='empty';
-  div.innerHTML='<strong>Aucune image sur cette page</strong>'+
-    `${end-start} entrée(s) sans fichier correspondant.`;
-  if(currentPage<totalPages){
-    const b=document.createElement('button');
-    b.textContent='Page '+(currentPage+1)+' →';
-    b.onclick=()=>gotoPage(currentPage+1);
-    div.appendChild(b);
-  }
-  galleryEl.appendChild(div);
-}
-
-/* =========================================================
-   LIGHTBOX + SWIPE
+   LIGHTBOX
    ========================================================= */
 function openLightbox(pos){
   if(pos<0||pos>=pageValid.length) return;
@@ -456,25 +594,18 @@ function showLightboxPhoto(){
   lbImg.alt='Photo n° '+p.numero;
   lbCounter.textContent=(lbPos+1)+' / '+pageValid.length+'  ·  N° '+p.numero;
 }
-function lbNext(){
-  if(lbPos<pageValid.length-1){lbPos++;showLightboxPhoto();}
-}
-function lbPrev(){
-  if(lbPos>0){lbPos--;showLightboxPhoto();}
-}
+function lbNext(){ if(lbPos<pageValid.length-1){lbPos++;showLightboxPhoto();} }
+function lbPrev(){ if(lbPos>0){lbPos--;showLightboxPhoto();} }
 
-// Tap zones + close
 lbEl.addEventListener('click',e=>{
   if(e.target===lbClose){closeLightbox();return;}
   const rect=lbEl.getBoundingClientRect();
-  const x=e.clientX-rect.left;
-  const ratio=x/rect.width;
+  const ratio=(e.clientX-rect.left)/rect.width;
   if(ratio<0.33) lbPrev();
   else if(ratio>0.67) lbNext();
   else closeLightbox();
 });
 
-// Swipe tactile
 let tStart=null;
 lbEl.addEventListener('touchstart',e=>{
   if(e.touches.length!==1) return;
@@ -488,12 +619,9 @@ lbEl.addEventListener('touchend',e=>{
   const dt=Date.now()-tStart.t;
   const start=tStart; tStart=null;
 
-  // Swipe horizontal rapide
   if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)*1.5 && dt<600){
-    dx<0?lbNext():lbPrev();
-    return;
+    dx<0?lbNext():lbPrev(); return;
   }
-  // Tap court au centre
   if(Math.abs(dx)<10 && Math.abs(dy)<10 && dt<250){
     const rect=lbEl.getBoundingClientRect();
     const ratio=(start.x-rect.left)/rect.width;
@@ -503,7 +631,6 @@ lbEl.addEventListener('touchend',e=>{
   }
 },{passive:true});
 
-// Clavier (desktop)
 document.addEventListener('keydown',e=>{
   if(!lbEl.classList.contains('on')) return;
   if(e.key==='Escape') closeLightbox();
@@ -516,20 +643,51 @@ document.addEventListener('keydown',e=>{
    ========================================================= */
 function renderPagination(){
   paginationEl.innerHTML='';
+
   const mk=(label,page,opts={})=>{
     const b=document.createElement('button');
-    b.className='pg-btn'+(opts.active?' active':'')+(opts.nav?' nav':'')+(opts.ellipsis?' ellipsis':'');
+    b.className='pg-btn'
+      +(opts.active?' active':'')
+      +(opts.nav?' nav':'')
+      +(opts.ellipsis?' ellipsis':'')
+      +(opts.empty?' empty':'');
     b.textContent=label;
     if(opts.disabled) b.disabled=true;
-    if(!opts.active&&!opts.disabled&&!opts.ellipsis) b.onclick=()=>gotoPage(page);
+    if(opts.empty) b.title='Page vide (aucune image)';
+    if(!opts.active && !opts.disabled && !opts.ellipsis && !opts.empty){
+      b.onclick=()=>gotoPage(page);
+    }
     return b;
   };
+
   paginationEl.appendChild(mk('‹',currentPage-1,{nav:true,disabled:currentPage===1}));
+
   pageNumbers(currentPage,totalPages).forEach(n=>{
-    if(n==='…') paginationEl.appendChild(mk('…',0,{ellipsis:true}));
-    else paginationEl.appendChild(mk(String(n),n,{active:n===currentPage}));
+    if(n==='…'){
+      paginationEl.appendChild(mk('…',0,{ellipsis:true}));
+    } else {
+      paginationEl.appendChild(mk(String(n),n,{
+        active: n===currentPage,
+        empty : emptyPages.has(n) && n!==currentPage
+      }));
+    }
   });
+
   paginationEl.appendChild(mk('›',currentPage+1,{nav:true,disabled:currentPage===totalPages}));
+
+  if(totalPages>7){
+    const jump=document.createElement('input');
+    jump.type='number';
+    jump.min=1; jump.max=totalPages; jump.placeholder='page';
+    jump.style.cssText='width:70px;height:40px;padding:0 8px;border:1px solid #ccd0d5;border-radius:8px;font-size:14px;margin-left:6px;text-align:center';
+    jump.addEventListener('keydown',e=>{
+      if(e.key==='Enter'){
+        const v=parseInt(jump.value,10);
+        if(v>=1 && v<=totalPages) gotoPage(v);
+      }
+    });
+    paginationEl.appendChild(jump);
+  }
 }
 
 function pageNumbers(cur,total){
@@ -541,7 +699,7 @@ function pageNumbers(cur,total){
   const withEll=[];
   for(let i=0;i<out.length;i++){
     withEll.push(out[i]);
-    if(i<out.length-1&&out[i+1]-out[i]>1) withEll.push('…');
+    if(i<out.length-1 && out[i+1]-out[i]>1) withEll.push('…');
   }
   return withEll;
 }
