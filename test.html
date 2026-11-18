@@ -3,199 +3,608 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-
-<title>اختبار مشغل YouTube</title>
+<title>فيديوهات السكن والتعمير حسب وسائل الإعلام</title>
 
 <style>
+:root{
+ --bg:#0b1220;
+ --card:#141c2e;
+ --card2:#1b2437;
+ --line:#26344d;
+ --txt:#e6ecf7;
+ --muted:#94a3b8;
+ --blue:#38bdf8;
+ --red:#ef4444;
+}
 *{box-sizing:border-box}
-
 body{
-  margin:0;
-  padding:30px 16px;
-  font-family:"Segoe UI",Tahoma,Arial,sans-serif;
-  background:#0b1220;
-  color:#e6ecf7;
+ margin:0;padding:24px 16px 60px;
+ background:var(--bg);color:var(--txt);
+ font-family:"Segoe UI",Tahoma,Arial,sans-serif;
 }
-
-.container{
-  max-width:850px;
-  margin:auto;
+.container{max-width:1350px;margin:auto}
+header{
+ display:flex;justify-content:space-between;
+ align-items:center;gap:15px;flex-wrap:wrap;
+ margin-bottom:24px
 }
-
-h1{
-  font-size:24px;
-  color:#38bdf8;
-  margin-bottom:8px;
+h1{font-size:24px;color:var(--blue);margin:0}
+.subtitle{color:var(--muted);font-size:13px;margin-top:8px}
+.stats{display:flex;gap:10px;flex-wrap:wrap}
+.stat{
+ background:var(--card);border:1px solid var(--line);
+ padding:10px 16px;border-radius:12px;color:var(--muted)
 }
-
-.subtitle{
-  color:#94a3b8;
-  margin-bottom:25px;
+.stat b{color:white;font-size:18px;margin-right:6px}
+.toolbar{
+ display:flex;gap:12px;flex-wrap:wrap;
+ background:var(--card);padding:16px;
+ border:1px solid var(--line);border-radius:16px;
+ margin-bottom:25px;position:sticky;top:8px;z-index:10;
 }
-
-.card{
-  background:#141c2e;
-  border:1px solid #243049;
-  border-radius:18px;
-  overflow:hidden;
+.field{flex:1 1 220px}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}
+input,select{
+ width:100%;padding:12px;
+ border:1px solid var(--line);border-radius:10px;
+ background:var(--card2);color:white;font-size:14px;
+ outline:none;
 }
-
-.video{
-  position:relative;
-  width:100%;
-  aspect-ratio:16/9;
-  background:#000;
-}
-
-.video iframe{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  border:0;
-}
-
-.info{
-  padding:20px;
-}
-
-.title{
-  font-size:18px;
-  line-height:1.7;
-  margin:0 0 12px;
-}
-
-.channel{
-  color:#38bdf8;
-  font-size:14px;
-}
-
-.status{
-  margin-top:18px;
-  padding:12px;
-  background:#1b2437;
-  border-radius:10px;
-  color:#94a3b8;
-  font-size:13px;
-}
-
-.actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:15px;
-}
-
-button,a{
-  border:0;
-  border-radius:9px;
-  padding:11px 17px;
-  font-size:14px;
-  cursor:pointer;
-  text-decoration:none;
-}
-
 button{
-  background:#0284c7;
-  color:white;
+ background:#334155;color:white;border:1px solid var(--line);
+ padding:11px 16px;border-radius:10px;cursor:pointer;
 }
-
-a{
-  background:#dc2626;
-  color:white;
+button:hover{background:#475569}
+.media-section{margin-bottom:35px}
+.media-heading{
+ display:flex;align-items:center;justify-content:space-between;
+ gap:10px;flex-wrap:wrap;
+ border-bottom:1px solid var(--line);
+ padding:12px 4px;margin-bottom:16px
 }
-
+.media-heading h2{font-size:18px;margin:0;color:var(--blue)}
+.media-count{font-size:12px;color:var(--muted)}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+ gap:18px
+}
+.card{
+ background:var(--card);border:1px solid var(--line);
+ border-radius:15px;overflow:hidden;
+ display:flex;flex-direction:column;
+}
+.video{
+ position:relative;aspect-ratio:16/9;
+ background:#000;overflow:hidden;cursor:pointer
+}
+.video img{width:100%;height:100%;object-fit:cover}
+.video iframe{
+ position:absolute;inset:0;width:100%;height:100%;border:0
+}
+.play{
+ position:absolute;inset:0;display:grid;place-items:center;
+ background:#0004
+}
+.play span{
+ background:#ef4444;width:55px;height:55px;
+ border-radius:50%;display:grid;place-items:center;
+ font-size:23px;color:white
+}
+.format{
+ position:absolute;top:9px;left:9px;
+ background:#0b1220dd;padding:5px 9px;
+ border-radius:7px;font-size:11px
+}
+.body{
+ padding:14px;display:flex;flex-direction:column;
+ gap:10px;flex:1
+}
+.title{font-size:14px;line-height:1.7;margin:0}
+.meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto}
+.chip{
+ background:var(--card2);border:1px solid var(--line);
+ padding:5px 8px;border-radius:8px;
+ color:var(--muted);font-size:11px
+}
+.topic{color:#7dd3fc}
+.channel-link{
+ color:#38bdf8;text-decoration:none;font-size:12px
+}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.actions a{
+ text-decoration:none;color:#fca5a5;
+ font-size:12px;padding:6px 9px;
+ border:1px solid #ef444455;border-radius:7px
+}
+.empty,.loading{
+ text-align:center;padding:50px;
+ color:var(--muted);background:var(--card);
+ border-radius:14px;grid-column:1/-1
+}
+.error{color:#fca5a5}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:30px}
+@media(max-width:600px){
+ body{padding:15px 10px}
+ h1{font-size:19px}
+ .toolbar{position:static}
+}
 </style>
 </head>
 
 <body>
-
 <div class="container">
 
-<h1>فيديوهات السكن والتعمير</h1>
+<header>
+ <div>
+  <h1>فيديوهات السكن والتعمير</h1>
+  <div class="subtitle">تجميع الفيديوهات حسب وسائل الإعلام والقنوات</div>
+ </div>
 
-<div class="subtitle">
-اختبار تشغيل فيديو YouTube داخل الصفحة
+ <div class="stats">
+  <div class="stat">الفيديوهات <b id="total">0</b></div>
+  <div class="stat">وسائل الإعلام <b id="channels">0</b></div>
+ </div>
+</header>
+
+<div class="toolbar">
+
+ <div class="field">
+  <label>اختيار وسيلة الإعلام</label>
+  <select id="mediaFilter">
+   <option value="all">جميع وسائل الإعلام</option>
+  </select>
+ </div>
+
+ <div class="field">
+  <label>البحث في عناوين الفيديوهات</label>
+  <input id="search" type="search"
+   placeholder="اكتب كلمة للبحث...">
+ </div>
+
+ <button id="reset">إعادة التعيين</button>
 </div>
 
-<div class="card">
-
-  <div class="video" id="videoContainer">
-
-    <iframe
-      id="youtubePlayer"
-      title="YouTube video player"
-      src="https://www.youtube.com/embed/DPxXriyHg8E?autoplay=0&rel=0&playsinline=1&enablejsapi=1"
-      referrerpolicy="strict-origin-when-cross-origin"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen>
-    </iframe>
-
-  </div>
-
-  <div class="info">
-
-    <h2 class="title">
-      شحال من واحد استافد من برنامج دعم السكن في المغرب؟
-    </h2>
-
-    <div class="channel">
-      📺 MEDI1 TV
-    </div>
-
-    <div class="status" id="status">
-      مشغل YouTube جاهز للاختبار.
-    </div>
-
-    <div class="actions">
-
-      <button onclick="reloadVideo()">
-        إعادة تحميل الفيديو
-      </button>
-
-      <a
-        href="https://www.youtube.com/watch?v=DPxXriyHg8E"
-        target="_blank"
-        rel="noopener noreferrer">
-        مشاهدة على YouTube
-      </a>
-
-    </div>
-
-  </div>
-
+<div id="status" class="loading">
+ جاري تحميل ملفات JSON...
 </div>
+
+<main id="results"></main>
+
+<footer>
+ Videothèque — Habitat, Urbanisme et Politique de la Ville
+</footer>
 
 </div>
 
 <script>
+"use strict";
 
-const VIDEO_ID = "DPxXriyHg8E";
+/* =========================================
+   CONFIGURATION GITHUB
+========================================= */
 
-function reloadVideo(){
+const CONFIG = {
+ owner: "marocnetmail",
+ repo: "125",
+ branch: "main",
+ folder: "json"
+};
 
-  const player = document.getElementById("youtubePlayer");
+const API =
+ `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.folder}?ref=${CONFIG.branch}`;
 
-  const params = new URLSearchParams({
-    autoplay:"0",
-    rel:"0",
-    playsinline:"1",
-    enablejsapi:"1",
-    origin:window.location.origin
+const RAW_BASE =
+ `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${CONFIG.folder}/`;
+
+/* =========================================
+   DONNEES
+========================================= */
+
+let VIDEOS = [];
+
+const results = document.getElementById("results");
+const statusBox = document.getElementById("status");
+const filter = document.getElementById("mediaFilter");
+const search = document.getElementById("search");
+
+/* =========================================
+   NORMALISATION JSON
+========================================= */
+
+function getVideoArray(data){
+
+ if(Array.isArray(data)) return data;
+
+ if(data && typeof data === "object"){
+
+  for(const key of [
+   "videos","data","items","results",
+   "publications","video","results_videos"
+  ]){
+   if(Array.isArray(data[key])) return data[key];
+  }
+
+  if(data.id || data.video_id || data.fbid){
+   return [data];
+  }
+ }
+
+ return [];
+}
+
+function normalizeVideo(v){
+
+ if(!v || typeof v !== "object") return null;
+
+ const url = v.url || v.video_url || "";
+
+ let id = String(
+  v.id || v.video_id || v.youtube_id || ""
+ ).trim();
+
+ if(!id && url){
+  const match = url.match(
+   /(?:shorts\/|embed\/|watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/
+  );
+  if(match) id = match[1];
+ }
+
+ if(!id) return null;
+
+ const title = v.title || v.titre || v.name || "بدون عنوان";
+
+ const channel =
+  v.channel || v.media || v.source ||
+  v.channel_name || v.chaine || "وسيلة إعلام غير محددة";
+
+ return {
+  id,
+  title: String(title),
+  url: v.url || `https://www.youtube.com/watch?v=${id}`,
+  thumbnail: v.thumbnail || v.miniature ||
+   `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+  channel: String(channel),
+  channel_url: v.channel_url || "",
+  views: v.views ?? v.vues ?? "غير متوفر",
+  published: v.published || v.date || v.date_publication || "",
+  format: v.format || v.type || "video",
+  topic: v.topic || v.theme || v.theme_fr || ""
+ };
+}
+
+/* =========================================
+   CHARGEMENT AUTOMATIQUE DES JSON
+========================================= */
+
+async function loadVideos(){
+
+ try{
+
+  statusBox.textContent = "جاري البحث عن ملفات JSON...";
+
+  const response = await fetch(API, {
+   cache:"no-store"
   });
 
-  player.src =
-    "https://www.youtube.com/embed/" +
-    VIDEO_ID + "?" + params.toString();
+  if(!response.ok){
+   throw new Error("GitHub API : " + response.status);
+  }
 
-  document.getElementById("status").textContent =
-    "تمت إعادة تحميل مشغل الفيديو.";
+  const files = await response.json();
+
+  const jsonFiles = files.filter(file =>
+   file.type === "file" &&
+   file.name.toLowerCase().endsWith(".json")
+  );
+
+  if(!jsonFiles.length){
+   throw new Error("Aucun fichier JSON trouvé dans le dossier.");
+  }
+
+  statusBox.textContent =
+   `جاري تحميل ${jsonFiles.length} ملف JSON...`;
+
+  const loaded = await Promise.allSettled(
+   jsonFiles.map(async file => {
+
+    const url = RAW_BASE +
+     file.name.split("/").map(encodeURIComponent).join("/");
+
+    const res = await fetch(url, {cache:"no-store"});
+
+    if(!res.ok) throw new Error(file.name);
+
+    const data = await res.json();
+
+    return {
+     filename:file.name,
+     records:getVideoArray(data)
+    };
+   })
+  );
+
+  const ids = new Set();
+
+  VIDEOS = [];
+
+  loaded.forEach(item => {
+
+   if(item.status !== "fulfilled") return;
+
+   item.value.records.forEach(record => {
+
+    const v = normalizeVideo(record);
+
+    if(v && !ids.has(v.id)){
+     ids.add(v.id);
+     VIDEOS.push(v);
+    }
+
+   });
+
+  });
+
+  if(!VIDEOS.length){
+   throw new Error("Aucune vidéo valide trouvée dans les JSON.");
+  }
+
+  populateFilter();
+
+  document.getElementById("total").textContent =
+   VIDEOS.length;
+
+  document.getElementById("channels").textContent =
+   new Set(VIDEOS.map(v=>v.channel)).size;
+
+  statusBox.style.display = "none";
+
+  // AFFICHER TOUTES LES VIDEOS AU DEMARRAGE
+  render();
+
+ }catch(error){
+
+  statusBox.className = "loading error";
+  statusBox.textContent =
+   "خطأ في تحميل البيانات : " + error.message;
+
+  console.error(error);
+ }
 
 }
 
-</script>
+/* =========================================
+   FILTRE PAR MEDIA
+========================================= */
 
+function populateFilter(){
+
+ const channels = [...new Set(
+  VIDEOS.map(v=>v.channel)
+ )].sort((a,b)=>a.localeCompare(b));
+
+ filter.innerHTML =
+  '<option value="all">جميع وسائل الإعلام ('+
+  VIDEOS.length+')</option>';
+
+ channels.forEach(channel=>{
+
+  const option = document.createElement("option");
+  option.value = channel;
+  option.textContent = channel;
+
+  filter.appendChild(option);
+
+ });
+
+}
+
+/* =========================================
+   CREATION DES CARTES
+========================================= */
+
+function makeCard(v){
+
+ const card = document.createElement("article");
+ card.className = "card";
+
+ const media = document.createElement("div");
+ media.className = "video";
+
+ const img = document.createElement("img");
+ img.src = v.thumbnail;
+ img.alt = v.title;
+ img.loading = "lazy";
+
+ img.onerror = () => {
+  img.onerror = null;
+  img.src = `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`;
+ };
+
+ const play = document.createElement("div");
+ play.className = "play";
+ play.innerHTML = "<span>▶</span>";
+
+ const format = document.createElement("span");
+ format.className = "format";
+ format.textContent = v.format.toUpperCase();
+
+ media.append(img,play,format);
+
+ media.addEventListener("click",()=>{
+
+  if(media.querySelector("iframe")) return;
+
+  document.querySelectorAll(".video iframe").forEach(frame=>{
+   frame.remove();
+  });
+
+  const iframe = document.createElement("iframe");
+
+  const params = new URLSearchParams({
+   autoplay:"1",
+   rel:"0",
+   playsinline:"1",
+   origin:window.location.origin
+  });
+
+  iframe.src =
+   `https://www.youtube.com/embed/${encodeURIComponent(v.id)}?${params}`;
+
+  iframe.title = v.title;
+  iframe.allow =
+   "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+  iframe.allowFullscreen = true;
+  iframe.referrerPolicy = "strict-origin-when-cross-origin";
+
+  media.appendChild(iframe);
+  play.remove();
+
+ });
+
+ const body = document.createElement("div");
+ body.className = "body";
+
+ const title = document.createElement("h3");
+ title.className = "title";
+ title.textContent = v.title;
+
+ const meta = document.createElement("div");
+ meta.className = "meta";
+
+ function chip(text,extra=""){
+  const el = document.createElement("span");
+  el.className = "chip " + extra;
+  el.textContent = text;
+  meta.appendChild(el);
+ }
+
+ chip("📺 "+v.channel);
+ chip("👁 "+v.views);
+ if(v.published) chip("🕒 "+v.published);
+ if(v.topic) chip("🏷 "+v.topic,"topic");
+
+ const actions = document.createElement("div");
+ actions.className = "actions";
+
+ const youtube = document.createElement("a");
+ youtube.href = `https://www.youtube.com/watch?v=${v.id}`;
+ youtube.target = "_blank";
+ youtube.rel = "noopener noreferrer";
+ youtube.textContent = "↗ YouTube";
+ actions.appendChild(youtube);
+
+ if(v.channel_url){
+  const channelLink = document.createElement("a");
+  channelLink.href = v.channel_url;
+  channelLink.target = "_blank";
+  channelLink.rel = "noopener noreferrer";
+  channelLink.textContent = "القناة";
+  actions.appendChild(channelLink);
+ }
+
+ body.append(title,meta,actions);
+ card.append(media,body);
+
+ return card;
+}
+
+/* =========================================
+   AFFICHAGE GROUPE PAR MEDIA
+========================================= */
+
+function render(){
+
+ const selected = filter.value;
+ const q = search.value.trim().toLocaleLowerCase();
+
+ const filtered = VIDEOS.filter(v=>{
+
+  const channelOK =
+   selected === "all" || v.channel === selected;
+
+  const text = [
+   v.title,v.channel,v.topic,v.published
+  ].join(" ").toLocaleLowerCase();
+
+  return channelOK && text.includes(q);
+ });
+
+ results.innerHTML = "";
+
+ if(!filtered.length){
+  results.innerHTML =
+   '<div class="empty">لا توجد فيديوهات مطابقة.</div>';
+  return;
+ }
+
+ const groups = new Map();
+
+ filtered.forEach(v=>{
+
+  if(!groups.has(v.channel)){
+   groups.set(v.channel,[]);
+  }
+
+  groups.get(v.channel).push(v);
+
+ });
+
+ // جميع القنوات au départ, triées par volume
+ const sorted = [...groups.entries()].sort(
+  (a,b)=>b[1].length-a[1].length ||
+  a[0].localeCompare(b[0])
+ );
+
+ sorted.forEach(([channel,videos])=>{
+
+  const section = document.createElement("section");
+  section.className = "media-section";
+
+  const heading = document.createElement("div");
+  heading.className = "media-heading";
+
+  const h2 = document.createElement("h2");
+  h2.textContent = "📺 "+channel;
+
+  const count = document.createElement("span");
+  count.className = "media-count";
+  count.textContent = videos.length+" فيديو";
+
+  heading.append(h2,count);
+
+  const grid = document.createElement("div");
+  grid.className = "grid";
+
+  videos.forEach(v=>{
+   grid.appendChild(makeCard(v));
+  });
+
+  section.append(heading,grid);
+  results.appendChild(section);
+
+ });
+
+}
+
+/* =========================================
+   EVENEMENTS
+========================================= */
+
+filter.addEventListener("change",render);
+search.addEventListener("input",render);
+
+document.getElementById("reset").addEventListener("click",()=>{
+ filter.value="all";
+ search.value="";
+ render();
+});
+
+// Lancement automatique
+loadVideos();
+
+</script>
 </body>
 </html>
