@@ -1,0 +1,42 @@
+ Le volume dans le lecteur C n'a pas de nom.
+ Le num‚ro de s‚rie du volume est BA65-0D40
+
+ R‚pertoire de C:\xampp\htdocs\dashboard\youtube
+
+20/11/2026  14:21    <DIR>          .
+20/11/2026  12:17    <DIR>          ..
+20/11/2026  14:21                 0 1.txt
+20/11/2026  12:17    <DIR>          css
+20/11/2026  12:09             2ÿ651 index.html
+20/11/2026  14:20    <DIR>          js
+20/11/2026  14:16    <DIR>          json
+               2 fichier(s)            2ÿ651 octets
+
+ R‚pertoire de C:\xampp\htdocs\dashboard\youtube\css
+
+20/11/2026  12:17    <DIR>          .
+20/11/2026  14:21    <DIR>          ..
+20/11/2026  12:14            13ÿ380 style.css
+               1 fichier(s)           13ÿ380 octets
+
+ R‚pertoire de C:\xampp\htdocs\dashboard\youtube\js
+
+20/11/2026  14:20    <DIR>          .
+20/11/2026  14:21    <DIR>          ..
+20/11/2026  14:10               212 app.js
+20/11/2026  12:15             5ÿ769 classification.js
+20/11/2026  12:15             2ÿ603 filters.js
+20/11/2026  12:15             3ÿ217 player.js
+20/11/2026  12:14             5ÿ951 statistics.js
+               5 fichier(s)           17ÿ752 octets
+
+ R‚pertoire de C:\xampp\htdocs\dashboard\youtube\json
+
+20/11/2026  14:16    <DIR>          .
+20/11/2026  14:21    <DIR>          ..
+20/11/2026  11:57            22ÿ059 videos.json
+               1 fichier(s)           22ÿ059 octets
+
+     Total des fichiers list‚sÿ:
+               9 fichier(s)           55ÿ842 octets
+              11 R‚p(s)   3ÿ154ÿ718ÿ720 octets libres

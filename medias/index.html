@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vidéothèque médiatique — Veille médiatique</title>
+  <meta name="description" content="Veille médiatique institutionnelle : logement, urbanisme et action gouvernementale au Maroc.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">▶</div>
+      <div class="brand-text">
+        <h1>VIDÉOTHÈQUE MÉDIATIQUE</h1>
+        <p>Veille médiatique – Logement, urbanisme et action gouvernementale</p>
+      </div>
+    </div>
+    <div class="header-tools">
+      <div class="search-box">
+        <input id="globalSearch" type="search" placeholder="Rechercher une vidéo, un média, un thème…"
+               aria-label="Recherche générale" autocomplete="off">
+      </div>
+      <div class="updated" id="lastUpdated">—</div>
+    </div>
+  </div>
+
+  <nav class="main-nav" aria-label="Navigation principale">
+    <div class="container nav-inner">
+      <a href="#/dashboard" data-nav="dashboard">Tableau de bord</a>
+      <a href="#/themes" data-nav="themes">Thématiques</a>
+      <a href="#/sources" data-nav="sources">Types de sources</a>
+      <a href="#/gallery" data-nav="gallery">Galerie</a>
+      <a href="#/admin" data-nav="admin">Classification</a>
+    </div>
+  </nav>
+</header>
+
+<main id="app" class="container">
+  <div id="loading" class="loading">Chargement des données…</div>
+  <div id="error" class="error hidden" role="alert"></div>
+  <div id="view"></div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>Vidéothèque médiatique — données issues de YouTube. Les dates sont estimées à partir des libellés relatifs fournis par la source.</p>
+  </div>
+</footer>
+
+<!-- Fenêtre modale du lecteur -->
+<div class="modal-backdrop hidden" id="playerModal" role="dialog" aria-modal="true" aria-labelledby="playerTitle">
+  <div class="modal">
+    <button class="modal-close" id="playerClose" aria-label="Fermer le lecteur">✕</button>
+    <div class="modal-body">
+      <div class="player-wrap" id="playerWrap"></div>
+      <div class="player-meta" id="playerMeta"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="js/statistics.js"></script>
+<script src="js/filters.js"></script>
+<script src="js/player.js"></script>
+<script src="js/classification.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
