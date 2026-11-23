@@ -114,8 +114,8 @@ header p {
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 18px;
 }
 
 .card {
@@ -125,8 +125,11 @@ header p {
     box-shadow: 0 4px 16px rgba(15,23,42,.06);
     min-width: 0;
     border: 2px solid transparent;
-    transition: border-color .2s;
+    transition: border-color .2s, transform .2s;
+    cursor: pointer;
 }
+
+.card:hover { transform: translateY(-3px); }
 
 .card.validated {
     border-color: #16a34a;
@@ -134,7 +137,7 @@ header p {
 
 .media-box {
     position: relative;
-    aspect-ratio: 16/9;
+    aspect-ratio: 4/3;
     background: #e2e8f0;
     display: flex;
     align-items: center;
@@ -157,8 +160,8 @@ header p {
 
 .logo-badge {
     position: absolute;
-    top: 12px;
-    left: 12px;
+    bottom: 12px;
+    right: 12px;
     z-index: 3;
     background: rgba(255,255,255,.96);
     border: 1px solid rgba(15,23,42,.12);
@@ -181,7 +184,7 @@ header p {
 }
 
 .card-body {
-    padding: 18px 20px 22px;
+    display: none;
 }
 
 .validation-row {
@@ -272,9 +275,19 @@ header p {
     }
 
     .grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
     }
+
+    .media-box { aspect-ratio: 1 / 1; }
+
+    .logo-badge {
+        right: 6px;
+        bottom: 6px;
+        padding: 4px 6px;
+        max-width: 105px;
+    }
+    .logo-badge img { max-height: 23px; max-width: 90px; }
 
     header {
         padding: 18px;
@@ -296,6 +309,47 @@ header p {
         object-fit: contain;
         background: #0f172a;
     }
+}
+
+
+/* Fenêtre de détail de l'album */
+.album-card .media-box { border-radius: 12px; }
+.album-modal {
+    display:none; position:fixed; inset:0; z-index:9999;
+    background:rgba(2,8,23,.78); padding:20px;
+    align-items:center; justify-content:center;
+}
+.album-modal.open { display:flex; }
+.album-dialog {
+    width:min(900px,100%); max-height:92vh; overflow:auto;
+    background:#fff; border-radius:16px; position:relative;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+.album-close {
+    position:absolute; top:12px; right:12px; z-index:5;
+    width:40px; height:40px; border:0; border-radius:50%;
+    background:#0f2942; color:#fff; font-size:25px; cursor:pointer;
+}
+.album-hero { position:relative; background:#0f172a; }
+.album-hero img.main { width:100%; max-height:55vh; object-fit:contain; display:block; margin:auto; }
+.album-hero .logo-badge { bottom:12px; right:12px; top:auto; left:auto; }
+.album-details { padding:22px; }
+.album-details h2 { margin:0 0 16px; font-size:1.25rem; line-height:1.5; }
+.album-meta { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+.album-meta span { background:#eef2f7; border-radius:20px; padding:6px 10px; font-size:.85rem; }
+.album-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
+.album-actions a,.album-actions button {
+    border:0; border-radius:8px; padding:11px 16px;
+    font-weight:800; cursor:pointer; text-decoration:none;
+}
+.album-actions a { background:#0f2942; color:#fff; }
+.album-actions button { background:#15803d; color:#fff; }
+.album-validation { color:#475569; margin-top:12px; font-weight:700; }
+@media(max-width:480px) {
+    .album-modal { padding:8px; }
+    .album-dialog { max-height:96vh; }
+    .album-details { padding:15px; }
+    .album-details h2 { font-size:1.05rem; }
 }
 
 </style>
@@ -4002,6 +4056,98 @@ updateCounters();
 document.getElementById('emptyMessage').style.display =
     articles.length ? 'none' : 'block';
 
+</script>
+
+
+<script>
+(() => {
+    const articleById = new Map(articles.map(a => [a.validation_id, a]));
+
+    // Les visuels de l'album proviennent directement de image_principale.
+    document.querySelectorAll('.card').forEach(card => {
+        const article = articleById.get(card.dataset.id);
+        if (!article) return;
+        card.classList.add('album-card');
+        const image = card.querySelector('img.main-photo');
+        const link = card.querySelector('.media-box > a');
+        if (image && article.image_principale) {
+            image.dataset.fallback = article.image_locale || image.src;
+            image.src = article.image_principale;
+            image.onerror = () => {
+                image.onerror = null;
+                if (image.dataset.fallback) image.src = image.dataset.fallback;
+            };
+        }
+        if (link) {
+            link.href = article.image_principale || link.href;
+            link.addEventListener('click', e => e.preventDefault());
+        }
+        card.addEventListener('click', e => {
+            if (e.target.closest('.validate-checkbox')) return;
+            openArticle(article);
+        });
+    });
+
+    const modal = document.createElement('div');
+    modal.className = 'album-modal';
+    modal.innerHTML = `
+      <div class="album-dialog" role="dialog" aria-modal="true" aria-label="Détails de l'article">
+        <button class="album-close" type="button" aria-label="Fermer">&times;</button>
+        <div class="album-content"></div>
+      </div>`;
+    document.body.appendChild(modal);
+    const content = modal.querySelector('.album-content');
+
+    const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+    const close = () => modal.classList.remove('open');
+    modal.querySelector('.album-close').addEventListener('click', close);
+    modal.addEventListener('click', e => { if (e.target === modal) close(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+
+    function openArticle(a) {
+        const image = a.image_principale || a.image_locale || '';
+        const logo = a.logo_media || '';
+        const checkbox = document.querySelector('.validate-checkbox[data-id="' + a.validation_id + '"]');
+        const isChecked = checkbox ? checkbox.checked : !!a.valide;
+
+        content.innerHTML = `
+          <div class="album-hero">
+            <img class="main" src="${esc(image)}" alt="${esc(a.titre)}"
+                 onerror="this.onerror=null;this.src='${esc(a.image_locale || '')}'">
+            ${logo ? `<div class="logo-badge"><img src="${esc(logo)}" alt="${esc(a.source || 'Logo média')}"></div>` : ''}
+          </div>
+          <div class="album-details">
+            <div class="media-name">${esc(a.source || 'Source non précisée')}</div>
+            <h2>${esc(a.titre || 'Sans titre')}</h2>
+            <div class="album-meta">
+              <span>📅 ${esc(a.date || 'Date non précisée')}</span>
+              <span>Thème : ${esc(a.theme || 'Non classé')}</span>
+              <span>${esc(a.statut || 'Image principale')}</span>
+            </div>
+            <p><strong>Source média :</strong> ${esc(a.source || '—')}</p>
+            <p><strong>Image principale :</strong> ${esc(a.image_principale || '—')}</p>
+            <p><strong>Identifiant :</strong> ${esc(a.validation_id || '—')}</p>
+            <div class="album-validation">${isChecked ? '✓ Article confirmé' : 'À confirmer'}</div>
+            <div class="album-actions">
+              ${a.url_article ? `<a href="${esc(a.url_article)}" target="_blank" rel="noopener">Consulter l’article ↗</a>` : ''}
+              <button type="button" class="album-toggle">${isChecked ? 'Retirer la confirmation' : 'Confirmer cet article'}</button>
+            </div>
+          </div>`;
+        content.querySelector('.album-toggle').addEventListener('click', () => {
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+                checkbox.dispatchEvent(new Event('change', {bubbles:true}));
+                const label = content.querySelector('.album-validation');
+                const btn = content.querySelector('.album-toggle');
+                label.textContent = checkbox.checked ? '✓ Article confirmé' : 'À confirmer';
+                btn.textContent = checkbox.checked ? 'Retirer la confirmation' : 'Confirmer cet article';
+            }
+        });
+        modal.classList.add('open');
+    }
+})();
 </script>
 
 </body>
